@@ -15,7 +15,8 @@ val quarkusPlatformVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    implementation("io.quarkus:quarkus-hibernate-reactive")
+    implementation("io.quarkus:quarkus-security-jpa")
+    implementation("io.quarkus:quarkus-hibernate-reactive-panache")
     implementation("io.quarkus:quarkus-smallrye-openapi")
     implementation("io.quarkus:quarkus-kotlin")
     implementation("io.quarkus:quarkus-reactive-mysql-client")
