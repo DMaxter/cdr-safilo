@@ -1,0 +1,30 @@
+# HTTP
+quarkus.http.port=8080
+domain.name=localhost
+
+# Database
+## Disable JDBC to use reactive
+quarkus.datasource.jdbc=false 
+quarkus.datasource.reactive.url=mysql://${domain}:3306/<DB-NAME>
+quarkus.datasource.username=<USER>
+quarkus.datasource.password=<PASSWORD>
+quarkus.hibernate-orm.database.generation=drop-and-create
+
+# Security
+## Disallow all endpoints by default (currently buggy implementation: https://github.com/quarkusio/quarkus/issues/26553)
+#quarkus.security.jaxrs.deny-unannotated-endpoints=true
+## Authenticated requests in open endpoints behave as non-authenticated
+quarkus.http.auth.proactive=false
+## Add BouncyCastle
+quarkus.security.security-providers=BC
+
+# JWT
+## Use cookies for authentication
+mp.jwt.token.header=Cookie
+mp.jwt.token.cookie=identity
+
+## JWT Algorithm parameters
+mp.jwt.verify.issuer=https://${domain.name}:${quarkus.http.port}
+mp.jwt.verify.publickey.algorithm=RS256
+mp.jwt.verify.publickey.location=<PUB KEY PATH>
+smallrye.jwt.sign.key.location=<PRIV KEY PATH>

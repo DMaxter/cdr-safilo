@@ -12,11 +12,9 @@ import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.bouncycastle.util.io.pem.PemReader
 import org.eclipse.microprofile.config.inject.ConfigProperty
-import org.eclipse.microprofile.jwt.JsonWebToken
 import org.jboss.logging.Logger
 import java.io.InputStreamReader
 import java.security.KeyFactory
-import java.security.KeyPairGenerator
 import java.security.PrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
 import javax.annotation.PostConstruct
@@ -48,6 +46,10 @@ class AuthService {
     @ConfigProperty(name = "smallrye.jwt.sign.key.location")
     lateinit var keyPath: String
 
+    @Inject
+    @ConfigProperty(name = "domain.name")
+    lateinit var domain: String
+
     lateinit var key: PrivateKey
 
     @PostConstruct
@@ -57,11 +59,11 @@ class AuthService {
 
         if (file != null) {
             logger.debug("Found key file")
-                val content = PemReader(InputStreamReader(file)).readPemObject().content
+            val content = PemReader(InputStreamReader(file)).readPemObject().content
 
-                key = KeyFactory.getInstance(ALGORITHM).generatePrivate(PKCS8EncodedKeySpec(content))
-                return
-                // Do nothing
+            key = KeyFactory.getInstance(ALGORITHM).generatePrivate(PKCS8EncodedKeySpec(content))
+            return
+            // Do nothing
         }
 
         throw RuntimeException("No signing key found")
@@ -97,23 +99,21 @@ class AuthService {
             throw InvalidCredentialsException()
         }
 
-        return Panache.withTransaction { userRepository.findByName(credentials.username!!) }
-            .onItem().ifNull()
-            .failWith { InvalidCredentialsException() }
-            .onItem().ifNotNull()
-            .transformToUni { user ->
+        return Panache.withTransaction { userRepository.findByName(credentials.username!!) }.onItem().ifNull()
+            .failWith { InvalidCredentialsException() }.onItem().ifNotNull().transformToUni { user ->
                 if (!BcryptUtil.matches(credentials.password!!, user.password)) {
                     Uni.createFrom().failure(InvalidCredentialsException())
                 } else {
                     Uni.createFrom().item(user)
                 }
+            }.onItem().transform { user: User ->
+                Response.ok().cookie(NewCookie(cookie, generateJwt(user), "/", domain, "", -1, true, true)).build()
             }
-            .onItem()
-            .transform { user: User -> Response.ok().cookie(NewCookie(cookie, generateJwt(user))).build() }
     }
 
     fun logout(): Uni<Response> {
-        return Uni.createFrom().item(Response.ok().build())
+        return Uni.createFrom()
+            .item(Response.ok().cookie(NewCookie(cookie, "", "/", domain, "", 0, true, true)).build())
     }
 
     fun forgot(@PathParam("username") user: String): Uni<Response> {
