@@ -47,6 +47,20 @@ You can then execute your native executable with: `./build/orders-1.0.0-SNAPSHOT
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
 
+## Generating JWT keys
+
+Create an RSA key with:
+
+```shell script
+openssl genrsa -out priv.pem 8192
+```
+
+Get the public key
+
+```shell script
+openssl rsa -in priv.pem -pub pub.pem
+```
+
 ## Related Guides
 
 - SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI

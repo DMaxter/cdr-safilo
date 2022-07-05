@@ -26,7 +26,6 @@ import javax.ws.rs.*
 import javax.ws.rs.core.NewCookie
 import javax.ws.rs.core.Response
 
-private const val KEY_PATH = "/key.pem"
 private const val ALGORITHM = "RSA"
 
 @ApplicationScoped
@@ -46,31 +45,26 @@ class AuthService {
     lateinit var cookie: String
 
     @Inject
-    lateinit var jwtService: JsonWebToken
+    @ConfigProperty(name = "smallrye.jwt.sign.key.location")
+    lateinit var keyPath: String
 
     lateinit var key: PrivateKey
 
     @PostConstruct
     fun init() {
         logger.info("Initializing Authentication Service")
-        val file = AuthService::class.java.getResourceAsStream(KEY_PATH)
+        val file = AuthService::class.java.getResourceAsStream(keyPath)
 
         if (file != null) {
-            logger.info("Found key file")
-            try {
+            logger.debug("Found key file")
                 val content = PemReader(InputStreamReader(file)).readPemObject().content
 
                 key = KeyFactory.getInstance(ALGORITHM).generatePrivate(PKCS8EncodedKeySpec(content))
                 return
-            } catch (e: Exception) {
-                logger.error("Invalid key loaded from file")
                 // Do nothing
-            }
         }
 
-        logger.info("Generating new key")
-        key = KeyPairGenerator.getInstance(ALGORITHM).genKeyPair().private
-        logger.warn("Generated key is not saved")
+        throw RuntimeException("No signing key found")
     }
 
     @Throws(InvalidCredentialsException::class)
@@ -127,6 +121,6 @@ class AuthService {
     }
 
     private fun generateJwt(user: User): String {
-        return Jwt.issuer(issuer).claim("user", user.email).claim("roles", user.roles).sign(key)
+        return Jwt.issuer(issuer).claim("sub", user.email).claim("roles", user.roles).sign(key)
     }
 }
