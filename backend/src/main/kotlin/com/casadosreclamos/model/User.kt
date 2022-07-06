@@ -11,9 +11,6 @@ import javax.persistence.*
 @UserDefinition
 class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-
     @Username
     lateinit var email: String
 
