@@ -24,7 +24,7 @@ class AuthController {
     @POST
     @PermitAll
     @Path("/register")
-    fun register(credentials: AuthDto): Uni<Response> {
+    fun registerUser(credentials: AuthDto): Uni<Response> {
         return authService.register(credentials)
     }
 

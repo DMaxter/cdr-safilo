@@ -20,28 +20,28 @@ class ExceptionMapper {
     }
 
     @ServerExceptionMapper
-    fun map(_: InvalidUserException): Uni<Response> {
+    fun map(e: InvalidUserException): Uni<Response> {
         LOGGER.error("Invalid user")
         return Uni.createFrom()
             .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid user")).build())
     }
 
     @ServerExceptionMapper
-    fun map(_: InvalidTokenException): Uni<Response> {
+    fun map(e: InvalidTokenException): Uni<Response> {
         LOGGER.error("Invalid token")
         return Uni.createFrom()
             .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid token")).build())
     }
 
     @ServerExceptionMapper
-    fun map(_: InvalidPasswordException): Uni<Response> {
+    fun map(e: InvalidPasswordException): Uni<Response> {
         LOGGER.error("Invalid password")
         return Uni.createFrom()
             .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid password")).build())
     }
 
     @ServerExceptionMapper
-    fun map(_: InvalidCredentialsException): Uni<Response> {
+    fun map(e: InvalidCredentialsException): Uni<Response> {
         LOGGER.error("Invalid credentials")
         return Uni.createFrom()
             .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid credentials")).build())

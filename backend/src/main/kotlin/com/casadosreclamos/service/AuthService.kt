@@ -19,7 +19,6 @@ import io.smallrye.mutiny.Uni
 import org.bouncycastle.util.io.pem.PemReader
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
-import org.jboss.resteasy.reactive.common.util.DateUtil
 import java.io.InputStreamReader
 import java.security.KeyFactory
 import java.security.MessageDigest
@@ -95,6 +94,8 @@ class AuthService {
         user.email = credentials.username!!
         user.password = BcryptUtil.bcryptHash(credentials.password!!)
         user.roles = mutableListOf(Role.COMMERCIAL)
+        // TODO: ask for name
+        user.name = "ASD"
 
         // TODO: send mail with credentials
         // TODO: check if user already registered
@@ -163,7 +164,7 @@ class AuthService {
 
                 logger.warn(userToken)
 
-                // TODO: Send main with token
+                // TODO: Send mail with token
 
                 tokenRepository.persist(token)
             }.onItem().transform { Response.ok().build() }

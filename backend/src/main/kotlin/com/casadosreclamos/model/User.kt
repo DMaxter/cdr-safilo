@@ -17,8 +17,14 @@ class User {
     @Password
     lateinit var password: String
 
+    lateinit var name: String
+
     @Roles
     @Enumerated
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
     lateinit var roles: MutableList<Role>
+
+    var credits: Double = 0.0
+
+    // TODO: Add list of brands
 }
