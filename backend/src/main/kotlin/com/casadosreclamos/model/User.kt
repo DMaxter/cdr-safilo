@@ -9,7 +9,14 @@ import javax.persistence.*
 
 @Entity
 @UserDefinition
-class User {
+class User() {
+    constructor(name: String, email: String, password: String, roles: MutableSet<Role>) : this() {
+        this.name = name
+        this.email = email
+        this.password = password
+        this.roles = roles
+    }
+
     @Id
     @Username
     lateinit var email: String
@@ -20,9 +27,9 @@ class User {
     lateinit var name: String
 
     @Roles
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
-    lateinit var roles: MutableList<Role>
+    lateinit var roles: MutableSet<Role>
 
     var credits: Double = 0.0
 

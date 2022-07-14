@@ -91,9 +91,11 @@ class AuthService {
             throw InvalidCredentialsException()
         }
 
+        // TODO: verify valid email
+
         user.email = credentials.username!!
         user.password = BcryptUtil.bcryptHash(credentials.password!!)
-        user.roles = mutableListOf(Role.COMMERCIAL)
+        user.roles = mutableSetOf(Role.COMMERCIAL)
         // TODO: ask for name
         user.name = "ASD"
 
@@ -172,31 +174,31 @@ class AuthService {
     }
 
     @Throws(InvalidTokenException::class, InvalidPasswordException::class)
-    fun changePassword(user: String, password: String, token: String): Uni<Response> {
+    fun changePassword(username: String, password: String, tryToken: String): Uni<Response> {
         if (password.isEmpty()) {
             throw InvalidPasswordException()
-        } else if (user.isEmpty() || token.isEmpty()) {
+        } else if (username.isEmpty() || tryToken.isEmpty()) {
             throw InvalidTokenException()
         }
 
-        val tokenHashed = sha512(token.toByteArray())
+        val tokenHashed = sha512(tryToken.toByteArray())
 
         return Panache.withTransaction {
-            val userUni = userRepository.findByName(user)
-            val tokenUni = tokenRepository.findById(user, tokenHashed)
+            val userUni = userRepository.findByName(username)
+            val tokenUni = tokenRepository.findById(username, tokenHashed)
 
-                Uni.combine().all().unis(userUni, tokenUni).asTuple().onItem().transformToUni{ tuple ->
-                    val user = tuple.item1
-                    val token = tuple.item2
+            Uni.combine().all().unis(userUni, tokenUni).asTuple().onItem().transformToUni { tuple ->
+                val user = tuple.item1
+                val token = tuple.item2
 
-                    if (user == null || token == null) {
-                        throw InvalidTokenException()
-                    }
+                if (user == null || token == null) {
+                    throw InvalidTokenException()
+                }
 
-                    user.password = BcryptUtil.bcryptHash(password)
+                user.password = BcryptUtil.bcryptHash(password)
 
-                    // Delete token
-                    tokenRepository.delete(token)
+                // Delete token
+                tokenRepository.delete(token)
             }.onItem().transform { Response.ok().build() }
         }
     }

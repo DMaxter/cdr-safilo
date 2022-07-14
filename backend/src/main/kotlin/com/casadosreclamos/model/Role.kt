@@ -2,11 +2,11 @@ package com.casadosreclamos.model
 
 import io.quarkus.security.jpa.RolesValue
 
-const val COMMERCIAL_ROLE = "Commercial"
-const val UPLOADER_ROLE = "Uploader"
+const val COMMERCIAL_ROLE = "COMMERCIAL"
+const val UPLOADER_ROLE = "UPLOADER"
 const val CDR_ROLE = "CDR"
-const val MANAGER_ROLE = "Manager"
-const val ADMIN_ROLE = "Admin"
+const val MANAGER_ROLE = "MANAGER"
+const val ADMIN_ROLE = "ADMIN"
 
 enum class Role(@RolesValue val label: String) {
         COMMERCIAL(COMMERCIAL_ROLE), // Regular user

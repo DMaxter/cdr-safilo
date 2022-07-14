@@ -17,4 +17,22 @@ class PasswordTokenId: Serializable {
     lateinit var user: String
 
     lateinit var token: String
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PasswordTokenId
+
+        if (user != other.user) return false
+        if (token != other.token) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = user.hashCode()
+        result = 31 * result + token.hashCode()
+        return result
+    }
 }

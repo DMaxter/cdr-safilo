@@ -39,10 +39,10 @@ class AuthController {
     @PermitAll
     @Path("/login")
     @Operation(summary = "Authenticate a user")
-    @APIResponses(value = [
+    @APIResponses(
         APIResponse(responseCode = "200", description = "Successful login"),
         APIResponse(responseCode = "400", description = "Invalid credentials")
-    ])
+    )
     fun login(credentials: AuthDto): Uni<Response> {
         return authService.login(credentials)
     }
@@ -51,10 +51,10 @@ class AuthController {
     @Authenticated
     @Path("/logout")
     @Operation(summary = "Delete session for current user")
-    @APIResponses(value = [
+    @APIResponses(
         APIResponse(responseCode = "200", description = "Successful logout"),
-        APIResponse(responseCode = "401", description = "There is no current logged in user")
-    ])
+        APIResponse(responseCode = "401", description = "No user session exists")
+    )
     fun logout(): Uni<Response> {
         return authService.logout()
     }
@@ -65,7 +65,7 @@ class AuthController {
     @Operation(summary = "Request token for password reset")
     // This method should always return 200 unless an exception occurred
     // because we don't want to expose our users
-    @APIResponses(value = [APIResponse(responseCode = "200", description = "A request has been made")])
+    @APIResponses(APIResponse(responseCode = "200", description = "A request has been made"))
     fun forgot(@PathParam("username") user: String): Uni<Response> {
         return authService.forgot(user)
     }
@@ -74,11 +74,15 @@ class AuthController {
     @PermitAll
     @Path("/forgot/{username}/{password}/{token}")
     @Operation(summary = "Change user password")
-    @APIResponses(value = [
+    @APIResponses(
         APIResponse(responseCode = "200", description = "Password was successfully changed"),
         APIResponse(responseCode = "401", description = "Token did not match the one requested by user")
-    ])
-    fun changePassword(@PathParam("username") user: String, @PathParam("password") password: String, @PathParam("token") token: String): Uni<Response> {
+    )
+    fun changePassword(
+        @PathParam("username") user: String,
+        @PathParam("password") password: String,
+        @PathParam("token") token: String
+    ): Uni<Response> {
         return authService.changePassword(user, password, token)
     }
 }

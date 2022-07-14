@@ -27,10 +27,10 @@ class UserController {
     @GET
     @Authenticated
     @Operation(summary = "Obtain logged user information")
-    @APIResponses(value = [
-        APIResponse(responseCode = "200", description = "Obtain user information"),
-        APIResponse(responseCode = "401", description = "User not allowed")
-    ])
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Information obtained"),
+        APIResponse(responseCode = "401", description = "No user session exists")
+    )
     fun getUserInfo(): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id -> userService.getInfo(id.principal.name) }
     }
