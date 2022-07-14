@@ -13,6 +13,7 @@ import com.casadosreclamos.repo.PasswordTokenRepository
 import com.casadosreclamos.repo.UserRepository
 import io.quarkus.elytron.security.common.BcryptUtil
 import io.quarkus.hibernate.reactive.panache.Panache
+import io.quarkus.runtime.Startup
 import io.smallrye.jwt.build.Jwt
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
@@ -35,6 +36,10 @@ import javax.ws.rs.core.Response
 private const val ALGORITHM = "RSA"
 private const val TOKEN_LEN: Long = 64
 
+private const val ADMIN_NAME = "admin"
+private const val ADMIN_PASS = "S4f!l0CDR"
+
+@Startup
 @ApplicationScoped
 class AuthService {
     @Inject
@@ -66,6 +71,20 @@ class AuthService {
 
     @PostConstruct
     private fun init() {
+        logger.info("Creating admin user")
+
+        val user = User(
+            "Admin", ADMIN_NAME, BcryptUtil.bcryptHash(ADMIN_PASS), mutableSetOf(Role.ADMIN)
+        )
+
+        Panache.withTransaction {
+            userRepository.persistAndFlush(user)
+        }.subscribe().with({
+            logger.info("Done")
+        }, { fail ->
+            logger.error("Failed admin creation: $fail")
+        })
+
         logger.info("Initializing Authentication Service")
         val file = AuthService::class.java.getResourceAsStream(keyPath)
 
