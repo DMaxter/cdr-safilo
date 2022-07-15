@@ -72,3 +72,33 @@ export default {
   }
 };
 </script>
+
+<!--
+<v-dialog
+        transition="dialog-bottom-transition"
+        max-width="600"
+        id="dialogo"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            width="33%" class="mt-16 white--text" color="#6e4e5d" 
+            v-bind="attrs"
+            v-on="on"
+            @click="$router.push('profile')"
+          >Entrar</v-btn>
+        </template>
+        <template v-slot:default="dialog">
+          <v-card>
+            <v-card-text>
+              <div class="text-h6 pt-12">O nome de utilizador ou palavra-passe está incorreto</div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                @click="dialog.value = false"
+              >Voltar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
+-->

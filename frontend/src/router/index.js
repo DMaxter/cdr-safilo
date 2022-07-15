@@ -40,7 +40,48 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrder2.vue')
+  },
+  {
+    path: '/order3',
+    name: 'order3',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrder3.vue')
+  },
+  {
+    path: '/recoverCode',
+    name: 'recoverCode',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerLoginPassword.vue')
+  },
+  {
+    path: '/redefinePassword',
+    name: 'redefinePassword',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerLoginPasswordChange.vue')
+  },
+  {
+    path: '/passwordChange',
+    name: 'passwordChange',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerProfilePassword.vue')
+  },
+  {
+    path: '/history',
+    name: 'history',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerHistory.vue')
   }
+  
   
 
 ]

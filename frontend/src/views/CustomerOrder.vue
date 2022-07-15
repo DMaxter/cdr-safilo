@@ -16,7 +16,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('history')">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>

@@ -98,6 +98,7 @@
            </v-col>
             <v-col cols="auto">
             <v-btn
+              @click="$router.push('order3')"
               class="d-flex flex-column"
               outlined
               rounded
@@ -117,7 +118,7 @@
 <script>
 
 export default {
-  name: 'CustomerSearch',
+  name: 'CustomerOrder2',
 
   components: {
   },

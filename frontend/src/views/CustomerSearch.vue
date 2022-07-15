@@ -5,27 +5,6 @@
     <v-row justify="center" align="center">
         <v-col cols="auto" >
           <v-card elevation="12" outlined color="#FAFAFA" height="600" width="800" style="border-radius: 15px">
-    <v-app-bar
-      :collapse="!collapseOnScroll"
-      color="#6e4e5d"
-      dark
-      dense
-    >
-
-      <v-tabs fixed-tabs>
-          <v-tab>Tab 1</v-tab>
-          <v-tab>Tab 2</v-tab>
-          <v-tab>Tab 3</v-tab>
-          <v-tab>Tab 4</v-tab>
-        </v-tabs>
-      <v-spacer></v-spacer>
-
-      <v-checkbox
-        v-model="collapseOnScroll"
-        color="white"
-        hide-details
-      ></v-checkbox>
-    </v-app-bar>
           <v-row no-gutters justify="center">
 
             <v-btn-toggle dark dense rounded style="border-radius: 15px">
@@ -37,7 +16,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('history')">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>

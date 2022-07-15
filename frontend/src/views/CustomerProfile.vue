@@ -7,7 +7,7 @@
           <v-card elevation="12" outlined color="#FAFAFA" height="600" width="800" style="border-radius: 15px">
           <v-row no-gutters justify="center">
 
-            <v-btn-toggle v-model="icon" light dense mandatory rounded style="border-radius: 15px">
+            <v-btn-toggle v-model="icon" dark dense mandatory rounded style="border-radius: 15px">
               <v-btn color="#6e4e5d" value="left">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
@@ -16,7 +16,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('history')">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -68,10 +68,7 @@
               </v-col>
               <v-col cols = 4 class="d-flex flex-column ml-10" align="left"> Email 
                 <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> xyz@gmail.com </v-main> 
-            </v-col>
-            <v-btn class="d-flex mt-9 white--text" color="#6e4e5d" height="25" elevation="2" rounded> Alterar 
-              <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
-            </v-btn>    
+            </v-col>  
              </v-row>
              <v-row justify="left" align="left" class="d-flex ml-4 pt-7">
               <v-col cols = 1>
@@ -82,7 +79,7 @@
               <v-col cols = 3 class="d-flex flex-column ml-10" align="left"> Password
                 <v-main class="grey lighten-2 text-no-wrap rounded-pill" width="" align="center"> ****** </v-main> 
             </v-col>
-            <v-btn class="d-flex mt-9 white--text" color="#6e4e5d" height="25" elevation="2" rounded> Alterar 
+            <v-btn class="d-flex mt-9 white--text" color="#6e4e5d" height="25" elevation="2" rounded  @click="$router.push('passwordChange')"> Alterar 
               <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
             </v-btn>    
              </v-row>
