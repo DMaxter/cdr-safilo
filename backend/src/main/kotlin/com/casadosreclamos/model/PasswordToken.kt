@@ -5,11 +5,11 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class PasswordToken {
+open class PasswordToken {
     @EmbeddedId
-    lateinit var id: PasswordTokenId
+    open lateinit var id: PasswordTokenId
 
-    lateinit var expiry: Date
+    open lateinit var expiry: Date
 }
 
 @Embeddable

@@ -70,7 +70,7 @@ class AuthService {
     lateinit var key: PrivateKey
 
     @PostConstruct
-    private fun init() {
+    fun init() {
         logger.info("Creating admin user")
 
         val user = User(
@@ -78,7 +78,7 @@ class AuthService {
         )
 
         Panache.withTransaction {
-            userRepository.persistAndFlush(user)
+            userRepository.persist(user)
         }.subscribe().with({
             logger.info("Done")
         }, { fail ->

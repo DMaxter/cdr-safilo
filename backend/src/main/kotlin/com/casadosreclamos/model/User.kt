@@ -9,7 +9,7 @@ import javax.persistence.*
 
 @Entity
 @UserDefinition
-class User() {
+open class User() {
     constructor(name: String, email: String, password: String, roles: MutableSet<Role>) : this() {
         this.name = name
         this.email = email
@@ -19,19 +19,19 @@ class User() {
 
     @Id
     @Username
-    lateinit var email: String
+    open lateinit var email: String
 
     @Password
-    lateinit var password: String
+    open lateinit var password: String
 
-    lateinit var name: String
+    open lateinit var name: String
 
     @Roles
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
-    lateinit var roles: MutableSet<Role>
+    open lateinit var roles: MutableSet<Role>
 
-    var credits: Double = 0.0
+    open var credits: Double = 0.0
 
     // TODO: Add list of brands
 }

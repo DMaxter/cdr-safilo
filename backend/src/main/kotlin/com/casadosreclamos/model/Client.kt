@@ -4,19 +4,19 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-class Client {
+open class Client {
     @Id
-    var id: Long = 0
+    open var id: Long = 0
 
-    lateinit var name: String
+    open lateinit var name: String
 
-    lateinit var address: String
+    open lateinit var address: String
 
-    var fiscalNumber: Long = 0
+    open var fiscalNumber: Long = 0
 
-    lateinit var postalCode: String
+    open lateinit var postalCode: String
 
-    lateinit var email: String
+    open lateinit var email: String
 
-    lateinit var phone: String
+    open lateinit var phone: String
 }
