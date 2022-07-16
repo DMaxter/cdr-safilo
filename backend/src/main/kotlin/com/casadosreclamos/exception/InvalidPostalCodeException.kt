@@ -1,4 +1,5 @@
 package com.casadosreclamos.exception
 
-class InvalidPostalCodeException: Exception() {
-}
+private const val MSG = "Invalid postal code"
+
+class InvalidPostalCodeException: CDRException(MSG)

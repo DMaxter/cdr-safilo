@@ -40,7 +40,7 @@ class ClientService {
         // TODO: verify valid phone
         // TODO: verify valid postal code
         if (clientDto.id == null || clientDto.id!! <= 0) {
-            throw InvalidIdException()
+            throw InvalidIdException("client")
         } else if (clientDto.email == null || clientDto.email!!.isEmpty()) {
             throw InvalidEmailException()
         } else if (clientDto.name == null || clientDto.name!!.isEmpty()) {

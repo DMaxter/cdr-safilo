@@ -1,4 +1,5 @@
 package com.casadosreclamos.exception
 
-class InvalidIdException: Exception() {
-}
+private const val MSG = "Invalid id for "
+
+class InvalidIdException(field: String): CDRException(MSG + field)

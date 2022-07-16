@@ -1,4 +1,5 @@
 package com.casadosreclamos.exception
 
-class InvalidPhoneException: Exception() {
-}
+private const val MSG = "Invalid phone"
+
+class InvalidPhoneException: CDRException(MSG)

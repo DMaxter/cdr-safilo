@@ -12,38 +12,18 @@ private val LOGGER = LoggerFactory.getLogger(ExceptionMapper::class.java)
 data class ExceptionError(val msg: String)
 
 class ExceptionMapper {
-    //@ServerExceptionMapper
+    @ServerExceptionMapper
     fun map(e: Exception): Uni<Response> {
-        LOGGER.warn("Received general exception $e")
+        LOGGER.error("Received general exception $e")
+        e.printStackTrace()
 
-        return Uni.createFrom().item(Response.serverError().entity(e).build())
+        return Uni.createFrom().item(Response.serverError().build())
     }
 
     @ServerExceptionMapper
-    fun map(e: InvalidUserException): Uni<Response> {
-        LOGGER.error("Invalid user")
+    fun map(e: CDRException): Uni<Response> {
+        LOGGER.error(e.msg)
         return Uni.createFrom()
-            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid user")).build())
-    }
-
-    @ServerExceptionMapper
-    fun map(e: InvalidTokenException): Uni<Response> {
-        LOGGER.error("Invalid token")
-        return Uni.createFrom()
-            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid token")).build())
-    }
-
-    @ServerExceptionMapper
-    fun map(e: InvalidPasswordException): Uni<Response> {
-        LOGGER.error("Invalid password")
-        return Uni.createFrom()
-            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid password")).build())
-    }
-
-    @ServerExceptionMapper
-    fun map(e: InvalidCredentialsException): Uni<Response> {
-        LOGGER.error("Invalid credentials")
-        return Uni.createFrom()
-            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError("Invalid credentials")).build())
+            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError(e.msg)).build())
     }
 }

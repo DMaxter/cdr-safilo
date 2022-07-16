@@ -1,4 +1,5 @@
 package com.casadosreclamos.exception
 
-class InvalidNameException: Exception() {
-}
+private const val MSG = "Invalid name"
+
+class InvalidNameException: CDRException(MSG)

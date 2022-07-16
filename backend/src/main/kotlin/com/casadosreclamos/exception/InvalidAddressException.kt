@@ -1,4 +1,6 @@
 package com.casadosreclamos.exception
 
-class InvalidAddressException: Exception() {
+private const val MSG = "Invalid address"
+
+class InvalidAddressException: CDRException(MSG) {
 }

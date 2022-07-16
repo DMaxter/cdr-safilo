@@ -1,4 +1,5 @@
 package com.casadosreclamos.exception
 
-class InvalidUserException: Exception() {
-}
+private const val MSG = "Invalid user"
+
+class InvalidUserException: CDRException(MSG)
