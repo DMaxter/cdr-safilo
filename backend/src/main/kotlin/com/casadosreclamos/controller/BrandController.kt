@@ -50,7 +50,7 @@ class BrandController {
     }
 
     @POST
-    @Path("/{id}")
+    @Path("image/{id}")
     @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
     @Operation(summary = "Add images to a brand")
     @APIResponses(
