@@ -7,12 +7,10 @@ import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
-import java.security.Principal
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
-import javax.ws.rs.core.Context
 import javax.ws.rs.core.Response
 
 @Path("/user")

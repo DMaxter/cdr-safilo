@@ -1,8 +1,8 @@
 package com.casadosreclamos.controller
 
+import com.casadosreclamos.dto.BrandDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
-import com.casadosreclamos.model.request.Brand
 import com.casadosreclamos.service.BrandService
 import io.quarkus.security.Authenticated
 import io.smallrye.mutiny.Multi
@@ -45,7 +45,20 @@ class BrandController {
         APIResponse(responseCode = "200", description = "Brands obtained"),
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
-    fun getAllBrands(): Multi<Brand> {
+    fun getAllBrands(): Multi<BrandDto> {
         return brandService.getAll()
+    }
+
+    @POST
+    @Path("/{id}")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Add images to a brand")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful image registration"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to add images to a brand")
+    )
+    fun addImages(@PathParam("id") brand: Long, images: List<String>): Uni<Response> {
+        return brandService.addImages(brand, images)
     }
 }
