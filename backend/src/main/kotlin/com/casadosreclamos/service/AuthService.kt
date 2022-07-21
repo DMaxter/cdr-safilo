@@ -79,11 +79,13 @@ class AuthService {
 
         Panache.withTransaction {
             userRepository.persist(user)
-        }.subscribe().with({
-            logger.info("Done")
-        }, { fail ->
-            logger.error("Failed admin creation: $fail")
-        })
+        }.onItemOrFailure().invoke { _: User, fail: Throwable? ->
+            if (fail == null) {
+                logger.info("Done")
+            } else {
+                logger.error("Failed admin creation: $fail")
+            }
+        }.await().indefinitely()
 
         logger.info("Initializing Authentication Service")
         val file = AuthService::class.java.getResourceAsStream(keyPath)
