@@ -26,6 +26,7 @@ import java.security.MessageDigest
 import java.security.PrivateKey
 import java.security.SecureRandom
 import java.security.spec.PKCS8EncodedKeySpec
+import java.time.Duration
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
@@ -33,11 +34,15 @@ import javax.inject.Inject
 import javax.ws.rs.core.NewCookie
 import javax.ws.rs.core.Response
 
+// JWT Configuration
 private const val ALGORITHM = "RSA"
 private const val TOKEN_LEN: Long = 64
 
+// Default user credentials
 private const val ADMIN_NAME = "admin"
 private const val ADMIN_PASS = "S4f!l0CDR"
+
+private const val TIME: Long = 3 // hours
 
 @Startup
 @ApplicationScoped
@@ -80,13 +85,14 @@ class AuthService {
         Panache.withTransaction {
             userRepository.findByName(ADMIN_NAME).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
                 if (user == null) {
-                    return@transformToUni userRepository.persist(admin).onItemOrFailure().invoke { _: User?, error: Throwable? ->
-                        if (fail == null) {
-                            logger.info("Admin created successfully")
-                        } else {
-                            logger.error("Failed to create admin: $error")
+                    return@transformToUni userRepository.persist(admin).onItemOrFailure()
+                        .invoke { _: User?, error: Throwable? ->
+                            if (fail == null) {
+                                logger.info("Admin created successfully")
+                            } else {
+                                logger.error("Failed to create admin: $error")
+                            }
                         }
-                    }
                 } else if (fail != null) {
                     logger.error("Failed to find admin: $fail")
                 } else {
@@ -156,7 +162,12 @@ class AuthService {
                     Uni.createFrom().item(user)
                 }
             }.onItem().transform { user: User ->
-                Response.ok().cookie(NewCookie(cookie, generateJwt(user), "/", domain, "", -1, true, true)).build()
+                Response.ok().cookie(
+                    NewCookie(
+                        cookie, generateJwt(user), "/", domain, "",
+                        Duration.ofHours(TIME).seconds.toInt(), true, true
+                    )
+                ).build()
             }
     }
 
@@ -235,7 +246,8 @@ class AuthService {
     }
 
     private fun generateJwt(user: User): String {
-        return Jwt.issuer(issuer).claim("sub", user.email).claim("roles", user.roles).sign(key)
+        return Jwt.issuer(issuer).claim("sub", user.email).claim("roles", user.roles).expiresIn(Duration.ofHours(TIME))
+            .sign(key)
     }
 
     private fun sha512(bytes: ByteArray): String {
