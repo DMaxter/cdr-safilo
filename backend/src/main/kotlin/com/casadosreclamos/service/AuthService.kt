@@ -73,17 +73,27 @@ class AuthService {
     fun init() {
         logger.info("Creating admin user")
 
-        val user = User(
+        val admin = User(
             "Admin", ADMIN_NAME, BcryptUtil.bcryptHash(ADMIN_PASS), mutableSetOf(Role.ADMIN)
         )
 
         Panache.withTransaction {
-            userRepository.persist(user)
-        }.onItemOrFailure().invoke { _: User, fail: Throwable? ->
-            if (fail == null) {
-                logger.info("Done")
-            } else {
-                logger.error("Failed admin creation: $fail")
+            userRepository.findByName(ADMIN_NAME).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
+                if (user == null) {
+                    return@transformToUni userRepository.persist(admin).onItemOrFailure().invoke { _: User?, error: Throwable? ->
+                        if (fail == null) {
+                            logger.info("Admin created successfully")
+                        } else {
+                            logger.error("Failed to create admin: $error")
+                        }
+                    }
+                } else if (fail != null) {
+                    logger.error("Failed to find admin: $fail")
+                } else {
+                    logger.warn("Admin already created")
+                }
+
+                return@transformToUni Uni.createFrom().nullItem()
             }
         }.await().indefinitely()
 
