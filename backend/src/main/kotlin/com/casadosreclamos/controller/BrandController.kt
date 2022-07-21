@@ -2,6 +2,7 @@ package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.BrandDto
 import com.casadosreclamos.model.ADMIN_ROLE
+import com.casadosreclamos.model.CDR_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.BrandService
 import io.quarkus.security.Authenticated
@@ -13,6 +14,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+import javax.ws.rs.DELETE
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -50,7 +52,7 @@ class BrandController {
     }
 
     @POST
-    @Path("image/{id}")
+    @Path("/image/{id}")
     @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
     @Operation(summary = "Add images to a brand")
     @APIResponses(
@@ -60,5 +62,18 @@ class BrandController {
     )
     fun addImages(@PathParam("id") brand: Long, images: List<String>): Uni<Response> {
         return brandService.addImages(brand, images)
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Remove a brand")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful brand deletion"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to add images to a brand")
+    )
+    fun deleteBrand(@PathParam("id") id: Long): Uni<Response> {
+        return brandService.delete(id)
     }
 }

@@ -1,6 +1,7 @@
 package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.BrandDto
+import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.InvalidNameException
 import com.casadosreclamos.model.request.Brand
 import com.casadosreclamos.model.request.Image
@@ -67,5 +68,11 @@ class BrandService {
             logger.error(e)
             Response.serverError().build()
         }
+    }
+
+    @Throws(InvalidIdException::class)
+    fun delete(id: Long): Uni<Response> {
+        return Panache.withTransaction { brandRepository.deleteById(id) }.onItem()
+            .transform { Response.ok().build() }.onFailure().transform { InvalidIdException("brand") }
     }
 }
