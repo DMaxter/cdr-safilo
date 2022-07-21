@@ -13,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+import javax.ws.rs.DELETE
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -47,5 +48,18 @@ class MaterialController {
     )
     fun getAllMaterial(): Multi<Material> {
         return materialService.getAll()
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Remove a material")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful material deletion"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
+    )
+    fun deleteMaterial(@PathParam("id") id: Long): Uni<Response> {
+        return materialService.delete(id)
     }
 }

@@ -1,6 +1,7 @@
 package com.casadosreclamos.service
 
 import com.casadosreclamos.exception.InvalidCostException
+import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.InvalidNameException
 import com.casadosreclamos.model.request.Material
 import com.casadosreclamos.repo.MaterialRepository
@@ -36,5 +37,11 @@ class MaterialService {
 
         return Panache.withTransaction { materialRepository.persist(material) }.onItem()
             .transform { Response.ok().build() }.onFailure().recoverWithItem { _ -> Response.serverError().build() }
+    }
+
+    @Throws(InvalidIdException::class)
+    fun delete(id: Long): Uni<Response> {
+        return Panache.withTransaction { materialRepository.deleteById(id) }.onItem()
+            .transform { Response.ok().build() }.onFailure().transform { InvalidIdException("material") }
     }
 }
