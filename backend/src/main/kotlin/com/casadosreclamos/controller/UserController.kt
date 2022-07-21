@@ -10,7 +10,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.GET
+import javax.ws.rs.PUT
 import javax.ws.rs.Path
+import javax.ws.rs.PathParam
 import javax.ws.rs.core.Response
 
 @Path("/user")
@@ -31,5 +33,18 @@ class UserController {
     )
     fun getUserInfo(): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id -> userService.getInfo(id.principal.name) }
+    }
+
+    @PUT
+    @Path("/password/{old}/{new}")
+    @Authenticated
+    @Operation(summary = "Change user password")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Password updated"),
+        APIResponse(responseCode = "401", description = "No user session exists")
+    )
+    fun changePassword(@PathParam("old") old: String, @PathParam("new") new: String): Uni<Response> {
+        return identity.deferredIdentity.onItem()
+            .transformToUni { id -> userService.changePassword(id.principal.name, old, new) }
     }
 }
