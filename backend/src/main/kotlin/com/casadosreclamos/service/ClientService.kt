@@ -21,8 +21,8 @@ class ClientService {
     @Inject
     lateinit var clientRepository: ClientRepository
 
-    fun getAll(): Multi<Client> {
-        return clientRepository.streamAll()
+    fun getAll(): Multi<ClientDto> {
+        return clientRepository.streamAll().map { ClientDto(it) }
     }
 
     @Throws(

@@ -1,8 +1,8 @@
 package com.casadosreclamos.controller
 
+import com.casadosreclamos.dto.MaterialDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.CDR_ROLE
-import com.casadosreclamos.model.request.Material
 import com.casadosreclamos.service.MaterialService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
@@ -15,11 +15,7 @@ import org.jboss.logging.Logger
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.DELETE
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
+import javax.ws.rs.*
 import javax.ws.rs.core.Response
 
 @Path("/material")
@@ -58,7 +54,7 @@ class MaterialController {
         APIResponse(responseCode = "200", description = "Materials obtained"),
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
-    fun getAllMaterial(): Multi<Material> {
+    fun getAllMaterial(): Multi<MaterialDto> {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
             logger.debug("User ${id.principal.name} is requesting all materials")
 

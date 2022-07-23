@@ -40,7 +40,7 @@ class ClientController {
         APIResponse(responseCode = "200", description = "Clients obtained"),
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
-    fun getAllClients(): Multi<Client> {
+    fun getAllClients(): Multi<ClientDto> {
         return identity.deferredIdentity.onItem().transformToMulti {id ->
             logger.info("User ${id.principal.name} is requesting all clients")
 

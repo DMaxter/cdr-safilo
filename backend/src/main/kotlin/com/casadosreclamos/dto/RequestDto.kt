@@ -14,8 +14,8 @@ data class RequestDto(
     var lastUpdate: Date?,
     var trackingCode: String?,
     var status: RequestStatus,
-    var brand: String?,
-    var material: String?,
+    var brand: BrandDto?,
+    var material: MaterialDto?,
     var measurements: Measurements?,
     var application: Boolean?,
     var images: RequestTypeDto?
@@ -28,8 +28,8 @@ data class RequestDto(
         request.lastUpdate,
         request.trackingCode,
         request.status,
-        request.info.brand.name,
-        request.info.material.name,
+        BrandDto(request.info.brand),
+        MaterialDto(request.info.material),
         request.info.measurement,
         request.info.application,
         RequestTypeDto.from(request.info.type)

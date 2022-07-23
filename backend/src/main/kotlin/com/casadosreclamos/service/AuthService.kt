@@ -2,6 +2,7 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.AuthDto
 import com.casadosreclamos.dto.RegisterDto
+import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.exception.*
 import com.casadosreclamos.model.PasswordToken
 import com.casadosreclamos.model.PasswordTokenId
@@ -147,8 +148,8 @@ class AuthService {
             }
     }
 
-    fun getAll(): Multi<User> {
-        return userRepository.streamAll()
+    fun getAll(): Multi<UserDto> {
+        return userRepository.streamAll().map { UserDto(it) }
     }
 
     @Throws(InvalidCredentialsException::class)

@@ -2,9 +2,9 @@ package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.AuthDto
 import com.casadosreclamos.dto.RegisterDto
+import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
-import com.casadosreclamos.model.User
 import com.casadosreclamos.service.AuthService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
@@ -49,7 +49,7 @@ class AuthController {
     @GET
     @PermitAll
     @Path("/all")
-    fun getAllUsers(): Multi<User> {
+    fun getAllUsers(): Multi<UserDto> {
         logger.info("Obtaining all users")
 
         return authService.getAll()

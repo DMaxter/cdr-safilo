@@ -1,5 +1,6 @@
 package com.casadosreclamos.service
 
+import com.casadosreclamos.dto.MaterialDto
 import com.casadosreclamos.exception.InvalidCostException
 import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.InvalidNameException
@@ -21,8 +22,8 @@ class MaterialService {
     @Inject
     lateinit var materialRepository: MaterialRepository
 
-    fun getAll(): Multi<Material> {
-        return materialRepository.streamAll()
+    fun getAll(): Multi<MaterialDto> {
+        return materialRepository.streamAll().map { MaterialDto(it) }
     }
 
     @Throws(InvalidNameException::class, InvalidCostException::class)
