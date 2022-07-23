@@ -5,11 +5,13 @@ import com.casadosreclamos.model.CDR_ROLE
 import com.casadosreclamos.model.request.Material
 import com.casadosreclamos.service.MaterialService
 import io.quarkus.security.Authenticated
+import io.quarkus.security.identity.CurrentIdentityAssociation
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
+import org.jboss.logging.Logger
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -24,6 +26,12 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class MaterialController {
     @Inject
+    lateinit var logger: Logger
+
+    @Inject
+    lateinit var identity: CurrentIdentityAssociation
+
+    @Inject
     lateinit var materialService: MaterialService
 
     @POST
@@ -36,7 +44,11 @@ class MaterialController {
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
     )
     fun addMaterial(@PathParam("material") name: String, @PathParam("cost") cost: Double): Uni<Response> {
-        return materialService.add(name, cost)
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is adding material \"$name\"")
+
+            return@transformToUni materialService.add(name, cost)
+        }
     }
 
     @GET
@@ -47,7 +59,11 @@ class MaterialController {
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
     fun getAllMaterial(): Multi<Material> {
-        return materialService.getAll()
+        return identity.deferredIdentity.onItem().transformToMulti { id ->
+            logger.debug("User ${id.principal.name} is requesting all materials")
+
+            return@transformToMulti materialService.getAll()
+        }
     }
 
     @DELETE
@@ -59,7 +75,11 @@ class MaterialController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
     )
-    fun deleteMaterial(@PathParam("id") id: Long): Uni<Response> {
-        return materialService.delete(id)
+    fun deleteMaterial(@PathParam("id") material: Long): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is deleting material with id $material")
+
+            return@transformToUni materialService.delete(material)
+        }
     }
 }

@@ -1,10 +1,8 @@
 package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.AuthDto
-import com.casadosreclamos.exception.InvalidCredentialsException
-import com.casadosreclamos.exception.InvalidPasswordException
-import com.casadosreclamos.exception.InvalidTokenException
-import com.casadosreclamos.exception.InvalidUserException
+import com.casadosreclamos.dto.RegisterDto
+import com.casadosreclamos.exception.*
 import com.casadosreclamos.model.PasswordToken
 import com.casadosreclamos.model.PasswordTokenId
 import com.casadosreclamos.model.Role
@@ -111,36 +109,42 @@ class AuthService {
             val content = PemReader(InputStreamReader(file)).readPemObject().content
 
             key = KeyFactory.getInstance(ALGORITHM).generatePrivate(PKCS8EncodedKeySpec(content))
+
+            logger.info("Authentication Service initialized successfully")
+
             return
             // Do nothing
         }
 
+        logger.error("Couldn't find a signing key for JWT")
         throw RuntimeException("No signing key found")
     }
 
     @Throws(InvalidCredentialsException::class)
-    fun register(credentials: AuthDto): Uni<Response> {
-        logger.info("Registering user ${credentials.username}")
-
+    fun register(credentials: RegisterDto): Uni<Response> {
         val user = User()
 
-        if (credentials.username == null || credentials.password == null || credentials.username!!.isEmpty() || credentials.password!!.isEmpty()) {
+        if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
             throw InvalidCredentialsException()
+        } else if (credentials.name == null || credentials.name!!.isEmpty()) {
+            throw InvalidNameException()
         }
 
         // TODO: verify valid email
 
-        user.email = credentials.username!!
+        user.email = credentials.email!!
         user.password = BcryptUtil.bcryptHash(credentials.password!!)
         user.roles = mutableSetOf(Role.COMMERCIAL)
-        // TODO: ask for name
-        user.name = "ASD"
+        user.name = credentials.name!!
 
         // TODO: send mail with credentials
         // TODO: check if user already registered
 
         return Panache.withTransaction { userRepository.persist(user) }.onItem().transform { Response.ok(user).build() }
-            .onFailure().recoverWithItem { _ -> Response.serverError().build() }
+            .onFailure().recoverWithItem { e ->
+                logger.error(e)
+                Response.serverError().build()
+            }
     }
 
     fun getAll(): Multi<User> {
@@ -150,11 +154,11 @@ class AuthService {
     @Throws(InvalidCredentialsException::class)
     fun login(credentials: AuthDto): Uni<Response> {
 
-        if (credentials.username == null || credentials.password == null || credentials.username!!.isEmpty() || credentials.password!!.isEmpty()) {
+        if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
             throw InvalidCredentialsException()
         }
 
-        return Panache.withTransaction { userRepository.findByName(credentials.username!!) }.onItem().ifNull()
+        return Panache.withTransaction { userRepository.findByName(credentials.email!!) }.onItem().ifNull()
             .failWith { InvalidCredentialsException() }.onItem().ifNotNull().transformToUni { user ->
                 if (!BcryptUtil.matches(credentials.password!!, user.password)) {
                     Uni.createFrom().failure(InvalidCredentialsException())

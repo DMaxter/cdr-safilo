@@ -7,6 +7,7 @@ import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
+import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -18,6 +19,9 @@ import javax.ws.rs.core.Response
 @Path("/user")
 @ApplicationScoped
 class UserController {
+    @Inject
+    lateinit var logger: Logger
+
     @Inject
     lateinit var identity: CurrentIdentityAssociation
 
@@ -32,7 +36,11 @@ class UserController {
         APIResponse(responseCode = "401", description = "No user session exists")
     )
     fun getUserInfo(): Uni<Response> {
-        return identity.deferredIdentity.onItem().transformToUni { id -> userService.getInfo(id.principal.name) }
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is requesting their personal information")
+
+            userService.getInfo(id.principal.name)
+        }
     }
 
     @PUT
@@ -44,7 +52,10 @@ class UserController {
         APIResponse(responseCode = "401", description = "No user session exists")
     )
     fun changePassword(@PathParam("old") old: String, @PathParam("new") new: String): Uni<Response> {
-        return identity.deferredIdentity.onItem()
-            .transformToUni { id -> userService.changePassword(id.principal.name, old, new) }
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is changing their password")
+
+            userService.changePassword(id.principal.name, old, new)
+        }
     }
 }

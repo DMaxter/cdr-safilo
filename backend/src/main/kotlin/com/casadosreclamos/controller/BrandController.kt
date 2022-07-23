@@ -6,11 +6,13 @@ import com.casadosreclamos.model.CDR_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.BrandService
 import io.quarkus.security.Authenticated
+import io.quarkus.security.identity.CurrentIdentityAssociation
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
+import org.jboss.logging.Logger
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -25,6 +27,12 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class BrandController {
     @Inject
+    lateinit var logger: Logger
+
+    @Inject
+    lateinit var identity: CurrentIdentityAssociation
+
+    @Inject
     lateinit var brandService: BrandService
 
     @POST
@@ -37,7 +45,11 @@ class BrandController {
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a brand")
     )
     fun addBrand(@PathParam("brand") brand: String): Uni<Response> {
-        return brandService.add(brand)
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is adding brand \"$brand\"")
+
+            return@transformToUni brandService.add(brand)
+        }
     }
 
     @GET
@@ -48,7 +60,11 @@ class BrandController {
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
     fun getAllBrands(): Multi<BrandDto> {
-        return brandService.getAll()
+        return identity.deferredIdentity.onItem().transformToMulti { id ->
+            logger.debug("User ${id.principal.name} is requesting all brands")
+
+            return@transformToMulti brandService.getAll()
+        }
     }
 
     @POST
@@ -61,7 +77,11 @@ class BrandController {
         APIResponse(responseCode = "403", description = "User doesn't have authorization to add images to a brand")
     )
     fun addImages(@PathParam("id") brand: Long, images: List<String>): Uni<Response> {
-        return brandService.addImages(brand, images)
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is adding ${images.size} images to brand with id $brand")
+
+            return@transformToUni brandService.addImages(brand, images)
+        }
     }
 
     @DELETE
@@ -73,7 +93,11 @@ class BrandController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to add images to a brand")
     )
-    fun deleteBrand(@PathParam("id") id: Long): Uni<Response> {
-        return brandService.delete(id)
+    fun deleteBrand(@PathParam("id") brand: Long): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is deleting brand with id $brand")
+
+            return@transformToUni brandService.delete(brand)
+        }
     }
 }

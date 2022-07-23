@@ -32,8 +32,6 @@ class BrandService {
 
     @Throws(InvalidNameException::class)
     fun add(brandName: String): Uni<Response> {
-        logger.info("Adding brand $brandName")
-
         if (brandName.isEmpty()) {
             throw InvalidNameException()
         }

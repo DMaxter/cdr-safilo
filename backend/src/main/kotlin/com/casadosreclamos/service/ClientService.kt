@@ -32,8 +32,6 @@ class ClientService {
         InvalidAddressException::class
     )
     fun register(clientDto: ClientDto): Uni<Response> {
-        logger.info("Registering client ${clientDto.name}")
-
         val client = Client()
 
         // TODO: verify valid email
@@ -64,6 +62,9 @@ class ClientService {
         client.postalCode = clientDto.postalCode!!
 
         return Panache.withTransaction { clientRepository.persist(client) }.onItem().transform { Response.ok().build() }
-            .onFailure().recoverWithItem { _ -> Response.serverError().build() }
+            .onFailure().recoverWithItem { e ->
+                logger.error(e)
+                Response.serverError().build()
+            }
     }
 }

@@ -8,12 +8,16 @@ import com.casadosreclamos.repo.MaterialRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
+import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class MaterialService {
+    @Inject
+    lateinit var logger: Logger
+
     @Inject
     lateinit var materialRepository: MaterialRepository
 
@@ -36,7 +40,11 @@ class MaterialService {
         // TODO: Check for existent material
 
         return Panache.withTransaction { materialRepository.persist(material) }.onItem()
-            .transform { Response.ok().build() }.onFailure().recoverWithItem { _ -> Response.serverError().build() }
+            .transform { Response.ok().build() }.onFailure().recoverWithItem { e ->
+                logger.error(e)
+
+                Response.serverError().build()
+            }
     }
 
     @Throws(InvalidIdException::class)

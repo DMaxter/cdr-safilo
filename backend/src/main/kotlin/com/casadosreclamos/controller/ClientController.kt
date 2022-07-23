@@ -6,11 +6,13 @@ import com.casadosreclamos.model.Client
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.ClientService
 import io.quarkus.security.Authenticated
+import io.quarkus.security.identity.CurrentIdentityAssociation
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
+import org.jboss.logging.Logger
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -23,6 +25,12 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class ClientController {
     @Inject
+    lateinit var logger: Logger
+
+    @Inject
+    lateinit var identity: CurrentIdentityAssociation
+
+    @Inject
     lateinit var clientService: ClientService
 
     @GET
@@ -33,7 +41,11 @@ class ClientController {
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
     fun getAllClients(): Multi<Client> {
-        return clientService.getAll()
+        return identity.deferredIdentity.onItem().transformToMulti {id ->
+            logger.info("User ${id.principal.name} is requesting all clients")
+
+            return@transformToMulti clientService.getAll()
+        }
     }
 
     @POST
@@ -45,6 +57,10 @@ class ClientController {
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a client")
     )
     fun registerClient(client: ClientDto): Uni<Response> {
-        return clientService.register(client)
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is registering client with name \"${client.name}\"")
+
+            return@transformToUni clientService.register(client)
+        }
     }
 }
