@@ -16,13 +16,18 @@ import com.casadosreclamos.model.Request
 import com.casadosreclamos.model.request.*
 import com.casadosreclamos.repo.*
 import io.quarkus.hibernate.reactive.panache.Panache
+import io.quarkus.mailer.Mail
+import io.quarkus.mailer.reactive.ReactiveMailer
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
+import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
+
+private const val CDR_EMAIL = "daniel99matos@gmail.com"
 
 @ApplicationScoped
 class RequestService {
@@ -52,6 +57,13 @@ class RequestService {
 
     @Inject
     lateinit var userRepository: UserRepository
+
+    @Inject
+    lateinit var mailer: ReactiveMailer
+
+    @Inject
+    @ConfigProperty(name = "cdr.email")
+    lateinit var cdrMail: String
 
     fun getAll(): Multi<RequestDto> {
         return requestRepository.streamAll().map { RequestDto(it) }
@@ -83,6 +95,11 @@ class RequestService {
         requestInfo.amount = requestDto.amount!!
         requestInfo.application = requestDto.application
 
+        lateinit var materialName: String
+        lateinit var clientName: String
+        lateinit var userName: String
+        lateinit var brandName: String
+
         return Panache.withTransaction {
             val clientUni =
                 clientRepository.findById(requestDto.clientId!!).onFailure().transform { InvalidIdException("client") }
@@ -107,7 +124,14 @@ class RequestService {
                         throw InvalidIdException("material")
                     }
 
+                    materialName = material.name
+                    clientName = client.name
+                    userName = user.name
+                    brandName = brand.name
+
                     // TODO: check plafond
+                    // TODO: Check if image from brand
+                    // TODO: Check if address from client
 
                     request.requester = user
                     request.client = client
@@ -126,6 +150,27 @@ class RequestService {
                     requestInfo.type = requestType
                     requestTypeRepository.persist(requestType)
                 }
+        }.onItem().transformToUni { _ ->
+            mailer.send(
+                Mail.withText(
+                    cdrMail, "Novo pedido efetuado por comercial da Safilo",
+                    """
+                    Foi efetuado um novo pedido à Casa dos Reclamos pelo utilizador.
+                    Resumo do pedido:
+                    
+                    Comercial: $userName
+                    Cliente: $clientName
+                    Material: $materialName
+                    Marca: $brandName
+                    Tipo de pedido: ${getType(requestDto.images!!)}
+                    
+                    Para ver todos os detalhes aceda à plataforma
+                    
+                    
+                    Este email é automático, por favor não responda 
+                    """.trimIndent()
+                )
+            )
         }.onItem().transform {
             Response.ok().build()
         }
@@ -190,5 +235,14 @@ class RequestService {
         val showcase = RightShowcase()
 
         return toShowcase(request, showcase)
+    }
+
+    private fun getType(request: RequestTypeDto): String {
+        return when(request) {
+            is OneDto -> "Uma face"
+            is TwoDto -> "Duas faces"
+            is ShowcaseDto -> "Montra"
+            else -> throw InvalidRequestTypeException()
+        }
     }
 }

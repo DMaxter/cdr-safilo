@@ -12,6 +12,8 @@ import com.casadosreclamos.repo.PasswordTokenRepository
 import com.casadosreclamos.repo.UserRepository
 import io.quarkus.elytron.security.common.BcryptUtil
 import io.quarkus.hibernate.reactive.panache.Panache
+import io.quarkus.mailer.Mail
+import io.quarkus.mailer.reactive.ReactiveMailer
 import io.quarkus.runtime.Startup
 import io.smallrye.jwt.build.Jwt
 import io.smallrye.mutiny.Multi
@@ -54,6 +56,9 @@ class AuthService {
 
     @Inject
     lateinit var tokenRepository: PasswordTokenRepository
+
+    @Inject
+    lateinit var mailer: ReactiveMailer
 
     @Inject
     @ConfigProperty(name = "mp.jwt.verify.issuer")
@@ -138,10 +143,24 @@ class AuthService {
         user.roles = mutableSetOf(Role.COMMERCIAL)
         user.name = credentials.name!!
 
-        // TODO: send mail with credentials
         // TODO: check if user already registered
 
-        return Panache.withTransaction { userRepository.persist(user) }.onItem().transform { Response.ok(user).build() }
+        return Panache.withTransaction { userRepository.persist(user) }.onItem().transformToUni { _ ->
+            mailer.send(
+                Mail.withText(
+                    user.email,
+                    "Registo na plataforma Safilo/CDR",
+                    """
+                        Foi efetuado um registo para o seu email na plataforma de pedidos para a Casa dos Reclamos com os seguintes dados
+                        
+                        Username: ${credentials.email}
+                        Password: ${credentials.password}
+                        
+                        
+                        Este é um email automático, por favor não responda"""
+                )
+            )
+        }.onItem().transform { Response.ok(user).build() }
             .onFailure().recoverWithItem { e ->
                 logger.error(e)
                 Response.serverError().build()
@@ -188,17 +207,17 @@ class AuthService {
             throw InvalidUserException()
         }
 
+        // Generate random alphanumeric token
+        val userToken =
+            SecureRandom().ints(48, 123).filter { (it <= 57 || it >= 64) && (it <= 90 || it >= 97) }.limit(
+                TOKEN_LEN
+            ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
+
         return Panache.withTransaction {
             userRepository.findByName(user).onItem().ifNotNull().transformToUni { user ->
                 val token = PasswordToken()
                 token.id = PasswordTokenId()
                 token.id.user = user.email
-
-                // Generate random alphanumeric token
-                val userToken =
-                    SecureRandom().ints(48, 123).filter { (it <= 57 || it >= 64) && (it <= 90 || it >= 97) }.limit(
-                        TOKEN_LEN
-                    ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
 
                 // Store only hash of token
                 token.id.token = sha512(userToken.toByteArray())
@@ -213,9 +232,17 @@ class AuthService {
 
                 logger.warn(userToken)
 
-                // TODO: Send mail with token
-
                 tokenRepository.persist(token)
+            }.onItem().transformToUni { _ ->
+                mailer.send(Mail.withText(user, "Pedido de substituição de password para a plataforma Safilo/CDR",
+                """
+                Foi efetuado um pedido de substituição de password para a conta associada a este email
+                
+                Para proceder à alteração da password aceda a https://${domain}/forget?email=$user&token=${userToken}
+                
+                
+                Este é um email automático, por favor não responda
+                """.trimIndent()))
             }.onItem().transform { Response.ok().build() }
         }
     }

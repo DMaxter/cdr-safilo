@@ -40,7 +40,7 @@ class AuthController {
     @APIResponses(APIResponse(responseCode = "200", description = "Successful user registration"))
     fun registerUser(credentials: RegisterDto): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} is registering user \"$credentials.email\"")
+            logger.info("User ${id.principal.name} is registering user \"${credentials.email}\"")
 
             return@transformToUni authService.register(credentials)
         }

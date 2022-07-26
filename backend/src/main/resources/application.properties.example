@@ -23,6 +23,18 @@ quarkus.security.security-providers=BC
 mp.jwt.token.header=Cookie
 mp.jwt.token.cookie=identity
 
+# Email
+## SMTP Settings
+quarkus.mailer.host=<HOST>
+quarkus.mailer.port=<PORT>
+quarkus.mailer.username=<USERNAME>
+quarkus.mailer.password=<PASSWORD>
+quarkus.mailer.from=<EMAIL>
+## Requests recipient
+cdr.email=<CDR EMAIL>
+## Disable mock in dev mode
+quarkus.mailer.mock=false
+
 ## JWT Algorithm parameters
 mp.jwt.verify.issuer=https://${domain.name}:${quarkus.http.port}
 mp.jwt.verify.publickey.algorithm=RS256
