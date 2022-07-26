@@ -176,6 +176,21 @@ class RequestService {
         }
     }
 
+    fun toProduction(requests: List<Long>): Uni<Response> {
+        // TODO: Check not empty or null
+
+        return Panache.withTransaction {
+            requestRepository.streamAll(requests).onItem().call { request ->
+                request.status = RequestStatus.IN_PRODUCTION
+
+                return@call Uni.createFrom().voidItem()
+            }.toUni()
+                .onItem().transform { _ ->
+                    Response.ok().build()
+                }
+        }
+    }
+
     private fun toRequestType(request: RequestTypeDto): Uni<out RequestType> {
         return when (request) {
             is OneDto -> toOneFace(request)
@@ -238,7 +253,7 @@ class RequestService {
     }
 
     private fun getType(request: RequestTypeDto): String {
-        return when(request) {
+        return when (request) {
             is OneDto -> "Uma face"
             is TwoDto -> "Duas faces"
             is ShowcaseDto -> "Montra"

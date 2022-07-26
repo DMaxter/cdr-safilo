@@ -18,6 +18,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.POST
+import javax.ws.rs.PUT
 import javax.ws.rs.Path
 import javax.ws.rs.core.Response
 
@@ -47,6 +48,21 @@ class RequestController {
             logger.info("User ${id.principal.name} is creating a request for client \"${request.clientId}\"")
 
             return@transformToUni requestService.add(request, id.principal.name)
+        }
+    }
+
+    @PUT
+    @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successfully put requests to production"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to issue a new request")
+    )
+    fun requestToProduction(requests: List<Long>): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} put requests $requests to production")
+
+            return@transformToUni requestService.toProduction(requests)
         }
     }
 
