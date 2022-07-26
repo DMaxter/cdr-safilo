@@ -62,6 +62,23 @@ class MaterialController {
         }
     }
 
+    @PUT
+    @Path("/{id}/{name}/{cost}")
+    @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Updates a material")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful material update"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
+    )
+    fun updateMaterial(@PathParam("id") materialId: Long, @PathParam("name") name: String, @PathParam("cost") cost: Double): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is updating material with id $materialId")
+
+            return@transformToUni materialService.update(materialId, name, cost)
+        }
+    }
+
     @DELETE
     @Path("/{id}")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)

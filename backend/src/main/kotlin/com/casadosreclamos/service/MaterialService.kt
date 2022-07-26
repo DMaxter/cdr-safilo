@@ -48,6 +48,24 @@ class MaterialService {
             }
     }
 
+    @Throws(InvalidNameException::class, InvalidCostException::class)
+    fun update(id: Long, name: String, cost: Double): Uni<Response> {
+        if (name.isEmpty()) {
+            throw InvalidNameException()
+        } else if (cost <= 0.0) {
+            throw InvalidCostException()
+        }
+
+        return Panache.withTransaction {
+            materialRepository.findById(id).onItem().transform { material ->
+                material.name = name
+                material.cost = cost
+
+                Response.ok().build()
+            }
+        }
+    }
+
     @Throws(InvalidIdException::class)
     fun delete(id: Long): Uni<Response> {
         return Panache.withTransaction { materialRepository.deleteById(id) }.onItem()
