@@ -6,7 +6,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
-            <v-menu
+                        <v-menu
             :offset-x="true"
             >
             <template v-slot:activator="{ on, attrs }">
@@ -59,52 +59,80 @@
 
             </v-btn-toggle>
           </v-menu>
+          </v-row> 
+          <v-row justify="center" align="center" no-gutters class="d-flex flex-column mt-5">
+            <v-row class="mt-1 mb-2" justify="center">
+            <v-col cols = "8">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                   <v-img :src=store.facesDefault[0].src height="40px" width="250.5px"></v-img>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "5" class="pa-0">
+                  <v-img :src=store.facesDefault[2].src height="60px" width="80px"></v-img>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0">
+                  <v-img :src=store.facesDefault[3].src height="60px" width="80px"></v-img>
+                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px"></v-img>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="4">
+            <v-row class="ml-1">
+            <v-col class="pa-0">
+              <v-img :src=store.facesDefault[4].src height="140px" width="80px"></v-img>
+            </v-col>
           </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-1">
-              <v-avatar color="#6e4e5d" size="100" class="mb-6">
-                <v-icon size="60" dark>
-                  mdi-account-circle
-                </v-icon>
-              </v-avatar>
-              Nome Comerciante
-            </v-row>
-            <v-divider></v-divider>
-            <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-              <v-avatar color="#6e4e5d" size="40" class="mb-2">
-                <v-icon size="24" dark>
-                  mdi-lock
-                </v-icon>
-              </v-avatar>
-              Alterar Palavra Passe
-            <v-col cols="auto" class="mt-6">
-              Palavra passe nova
-              <v-text-field
-                              style="width: 300px"
-                              class="mt-2"
-                              label="Nova Palavra Passe"
-                              type="text"
-                              rounded
-                              outlined
-                              hide-details
-                              v-model="username"></v-text-field>
-            </v-col>
-            <v-col cols="auto">
-              Confirmar palavra passe nova
-              <v-text-field
-                              style="width: 300px"
-                              class="mt-2"
-                              label="Nova Palavra Passe"
-                              type="text"
-                              rounded
-                              outlined
-                              hide-details
-                              v-model="username"></v-text-field>
-            </v-col>
-            </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 35px;">
+          </v-col>
+          </v-row>
+          <v-col cols="auto" class="mb-5">
+          </v-col>
+          <v-col cols="auto" >
+            <v-textarea
+          class="mt-0" 
+          style="width: 400px; border-radius: 15px"
+          rows="2"
+          no-resize
+          hide-details
+          outlined
+          name="input-7-4"
+          label="Quantidade"
+          value=""
+        ></v-textarea>
+          </v-col>
+          <v-col cols="5">
+            <v-row justify="end" class="mt-0">
+            <v-checkbox
+            v-model="checkbox"
+            hide-details
+            :label="`Aplicação?`"
+          ></v-checkbox>
+          </v-row>
+          </v-col>
+          <v-col cols="auto" >
+            <v-textarea
+          class="mt-8" 
+          style="width: 450px; border-radius: 15px"
+          rows="2"
+          height="100"
+          no-resize
+          hide-details
+          outlined
+          name="input-7-4"
+          label="Observações sobre o pedido"
+          value=""
+        ></v-textarea>
+          </v-col>
+          </v-row>
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 95px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profile')"
+              @click="$router.push('ABC')"
               class="d-flex flex-column"
               outlined
               rounded
@@ -115,6 +143,7 @@
            </v-col>
             <v-col cols="auto">
             <v-btn
+              @click="$router.push('ABCfinal2')"
               class="d-flex flex-column"
               outlined
               rounded
@@ -132,21 +161,21 @@
 </template>
 
 <script>
+import { store } from '@/store.js'
 
 export default {
-  name: 'CustomerProfile',
+  name: 'CustomerOrder3ABC',
 
   components: {
   },
 
   data: () => ({
-
+    store
   }),
 };
 </script>
 
 <style>
-
 #app {
     background: #3A1C71;
     background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);

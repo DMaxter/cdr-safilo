@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" height="60" width="170" @click="$router.push('history')">
+              <v-btn color="#6e4e5d" value="center1" height="60" width="170" class="v-btn--active">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" class="v-btn--active" height="60" width="170">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="60" width="170">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -60,58 +60,40 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-3">
-            <v-col cols="auto">
-                Procurar Cliente
-            </v-col>
-            <v-col cols="auto" >
-            <v-text-field
-            label=""
-            placeholder="Nome/Id"
-            filled
-            rounded
-            dense
-          ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
-            <v-col cols="auto">
-                Procurar por Material
-            </v-col>
-            <v-col cols="auto" >
-          <v-select
-          :items="items2"
-          label="Material"
-          dense
-          outlined
-        ></v-select>
-            </v-col>
-          </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
-            <v-col cols="auto">
-                Procurar por Estado
-            </v-col>
-            <v-col cols="auto" >
-          <v-select
-          :items="items"
-          label="Estado"
-          dense
-          outlined
-        ></v-select>
-            </v-col>
-          </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
-            <v-col cols="auto">
-              <v-btn
+          <v-row justify="center" align="center" class="d-flex flex-column mb-2 mt-2">
+              <v-avatar color="#6e4e5d" size="100" class="mb-6">
+                <v-icon size="60" dark>
+                  mdi-account-circle
+                </v-icon>
+              </v-avatar>
+              Nome Comerciante
+            </v-row>
+            <v-divider></v-divider>
+            <v-row justify="center" align="center" class="d-flex flex-column mt-2">
+                <v-data-table
+                  height = "280px"
+                  fixed-header
+                  :headers="headers"
+                  :items="desserts"
+                  hide-default-footer
+                  class="elevation-1"
+                ></v-data-table>
+            </v-row>
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
+           <v-col cols="auto" class="pl-4">
+            <v-btn
+              @click="$router.push('profile')"
               class="d-flex flex-column"
               outlined
-              x-large
               rounded
               color="#6e4e5d"
-            > Confirmar <v-icon >mdi-play</v-icon>
+            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
+            Voltar
             </v-btn>
+           </v-col>
+            <v-col cols="auto">
             </v-col>
-          </v-row>
+           </v-row>
           </v-card>
         </v-col>
     </v-row>
@@ -123,20 +105,46 @@
 <script>
 
 export default {
-  name: 'CustomerSearch',
+  name: 'CustomerHistory',
 
   components: {
   },
 
-  data: () => ({
-    collapseOnScroll: true,
-    items: ['Novo','Em Produção'],
-    items2: ['BACKLIT','BANNER','MICROPERFURADO',
-    'PAPEL FOTOGRÁFICO', 'PVC 3 mm', 'PVC 5 mm',
-    'TÊXTIL BACKLIT MA', 'VINIL', 'Vinil imp + recort',
-    'VINIL INTERIOR MON', 'VINIL METALIZADO', 'VINIL REPOSICIONÁ']
-  }),
-};
+data () {
+      return {
+        headers: [
+          { text: 'MARCA', value: 'marca', width: '200px', align: 'left' },
+          { text: 'PLAFOND', value: 'plafond', width: '200px', align: 'left' },
+        ],
+        desserts: [
+          {
+            marca: 'abc',
+            plafond: '100',
+          },
+          {
+            marca: 'def',
+            plafond: '100',
+          },
+          {
+            marca: 'ghy',
+            plafond: '100',
+          },
+          {
+            marca: 'ghy',
+            plafond: '100',
+          },
+          {
+            marca: 'ghy',
+            plafond: '100',
+          },
+          {
+            marca: 'ghy',
+            plafond: '100',
+          }
+        ],
+      }
+    },
+  }
 </script>
 
 <style>

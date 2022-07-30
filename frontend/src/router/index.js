@@ -39,7 +39,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrder2.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrderOneOrTwo.vue')
   },
   {
     path: '/order3',
@@ -47,7 +47,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrder3.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrderOneOrTwoFinal.vue')
   },
   {
     path: '/recoverCode',
@@ -80,7 +80,48 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/CustomerHistory.vue')
+  },
+  {
+    path: '/plafond',
+    name: 'plafond',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerPlafond.vue')
+  },
+  {
+    path: '/ABC',
+    name: 'ABC',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrderMontra.vue')
+  },
+  {
+    path: '/order22',
+    name: 'order22',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrderOrderOneOrTwoSecond.vue')
+  },
+  {
+    path: '/ABCfinal',
+    name: 'ABCfinal',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrderMontra2.vue')
+  },
+  {
+    path: '/ABCfinal2',
+    name: 'ABCfinal2',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerOrderMontraFinal.vue')
   }
+  
   
   
 

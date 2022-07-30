@@ -5,8 +5,8 @@
     <v-row justify="center" align="center">
         <v-col cols="auto" >
           <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
-          <v-row no-gutters justify="start" class="pt-2 pl-2">
-            <v-menu
+          <v-row no-gutters justify="space-between" align="center" class="mr-1 ml-2">
+                        <v-menu
             :offset-x="true"
             >
             <template v-slot:activator="{ on, attrs }">
@@ -59,52 +59,67 @@
 
             </v-btn-toggle>
           </v-menu>
+          <v-card elevation="2" outlined color="#FAFAFA" height="80" style="width: 250px; border-radius: 15px">
+            <v-row justify="center" align="center" class="d-flex flex-column mt-3">
+            <v-col cols="auto" class="pa-0">
+            Créditos atuais para marca XYZ:
+            </v-col>
+            <v-col cols="auto" class="pa-0">
+              3000 <v-icon>mdi-currency-eur</v-icon>
+            </v-col>
+            </v-row>
+            </v-card>
+          </v-row> 
+          <v-row justify="center" align="center" no-gutters class="d-flex flex-column mt-5">
+            <v-carousel hide-delimiters :continuous=false height="175" style="width: 400px;">
+              <v-carousel-item
+                v-for="(item,i) in facetas"
+                :key="i"
+                :src="item"
+                contain
+                ></v-carousel-item>
+            </v-carousel>
+          <v-col cols="auto" class="mb-5">
+          </v-col>
+          <v-col cols="auto" >
+          <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" style="width: 400px; border-radius: 15px">
+            <v-row justify="center" align="center" class="d-flex flex-column">
+            <v-col class="pt-4">
+            Referência do Pedido:
+            </v-col>
+            <v-col>
+              AE3456
+            </v-col>
+            </v-row>
+            </v-card>
+          <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" class="mt-5" style="width: 400px; border-radius: 15px">
+            <v-row justify="center" align="center" class="d-flex flex-column">
+            <v-col class="pt-4">
+            Créditos a debitar
+            </v-col>
+             <v-col cols="auto">
+              440 <v-icon>mdi-currency-eur</v-icon>
+            </v-col>
+            </v-row>
+            </v-card>
+          <v-textarea
+          class="mt-5" 
+          style="width: 400px; border-radius: 15px"
+          rows="2"
+          no-resize
+          hide-details
+          outlined
+          name="input-7-4"
+          label="Observações sobre o pedido"
+          value=""
+        ></v-textarea>
+          </v-col>
+
           </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-1">
-              <v-avatar color="#6e4e5d" size="100" class="mb-6">
-                <v-icon size="60" dark>
-                  mdi-account-circle
-                </v-icon>
-              </v-avatar>
-              Nome Comerciante
-            </v-row>
-            <v-divider></v-divider>
-            <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-              <v-avatar color="#6e4e5d" size="40" class="mb-2">
-                <v-icon size="24" dark>
-                  mdi-lock
-                </v-icon>
-              </v-avatar>
-              Alterar Palavra Passe
-            <v-col cols="auto" class="mt-6">
-              Palavra passe nova
-              <v-text-field
-                              style="width: 300px"
-                              class="mt-2"
-                              label="Nova Palavra Passe"
-                              type="text"
-                              rounded
-                              outlined
-                              hide-details
-                              v-model="username"></v-text-field>
-            </v-col>
-            <v-col cols="auto">
-              Confirmar palavra passe nova
-              <v-text-field
-                              style="width: 300px"
-                              class="mt-2"
-                              label="Nova Palavra Passe"
-                              type="text"
-                              rounded
-                              outlined
-                              hide-details
-                              v-model="username"></v-text-field>
-            </v-col>
-            </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 35px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 35px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profile')"
+              @click="$router.push('order2')"
               class="d-flex flex-column"
               outlined
               rounded
@@ -132,21 +147,41 @@
 </template>
 
 <script>
+import { store } from '@/store.js'
 
 export default {
-  name: 'CustomerProfile',
+  name: 'CustomerOrder3',
 
   components: {
   },
 
   data: () => ({
-
+    collapseOnScroll: true,
+    items: ['Novo','Em Produção'],
+    pics: [
+    {
+      src: require('@/assets/default-placeholder.png')
+    },
+    {
+      src: require('@/assets/default-placeholder.png')
+    }
+  ],
+  store,
+  facetas: null
   }),
+
+  created () {
+    if (store.face2 == null){
+      this.facetas = [store.face1]
+    } else {
+      this.facetas = [store.face1, store.face2]
+    }
+  }
+  
 };
 </script>
 
 <style>
-
 #app {
     background: #3A1C71;
     background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
