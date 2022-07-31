@@ -12,7 +12,7 @@
     <v-row justify="center" align="center">
         <v-col cols="auto" >
           <v-card elevation="12" outlined color="#FAFAFA" height="400" width="450" style="border-radius: 15px">
-            <v-card-title class="justify-center">Iniciar Sessão</v-card-title> 
+            <v-card-title class="justify-center">Iniciar Sessão</v-card-title>
             <v-divider></v-divider>
             <v-card-text>
 
@@ -22,14 +22,14 @@
                               type="text"
                               rounded
                               outlined
-                              v-model="username"></v-text-field>
+                              v-model="auth.email"></v-text-field>
                 <v-text-field
                               label="Password"
                               type="password"
                               rounded
                               outlined
                               hide-details
-                              v-model="password"></v-text-field>
+                              v-model="auth.password"></v-text-field>
               </v-form>
               </v-card-text>
                 <v-card-actions>
@@ -44,7 +44,7 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            width="33%" class="mt-16 white--text" color="#6e4e5d" 
+            width="33%" class="mt-16 white--text" color="#6e4e5d"
             v-bind="attrs"
             v-on="on"
             @click="$router.push('profile')"
@@ -77,6 +77,9 @@
 
 <script>
 
+import Backend from '@/router/backend'
+import AuthDto from '@/models/AuthDto';
+
 export default {
   name: 'App',
 
@@ -84,8 +87,22 @@ export default {
   },
 
   data: () => ({
-     myImage: require('@/assets/logo.png'),
-     username: '',
+    myImage: require('@/assets/logo.png'),
+    auth: new AuthDto()
   }),
+
+
+
+  methods: {
+    login: async function () {
+      try {
+        await Backend.login(this.auth)
+        this.$router.push("profile")
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    }
+  }
 };
 </script>
