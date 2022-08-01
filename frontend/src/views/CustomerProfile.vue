@@ -13,7 +13,7 @@
               <v-btn
                 height="64"
                 width="100"
-                round
+                rounded
                 class="white--text"
                 color="#6e4e5d"
                 dark
@@ -66,7 +66,7 @@
                   mdi-account-circle
                 </v-icon>
               </v-avatar>
-              Nome Comerciante
+              {{ this.profile.name }}
             </v-row>
              <v-row justify="left" align="left" class="d-flex ml-4">
               <v-col cols = 1>
@@ -74,9 +74,9 @@
                   <v-icon size="50" dark class="d-flex"> mdi-currency-usd </v-icon>
                 </v-avatar>
               </v-col>
-              <v-col cols = 2 class="d-flex flex-column ml-10" align="left"> Plafond Geral 
-                <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> 500
-                <v-icon size="15"> mdi-currency-eur </v-icon> </v-main> </v-col>    
+              <v-col cols = 2 class="d-flex flex-column ml-10" align="left"> Plafond Geral
+                <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{ profile.credits }}
+                <v-icon size="15"> mdi-currency-eur </v-icon> </v-main> </v-col>
               <v-col cols = 1 align="left" class>
                  <v-avatar color="#6e4e5d" size="20" class="d-flex" @click = "$router.push('plafond')">
                   <v-icon size="15" dark class="d-flex"> mdi-help </v-icon>
@@ -89,9 +89,9 @@
                   <v-icon size="30" dark class="d-flex"> mdi-email </v-icon>
                 </v-avatar>
               </v-col>
-              <v-col cols = 4 class="d-flex flex-column ml-10" align="left"> Email 
-                <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> xyz@gmail.com </v-main> 
-            </v-col>  
+              <v-col cols = 4 class="d-flex flex-column ml-10" align="left"> Email
+                <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{ profile.email }} </v-main>
+            </v-col>
              </v-row>
              <v-row justify="left" align="left" class="d-flex ml-4 pt-7">
               <v-col cols = 1>
@@ -100,11 +100,11 @@
                 </v-avatar>
               </v-col>
               <v-col cols = 3 class="d-flex flex-column ml-10" align="left"> Password
-                <v-main class="grey lighten-2 text-no-wrap rounded-pill" width="" align="center"> ****** </v-main> 
+                <v-main class="grey lighten-2 text-no-wrap rounded-pill" width="" align="center"> ****** </v-main>
             </v-col>
-            <v-btn class="d-flex mt-9 white--text" color="#6e4e5d" height="25" elevation="2" rounded  @click="$router.push('passwordChange')"> Alterar 
+            <v-btn class="d-flex mt-9 white--text" color="#6e4e5d" height="25" elevation="2" rounded  @click="$router.push('passwordChange')"> Alterar
               <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
-            </v-btn>    
+            </v-btn>
              </v-row>
           </v-card>
         </v-col>
@@ -115,6 +115,8 @@
 </template>
 
 <script>
+import Backend from "@/router/backend";
+import UserDto from "@/models/UserDto";
 
 export default {
   name: 'CustomerProfile',
@@ -129,7 +131,12 @@ export default {
         { title: 'Click Me' },
         { title: 'Click Me 2' },
       ],
+    profile: new UserDto()
   }),
+
+  created: async function() {
+    this.profile = await Backend.getProfile()
+  }
 };
 </script>
 

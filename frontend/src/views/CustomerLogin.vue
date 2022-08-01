@@ -47,7 +47,7 @@
             width="33%" class="mt-16 white--text" color="#6e4e5d"
             v-bind="attrs"
             v-on="on"
-            @click="$router.push('profile')"
+            @click="login"
           >Entrar</v-btn>
         </template>
         <template v-slot:default="dialog">

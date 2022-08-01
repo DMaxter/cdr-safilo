@@ -1,3 +1,4 @@
+import UserDto from '@/models/UserDto';
 import axios from 'axios'
 
 const httpClient = axios.create();
@@ -17,6 +18,24 @@ export default class Backend {
       .catch(async error => {
         throw Error(await this.errorMessage(error.response))
       })
+  }
+
+  static async getProfile() {
+    return httpClient.get("/user").then(response => {
+      return new UserDto(response.data)
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async redefineWithToken(username) {
+    return httpClient.post(`/auth/forgot/${username}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
   }
 
   static async errorMessage(error) {
