@@ -151,6 +151,9 @@
             </v-container>
 
         </template>
+        <template v-slot:[`item.actions`]="{ item }">
+            <v-icon @click="getRequest(item)">mdi-plus</v-icon>
+          </template>
     </v-data-table>
             </v-row>
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
@@ -184,6 +187,7 @@
 </template>
 
 <script>
+import { store } from '@/store.js'
 
 export default {
   name: 'CustomerHistory',
@@ -193,6 +197,7 @@ export default {
 
 data () {
       return {
+        store,
         estadosList: [
           {text: "Qualquer", value: null},
           {text: "Novo", value: "novo"},
@@ -213,21 +218,75 @@ data () {
             name: 'FCH 2022.06.05 1254',
             calories: "novo",
             fat: "HUGO BOSS",
+            modelo: "montra",
+            material: ["pvc", "pvc2", "pvc3", "pvc4", "pvc5"],
+            dimensões: ["60 x 40", "100 x 50", "100 x 100", "30 x 90", "120 x 80"],
+            images: [
+              {
+                src: require('@/assets/uno.jpg'),
+              },
+                    {
+                src: require('@/assets/trese.png'),
+              },
+                    {
+                src: require('@/assets/quatre.png'),
+              },
+                    {
+                src: require('@/assets/dos.jpg'),
+              },
+                    {
+                src: require('@/assets/dos.jpg'),
+              },
+            ],
+            quantidade: 1,
+            observacoes: "Por favor despachem-se",
+            custo: 300,
+            aplicacao: true, 
           },
           {
             name: 'ABC 2022.06.01 1245',
             calories: "em produção",
             fat: "CAROLINA HERRERA",
+            modelo: "normal",
+            material: ["laminado"],
+            dimensões: ["100 x 50"],
+            images: [
+                    {
+                src: require('@/assets/quatre.png'),
+              },
+            ],
+            quantidade: [2],
+            observacoes: "Por favor despachem-se",
+            custo: 400,
+            aplicacao: [false], 
           },
           {
             name: 'DEF 2022.06.08 1425',
             calories: "novo",
             fat: "HUGO BOSS",
+            modelo: "normal",
+            material: ["laminado", "backlit"],
+            dimensões: ["100 x 50", "80 x 40"],
+            images: [
+              {
+                src: require('@/assets/quatre.png'),
+              },
+              {
+                src: require('@/assets/trese.png'),
+              },
+            ],
+            quantidade: [3, 4],
+            observacoes: "Por favor despachem-se",
+            custo: 400,
+            aplicacao: [true, false], 
           },
           {
             name: 'GH1 2022.06.15 1524',
             calories: "em produção",
             fat: "TOMMY HILFIGER",
+            modelo: "montra",
+            material: "pvc",
+            dimensões: "70 x 40"            
           }
         ],
         dates: [],
@@ -256,6 +315,10 @@ data () {
             filter: this.marcasFilter,
 
           },
+          { text: "", value: "actions", sortable: false },
+          { text: "", value: "modelo", align: ' d-none', sortable: false },
+          { text: "", value: "material", align: ' d-none', sortable: false },
+          { text: "", value: "dimensões", align: ' d-none', sortable: false },
         ]
       },
       
@@ -265,6 +328,24 @@ data () {
         if(e.length > 2) {
           e.pop()
         }
+      },
+      getRequest(item) {
+        store.pedidoAtual = {
+            cod: item.name.split(" ")[0],
+            data: item.name.split(" ")[1],
+            marca: item.fat,
+            modelo: item.modelo,
+            material: item.material,
+            dimensoes: item.dimensões,
+            estado: item.calories,
+            images: item.images,
+            quantity: item.quantidade,
+            observations: item.observacoes,
+            cost: item.custo,
+            application: item.aplicacao
+          },
+  
+        this.$router.push({name: 'details'});
       },
       /**
        * Filter for dessert names column.

@@ -28,4 +28,19 @@ export const store = reactive({
   ],
   face1: null,
   face2: null,
+  pedidoAtual: {
+      cod: null,
+      data: null,
+      marca: null,
+      modelo: null,
+      material: null,
+      dimensoes: null,
+      estado: null,
+      images: null,
+      quantity: null,
+      observations: null,
+      cost: null,
+      application: null
+    },
+  
 })
