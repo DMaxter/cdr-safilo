@@ -6,7 +6,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
-            <v-menu
+      <v-menu
             :offset-x="true"
             >
             <template v-slot:activator="{ on, attrs }">
@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profileComercial')">
+              <v-btn-toggle v-model="icon" dark dense mandatory>
+              <v-btn color="#6e4e5d" value="left" height="60" width="170">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,15 +33,15 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" height="60" width="170" @click="$router.push('history')">
-                <span class="white--text" style="font-size: 12px">Histórico</span>
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="60" width="170">
+                <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
-                  mdi-clock
+                  mdi-account-group
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" class="v-btn--active" height="60" width="170">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="60" width="170">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,11 +49,11 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('order')" height="60" width="170">
-                <span class="white--text" style="font-size: 12px">Novo Pedido</span>
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="60" width="170">
+                <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
-                  mdi-playlist-plus
+                  mdi-cog
                 </v-icon>
               </v-btn>
 
@@ -62,7 +62,7 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-3">
             <v-col cols="auto">
-                Procurar Pedido
+                ID do Comerciante
             </v-col>
             <v-col cols="auto" >
             <v-text-field
@@ -77,45 +77,70 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
             <v-col cols="auto">
-                Procurar por Material
+                Marca
             </v-col>
             <v-col cols="auto" >
-          <v-select
-          v-model = material
-          :items="items2"
-          label="Material"
-          dense
-          outlined
-        ></v-select>
+          <v-text-field
+            v-model= text
+            label=""
+            placeholder="Marca"
+            filled
+            rounded
+            dense
+          ></v-text-field>
             </v-col>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
             <v-col cols="auto">
-                Procurar por Estado
+                Plafond
             </v-col>
             <v-col cols="auto" >
-          <v-select
-          v-model = estado
-          :items="items"
-          label="Estado"
-          dense
-          outlined
-        ></v-select>
+          <v-text-field
+            v-model= text
+            label=""
+            placeholder="Nome/Id"
+            filled
+            rounded
+            dense
+          ></v-text-field>
             </v-col>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
+          <v-dialog
+        transition="dialog-bottom-transition"
+        max-width="600"
+        id="dialogo"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-row justify="end" align="end" class="d-flex flex-column mt-4 mr-5">
             <v-col cols="auto">
               <v-btn
               class="d-flex flex-column"
               outlined
+              v-bind="attrs"
+              v-on="on"
               x-large
               rounded
               color="#6e4e5d"
-              @click=searchFilters() 
+              @click= "dialog.value = true"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
           </v-row>
+        </template>
+        <template v-slot:default="dialog">
+          <v-card>
+            <v-card-text>
+              <div class="text-h6 pt-12">Alterado com sucesso!</div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                @click="dialog.value = false"
+              >Voltar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
           </v-card>
         </v-col>
     </v-row>

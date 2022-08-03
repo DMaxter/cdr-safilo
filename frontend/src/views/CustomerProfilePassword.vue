@@ -4,8 +4,9 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
-          <v-row no-gutters justify="start" class="pt-2 pl-2">
+          <v-card elevation="12" color="#FAFAFA" height="635" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
+          <v-row no-gutters justify="start" class="pt-2">
+            <v-col cols="2">
             <v-menu
             :offset-x="true"
             >
@@ -25,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark dense>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profile')">
+              <v-btn color="#6e4e5d" value="left" height="60" width="170" class="v-btn--active" @click="$router.push('profileComercial')">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -49,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" class="v-btn--active" height="60" width="170">
+              <v-btn color="#6e4e5d" value="right" height="60" width="170" @click="$router.push('order')">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -59,16 +60,19 @@
 
             </v-btn-toggle>
           </v-menu>
-          </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-1">
+          </v-col>
+          <v-col cols="8">
+          <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-1">
               <v-avatar color="#6e4e5d" size="100" class="mb-6">
                 <v-icon size="60" dark>
                   mdi-account-circle
                 </v-icon>
               </v-avatar>
-              Nome Comerciante
+              Nome empregado safilo
             </v-row>
             <v-divider></v-divider>
+            </v-col>
+          </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
               <v-avatar color="#6e4e5d" size="40" class="mb-2">
                 <v-icon size="24" dark>
@@ -76,7 +80,19 @@
                 </v-icon>
               </v-avatar>
               Alterar Palavra Passe
-            <v-col cols="auto" class="mt-6">
+              <v-col cols="auto" class="mt-4">
+              Palavra passe atual
+              <v-text-field
+                              style="width: 300px"
+                              class="mt-2"
+                              label="Palavra Passe"
+                              type="text"
+                              rounded
+                              outlined
+                              hide-details
+                              v-model="username"></v-text-field>
+            </v-col>
+            <v-col cols="auto">
               Palavra passe nova
               <v-text-field
                               style="width: 300px"
@@ -101,10 +117,10 @@
                               v-model="username"></v-text-field>
             </v-col>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 35px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 15px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profile')"
+              @click="$router.push('profileComercial')"
               class="d-flex flex-column"
               outlined
               rounded

@@ -6,7 +6,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
-            <v-menu
+             <v-menu
             :offset-x="true"
             >
             <template v-slot:activator="{ on, attrs }">
@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profileComercial')">
+              <v-btn-toggle v-model="icon" dark dense mandatory>
+              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('safiloProfile')">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,11 +33,11 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" height="60" width="170" class="v-btn--active">
-                <span class="white--text" style="font-size: 12px">Histórico</span>
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="60" width="170">
+                <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
-                  mdi-clock
+                  mdi-account-group
                 </v-icon>
               </v-btn>
 
@@ -49,11 +49,11 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('order')" height="60" width="170">
-                <span class="white--text" style="font-size: 12px">Novo Pedido</span>
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="60" width="170">
+                <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
-                  mdi-playlist-plus
+                  mdi-cog
                 </v-icon>
               </v-btn>
 
@@ -78,7 +78,7 @@
                                     style="width: 150px;"
                                     :items="marcasList"
                                     v-model="marcasFilterValue"
-                                    label="Marca"
+                                    label="Faturação"
                             ></v-select>
                         </v-row>
                     </v-col>
@@ -90,60 +90,8 @@
                                     style="width: 150px;"
                                     :items="estadosList"
                                     v-model="estadosFilterValue"
-                                    label="Estado"
+                                    label="Ativo"
                             ></v-select>
-                        </v-row>
-                    </v-col>
-
-                    <v-col cols="7">
-                        <v-row class="pa-2">
-                            <!-- Filter for calories -->
-                            <v-menu
-                              ref="menu"
-                              v-model="menu"
-                              :close-on-content-click="false"
-                              :return-value.sync="dates"
-                              transition="scale-transition"
-                              offset-y
-                              min-width="auto"
-                            >
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-combobox
-                                  v-model="dates"
-                                  multiple
-                                  chips
-                                  small-chips
-                                  label="Data"
-                                  prepend-icon="mdi-calendar"
-                                  readonly
-                                  v-bind="attrs"
-                                  v-on="on"
-                                ></v-combobox>
-                              </template>
-                              <v-date-picker
-                                v-model="dates"
-                                multiple
-                                v-on:input="limiter"
-                                no-title
-                                scrollable
-                              >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                  text
-                                  color="primary"
-                                  @click="menu = false"
-                                >
-                                  Cancel
-                                </v-btn>
-                                <v-btn
-                                  text
-                                  color="primary"
-                                  @click="$refs.menu.save(dates);"
-                                >
-                                  OK
-                                </v-btn>
-                              </v-date-picker>
-                            </v-menu>
                         </v-row>
                     </v-col>
 
@@ -159,7 +107,7 @@
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profileComercial')"
+              @click="$router.push('profile')"
               class="d-flex flex-column"
               outlined
               rounded
@@ -200,14 +148,11 @@ data () {
         store,
         estadosList: [
           {text: "Qualquer", value: null},
-          {text: "Novo", value: "novo"},
-          {text: "Em Produção", value: "em produção"},
+          {text: "Sim", value: "sim"},
+          {text: "Não", value: "não"},
         ],
         marcasList: [
           {text: "Qualquer", value: null},
-          {text: "HUGO BOSS", value: "hugo boss"},
-          {text: "CAROLINA HERRERA", value: "carolina herrera"},
-          {text: "TOMMY HILFIGER", value: "tommy hilfiger"},
         ],
         // Filter models.
         marcasFilterValue: null,
@@ -215,9 +160,9 @@ data () {
 
         desserts: [
           {
-            name: 'FCH 2022.06.05 1254',
+            name: '1234',
             calories: "novo",
-            fat: "HUGO BOSS",
+            fat: "xxxxxx - Lisboa",
             modelo: "montra",
             material: ["pvc", "pvc2", "pvc3", "pvc4", "pvc5"],
             dimensões: ["60 x 40", "100 x 50", "100 x 100", "30 x 90", "120 x 80"],
@@ -244,9 +189,9 @@ data () {
             aplicacao: true, 
           },
           {
-            name: 'ABC 2022.06.01 1245',
+            name: '5678',
             calories: "em produção",
-            fat: "CAROLINA HERRERA",
+            fat: "yyyyyy - Porto",
             modelo: "normal",
             material: ["laminado"],
             dimensões: ["100 x 50"],
@@ -261,9 +206,9 @@ data () {
             aplicacao: [false], 
           },
           {
-            name: 'DEF 2022.06.08 1425',
+            name: '9101',
             calories: "novo",
-            fat: "HUGO BOSS",
+            fat: "zzzzzz - Setubal",
             modelo: "normal",
             material: ["laminado", "backlit"],
             dimensões: ["100 x 50", "80 x 40"],
@@ -280,14 +225,6 @@ data () {
             custo: 400,
             aplicacao: [true, false], 
           },
-          {
-            name: 'GH1 2022.06.15 1524',
-            calories: "em produção",
-            fat: "TOMMY HILFIGER",
-            modelo: "montra",
-            material: "pvc",
-            dimensões: "70 x 40"            
-          }
         ],
         dates: [],
         menu: false,
@@ -297,7 +234,7 @@ data () {
       headers() {
         return [
           {
-            text: 'COD/DATA/NUM',
+            text: 'Código',
             align: 'left',
             sortable: false,
             value: 'name',
@@ -310,8 +247,9 @@ data () {
             filter: this.estadoFilter,
           },
           {
-            text: 'Marca',
+            text: 'Nome',
             value: 'fat',
+            align: "center",
             filter: this.marcasFilter,
 
           },
@@ -330,22 +268,8 @@ data () {
         }
       },
       getRequest(item) {
-        store.pedidoAtual = {
-            cod: item.name.split(" ")[0],
-            data: item.name.split(" ")[1],
-            marca: item.fat,
-            modelo: item.modelo,
-            material: item.material,
-            dimensoes: item.dimensões,
-            estado: item.calories,
-            images: item.images,
-            quantity: item.quantidade,
-            observations: item.observacoes,
-            cost: item.custo,
-            application: item.aplicacao
-          },
-  
-        this.$router.push({name: 'details'});
+        console.log(item)
+        this.$router.push({name: 'clientInfo'});
       },
       /**
        * Filter for dessert names column.

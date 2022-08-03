@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profileComercial')">
+              <v-btn-toggle v-model="icon" dark dense mandatory>
+              <v-btn color="#6e4e5d" value="left" height="60" width="170">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,15 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" height="60" width="170" @click="$router.push('history')">
-                <span class="white--text" style="font-size: 12px">Histórico</span>
-
-                <v-icon right>
-                  mdi-clock
-                </v-icon>
-              </v-btn>
-
-              <v-btn color="#6e4e5d" value="center2" class="v-btn--active" height="60" width="170">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="60" width="170">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,20 +41,20 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('order')" height="60" width="170">
-                <span class="white--text" style="font-size: 12px">Novo Pedido</span>
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="60" width="170">
+                <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
-                  mdi-playlist-plus
+                  mdi-book
                 </v-icon>
               </v-btn>
 
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-3">
+          <v-row justify="center" align="center" class="d-flex flex-column mt-16">
             <v-col cols="auto">
-                Procurar Pedido
+                ID do Pedido
             </v-col>
             <v-col cols="auto" >
             <v-text-field
@@ -77,21 +69,7 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
             <v-col cols="auto">
-                Procurar por Material
-            </v-col>
-            <v-col cols="auto" >
-          <v-select
-          v-model = material
-          :items="items2"
-          label="Material"
-          dense
-          outlined
-        ></v-select>
-            </v-col>
-          </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
-            <v-col cols="auto">
-                Procurar por Estado
+              Estado
             </v-col>
             <v-col cols="auto" >
           <v-select
@@ -103,7 +81,7 @@
         ></v-select>
             </v-col>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
+          <v-row justify="end" align="end" class="d-flex flex-column mt-16 mr-4">
             <v-col cols="auto">
               <v-btn
               class="d-flex flex-column"

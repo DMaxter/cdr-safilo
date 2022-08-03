@@ -10,12 +10,28 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/CustomerLogin.vue')
   },
   {
-    path: '/profile',
-    name: 'profile',
+    path: '/profileComercial',
+    name: 'profileComercial',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/CustomerProfile.vue')
+  },
+  {
+    path: '/profileCdr',
+    name: 'profileCdr',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CdrProfile.vue')
+  },
+  {
+    path: '/profileSafilo',
+    name: 'profileSafilo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloProfile.vue')
   },
   {
     path: '/search',
@@ -160,12 +176,87 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/DetailsOneOrTwoFinal.vue')
+  },
+  {
+    path: '/SearchResults',
+    name: 'searchResults',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SearchResults.vue')
+  },
+  {
+    path: '/Clients',
+    name: 'clients',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloClients.vue')
+  },
+  {
+    path: '/ClientInfo',
+    name: 'clientInfo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloSpecificClient.vue')
+  },
+  {
+    path: '/ClientStores',
+    name: 'clientStores',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloClientStores.vue')
+  },
+  {
+    path: '/StoreInfo',
+    name: 'storeInfo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloClientSpecificStore.vue')
+  },
+  {
+    path: '/Configure',
+    name: 'configure',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloConfigure.vue')
+  },
+  {
+    path: '/ImageUpload',
+    name: 'imageUpload',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloImageUpload.vue')
+  },
+  {
+    path: '/PlafondChange',
+    name: 'plafondChange',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloPlafondChange.vue')
+  },
+  {
+    path: '/StateChange',
+    name: 'stateChange',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CdrStateChange.vue')
+  },
+  {
+    path: '/Materiais',
+    name: 'materiais',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/CdrMaterials.vue')
   }
-  
-  
-  
-  
-  
 
 ]
 

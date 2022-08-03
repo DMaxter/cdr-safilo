@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark dense>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profile')">
+              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profileComercial')">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -82,7 +82,7 @@
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profile')"
+              @click="$router.push('profileComercial')"
               class="d-flex flex-column"
               outlined
               rounded
