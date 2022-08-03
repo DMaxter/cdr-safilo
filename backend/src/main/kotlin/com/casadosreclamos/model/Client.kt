@@ -2,6 +2,7 @@ package com.casadosreclamos.model
 
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.OneToMany
 
 @Entity
 open class Client {
@@ -10,11 +11,10 @@ open class Client {
 
     open lateinit var name: String
 
-    open lateinit var address: String
+    @OneToMany(mappedBy = "client", orphanRemoval = true)
+    open lateinit var addresses: MutableList<Address>
 
     open var fiscalNumber: Long = 0
-
-    open lateinit var postalCode: String
 
     open lateinit var email: String
 

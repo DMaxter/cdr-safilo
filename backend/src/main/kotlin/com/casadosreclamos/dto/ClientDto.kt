@@ -5,18 +5,16 @@ import com.casadosreclamos.model.Client
 data class ClientDto(
     var id: Long?,
     var name: String?,
-    var address: String?,
+    var addresses: List<AddressDto>?,
     var fiscalNumber: Long?,
-    var postalCode: String?,
     var email: String?,
     var phone: String?
 ) {
     constructor(client: Client) : this(
         client.id,
         client.name,
-        client.address,
+        client.addresses.stream().map { AddressDto(it) }.toList(),
         client.fiscalNumber,
-        client.postalCode,
         client.email,
         client.phone
     )

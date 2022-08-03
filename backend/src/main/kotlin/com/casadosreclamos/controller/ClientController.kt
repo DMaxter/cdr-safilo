@@ -1,5 +1,6 @@
 package com.casadosreclamos.controller
 
+import com.casadosreclamos.dto.AddressDto
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.Client
@@ -16,9 +17,7 @@ import org.jboss.logging.Logger
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
+import javax.ws.rs.*
 import javax.ws.rs.core.Response
 
 @Path("/client")
@@ -61,6 +60,23 @@ class ClientController {
             logger.info("User ${id.principal.name} is registering client with name \"${client.name}\"")
 
             return@transformToUni clientService.register(client)
+        }
+    }
+
+    @PUT
+    @Path("/address/{id}")
+    @Operation(summary = "Add address to client")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful address registration"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to add a client address")
+    )
+    fun addClientAddress(@PathParam("id") client: Long, address: AddressDto): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is adding an address to client with id $client")
+
+            return@transformToUni clientService.addAddress(client, address)
         }
     }
 }

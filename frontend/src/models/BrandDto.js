@@ -10,8 +10,8 @@ export default class BrandDto {
       this.images = []
 
       // TODO: Check this syntax
-      for (x in obj.images) {
-        this.images.append(new ImageDto(x))
+      for (image in obj.images) {
+        this.images.append(new ImageDto(image))
       }
     }
   }

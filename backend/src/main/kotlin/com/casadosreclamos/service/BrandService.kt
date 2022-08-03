@@ -50,7 +50,7 @@ class BrandService {
     }
 
     fun addImages(brandId: Long, images: List<String>): Uni<Response> {
-        // TODO
+        // TODO: Check brand id and upload images
 
         return Panache.withTransaction {
             brandRepository.findByIdWithImages(brandId).onItem().transformToUni { brand ->

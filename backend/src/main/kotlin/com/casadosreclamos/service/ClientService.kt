@@ -1,8 +1,11 @@
 package com.casadosreclamos.service
 
+import com.casadosreclamos.dto.AddressDto
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.exception.*
+import com.casadosreclamos.model.Address
 import com.casadosreclamos.model.Client
+import com.casadosreclamos.repo.AddressRepository
 import com.casadosreclamos.repo.ClientRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
@@ -21,15 +24,17 @@ class ClientService {
     @Inject
     lateinit var clientRepository: ClientRepository
 
+    @Inject
+    lateinit var addressRepository: AddressRepository
+
     fun getAll(): Multi<ClientDto> {
-        return clientRepository.streamAll().map { ClientDto(it) }
+        return clientRepository.streamAllWithAddresses().map { ClientDto(it) }
     }
 
     @Throws(
         InvalidIdException::class,
         InvalidEmailException::class,
         InvalidNameException::class,
-        InvalidAddressException::class
     )
     fun register(clientDto: ClientDto): Uni<Response> {
         val client = Client()
@@ -43,28 +48,50 @@ class ClientService {
             throw InvalidEmailException()
         } else if (clientDto.name == null || clientDto.name!!.isEmpty()) {
             throw InvalidNameException()
-        } else if (clientDto.address == null || clientDto.address!!.isEmpty()) {
-            throw InvalidAddressException()
         } else if (clientDto.fiscalNumber == null) {
             throw InvalidFiscalNumberException()
         } else if (clientDto.phone == null || clientDto.phone!!.isEmpty()) {
             throw InvalidPhoneException()
-        } else if (clientDto.postalCode == null || clientDto.postalCode!!.isEmpty()) {
-            throw InvalidPostalCodeException()
         }
 
         client.id = clientDto.id!!
         client.email = clientDto.email!!
         client.name = clientDto.name!!
-        client.address = clientDto.address!!
         client.fiscalNumber = clientDto.fiscalNumber!!
         client.phone = clientDto.phone!!
-        client.postalCode = clientDto.postalCode!!
+        client.addresses = mutableListOf()
 
         return Panache.withTransaction { clientRepository.persist(client) }.onItem().transform { Response.ok().build() }
             .onFailure().recoverWithItem { e ->
                 logger.error(e)
                 Response.serverError().build()
             }
+    }
+
+    @Throws(InvalidAddressException::class, InvalidPostalCodeException::class)
+    fun addAddress(clientId: Long, addressDto: AddressDto): Uni<Response> {
+        val address = Address()
+
+        if (clientId <= 0) {
+            throw InvalidIdException("client")
+        } else if (addressDto.address == null || addressDto.address!!.isEmpty()) {
+            throw InvalidAddressException()
+        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty()) {
+            throw InvalidPostalCodeException()
+        }
+
+        address.street = addressDto.address!!
+        address.postalCode = addressDto.postalCode!!
+
+        return Panache.withTransaction {
+            clientRepository.findByIdWithAddresses(clientId).onItem().transformToUni { client ->
+                address.client = client
+                client.addresses.add(address)
+                return@transformToUni addressRepository.persist(address)
+            }
+        }.onItem().transform { Response.ok().build() }.onFailure().recoverWithItem { e ->
+            logger.error(e)
+            Response.serverError().build()
+        }
     }
 }
