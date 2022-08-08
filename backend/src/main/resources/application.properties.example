@@ -5,7 +5,7 @@ domain.name=localhost
 # Database
 ## Disable JDBC to use reactive
 quarkus.datasource.jdbc=false 
-quarkus.datasource.reactive.url=mysql://${domain}:3306/<DB-NAME>
+quarkus.datasource.reactive.url=mysql://${domain.name}:3306/<DB-NAME>
 quarkus.datasource.username=<USER>
 quarkus.datasource.password=<PASSWORD>
 quarkus.hibernate-orm.database.generation=drop-and-create

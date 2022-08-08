@@ -1,5 +1,8 @@
 package com.casadosreclamos.controller
 
+import com.casadosreclamos.model.ADMIN_ROLE
+import com.casadosreclamos.model.MANAGER_ROLE
+import com.casadosreclamos.model.User
 import com.casadosreclamos.service.UserService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
@@ -8,6 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.jboss.logging.Logger
+import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -56,6 +60,27 @@ class UserController {
             logger.info("User ${id.principal.name} is changing their password")
 
             userService.changePassword(id.principal.name, old, new)
+        }
+    }
+
+    @PUT
+    @Path("/plafond/{user}/{brand}/{amount}")
+    @RolesAllowed(ADMIN_ROLE, MANAGER_ROLE)
+    @Operation(summary = "Update the plafond for a user on a particular brand")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Plafond updated successfully"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to issue a new request")
+    )
+    fun setPlafondForUser(
+        @PathParam("user") user: String,
+        @PathParam("brand") brand: Long,
+        @PathParam("amount") amount: Double
+    ): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is updating plafond for user $user on brand with id $brand")
+
+            userService.setPlafond(user, brand, amount)
         }
     }
 }

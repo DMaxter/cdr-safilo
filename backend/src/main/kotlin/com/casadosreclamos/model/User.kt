@@ -31,7 +31,6 @@ open class User() {
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
     open lateinit var roles: MutableSet<Role>
 
-    open var credits: Double = 0.0
-
-    // TODO: Add list of brands
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    open lateinit var credits: MutableSet<Plafond>
 }
