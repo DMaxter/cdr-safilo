@@ -90,7 +90,7 @@
                               rounded
                               outlined
                               hide-details
-                              v-model="username"></v-text-field>
+                              v-model="currentPassword"></v-text-field>
             </v-col>
             <v-col cols="auto">
               Palavra passe nova
@@ -102,7 +102,7 @@
                               rounded
                               outlined
                               hide-details
-                              v-model="username"></v-text-field>
+                              v-model="newPassword"></v-text-field>
             </v-col>
             <v-col cols="auto">
               Confirmar palavra passe nova
@@ -114,7 +114,7 @@
                               rounded
                               outlined
                               hide-details
-                              v-model="username"></v-text-field>
+                              v-model="newPassword2"></v-text-field>
             </v-col>
             </v-row>
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 15px;">
@@ -135,6 +135,7 @@
               outlined
               rounded
               color="#6e4e5d"
+              @click="changePassword"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -148,6 +149,7 @@
 </template>
 
 <script>
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerProfile',
@@ -156,8 +158,22 @@ export default {
   },
 
   data: () => ({
-
+    currentPassword: null,
+    newPassword: null,
+    newPassword2: null
   }),
+
+  methods: {
+    changePassword: async function () {
+      if(this.newPassword == this.newPassword2)
+      try {
+        await Backend.changePassword(this.currentPassword, this.newPassword)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    }
+  }
 };
 </script>
 

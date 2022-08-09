@@ -38,6 +38,51 @@ export default class Backend {
     })
   }
 
+  static async changePassword(oldPassword, newPassword) {
+    return httpClient.put(`/user/password/${oldPassword}/${newPassword}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async addMaterial(material, cost) {
+    return httpClient.post(`/material/${material}/${cost}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async getMaterials() {
+    return httpClient.get("/material").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async deleteMaterial(id) {
+    return httpClient.delete(`/material/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async updateMaterial(id, name, cost) {
+    return httpClient.put(`/material/${id}/${name}/${cost}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
   static async errorMessage(error) {
     if (error.status == 400) {
       return error.data.msg

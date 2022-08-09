@@ -37,20 +37,19 @@
                   <v-btn color="#6e4e5d" text @click="$router.push('recoverCode')">
                     Esqueceu-se da palavra passe?
                   </v-btn>
-                  <v-dialog
+
+          <v-btn
+            width="33%" class="mt-16 white--text" color="#6e4e5d"
+            @click="login"
+          >Entrar</v-btn>
+
+      <v-dialog
+        v-model="dialog"
         transition="dialog-bottom-transition"
         max-width="600"
         id="dialogo"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            width="33%" class="mt-16 white--text" color="#6e4e5d"
-            v-bind="attrs"
-            v-on="on"
-            @click="login"
-          >Entrar</v-btn>
-        </template>
-        <template v-slot:default="dialog">
+        <template>
           <v-card>
             <v-card-text>
               <div class="text-h6 pt-12">O nome de utilizador ou palavra-passe está incorreto</div>
@@ -58,7 +57,7 @@
             <v-card-actions class="justify-end">
               <v-btn
                 text
-                @click="dialog.value = false"
+                @click="dialog = false"
               >Voltar</v-btn>
             </v-card-actions>
           </v-card>
@@ -87,6 +86,7 @@ export default {
   },
 
   data: () => ({
+    dialog: false,
     myImage: require('@/assets/logo.png'),
     auth: new AuthDto()
   }),
@@ -97,9 +97,9 @@ export default {
     login: async function () {
       try {
         await Backend.login(this.auth)
-        this.$router.push("profile")
+        this.$router.push("profileComercial")
       } catch (error) {
-        // TODO: Show something
+        this.dialog = true
         console.error(error)
       }
     }
