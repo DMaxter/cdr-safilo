@@ -8,6 +8,13 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class UserRepository : PanacheRepository<User> {
+    fun findByNameWithCredits(user: String): Uni<User> {
+        return find(
+            "FROM User u LEFT JOIN FETCH u.credits WHERE u.email = :user",
+            Parameters.with("user", user).map()
+        ).singleResult()
+    }
+
     fun findByName(user: String): Uni<User> {
         return find("email = :user", Parameters.with("user", user).map()).firstResult()
     }

@@ -85,6 +85,7 @@ class AuthService {
         val admin = User(
             "Admin", ADMIN_NAME, BcryptUtil.bcryptHash(ADMIN_PASS), mutableSetOf(Role.ADMIN)
         )
+        admin.credits = mutableSetOf()
 
         Panache.withTransaction {
             userRepository.findByName(ADMIN_NAME).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
@@ -142,6 +143,7 @@ class AuthService {
         user.password = BcryptUtil.bcryptHash(credentials.password!!)
         user.roles = mutableSetOf(Role.COMMERCIAL)
         user.name = credentials.name!!
+        user.credits = mutableSetOf()
 
         // TODO: check if user already registered
 
