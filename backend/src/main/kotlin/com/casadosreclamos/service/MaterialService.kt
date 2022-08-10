@@ -1,6 +1,7 @@
 package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.MaterialDto
+import com.casadosreclamos.exception.AlreadyExistsException
 import com.casadosreclamos.exception.InvalidCostException
 import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.InvalidNameException
@@ -38,14 +39,15 @@ class MaterialService {
         material.cost = cost
         material.name = name
 
-        // TODO: Check for existent material
-
-        return Panache.withTransaction { materialRepository.persist(material) }.onItem()
-            .transform { Response.ok().build() }.onFailure().recoverWithItem { e ->
-                logger.error(e)
-
-                Response.serverError().build()
+        return Panache.withTransaction {
+            materialRepository.exists(name).onItem().transformToUni { value ->
+                return@transformToUni if (value) {
+                    throw AlreadyExistsException("Material")
+                } else {
+                    materialRepository.persist(material)
+                }
             }
+        }.onItem().transform { Response.ok().build() }
     }
 
     @Throws(InvalidNameException::class, InvalidCostException::class)
