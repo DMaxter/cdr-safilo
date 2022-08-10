@@ -187,6 +187,18 @@ class RequestService {
         }
     }
 
+    fun finishRequest(requestId: Long, code: String?): Uni<Response> {
+        return Panache.withTransaction {
+            requestRepository.findById(requestId).onItem().transform { request ->
+                request.status = RequestStatus.DONE
+                request.lastUpdate = Date()
+                request.trackingCode = code
+
+                Response.ok().build()
+            }
+        }
+    }
+
     fun cancel(requestId: Long, username: String): Uni<Response> {
         lateinit var roles: Set<Role>
 

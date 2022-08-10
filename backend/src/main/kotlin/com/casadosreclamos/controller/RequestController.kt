@@ -79,7 +79,23 @@ class RequestController {
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("/finish/{id}")
+    @Authenticated
+    @Operation(summary = "Cancel a request")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Request cancelled"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+    )
+    fun finishRequest(@PathParam("id") request: Long, code: String?): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is finishing request with id $request")
+
+            return@transformToUni requestService.finishRequest(request, code)
+        }
+    }
+
+    @PUT
+    @Path("/cancel/{id}")
     @Authenticated
     @Operation(summary = "Cancel a request")
     @APIResponses(
