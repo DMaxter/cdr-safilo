@@ -87,6 +87,7 @@ class RequestService {
         request.status = RequestStatus.ORDERED
         request.created = Date()
         request.lastUpdate = request.created
+        request.observations = requestDto.observations
 
         val requestInfo = RequestInfo()
         requestInfo.measurement = requestDto.measurements!!
@@ -99,7 +100,8 @@ class RequestService {
 
         return Panache.withTransaction {
             val clientUni =
-                clientRepository.findById(requestDto.clientId!!).onFailure().transform { InvalidIdException("client") }
+                clientRepository.findByIdWithAddresses(requestDto.clientId!!).onFailure()
+                    .transform { InvalidIdException("client") }
             val brandUni =
                 brandRepository.findById(requestDto.brandId!!).onFailure().transform { InvalidIdException("brand") }
             val materialUni = materialRepository.findById(requestDto.materialId!!).onFailure()
@@ -119,6 +121,8 @@ class RequestService {
                         throw InvalidIdException("brand")
                     } else if (material == null) {
                         throw InvalidIdException("material")
+                    } else if (client.addresses.stream().noneMatch { it.id == requestDto.addressId }) {
+                        throw InvalidIdException("address")
                     }
 
                     materialName = material.name
@@ -128,8 +132,9 @@ class RequestService {
 
                     // TODO: check plafond
                     // TODO: Check if image from brand
-                    // TODO: Check if address from client
 
+                    request.address =
+                        client.addresses.stream().filter { it.id == requestDto.addressId }.findFirst().get()
                     request.requester = user
                     request.client = client
                     requestInfo.brand = brand

@@ -10,7 +10,7 @@ data class NewRequestDto(
     var amount: Int?,
     var measurements: Measurements?,
     var addressId: Long?,
-    var application: Boolean,
+    var observations: String?,
 
     @Schema(oneOf = [OneFace::class, TwoFaces::class, LeftShowcase::class, RightShowcase::class])
     var images: RequestTypeDto?
