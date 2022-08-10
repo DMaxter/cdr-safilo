@@ -24,6 +24,7 @@ import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
+import javax.ws.rs.core.Response.Status
 
 private const val CDR_EMAIL = "daniel99matos@gmail.com"
 
@@ -99,9 +100,8 @@ class RequestService {
         lateinit var brandName: String
 
         return Panache.withTransaction {
-            val clientUni =
-                clientRepository.findByIdWithAddresses(requestDto.clientId!!).onFailure()
-                    .transform { InvalidIdException("client") }
+            val clientUni = clientRepository.findByIdWithAddresses(requestDto.clientId!!).onFailure()
+                .transform { InvalidIdException("client") }
             val brandUni =
                 brandRepository.findById(requestDto.brandId!!).onFailure().transform { InvalidIdException("brand") }
             val materialUni = materialRepository.findById(requestDto.materialId!!).onFailure()
@@ -177,29 +177,31 @@ class RequestService {
         }
     }
 
-    fun toProduction(requests: List<Long>): Uni<Response> {
-        // TODO: Check not empty or null
-
+    fun toProduction(requestId: Long): Uni<Response> {
         return Panache.withTransaction {
-            requestRepository.streamAll(requests).onItem().call { request ->
+            requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
                 request.status = RequestStatus.IN_PRODUCTION
                 request.lastUpdate = Date()
 
-                return@call Uni.createFrom().voidItem()
-            }.toUni().onItem().transform {
                 Response.ok().build()
+            }.onItem().ifNull().continueWith {
+                logger.error("Request not found")
+                Response.status(Status.NOT_FOUND).build()
             }
         }
     }
 
     fun finishRequest(requestId: Long, code: String?): Uni<Response> {
         return Panache.withTransaction {
-            requestRepository.findById(requestId).onItem().transform { request ->
+            requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
                 request.status = RequestStatus.DONE
                 request.lastUpdate = Date()
                 request.trackingCode = code
 
                 Response.ok().build()
+            }.onItem().ifNull().continueWith {
+                logger.error("Request not found")
+                Response.status(Status.NOT_FOUND).build()
             }
         }
     }
@@ -213,7 +215,7 @@ class RequestService {
             userRepository.findByName(username).onItem().transformToUni { user ->
                 roles = user.roles
 
-                requestRepository.findById(requestId).onItem().call { request ->
+                requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
                     // Prevent other commercials from cancelling arbitrary requests
                     if (roles.contains(Role.ADMIN) || roles.contains(Role.CDR) || roles.contains(Role.MANAGER) || (roles.contains(
                             Role.COMMERCIAL
@@ -225,11 +227,12 @@ class RequestService {
                         throw OperationNotPerformedException()
                     }
 
-                    return@call Uni.createFrom().voidItem()
+                    Response.ok().build()
+                }.onItem().ifNull().continueWith {
+                    logger.error("Request not found")
+                    Response.status(Status.NOT_FOUND).build()
                 }
             }
-        }.onItem().transform {
-            Response.ok().build()
         }
     }
 

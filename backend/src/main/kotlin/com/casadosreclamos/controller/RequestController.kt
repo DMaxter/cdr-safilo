@@ -49,17 +49,19 @@ class RequestController {
     }
 
     @PUT
+    @Path("/production/{id}")
+    @Operation(summary = "Mark request as in production")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
     @APIResponses(
         APIResponse(responseCode = "200", description = "Successfully put requests to production"),
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to issue a new request")
     )
-    fun requestToProduction(requests: List<Long>): Uni<Response> {
+    fun requestToProduction(@PathParam("id") request: Long): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} put requests $requests to production")
+            logger.info("User ${id.principal.name} put request $request to production")
 
-            return@transformToUni requestService.toProduction(requests)
+            return@transformToUni requestService.toProduction(request)
         }
     }
 
@@ -80,8 +82,8 @@ class RequestController {
 
     @PUT
     @Path("/finish/{id}")
-    @Authenticated
-    @Operation(summary = "Cancel a request")
+    @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Mark request as finished")
     @APIResponses(
         APIResponse(responseCode = "200", description = "Request cancelled"),
         APIResponse(responseCode = "401", description = "User is not logged in"),
