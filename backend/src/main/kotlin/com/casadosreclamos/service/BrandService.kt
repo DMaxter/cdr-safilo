@@ -1,6 +1,7 @@
 package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.BrandDto
+import com.casadosreclamos.exception.AlreadyExistsException
 import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.InvalidNameException
 import com.casadosreclamos.model.request.Brand
@@ -40,13 +41,15 @@ class BrandService {
         brand.name = brandName
         brand.images = mutableListOf()
 
-        // TODO: Check for existent brand
-
-        return Panache.withTransaction { brandRepository.persist(brand) }.onItem().transform { Response.ok().build() }
-            .onFailure().recoverWithItem { e ->
-                logger.error(e)
-                Response.serverError().build()
+        return Panache.withTransaction {
+            brandRepository.exists(brandName).onItem().transformToUni { value ->
+                return@transformToUni if (value) {
+                    throw AlreadyExistsException("Brand ")
+                } else {
+                    brandRepository.persist(brand)
+                }
             }
+        }.onItem().transform { Response.ok().build() }
     }
 
     fun addImages(brandId: Long, images: List<String>): Uni<Response> {
