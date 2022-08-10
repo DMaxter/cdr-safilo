@@ -10,7 +10,7 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ClientRepository : PanacheRepository<Client> {
     fun streamAllWithAddresses(): Multi<Client> {
-        return stream("FROM Client c LEFT JOIN FETCH c.addresses")
+        return stream("SELECT DISTINCT c FROM Client c LEFT JOIN FETCH c.addresses")
     }
 
     fun findByName(name: String): Uni<Client> {
