@@ -34,15 +34,15 @@ class UserService {
         return Panache.withTransaction {
             userRepository.findByNameWithCredits(user).onItem()
                 .transform { user ->
-                    Response.ok(UserDto(user)).build()
+                    Response.ok(UserDto(user!!)).build()
                 }
         }
     }
 
     @Throws(InvalidCredentialsException::class)
-    fun changePassword(user: String, old: String, new: String): Uni<Response> {
+    fun changePassword(username: String, old: String, new: String): Uni<Response> {
         return Panache.withTransaction {
-            userRepository.findByName(user).onItem().transform { user ->
+            userRepository.findByName(username).onItem().transform { user ->
                 return@transform if (BcryptUtil.matches(old, user.password)) {
                     user.password = BcryptUtil.bcryptHash(new)
 
@@ -83,7 +83,10 @@ class UserService {
                 plafondId.brandId = brand!!.id
 
                 plafondRepository.findById(plafondId)
-            }).onItem().ifNull().switchTo {
+            }).onItem().ifNotNull().transform { plafond ->
+                plafond.amount = credits
+                plafond
+            }.onItem().ifNull().switchTo {
                 val plafond = Plafond()
                 plafond.amount = credits
                 plafond.id = plafondId
@@ -93,9 +96,6 @@ class UserService {
                 user!!.credits.add(plafond)
 
                 plafondRepository.persist(plafond)
-            }.onItem().ifNotNull().transform { plafond ->
-                plafond.amount = credits
-                plafond
             }
         }.onItem().transform { Response.ok().build() }
     }

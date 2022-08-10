@@ -6,14 +6,14 @@ import io.quarkus.panache.common.Parameters
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import javax.enterprise.context.ApplicationScoped
+import javax.persistence.NoResultException
 
 @ApplicationScoped
 class UserRepository : PanacheRepository<User> {
     fun findByNameWithCredits(user: String): Uni<User> {
         return find(
-            "FROM User u LEFT JOIN FETCH u.credits WHERE u.email = :user",
-            Parameters.with("user", user).map()
-        ).singleResult()
+            "FROM User u LEFT JOIN FETCH u.credits WHERE u.email = :user", Parameters.with("user", user).map()
+        ).firstResult()
     }
 
     fun streamAllWithCredits(): Multi<User> {
