@@ -22,6 +22,12 @@ quarkus.security.security-providers=BC
 ## Use cookies for authentication
 mp.jwt.token.header=Cookie
 mp.jwt.token.cookie=identity
+smallrye.jwt.path.groups=roles
+## JWT Algorithm parameters
+mp.jwt.verify.issuer=https://${domain.name}:${quarkus.http.port}
+mp.jwt.verify.publickey.algorithm=RS256
+mp.jwt.verify.publickey.location=<PUB KEY PATH>
+smallrye.jwt.sign.key.location=<PRIV KEY PATH>
 
 # Email
 ## SMTP Settings
@@ -32,11 +38,6 @@ quarkus.mailer.password=<PASSWORD>
 quarkus.mailer.from=<EMAIL>
 ## Requests recipient
 cdr.email=<CDR EMAIL>
-## Disable mock in dev mode
-quarkus.mailer.mock=false
 
-## JWT Algorithm parameters
-mp.jwt.verify.issuer=https://${domain.name}:${quarkus.http.port}
-mp.jwt.verify.publickey.algorithm=RS256
-mp.jwt.verify.publickey.location=<PUB KEY PATH>
-smallrye.jwt.sign.key.location=<PRIV KEY PATH>
+# File upload
+quarkus.http.body.uploads-directory=<UPLOAD DIR>
