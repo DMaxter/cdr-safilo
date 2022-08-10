@@ -15,6 +15,10 @@ class UserRepository : PanacheRepository<User> {
         ).singleResult()
     }
 
+    fun exists(user: String): Uni<Boolean> {
+        return count("FROM User u WHERE u.email = :user", Parameters.with("user", user).map()).onItem().transform { it != 0L }
+    }
+
     fun findByName(user: String): Uni<User> {
         return find("email = :user", Parameters.with("user", user).map()).firstResult()
     }

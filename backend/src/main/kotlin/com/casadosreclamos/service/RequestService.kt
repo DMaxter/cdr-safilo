@@ -185,7 +185,7 @@ class RequestService {
 
                 return@call Uni.createFrom().voidItem()
             }.toUni()
-                .onItem().transform { _ ->
+                .onItem().transform {
                     Response.ok().build()
                 }
         }

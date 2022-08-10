@@ -1,5 +1,6 @@
 package com.casadosreclamos.service
 
+import com.casadosreclamos.EMAIL_REGEX
 import com.casadosreclamos.dto.AuthDto
 import com.casadosreclamos.dto.RegisterDto
 import com.casadosreclamos.dto.UserDto
@@ -133,11 +134,11 @@ class AuthService {
 
         if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
             throw InvalidCredentialsException()
+        } else if (!EMAIL_REGEX.matches(credentials.email!!)) {
+            throw InvalidEmailException()
         } else if (credentials.name == null || credentials.name!!.isEmpty()) {
             throw InvalidNameException()
         }
-
-        // TODO: verify valid email
 
         user.email = credentials.email!!
         user.password = BcryptUtil.bcryptHash(credentials.password!!)
@@ -145,28 +146,29 @@ class AuthService {
         user.name = credentials.name!!
         user.credits = mutableSetOf()
 
-        // TODO: check if user already registered
-
-        return Panache.withTransaction { userRepository.persist(user) }.onItem().transformToUni { _ ->
+        return Panache.withTransaction {
+            userRepository.exists(user.email).onItem().transformToUni { value ->
+                return@transformToUni if (value) {
+                    throw AlreadyExistsException("User")
+                } else {
+                    userRepository.persist(user)
+                }
+            }
+        }.onItem().ifNotNull().transformToUni { _ ->
             mailer.send(
                 Mail.withText(
-                    user.email,
-                    "Registo na plataforma Safilo/CDR",
-                    """
+                    user.email, "Registo na plataforma Safilo/CDR", """
                         Foi efetuado um registo para o seu email na plataforma de pedidos para a Casa dos Reclamos com os seguintes dados
                         
                         Username: ${credentials.email}
                         Password: ${credentials.password}
                         
+                        Aconselha-se a mudança de password na plataforma.
                         
                         Este é um email automático, por favor não responda"""
                 )
             )
-        }.onItem().transform { Response.ok(user).build() }
-            .onFailure().recoverWithItem { e ->
-                logger.error(e)
-                Response.serverError().build()
-            }
+        }.onItem().transform { Response.ok().build() }
     }
 
     fun getAll(): Multi<UserDto> {
@@ -190,8 +192,7 @@ class AuthService {
             }.onItem().transform { user: User ->
                 Response.ok().cookie(
                     NewCookie(
-                        cookie, generateJwt(user), "/", domain, "",
-                        Duration.ofHours(TIME).seconds.toInt(), true, true
+                        cookie, generateJwt(user), "/", domain, "", Duration.ofHours(TIME).seconds.toInt(), true, true
                     )
                 ).build()
             }
@@ -210,10 +211,9 @@ class AuthService {
         }
 
         // Generate random alphanumeric token
-        val userToken =
-            SecureRandom().ints(48, 123).filter { (it <= 57 || it >= 64) && (it <= 90 || it >= 97) }.limit(
-                TOKEN_LEN
-            ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
+        val userToken = SecureRandom().ints(48, 123).filter { (it <= 57 || it >= 64) && (it <= 90 || it >= 97) }.limit(
+            TOKEN_LEN
+        ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
 
         return Panache.withTransaction {
             userRepository.findByName(user).onItem().ifNotNull().transformToUni { user ->
@@ -236,15 +236,18 @@ class AuthService {
 
                 tokenRepository.persist(token)
             }.onItem().transformToUni { _ ->
-                mailer.send(Mail.withText(user, "Pedido de substituição de password para a plataforma Safilo/CDR",
-                """
+                mailer.send(
+                    Mail.withText(
+                        user, "Pedido de substituição de password para a plataforma Safilo/CDR", """
                 Foi efetuado um pedido de substituição de password para a conta associada a este email
                 
                 Para proceder à alteração da password aceda a https://${domain}/forget?email=$user&token=${userToken}
                 
                 
                 Este é um email automático, por favor não responda
-                """.trimIndent()))
+                """.trimIndent()
+                    )
+                )
             }.onItem().transform { Response.ok().build() }
         }
     }

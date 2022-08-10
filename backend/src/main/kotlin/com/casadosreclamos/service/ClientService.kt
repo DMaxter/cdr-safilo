@@ -1,5 +1,8 @@
 package com.casadosreclamos.service
 
+import com.casadosreclamos.EMAIL_REGEX
+import com.casadosreclamos.PHONE_REGEX
+import com.casadosreclamos.POSTAL_REGEX
 import com.casadosreclamos.dto.AddressDto
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.exception.*
@@ -39,18 +42,15 @@ class ClientService {
     fun register(clientDto: ClientDto): Uni<Response> {
         val client = Client()
 
-        // TODO: verify valid email
-        // TODO: verify valid phone
-        // TODO: verify valid postal code
         if (clientDto.id == null || clientDto.id!! <= 0) {
             throw InvalidIdException("client")
-        } else if (clientDto.email == null || clientDto.email!!.isEmpty()) {
+        } else if (clientDto.email == null || clientDto.email!!.isEmpty() || !EMAIL_REGEX.matches(clientDto.email!!)) {
             throw InvalidEmailException()
         } else if (clientDto.name == null || clientDto.name!!.isEmpty()) {
             throw InvalidNameException()
         } else if (clientDto.fiscalNumber == null) {
             throw InvalidFiscalNumberException()
-        } else if (clientDto.phone == null || clientDto.phone!!.isEmpty()) {
+        } else if (clientDto.phone == null || clientDto.phone!!.isEmpty() || !PHONE_REGEX.matches(clientDto.phone!!)) {
             throw InvalidPhoneException()
         }
 
@@ -76,7 +76,7 @@ class ClientService {
             throw InvalidIdException("client")
         } else if (addressDto.address == null || addressDto.address!!.isEmpty()) {
             throw InvalidAddressException()
-        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty()) {
+        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty() || !POSTAL_REGEX.matches(addressDto.postalCode!!)) {
             throw InvalidPostalCodeException()
         }
 
