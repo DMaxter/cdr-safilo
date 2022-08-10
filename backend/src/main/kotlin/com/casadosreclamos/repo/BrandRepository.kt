@@ -10,7 +10,7 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class BrandRepository : PanacheRepository<Brand> {
     fun streamAllWithImages(): Multi<Brand> {
-        return stream("FROM Brand b LEFT JOIN FETCH b.images")
+        return stream("SELECT DISTINCT b FROM Brand b LEFT JOIN FETCH b.images")
     }
 
     fun exists(name: String): Uni<Boolean> {

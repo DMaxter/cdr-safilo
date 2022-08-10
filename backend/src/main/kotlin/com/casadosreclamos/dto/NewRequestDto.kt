@@ -9,6 +9,7 @@ data class NewRequestDto(
     var materialId: Long?,
     var amount: Int?,
     var measurements: Measurements?,
+    var addressId: Long?,
     var application: Boolean,
 
     @Schema(oneOf = [OneFace::class, TwoFaces::class, LeftShowcase::class, RightShowcase::class])

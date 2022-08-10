@@ -33,4 +33,6 @@ open class Request {
     open lateinit var info: RequestInfo
 
     open var cost: Double = 0.0
+
+    open var observations: String? = null
 }

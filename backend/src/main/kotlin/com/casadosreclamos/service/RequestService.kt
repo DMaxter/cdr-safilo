@@ -8,11 +8,9 @@ import com.casadosreclamos.dto.RightShowcase as RightDto
 import com.casadosreclamos.dto.RequestDto
 import com.casadosreclamos.dto.RequestTypeDto
 import com.casadosreclamos.dto.ShowcaseDto
-import com.casadosreclamos.exception.InvalidAmountException
-import com.casadosreclamos.exception.InvalidIdException
-import com.casadosreclamos.exception.InvalidMeasurementsException
-import com.casadosreclamos.exception.InvalidRequestTypeException
+import com.casadosreclamos.exception.*
 import com.casadosreclamos.model.Request
+import com.casadosreclamos.model.Role
 import com.casadosreclamos.model.request.*
 import com.casadosreclamos.repo.*
 import io.quarkus.hibernate.reactive.panache.Panache
@@ -93,7 +91,6 @@ class RequestService {
         val requestInfo = RequestInfo()
         requestInfo.measurement = requestDto.measurements!!
         requestInfo.amount = requestDto.amount!!
-        requestInfo.application = requestDto.application
 
         lateinit var materialName: String
         lateinit var clientName: String
@@ -153,8 +150,7 @@ class RequestService {
         }.onItem().transformToUni { _ ->
             mailer.send(
                 Mail.withText(
-                    cdrMail, "Novo pedido efetuado por comercial da Safilo",
-                    """
+                    cdrMail, "Novo pedido efetuado por comercial da Safilo", """
                     Foi efetuado um novo pedido à Casa dos Reclamos pelo utilizador.
                     Resumo do pedido:
                     
@@ -182,12 +178,41 @@ class RequestService {
         return Panache.withTransaction {
             requestRepository.streamAll(requests).onItem().call { request ->
                 request.status = RequestStatus.IN_PRODUCTION
+                request.lastUpdate = Date()
 
                 return@call Uni.createFrom().voidItem()
-            }.toUni()
-                .onItem().transform {
-                    Response.ok().build()
+            }.toUni().onItem().transform {
+                Response.ok().build()
+            }
+        }
+    }
+
+    fun cancel(requestId: Long, username: String): Uni<Response> {
+        lateinit var roles: Set<Role>
+
+        // TODO: Send mail
+
+        return Panache.withTransaction {
+            userRepository.findByName(username).onItem().transformToUni { user ->
+                roles = user.roles
+
+                requestRepository.findById(requestId).onItem().call { request ->
+                    // Prevent other commercials from cancelling arbitrary requests
+                    if (roles.contains(Role.ADMIN) || roles.contains(Role.CDR) || roles.contains(Role.MANAGER) || (roles.contains(
+                            Role.COMMERCIAL
+                        ) && request.requester.name == username)
+                    ) {
+                        request.status = RequestStatus.CANCELLED
+                        request.lastUpdate = Date()
+                    } else {
+                        throw OperationNotPerformedException()
+                    }
+
+                    return@call Uni.createFrom().voidItem()
                 }
+            }
+        }.onItem().transform {
+            Response.ok().build()
         }
     }
 
@@ -228,8 +253,8 @@ class RequestService {
         val rightUni = imageRepository.findById(request.right.id)
         val sideUni = imageRepository.findById(request.side.id)
 
-        return Uni.join().all(topUni, bottomUni, leftUni, rightUni, sideUni).andFailFast()
-            .onItem().transform { (top, bottom, left, right, side) ->
+        return Uni.join().all(topUni, bottomUni, leftUni, rightUni, sideUni).andFailFast().onItem()
+            .transform { (top, bottom, left, right, side) ->
                 output.top = top
                 output.bottom = bottom
                 output.left = left

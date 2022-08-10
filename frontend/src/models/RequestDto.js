@@ -9,8 +9,8 @@ export default class RequestDto {
   brand = null // BrandDto
   material = null // MaterialDto
   measurements = null // Measurements
-  application = null // Boolean
   images = null // RequestTypeDto
+  observations = null // String
 
   constructor(obj) {
     if (obj) {
@@ -23,8 +23,8 @@ export default class RequestDto {
       this.brand = new BrandDto(obj.brand)
       this.material = new MaterialDto(obj.material)
       this.measurement = new Measurements(obj.measurement)
-      this.application = obj.application
       this.images = RequestTypeDto.from(obj.images)
+      this.observations = obj.observations
     }
   }
 }

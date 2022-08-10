@@ -24,8 +24,6 @@ open class RequestInfo {
 
     open var amount: Int = 0
 
-    open var application: Boolean = false
-
     @ManyToOne
     open lateinit var material: Material
 }

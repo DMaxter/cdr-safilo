@@ -16,10 +16,7 @@ import org.jboss.logging.Logger
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
+import javax.ws.rs.*
 import javax.ws.rs.core.Response
 
 @Path("/request")
@@ -72,13 +69,28 @@ class RequestController {
     @APIResponses(
         APIResponse(responseCode = "200", description = "Request obtained"),
         APIResponse(responseCode = "401", description = "User is not logged in"),
-        APIResponse(responseCode = "403", description = "User doesn't have authorization to view all requests")
     )
     fun getAllRequest(): Multi<RequestDto> {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
             logger.debug("User ${id.principal.name} is requesting all clients")
 
             return@transformToMulti requestService.getAll()
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Authenticated
+    @Operation(summary = "Cancel a request")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Request cancelled"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+    )
+    fun cancelRequest(@PathParam("id") request: Long): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is cancelling request with id $request")
+
+            return@transformToUni requestService.cancel(request, id.principal.name)
         }
     }
 }

@@ -172,7 +172,7 @@ class AuthService {
     }
 
     fun getAll(): Multi<UserDto> {
-        return userRepository.streamAll().map { UserDto(it) }
+        return userRepository.streamAllWithCredits().map { UserDto(it) }
     }
 
     @Throws(InvalidCredentialsException::class)

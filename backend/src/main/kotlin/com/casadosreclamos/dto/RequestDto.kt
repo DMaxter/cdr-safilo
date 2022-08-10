@@ -15,11 +15,12 @@ data class RequestDto(
     var lastUpdate: Date?,
     var trackingCode: String?,
     var status: RequestStatus,
-    var brand: BrandDto?,
+    var brand: String?,
     var material: MaterialDto?,
     var measurements: Measurements?,
-    var application: Boolean?,
-    var images: RequestTypeDto?
+    var images: RequestTypeDto?,
+    var cost: Double?,
+    var observations: String?
 ) {
     constructor(request: Request) : this(
         request.id,
@@ -30,10 +31,11 @@ data class RequestDto(
         request.lastUpdate,
         request.trackingCode,
         request.status,
-        BrandDto(request.info.brand),
+        request.info.brand.name,
         MaterialDto(request.info.material),
         request.info.measurement,
-        request.info.application,
-        RequestTypeDto.from(request.info.type)
+        RequestTypeDto.from(request.info.type),
+        request.cost,
+        request.observations
     )
 }
