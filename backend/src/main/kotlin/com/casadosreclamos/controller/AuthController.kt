@@ -8,6 +8,7 @@ import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.AuthService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
+import io.quarkus.security.runtime.QuarkusSecurityIdentity
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -101,12 +102,23 @@ class AuthController {
     @Operation(summary = "Change user password")
     @APIResponses(APIResponse(responseCode = "200", description = "Password was successfully changed"))
     fun changePassword(
-        @PathParam("username") user: String,
-        @PathParam("password") password: String,
-        @PathParam("token") token: String
+        @PathParam("username") user: String, @PathParam("password") password: String, @PathParam("token") token: String
     ): Uni<Response> {
         logger.info("Changing password for user \"$user\" through recovery token")
 
         return authService.changePassword(user, password, token)
+    }
+
+    @GET
+    @PermitAll
+    @Path("/logged")
+    @Operation(summary = "Check if user logged")
+    @APIResponses(APIResponse(responseCode = "200", description = "Could check if user was logged in or not"))
+    fun isLogged(): Uni<Response> {
+        return identity.deferredIdentity.onItem().transform { id ->
+            logger.debug("User ${id.principal.name} is checking if logged in")
+
+            Response.ok(id is QuarkusSecurityIdentity).build()
+        }
     }
 }
