@@ -68,7 +68,7 @@ class ClientService {
             }
     }
 
-    @Throws(InvalidAddressException::class, InvalidPostalCodeException::class)
+    @Throws(InvalidIdException::class, InvalidAddressException::class, InvalidPostalCodeException::class)
     fun addAddress(clientId: Long, addressDto: AddressDto): Uni<Response> {
         val address = Address()
 
@@ -76,7 +76,10 @@ class ClientService {
             throw InvalidIdException("client")
         } else if (addressDto.address == null || addressDto.address!!.isEmpty()) {
             throw InvalidAddressException()
-        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty() || !POSTAL_REGEX.matches(addressDto.postalCode!!)) {
+        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty() || !POSTAL_REGEX.matches(
+                addressDto.postalCode!!
+            )
+        ) {
             throw InvalidPostalCodeException()
         }
 
@@ -85,13 +88,14 @@ class ClientService {
 
         return Panache.withTransaction {
             clientRepository.findByIdWithAddresses(clientId).onItem().transformToUni { client ->
+                if (client == null) {
+                    throw InvalidIdException("client")
+                }
+
                 address.client = client
                 client.addresses.add(address)
                 return@transformToUni addressRepository.persist(address)
             }
-        }.onItem().transform { Response.ok().build() }.onFailure().recoverWithItem { e ->
-            logger.error(e)
-            Response.serverError().build()
-        }
+        }.onItem().transform { Response.ok().build() }
     }
 }

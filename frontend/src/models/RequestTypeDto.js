@@ -12,43 +12,43 @@ export class RequestTypeDto {
 }
 
 export class ShowcaseDto extends RequestTypeDto {
-  top = null // ImageDto
-  bottom = null // ImageDto
-  left = null // ImageDto
-  right = null // ImageDto
-  side = null // ImageDto
+  top = null // RequestSlotDto
+  bottom = null // RequestSlotDto
+  left = null // RequestSlotDto
+  right = null // RequestSlotDto
+  side = null // RequestSlotDto
 
   constructor(obj) {
     if (obj) {
-      this.top = obj.top
-      this.bottom = obj.bottom
-      this.left = obj.left
-      this.right = obj.right
-      this.side = obj.side
+      this.top = new RequestSlotDto(obj.top)
+      this.bottom = new RequestSlotDto(obj.bottom)
+      this.left = new RequestSlotDto(obj.left)
+      this.right = new RequestSlotDto(obj.right)
+      this.side = new RequestSlotDto(obj.side)
     }
   }
 }
 
 export class OneFace extends RequestTypeDto {
   type = "OneFace"
-  cover = null // ImageDto
+  cover = null // RequestSlotDto
 
   constructor(obj) {
     if (obj) {
-      this.cover = obj.cover
+      this.cover = new RequestSlotDto(obj.cover)
     }
   }
 }
 
 export class TwoFaces extends RequestTypeDto {
   type = "TwoFaces"
-  cover = null // ImageDto
-  back = null // ImageDto
+  cover = null // RequestSlotDto
+  back = null // RequestSlotDto
 
   constructor(obj) {
     if (obj) {
-      this.cover = obj.cover
-      this.back = obj.back
+      this.cover = new RequestSlotDto(obj.cover)
+      this.back = new RequestSlotDto(obj.back)
     }
   }
 }

@@ -1,13 +1,10 @@
 package com.casadosreclamos.service
 
-import com.casadosreclamos.dto.NewRequestDto
+import com.casadosreclamos.dto.*
 import com.casadosreclamos.dto.OneFace as OneDto
 import com.casadosreclamos.dto.TwoFaces as TwoDto
 import com.casadosreclamos.dto.LeftShowcase as LeftDto
 import com.casadosreclamos.dto.RightShowcase as RightDto
-import com.casadosreclamos.dto.RequestDto
-import com.casadosreclamos.dto.RequestTypeDto
-import com.casadosreclamos.dto.ShowcaseDto
 import com.casadosreclamos.exception.*
 import com.casadosreclamos.model.Request
 import com.casadosreclamos.model.Role
@@ -25,8 +22,6 @@ import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.Status
-
-private const val CDR_EMAIL = "daniel99matos@gmail.com"
 
 @ApplicationScoped
 class RequestService {
@@ -46,7 +41,7 @@ class RequestService {
     lateinit var materialRepository: MaterialRepository
 
     @Inject
-    lateinit var requestInfoRepository: RequestInfoRepository
+    lateinit var requestSlotRepository: RequestSlotRepository
 
     @Inject
     lateinit var requestTypeRepository: RequestTypeRepository
@@ -72,84 +67,53 @@ class RequestService {
     fun add(requestDto: NewRequestDto, username: String): Uni<Response> {
         if (requestDto.clientId == null || requestDto.clientId!! <= 0) {
             throw InvalidIdException("client")
-        } else if (requestDto.brandId == null || requestDto.brandId!! <= 0) {
-            throw InvalidIdException("brand")
-        } else if (requestDto.materialId == null || requestDto.materialId!! <= 0) {
-            throw InvalidIdException("material")
-        } else if (requestDto.measurements == null || requestDto.measurements!!.height <= 0 || requestDto.measurements!!.width <= 0) {
-            throw InvalidMeasurementsException()
         } else if (requestDto.amount == null || requestDto.amount!! <= 0) {
             throw InvalidAmountException()
-        } else if (requestDto.images == null) {
+        } else if (requestDto.type == null) {
             throw InvalidRequestTypeException()
         }
+
+        validateType(requestDto.type!!)
 
         val request = Request()
         request.status = RequestStatus.ORDERED
         request.created = Date()
         request.lastUpdate = request.created
         request.observations = requestDto.observations
+        request.amount = requestDto.amount!!
 
-        val requestInfo = RequestInfo()
-        requestInfo.measurement = requestDto.measurements!!
-        requestInfo.amount = requestDto.amount!!
-
-        lateinit var materialName: String
         lateinit var clientName: String
         lateinit var userName: String
-        lateinit var brandName: String
 
         return Panache.withTransaction {
-            val clientUni = clientRepository.findByIdWithAddresses(requestDto.clientId!!).onFailure()
-                .transform { InvalidIdException("client") }
-            val brandUni =
-                brandRepository.findById(requestDto.brandId!!).onFailure().transform { InvalidIdException("brand") }
-            val materialUni = materialRepository.findById(requestDto.materialId!!).onFailure()
-                .transform { InvalidIdException("material") }
+            val clientUni = clientRepository.findByIdWithAddresses(requestDto.clientId!!)
             val userUni = userRepository.findByName(username)
 
-            Uni.combine().all().unis(clientUni, brandUni, materialUni, userUni).asTuple().onItem()
-                .transformToUni { tuple ->
+            Uni.combine().all().unis(clientUni, userUni).asTuple().onItem().transformToUni { tuple ->
                     val client = tuple.item1
-                    val brand = tuple.item2
-                    val material = tuple.item3
-                    val user = tuple.item4
+                    val user = tuple.item2
 
                     if (client == null) {
                         throw InvalidIdException("client")
-                    } else if (brand == null) {
-                        throw InvalidIdException("brand")
-                    } else if (material == null) {
-                        throw InvalidIdException("material")
-                    } else if (client.addresses.stream().noneMatch { it.id == requestDto.addressId }) {
-                        throw InvalidIdException("address")
                     }
 
-                    materialName = material.name
                     clientName = client.name
                     userName = user.name
-                    brandName = brand.name
 
                     // TODO: check plafond
-                    // TODO: Check if image from brand
 
                     request.address =
-                        client.addresses.stream().filter { it.id == requestDto.addressId }.findFirst().get()
+                        client.addresses.stream().filter { it.id == requestDto.addressId }.findFirst().orElse(null)
+                            ?: throw InvalidIdException("address")
                     request.requester = user
                     request.client = client
-                    requestInfo.brand = brand
-                    requestInfo.material = material
 
                     requestRepository.persistAndFlush(request)
                 }.onItem().transformToUni { _ ->
-                    requestInfo.request = request
-                    request.info = requestInfo
-                    requestInfoRepository.persist(requestInfo)
-                }.onItem().transformToUni { _ ->
-                    toRequestType(requestDto.images!!)
+                    toRequestType(requestDto.type!!)
                 }.onItem().transformToUni { requestType ->
-                    requestType.request = requestInfo
-                    requestInfo.type = requestType
+                    requestType.request = request
+                    request.type = requestType
                     requestTypeRepository.persist(requestType)
                 }
         }.onItem().transformToUni { _ ->
@@ -161,9 +125,7 @@ class RequestService {
                     
                     Comercial: $userName
                     Cliente: $clientName
-                    Material: $materialName
-                    Marca: $brandName
-                    Tipo de pedido: ${getType(requestDto.images!!)}
+                    Tipo de pedido: ${getType(requestDto.type!!)}
                     
                     Para ver todos os detalhes aceda à plataforma
                     
@@ -247,33 +209,33 @@ class RequestService {
     }
 
     private fun toOneFace(request: OneDto): Uni<OneFace> {
-        return imageRepository.findById(request.cover.id).onItem().transform { image ->
+        return doSlot(request.cover).onItem().transform { slot ->
             val type = OneFace()
-            type.cover = image
+            type.cover = slot
             type
-        }.onFailure().transform { InvalidIdException("image") }
+        }
     }
 
     private fun toTwoFaces(request: TwoDto): Uni<TwoFaces> {
-        val coverUni = imageRepository.findById(request.cover.id)
-        val backUni = imageRepository.findById(request.back.id)
+        val coverSlot = doSlot(request.cover)
+        val backSlot = doSlot(request.back)
 
-        return Uni.join().all(coverUni, backUni).andFailFast().onItem().transform { (cover, back) ->
+        return Uni.join().all(coverSlot, backSlot).andFailFast().onItem().transform { (cover, back) ->
             val type = TwoFaces()
             type.cover = cover
             type.back = back
             type
-        }.onFailure().transform { InvalidIdException("image") }
+        }
     }
 
     private fun toShowcase(request: ShowcaseDto, output: Showcase): Uni<Showcase> {
-        val topUni = imageRepository.findById(request.top.id)
-        val bottomUni = imageRepository.findById(request.bottom.id)
-        val leftUni = imageRepository.findById(request.left.id)
-        val rightUni = imageRepository.findById(request.right.id)
-        val sideUni = imageRepository.findById(request.side.id)
+        val topSlot = doSlot(request.top)
+        val bottomSlot = doSlot(request.bottom)
+        val leftSlot = doSlot(request.left)
+        val rightSlot = doSlot(request.right)
+        val sideSlot = doSlot(request.side)
 
-        return Uni.join().all(topUni, bottomUni, leftUni, rightUni, sideUni).andFailFast().onItem()
+        return Uni.join().all(topSlot, bottomSlot, leftSlot, rightSlot, sideSlot).andFailFast().onItem()
             .transform { (top, bottom, left, right, side) ->
                 output.top = top
                 output.bottom = bottom
@@ -282,7 +244,7 @@ class RequestService {
                 output.side = side
 
                 output
-            }.onFailure().transform { InvalidIdException("image") }
+            }
     }
 
     private fun toLeftShowcase(request: LeftDto): Uni<Showcase> {
@@ -297,12 +259,90 @@ class RequestService {
         return toShowcase(request, showcase)
     }
 
+    private fun doSlot(slotDto: RequestSlotDto): Uni<RequestSlot> {
+        val materialUni = materialRepository.findById(slotDto.material!!.id)
+        val brandUni = brandRepository.findByIdWithImages(slotDto.brand!!.id!!)
+
+        return Uni.combine().all().unis(materialUni, brandUni).asTuple().onItem().transformToUni { tuple ->
+            val material = tuple.item1
+            val brand = tuple.item2
+
+            if (material == null) {
+                throw InvalidIdException("material")
+            } else if (brand == null) {
+                throw InvalidIdException("brand")
+            }
+
+            val image = brand.images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
+                ?: throw InvalidIdException("image")
+
+            val slot = RequestSlot()
+            slot.image = image
+            slot.material = material
+            slot.brand = brand
+            slot.measurements = slotDto.measurements!!
+
+            requestSlotRepository.persist(slot)
+        }
+    }
+
     private fun getType(request: RequestTypeDto): String {
         return when (request) {
             is OneDto -> "Uma face"
             is TwoDto -> "Duas faces"
             is ShowcaseDto -> "Montra"
             else -> throw InvalidRequestTypeException()
+        }
+    }
+
+    private fun validateType(request: RequestTypeDto) {
+        return when (request) {
+            is OneDto -> {
+                validateSlot(request.cover)
+            }
+            is TwoDto -> {
+                validateSlot(request.cover)
+                validateSlot(request.back)
+            }
+            is ShowcaseDto -> {
+                validateSlot(request.top)
+                validateSlot(request.bottom)
+                validateSlot(request.left)
+                validateSlot(request.right)
+                validateSlot(request.side)
+            }
+            else -> throw InvalidRequestTypeException()
+        }
+    }
+
+    private fun validateSlot(slot: RequestSlotDto?) {
+        validateBrand(slot?.brand)
+        validateImage(slot?.image)
+        validateMaterial(slot?.material)
+        validateMeasurements(slot?.measurements)
+    }
+
+    private fun validateBrand(brand: BrandDto?) {
+        if (brand?.id == null || brand.id!! <= 0) {
+            throw InvalidIdException("brand")
+        }
+    }
+
+    private fun validateImage(image: ImageDto?) {
+        if (image?.id == null || image.id!! <= 0) {
+            throw InvalidIdException("image")
+        }
+    }
+
+    private fun validateMaterial(material: MaterialDto?) {
+        if (material?.id == null || material.id!! <= 0) {
+            throw InvalidIdException("material")
+        }
+    }
+
+    private fun validateMeasurements(measurements: Measurements?) {
+        if (measurements == null || measurements.height <= 0 || measurements.width <= 0) {
+            throw InvalidMeasurementsException()
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.casadosreclamos.model
 
-import com.casadosreclamos.model.request.RequestInfo
 import com.casadosreclamos.model.request.RequestStatus
+import com.casadosreclamos.model.request.RequestType
 import java.util.*
 import javax.persistence.*
 
@@ -29,10 +29,12 @@ open class Request {
 
     open var trackingCode: String? =  null
 
-    @OneToOne(mappedBy = "request")
-    open lateinit var info: RequestInfo
+    open var amount: Int = 0
 
     open var cost: Double = 0.0
 
     open var observations: String? = null
+
+    @OneToOne
+    open lateinit var type: RequestType
 }

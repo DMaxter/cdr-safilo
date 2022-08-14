@@ -41,38 +41,38 @@ abstract class RequestTypeDto() {
 }
 
 abstract class ShowcaseDto() : RequestTypeDto() {
-    lateinit var top: ImageDto
-    lateinit var bottom: ImageDto
-    lateinit var left: ImageDto
-    lateinit var right: ImageDto
-    lateinit var side: ImageDto
+    lateinit var top: RequestSlotDto
+    lateinit var bottom: RequestSlotDto
+    lateinit var left: RequestSlotDto
+    lateinit var right: RequestSlotDto
+    lateinit var side: RequestSlotDto
 
     constructor(request: Showcase) : this() {
-        this.top = ImageDto(request.top)
-        this.bottom = ImageDto(request.bottom)
-        this.left = ImageDto(request.left)
-        this.right = ImageDto(request.right)
-        this.side = ImageDto(request.side)
+        this.top = RequestSlotDto(request.top)
+        this.bottom = RequestSlotDto(request.bottom)
+        this.left = RequestSlotDto(request.left)
+        this.right = RequestSlotDto(request.right)
+        this.side = RequestSlotDto(request.side)
     }
 }
 
 class OneFace() : RequestTypeDto() {
-    lateinit var cover: ImageDto
+    lateinit var cover: RequestSlotDto
 
     constructor(request: OneFaceRequest) : this() {
-        this.cover = ImageDto(request.cover)
+        this.cover = RequestSlotDto(request.cover)
     }
 }
 
 class TwoFaces() : RequestTypeDto() {
-    lateinit var cover: ImageDto
+    lateinit var cover: RequestSlotDto
 
-    lateinit var back: ImageDto
+    lateinit var back: RequestSlotDto
 
 
     constructor(request: TwoFacesRequest) : this() {
-        this.cover = ImageDto(request.cover)
-        this.back = ImageDto(request.back)
+        this.cover = RequestSlotDto(request.cover)
+        this.back = RequestSlotDto(request.back)
     }
 }
 

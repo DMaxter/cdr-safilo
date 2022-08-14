@@ -1,12 +1,6 @@
 package com.casadosreclamos.model.request
 
-import com.casadosreclamos.dto.RequestTypeDto
-import com.casadosreclamos.exception.InvalidRequestTypeException
-import com.casadosreclamos.dto.OneFace as OneDto
-import com.casadosreclamos.dto.TwoFaces as TwoDto
-import com.casadosreclamos.dto.LeftShowcase as LeftDto
-import com.casadosreclamos.dto.RightShowcase as RightDto
-import io.smallrye.mutiny.Uni
+import com.casadosreclamos.model.Request
 import javax.persistence.*
 
 @Entity
@@ -19,38 +13,38 @@ abstract class RequestType {
     @OneToOne
     @JoinColumn(name = "id")
     @MapsId
-    open lateinit var request: RequestInfo
+    open lateinit var request: Request
 }
 
 @MappedSuperclass
 abstract class Showcase: RequestType() {
     @ManyToOne
-    open lateinit var top: Image
+    open lateinit var top: RequestSlot
     @ManyToOne
-    open lateinit var bottom: Image
+    open lateinit var bottom: RequestSlot
     @ManyToOne
-    open lateinit var left: Image
+    open lateinit var left: RequestSlot
     @ManyToOne
-    open lateinit var right: Image
+    open lateinit var right: RequestSlot
     @ManyToOne
-    open lateinit var side: Image
+    open lateinit var side: RequestSlot
 }
 
 @Entity
 @DiscriminatorValue("OneFace")
 open class OneFace: RequestType() {
     @ManyToOne
-    open lateinit var cover: Image
+    open lateinit var cover: RequestSlot
 }
 
 @Entity
 @DiscriminatorValue("TwoFaces")
 open class TwoFaces: RequestType() {
     @ManyToOne
-    open lateinit var cover: Image
+    open lateinit var cover: RequestSlot
 
     @ManyToOne
-    open lateinit var back: Image
+    open lateinit var back: RequestSlot
 }
 
 @Entity
@@ -60,7 +54,3 @@ open class LeftShowcase: Showcase()
 @Entity
 @DiscriminatorValue("RightShowcase")
 open class RightShowcase: Showcase()
-
-private fun from(request: OneFace) {
-
-}
