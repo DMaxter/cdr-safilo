@@ -2,7 +2,6 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.EMAIL_REGEX
 import com.casadosreclamos.PHONE_REGEX
-import com.casadosreclamos.POSTAL_REGEX
 import com.casadosreclamos.dto.AddressDto
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.exception.*
@@ -76,10 +75,7 @@ class ClientService {
             throw InvalidIdException("client")
         } else if (addressDto.address == null || addressDto.address!!.isEmpty()) {
             throw InvalidAddressException()
-        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty() || !POSTAL_REGEX.matches(
-                addressDto.postalCode!!
-            )
-        ) {
+        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty()) {
             throw InvalidPostalCodeException()
         }
 
