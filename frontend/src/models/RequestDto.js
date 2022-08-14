@@ -12,6 +12,7 @@ export default class RequestDto {
   type = null // RequestTypeDto
   cost = null // Double
   observations = null // String
+  application = null // Boolean
 
   constructor(obj) {
     if (obj) {
@@ -25,6 +26,7 @@ export default class RequestDto {
       this.type = RequestTypeDto.from(obj.type)
       this.cost = obj.cost
       this.observations = obj.observations
+      this.application = obj.application
     }
   }
 }

@@ -17,7 +17,8 @@ data class RequestDto(
     var status: RequestStatus,
     var type: RequestTypeDto?,
     var cost: Double?,
-    var observations: String?
+    var observations: String?,
+    var application: Boolean?
 ) {
     constructor(request: Request) : this(
         request.id,
@@ -30,6 +31,7 @@ data class RequestDto(
         request.status,
         RequestTypeDto.from(request.type),
         request.cost,
-        request.observations
+        request.observations,
+        request.application
     )
 }

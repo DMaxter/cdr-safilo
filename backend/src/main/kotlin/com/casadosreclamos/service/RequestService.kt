@@ -71,6 +71,8 @@ class RequestService {
             throw InvalidAmountException()
         } else if (requestDto.type == null) {
             throw InvalidRequestTypeException()
+        } else if (requestDto.application == null) {
+            requestDto.application = false
         }
 
         validateType(requestDto.type!!)
@@ -80,6 +82,7 @@ class RequestService {
         request.created = Date()
         request.lastUpdate = request.created
         request.observations = requestDto.observations
+        request.application = requestDto.application!!
         request.amount = requestDto.amount!!
 
         lateinit var clientName: String
