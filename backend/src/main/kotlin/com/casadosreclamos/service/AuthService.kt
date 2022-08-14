@@ -205,8 +205,8 @@ class AuthService {
     }
 
     @Throws(InvalidUserException::class)
-    fun forgot(user: String): Uni<Response> {
-        if (user.isEmpty()) {
+    fun forgot(username: String): Uni<Response> {
+        if (username.isEmpty()) {
             throw InvalidUserException()
         }
 
@@ -216,7 +216,7 @@ class AuthService {
         ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
 
         return Panache.withTransaction {
-            userRepository.findByName(user).onItem().ifNotNull().transformToUni { user ->
+            userRepository.findByName(username).onItem().ifNotNull().transformToUni { user ->
                 val token = PasswordToken()
                 token.id = PasswordTokenId()
                 token.id.user = user.email
@@ -234,11 +234,10 @@ class AuthService {
 
                 logger.warn(userToken)
 
-                tokenRepository.persist(token)
-            }.onItem().transformToUni { _ ->
-                mailer.send(
-                    Mail.withText(
-                        user, "Pedido de substituição de password para a plataforma Safilo/CDR", """
+                tokenRepository.persist(token).onItem().transformToUni { _ ->
+                    mailer.send(
+                        Mail.withText(
+                            username, "Pedido de substituição de password para a plataforma Safilo/CDR", """
                 Foi efetuado um pedido de substituição de password para a conta associada a este email
                 
                 Para proceder à alteração da password aceda a https://${domain}/forget?email=$user&token=${userToken}
@@ -246,9 +245,16 @@ class AuthService {
                 
                 Este é um email automático, por favor não responda
                 """.trimIndent()
+                        )
                     )
-                )
-            }.onItem().transform { Response.ok().build() }
+                }
+            }
+        }.onItemOrFailure().transform { _: Void?, e: Throwable? ->
+            if (e != null) {
+                logger.error(e)
+            }
+
+            Response.ok().build()
         }
     }
 
