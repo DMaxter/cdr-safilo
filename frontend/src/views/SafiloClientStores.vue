@@ -103,6 +103,71 @@
             <v-icon @click="getRequest(item)">mdi-plus</v-icon>
           </template>
     </v-data-table>
+        <template>
+    <v-dialog
+      v-model="dialog1"
+      persistent
+      max-width="500px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+      <v-btn height="60" width="240" class="mb-3 mt-5" v-bind="attrs" v-on="on"> Adicionar Loja a Cliente </v-btn>
+      </template>
+      <v-card>
+        <v-card-title class="justify-center">
+          <span class="text-h5"> Adicionar Loja a Cliente </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <v-col
+                cols="8"
+              >
+                <v-text-field
+                  label="Código da Loja"
+                  required
+                  v-model="storeID"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="8"
+              >
+                <v-text-field
+                  label="Morada da Loja"
+                  required
+                  v-model="storeAdress"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="8"
+              >
+                <v-text-field
+                  label="Código postal da Loja"
+                  required
+                  v-model="storePostCode"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog1 = false;"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="addStore(); dialog1 = false;"
+          >
+            Adicionar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+</template>
             </v-row>
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
            <v-col cols="auto" class="pl-4">
@@ -136,6 +201,8 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
+import AddressDto from '@/models/AddressDto';
 
 export default {
   name: 'CustomerHistory',
@@ -146,7 +213,13 @@ export default {
 data () {
       return {
         store,
-
+        storeID: null,
+        storeAdress: null,
+        storePostCode: null,
+        dialog1: false,
+        dates: [],
+        menu: false,
+        address: new AddressDto(),
         desserts: [
           {
             name: '1234',
@@ -170,8 +243,20 @@ data () {
             telefone: "999999997"
           },
         ],
-        dates: [],
-        menu: false,
+      }
+    },
+    async created() { 
+      try {
+        var allClients = Backend.getClients()
+        allClients.forEach(element => {
+          if(store.currentClient.name == element.name){
+            store.currentClient = element
+          }
+        });
+        console.log(store.currentClient)
+        } catch (error) {
+        // TODO: Show something
+        console.error(error)
       }
     },
     computed: {
@@ -189,9 +274,6 @@ data () {
             align: "center",
           },
           { text: "", value: "actions", sortable: false },
-          { text: "", value: "morada", align: ' d-none', sortable: false },
-          { text: "", value: "imagem", align: ' d-none', sortable: false },
-          { text: "", value: "telefone", align: ' d-none', sortable: false },
         ]
       },
       
@@ -201,6 +283,19 @@ data () {
         console.log(item)
         this.$router.push({name: 'storeInfo'});
       },
+
+      addStore: async function () {
+      try {
+        this.address.id = this.storeID
+        this.address.address = this.storeAdress
+        this.address.postalCode = this.storePostCode
+        console.log(this.address)
+        await Backend.addStore(store.currentClient.id, this.address)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
     }
   }
 </script>

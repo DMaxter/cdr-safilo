@@ -5,7 +5,7 @@
     <v-row justify="center" align="center">
         <v-col cols="auto" >
           <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
-          <v-row no-gutters justify="start" class="pt-2 pl-2">
+          <v-row no-gutters justify="space-between" class="pt-2 pl-2 pr-2">
             <v-menu
             :offset-x="true"
             >
@@ -59,17 +59,29 @@
 
             </v-btn-toggle>
           </v-menu>
-          </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
-              Nome Comerciante
-            </v-row>
-            <v-divider></v-divider>
-            <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="desserts" fixed-header item-key="name" hide-default-footer height="210" style="width: 600px;" class="elevation-1">
-        <template v-slot:top>
-
-            <!-- v-container, v-col and v-row are just for decoration purposes. -->
-            <v-container fluid>
+          <v-menu
+            :offset-y="true"
+            left
+            tile
+            scale
+            :close-on-content-click="false"
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                height="64"
+                width="100"
+                round
+                class="white--text"
+                color="#6e4e5d"
+                dark
+                v-bind="attrs"
+                v-on="on"
+              >
+                Filtros
+              </v-btn>
+            </template>
+            <v-card>
+             <v-container fluid>
                 <v-row>
 
                     <v-col cols="5">
@@ -122,7 +134,7 @@
                               </template>
                               <v-date-picker
                                 v-model="dates"
-                                multiple
+                                range
                                 v-on:input="limiter"
                                 no-title
                                 scrollable
@@ -149,8 +161,16 @@
 
                 </v-row>
             </v-container>
-
-        </template>
+          </v-card>
+          </v-menu>
+          </v-row>
+            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
+              Nome Comerciante
+            </v-row>
+            <v-divider></v-divider>
+            <v-row justify="center" align="center" class="d-flex flex-column mt-2">
+        <v-data-table :headers="headers" :items="desserts" fixed-header item-key="name" hide-default-footer height="380" style="width: 600px;" class="elevation-1 my-header-style">
+        
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="getRequest(item)">mdi-plus</v-icon>
           </template>
@@ -243,6 +263,35 @@ data () {
             custo: 300,
             aplicacao: true, 
           },
+           {
+            name: 'FCH 2022.06.05 1254',
+            calories: "novo",
+            fat: "HUGO BOSS",
+            modelo: "montra",
+            material: ["pvc", "pvc2", "pvc3", "pvc4", "pvc5"],
+            dimensões: ["60 x 40", "100 x 50", "100 x 100", "30 x 90", "120 x 80"],
+            images: [
+              {
+                src: require('@/assets/uno.jpg'),
+              },
+                    {
+                src: require('@/assets/trese.png'),
+              },
+                    {
+                src: require('@/assets/quatre.png'),
+              },
+                    {
+                src: require('@/assets/dos.jpg'),
+              },
+                    {
+                src: require('@/assets/dos.jpg'),
+              },
+            ],
+            quantidade: 1,
+            observacoes: "Por favor despachem-se",
+            custo: 300,
+            aplicacao: true, 
+          },
           {
             name: 'ABC 2022.06.01 1245',
             calories: "em produção",
@@ -302,6 +351,7 @@ data () {
             sortable: false,
             value: 'name',
             filter: this.dateFilter,
+            class: 'my-header-style'
           },
           {
             text: 'Estado',
@@ -313,9 +363,10 @@ data () {
             text: 'Marca',
             value: 'fat',
             filter: this.marcasFilter,
+            class: 'my-header-style'
 
           },
-          { text: "", value: "actions", sortable: false },
+          { text: "", value: "actions", sortable: false, class: 'my-header-style'},
           { text: "", value: "modelo", align: ' d-none', sortable: false },
           { text: "", value: "material", align: ' d-none', sortable: false },
           { text: "", value: "dimensões", align: ' d-none', sortable: false },
@@ -324,9 +375,10 @@ data () {
       
     },
     methods: {
-      limiter(e) {
-        if(e.length > 2) {
-          e.pop()
+      limiter() {
+        if(this.dates.length > 2) {
+          this.dates = []
+          this.$refs.menu.save(this.dates);
         }
       },
       getRequest(item) {
@@ -385,9 +437,16 @@ data () {
         }
         var gaga = value.split(" ")
         var converted = new Date(gaga[1])
-        console.log(converted.setHours(0,0,0,0))
-        console.log(new Date(this.dates[0]))
-        return converted >= (new Date(this.dates[0]).setHours(0,0,0,0)) && converted <= (new Date(this.dates[1]).setHours(0,0,0,0))
+        var date1
+        var date2
+        if(new Date(this.dates[0]).setHours(0,0,0,0) > new Date(this.dates[1]).setHours(0,0,0,0)){
+          date1 = new Date(this.dates[1]).setHours(0,0,0,0)
+          date2 = new Date(this.dates[0]).setHours(0,0,0,0)
+        } else { 
+          date1 = new Date(this.dates[0]).setHours(0,0,0,0)
+          date2 = new Date(this.dates[1]).setHours(0,0,0,0)
+        }
+        return converted >= date1 && converted <= date2
        }
     }
   }
@@ -395,6 +454,9 @@ data () {
 
 <style>
 
+.my-header-style {
+  background-color: rgb(225, 225, 225) !important;
+}
 #app {
     background: #3A1C71;
     background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);

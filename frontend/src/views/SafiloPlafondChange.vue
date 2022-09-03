@@ -62,17 +62,15 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-3">
             <v-col cols="auto">
-                ID do Comerciante
+                Comerciante
             </v-col>
             <v-col cols="auto" >
-            <v-text-field
-            v-model= text
-            label=""
-            placeholder="Nome/Id"
-            filled
-            rounded
+              <v-autocomplete
+            v-model="user"
+            :items="userNames"
             dense
-          ></v-text-field>
+            label="nome"
+          ></v-autocomplete>
             </v-col>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
@@ -80,14 +78,12 @@
                 Marca
             </v-col>
             <v-col cols="auto" >
-          <v-text-field
-            v-model= text
-            label=""
-            placeholder="Marca"
-            filled
-            rounded
+              <v-autocomplete
+            v-model="brand"
+            :items="brandNames"
             dense
-          ></v-text-field>
+            label="marca"
+          ></v-autocomplete>
             </v-col>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
@@ -96,22 +92,39 @@
             </v-col>
             <v-col cols="auto" >
           <v-text-field
-            v-model= text
+            v-model= valor
             label=""
-            placeholder="Nome/Id"
+            placeholder="Quantidade"
             filled
             rounded
             dense
+            hide-details
           ></v-text-field>
+            </v-col>
+            <v-col cols="auto" >
+              <v-btn-toggle v-model="toggle_exclusive">
+                <v-btn v-model="add">
+                  Acrescentar
+                </v-btn>
+
+                <v-btn v-model="remove">
+                  Retirar
+                </v-btn>
+
+                <v-btn v-model="change">
+                  Alterar
+                </v-btn>
+            </v-btn-toggle>
             </v-col>
           </v-row>
           <v-dialog
         transition="dialog-bottom-transition"
+        v-model="dialog"
         max-width="600"
         id="dialogo"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-row justify="end" align="end" class="d-flex flex-column mt-4 mr-5">
+          <v-row justify="end" align="end" class="d-flex flex-column mt-4 mr-0">
             <v-col cols="auto">
               <v-btn
               class="d-flex flex-column"
@@ -121,7 +134,7 @@
               x-large
               rounded
               color="#6e4e5d"
-              @click= "dialog.value = true"
+              @click= "changePlafond(); dialog = true"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -151,6 +164,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerSearch',
@@ -159,6 +173,17 @@ export default {
   },
 
   data: () => ({
+    dialog: false,
+    user: null,
+    add: false,
+    remove: false,
+    change: false,
+    valor: null,
+    brand: null,
+    allUsers: null,
+    userNames: [],
+    brandNames: [],
+    allBrands: null,
     store,
     text: "",
     material: "",
@@ -170,6 +195,23 @@ export default {
     'TÊXTIL BACKLIT MA', 'VINIL', 'Vinil imp + recort',
     'VINIL INTERIOR MON', 'VINIL METALIZADO', 'VINIL REPOSICIONÁ']
   }),
+  async created() { 
+       try {
+        this.allUsers = await Backend.getUsers()
+        this.allBrands = await Backend.getBrands()
+        this.allUsers.forEach(element => {
+          this.userNames.push(element.name)
+        });
+        this.allBrands.forEach(element => {
+          this.brandNames.push(element.name)
+        });
+        console.log(this.allBrands)
+        console.log(this.allUsers)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
   methods: { 
     searchFilters() {
       if(this.text == ""){
@@ -192,6 +234,43 @@ export default {
       }
 
       // this.$router.push({name: 'searchResults'});
+    },
+    async changePlafond() {
+      var currentUser = null
+      var existingUser = false;
+      this.allUsers.forEach(element => {
+        if(element.name == this.user){
+          existingUser = true;
+          currentUser = element;
+        }
+      });
+      var existingBrand = false;
+      var idToUse = null
+      var currentPlafond = null;
+      this.allBrands.forEach(element => {
+        if(element.name == this.brand){
+          idToUse = element.id
+          existingBrand = true;
+          currentUser.credits.forEach(element2 => {
+            if (element2.brand == this.brand){
+              currentPlafond = element2.amount
+            }
+          })
+        }
+      });
+      console.log(this.user, idToUse, this.valor)
+      if(existingUser && existingBrand) {
+        if(this.change){
+          await Backend.updatePlafond(this.user, idToUse, this.valor)
+        } else if (this.add){
+          currentPlafond = Number(this.valor) + Number(currentPlafond)
+          console.log(currentPlafond)
+          await Backend.updatePlafond(this.user, idToUse, currentPlafond)
+        } else if (this.remove){
+          currentPlafond = Number(currentPlafond) - Number(this.valor)
+          await Backend.updatePlafond(this.user, idToUse, currentPlafond)
+        }
+      }
     }  
   }
 };

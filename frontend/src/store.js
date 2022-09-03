@@ -42,5 +42,9 @@ export const store = reactive({
       cost: null,
       application: null
     },
-  
+  currentClient: null,
+  currentAddress: null,
+  currentCost: null,
+  currentBrand: null,
+  costPerBrand: null,
 })

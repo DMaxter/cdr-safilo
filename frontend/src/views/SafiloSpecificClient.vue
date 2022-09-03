@@ -61,7 +61,7 @@
           </v-menu>
           </v-row>
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 470px">
-          <h3 class="mb-8"> Cód: {{store.pedidoAtual.cod}}</h3>
+          <h3 class="mb-8"> {{store.currentClient.id}} - {{store.currentClient.name}}</h3>
           <v-btn height="60" width="500" class="mb-3" @click="$router.push('clientStores')"> Lojas </v-btn>
           <v-btn height="60" width="500" class="mb-3"> Histórico </v-btn>
           <v-btn height="60" width="500" class="mb-3"> Faturação </v-btn>

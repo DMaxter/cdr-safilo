@@ -4,7 +4,9 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
+          <v-card elevation="12" :height="$vuetify.breakpoint.lg
+                ? '600px' 
+                : '900px'" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
             <v-menu
             :offset-x="true"
@@ -68,7 +70,9 @@
               </v-avatar>
               Nome Empregado Safilo
             </v-row>
-             <v-row justify="left" align="left" class="d-flex ml-4">
+             <v-row justify="left" align="left" :class="$vuetify.breakpoint.lg
+                ? 'd-flex ml-4' 
+                : 'd-flex ml-4 mt-16'">
               <v-col cols = 1>
                 <v-avatar color="#6e4e5d" size="50" class="d-flex ml-12">
                   <v-icon size="50" dark class="d-flex"> mdi-currency-usd </v-icon>
@@ -78,7 +82,9 @@
                 <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> 500
                 <v-icon size="15"> mdi-currency-eur </v-icon> </v-main> </v-col>    
              </v-row>
-             <v-row justify="left" align="left" class="d-flex ml-4 pt-7">
+             <v-row justify="left" align="left" :class="$vuetify.breakpoint.lg
+                ? 'd-flex ml-4 pt-7' 
+                : 'd-flex ml-4 mt-16'">
               <v-col cols = 1>
                 <v-avatar color="#6e4e5d" size="50" class="d-flex ml-12">
                   <v-icon size="30" dark class="d-flex"> mdi-email </v-icon>
@@ -88,7 +94,9 @@
                 <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> xyz@gmail.com </v-main> 
             </v-col>  
              </v-row>
-             <v-row justify="left" align="left" class="d-flex ml-4 pt-7">
+             <v-row justify="left" align="left" :class="$vuetify.breakpoint.lg
+                ? 'd-flex ml-4 pt-7' 
+                : 'd-flex ml-4 mt-16'">
               <v-col cols = 1>
                 <v-avatar color="#6e4e5d" size="50" class="d-flex ml-12">
                   <v-icon size="35" dark class="d-flex"> mdi-lock </v-icon>

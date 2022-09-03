@@ -5,7 +5,7 @@
     <v-row justify="center" align="center">
         <v-col cols="auto" >
           <v-card elevation="12" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
-          <v-row no-gutters justify="start" class="pt-2 pl-2">
+          <v-row no-gutters justify="space-between" class="pt-2 pl-2 pr-2">
             <v-menu
             :offset-x="true"
             >
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('order')" height="60" width="170">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('orderClient')" height="60" width="170">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -59,6 +59,17 @@
 
             </v-btn-toggle>
           </v-menu>
+          <v-btn
+                height="64"
+                width="100"
+                rounded
+                class="white--text"
+                color="#6e4e5d"
+                dark
+                @click="logout()"
+              >
+                Logout
+              </v-btn>
           </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mb-10 mt-3">
               <v-avatar color="#6e4e5d" size="100" class="mb-6">
@@ -75,7 +86,7 @@
                 </v-avatar>
               </v-col>
               <v-col cols = 2 class="d-flex flex-column ml-10" align="left"> Plafond Geral
-                <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{ profile.credits }}
+                <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{ this.credits }}
                 <v-icon size="15"> mdi-currency-eur </v-icon> </v-main> </v-col>
               <v-col cols = 1 align="left" class>
                  <v-avatar color="#6e4e5d" size="20" class="d-flex" @click = "$router.push('plafond')">
@@ -125,17 +136,22 @@ export default {
   },
 
   data: () => ({
-    items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
+    credits: null,
     profile: new UserDto()
   }),
 
   created: async function() {
     this.profile = await Backend.getProfile()
+    this.credits = 0
+    this.profile.credits.forEach(element => {
+      this.credits += element.amount
+    });
+  },
+
+  methods: {
+    async logout() {
+     await Backend.logout()
+    }
   }
 };
 </script>

@@ -6,7 +6,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
-             <v-menu
+            <v-menu
             :offset-x="true"
             >
             <template v-slot:activator="{ on, attrs }">
@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense mandatory>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('safiloProfile')">
+              <v-btn-toggle v-model="icon" dark dense>
+              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profileComercial')">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,15 +33,15 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="60" width="170">
-                <span class="white--text" style="font-size: 12px">Clientes</span>
+              <v-btn color="#6e4e5d" value="center1" height="60" width="170" @click="$router.push('history')">
+                <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
-                  mdi-account-group
+                  mdi-clock
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="60" width="170">
+              <v-btn color="#6e4e5d" value="center2" height="60" width="170"  @click="$router.push('search')" >
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,11 +49,11 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="60" width="170">
-                <span class="white--text" style="font-size: 12px">Configurar</span>
+              <v-btn color="#6e4e5d" value="right" class="v-btn--active" height="60" width="170">
+                <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
-                  mdi-cog
+                  mdi-playlist-plus
                 </v-icon>
               </v-btn>
 
@@ -61,7 +61,7 @@
           </v-menu>
           </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mb-11 mt-5">
-              
+              Selecionar cliente e morada de entrega
             </v-row>
             <v-divider></v-divider>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
@@ -103,18 +103,14 @@
             <v-icon @click="getSpecificClient(item)">mdi-plus</v-icon>
           </template>
     </v-data-table>
-    <template>
-    <v-dialog
+     <v-dialog
       v-model="dialog1"
       persistent
       max-width="500px"
     >
-      <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="200" class="mb-3 mt-5" v-bind="attrs" v-on="on"> Adicionar Cliente </v-btn>
-      </template>
       <v-card>
         <v-card-title class="justify-center">
-          <span class="text-h5"> Adicionar Cliente </span>
+          <span class="text-h5"> Selecionar Morada </span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -122,47 +118,12 @@
               <v-col
                 cols="8"
               >
-                <v-text-field
-                  label="Código do cliente"
-                  required
-                  v-model="clientCode"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-              >
-                <v-text-field
-                  label="Nome do cliente"
-                  required
-                  v-model="clientName"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-              >
-                <v-text-field
-                  label="NIF do cliente"
-                  required
-                  v-model="clientNIF"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-              >
-                <v-text-field
-                  label="Email do cliente"
-                  required
-                  v-model="clientEmail"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-              >
-                <v-text-field
-                  label="Número de telefone do cliente"
-                  required
-                  v-model="clientPhone"
-                ></v-text-field>
+          <v-autocomplete
+            v-model="selectedAdress"
+            :items="items"
+            dense
+            label="Filled"
+          ></v-autocomplete>
               </v-col>
             </v-row>
           </v-container>
@@ -178,37 +139,14 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="addClient(); dialog1 = false;"
+            @click="store.currentAddress = selectedAdress; dialog1 = false; $router.push('order');"
           >
-            Adicionar
+            Selecionar
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-</template>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 70px;">
-           <v-col cols="auto" class="pl-4">
-            <v-btn
-              @click="$router.push('profile')"
-              class="d-flex flex-column"
-              outlined
-              rounded
-              color="#6e4e5d"
-            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
-            Voltar
-            </v-btn>
-           </v-col>
-            <v-col cols="auto">
-            <v-btn
-              class="d-flex flex-column"
-              outlined
-              rounded
-              color="#6e4e5d"
-            > Confirmar <v-icon >mdi-play</v-icon>
-            </v-btn>
-            </v-col>
-           </v-row>
           </v-card>
         </v-col>
     </v-row>
@@ -230,6 +168,8 @@ export default {
 
 data () {
       return {
+        items: [],
+        selectedAdress: null,
         allClients: null,
         desserts2: [],
         clientName: null,
@@ -258,7 +198,6 @@ data () {
     async created() { 
        try {
         this.allClients = await Backend.getClients()
-        console.log(this.allClients)
         this.allClients.forEach(element => {
           this.desserts2.push({ name: element.name, fat: element.id })
         });
@@ -287,28 +226,16 @@ data () {
       
     },
     methods: {
-      addClient: async function () {
-      try {
-        this.client.id = this.clientCode
-        this.client.name = this.clientName
-        this.client.fiscalNumber = this.clientNIF
-        this.client.email = this.clientEmail
-        this.client.phone = this.clientPhone
-        await Backend.addClient(this.client)
-      } catch (error) {
-        // TODO: Show something
-        console.error(error)
-      }
-    },
-      getSpecificClient(item) {
+      getSpecificClient(item){
         this.allClients.forEach(element => {
-          if(item.name == element.name){
-            store.currentClient = element
+          if(element.name == item.name){
+            element.addresses.forEach(element2 => {
+              this.items.push((element2.address + ", " + element2.postalCode))
+            })
           }
         });
-        console.log(store.currentClient)
-        this.$router.push({name: 'clientInfo'});
-      },
+        this.dialog1 = true
+      }
     }
   }
 </script>

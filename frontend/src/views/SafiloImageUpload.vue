@@ -60,23 +60,30 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex" style="height: 330px">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 330px">
           <v-col cols="auto">
+          <v-select style="width: 200px;"
+          :items="brands"
+          v-model="brand"
+          label="Marca"
+          class="mt-10"
+          dense
+          outlined
+          hide-details
+          ></v-select>
+          </v-col>
+          <v-col cols="auto" class="d-flex mt-16">
             <v-img :src="myImage" contain height="80px" width="80px" @click.stop="handleFileImport"></v-img>
-            </v-col>
             <input 
             ref="uploader" 
             class="d-none" 
             type="file" 
             @change="onFileChanged"
             >
-            <v-col cols=3> 
-              <v-row justify="center" align="start" class="d-flex flex-column">
                 <v-col cols="auto" class="text-decoration-underline mb-15">
                   Escolher Imagem
                 </v-col>
-              </v-row>
-            </v-col>
+          </v-col>
           </v-row>
 <v-dialog
         transition="dialog-bottom-transition"
@@ -124,6 +131,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerHistory',
@@ -133,6 +141,9 @@ export default {
 
 data () {
       return {
+        allBrands: null,
+        brands: [],
+        brand: null,
         selectedFile: null,
         store,
         myImage: require('@/assets/default-placeholder.png'),
@@ -148,7 +159,24 @@ methods: {
 
                 console.log(this.selectedFile)
             },
-}
+
+      getBrands: async function () {
+      try {
+        this.allBrands = await Backend.getBrands()
+        console.log(this.allBrands)
+        this.allBrands.forEach(element => {
+          this.brands.push(element.name)
+        });
+        console.log(this.brands)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+},
+    created: async function () {
+      this.getBrands()
+    }
   }
 </script>
 

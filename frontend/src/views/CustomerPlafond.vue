@@ -103,6 +103,7 @@
 </template>
 
 <script>
+import Backend from "@/router/backend";
 
 export default {
   name: 'CustomerHistory',
@@ -117,33 +118,16 @@ data () {
           { text: 'PLAFOND', value: 'plafond', width: '200px', align: 'left' },
         ],
         desserts: [
-          {
-            marca: 'abc',
-            plafond: '100',
-          },
-          {
-            marca: 'def',
-            plafond: '100',
-          },
-          {
-            marca: 'ghy',
-            plafond: '100',
-          },
-          {
-            marca: 'ghy',
-            plafond: '100',
-          },
-          {
-            marca: 'ghy',
-            plafond: '100',
-          },
-          {
-            marca: 'ghy',
-            plafond: '100',
-          }
+        
         ],
       }
     },
+  async created () {
+    var currentUser = await Backend.getProfile()
+    currentUser.credits.forEach(element => {
+      this.desserts.push({ marca: element.brand, plafond: element.amount})
+    });
+  }
   }
 </script>
 

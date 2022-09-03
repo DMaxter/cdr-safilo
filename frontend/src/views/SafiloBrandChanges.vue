@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark dense mandatory>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170">
+              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('safiloProfile')">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -60,21 +60,29 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 330px">
-          <v-btn height="60" width="500" class="mb-3" @click="$router.push('imageUpload')"> Imagens </v-btn>
-          <v-btn height="60" width="500" class="mb-3" @click="$router.push('plafondChange')"> Plafond </v-btn>
-          <v-btn height="60" width="500" class="mb-3" @click="$router.push('brandChange')"> Marcas </v-btn>
-          <v-dialog
+            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
+            </v-row>
+            <v-divider></v-divider>
+            <v-row justify="center" align="center" class="d-flex flex-column mt-2">
+        <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="250" style="width: 600px;" class="elevation-1 mt-10">
+        <template v-slot:[`item.actions`]="{ item }">
+            <v-icon @click="deleteBrand(item)">mdi-delete</v-icon>
+          </template>
+    </v-data-table>
+            </v-row>
+            <v-row justify="center">
+                <template>
+    <v-dialog
       v-model="dialog1"
       persistent
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn height="60" width="500" class="mb-3" v-bind="attrs" v-on="on"> Registar Comercial </v-btn>
+      <v-btn height="60" width="200" class="mb-3 mt-5" v-bind="attrs" v-on="on"> Adicionar Marca </v-btn>
       </template>
       <v-card>
         <v-card-title class="justify-center">
-          <span class="text-h5"> Registar Comercial </span>
+          <span class="text-h5"> Adicionar Marca </span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -83,36 +91,9 @@
                 cols="8"
               >
                 <v-text-field
-                  label="Email"
+                  label="Nome da marca a adicionar"
                   required
-                  v-model="comercialEmail"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-              >
-                <v-text-field
-                  label="Nome"
-                  required
-                  v-model="comercialName"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-              >
-                <v-text-field
-                  label="Palavra Passe"
-                  required
-                  v-model="password1"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-              >
-                <v-text-field
-                  label="Confirmar Palavra Passe"
-                  required
-                  v-model="password2"
+                  v-model="brandName"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -129,15 +110,38 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="addComercial(); dialog1 = false;"
+            @click="addBrand(); dialog1 = false;"
           >
             Adicionar
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-          </v-row>
-          </v-card>         
+</template>
+            </v-row>
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 90px;">
+           <v-col cols="auto" class="pl-4">
+            <v-btn
+              @click="$router.push('profile')"
+              class="d-flex flex-column"
+              outlined
+              rounded
+              color="#6e4e5d"
+            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
+            Voltar
+            </v-btn>
+           </v-col>
+            <v-col cols="auto">
+            <v-btn
+              class="d-flex flex-column"
+              outlined
+              rounded
+              color="#6e4e5d"
+            > Confirmar <v-icon >mdi-play</v-icon>
+            </v-btn>
+            </v-col>
+           </v-row>
+          </v-card>
         </v-col>
     </v-row>
     </v-container>
@@ -148,7 +152,6 @@
 <script>
 import { store } from '@/store.js'
 import Backend from '@/router/backend'
-import RegisterDto from '@/models/RegisterDto';
 
 export default {
   name: 'CustomerHistory',
@@ -160,36 +163,76 @@ data () {
       return {
         dialog1: false,
         store,
-        comercialEmail: null,
-        comercialName: null,
-        password1: null,
-        password2: null,
-        user: new RegisterDto()
+        desserts: [
+          {
+            name: 'Hugo Boss',
+          },
+          {
+            name: 'Jimmy Choo',
+          },
+          {
+            name: 'Tommy Hilfiger',
+          },
+        ],
+        desserts2: [],
+        allBrands: null,
+        brandName: null,
       }
     },
-
-methods: {
-  getPedido() {
-    if(store.pedidoAtual.modelo == "montra"){
-      this.$router.push({name: 'detailsMontra'});
-    } else {
-      this.$router.push({name: 'detailsOneOrTwo'});
-    }
-  },
-  async addComercial() {
-    try {
-        if(this.password1 == this.password2){
-          this.user.email = this.comercialEmail
-          this.user.password = this.password1
-          this.user.name = this.comercialName
-          await Backend.addComercial(this.user)
-        }
+    async created() { 
+       try {
+        this.allBrands = await Backend.getBrands()
+        console.log(this.allBrands)
+        this.allBrands.forEach(element => {
+          this.desserts2.push({ name: element.name })
+        });
       } catch (error) {
         // TODO: Show something
         console.error(error)
       }
-  }
-}
+    },
+    computed: {
+      headers() {
+        return [
+          {
+            text: 'Marca',
+            align: 'left',
+            sortable: true,
+            value: 'name',
+          },
+          { text: "", value: "actions", align: 'right', sortable: false },
+        ]
+      },
+      
+    },
+    methods: {
+      getRequest(item) {
+        console.log(item)
+        this.$router.push({name: 'clientInfo'});
+      },
+      addBrand: async function () {
+      try {
+        await Backend.addBrand(this.brandName)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+    deleteBrand: async function (item) {
+      try {
+        var id = null
+        this.allBrands.forEach(element => {
+          if(element.name == item.name){
+            id = element.id
+          }
+        });
+        await Backend.deleteBrand(id)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+    }
   }
 </script>
 

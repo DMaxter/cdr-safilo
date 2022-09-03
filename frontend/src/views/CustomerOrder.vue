@@ -185,12 +185,7 @@ export default {
     background: linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
 }
 .selected {
-    background-image: repeating-linear-gradient(-45deg,
-                        rgba(255,0,0,.25),
-                        rgba(255,0,0,.25) 5px,
-                        rgba(0,0,255,.25) 5px,
-                        rgba(0,0,255,.25) 10px
-                      );
+    background-image: linear-gradient(to top, #F0E68C 0%, transparent 72px);
   }
 
 </style>

@@ -62,33 +62,152 @@
           </v-row> 
           <v-row justify="center" align="center" no-gutters class="d-flex flex-column mt-5">
             <v-row class="mt-1 mb-2" justify="center">
+            <template v-if="store.isActive2">
             <v-col cols = "8">
               <v-row class="d-flex flex-column">
                 <v-col class="pa-0">
-                   <v-img :src=store.facesDefault[0].src height="40px" width="250.5px"></v-img>
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                 </v-col>
                 <v-col>
                 <v-row justify="space-between">
                   <v-col cols = "5" class="pa-0">
-                  <v-img :src=store.facesDefault[2].src height="60px" width="80px"></v-img>
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                   </v-col>
                   <v-col cols = "4" class="pa-0">
-                  <v-img :src=store.facesDefault[3].src height="60px" width="80px"></v-img>
-                  </v-col>
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>                  </v-col>
                 </v-row>
                 </v-col>
                 <v-col class="pa-0">
-                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px"></v-img>
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                 </v-col>
               </v-row>
             </v-col>
             <v-col cols="4">
             <v-row class="ml-1">
             <v-col class="pa-0">
-              <v-img :src=store.facesDefault[4].src height="140px" width="80px"></v-img>
+               <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
             </v-col>
           </v-row>
           </v-col>
+          </template>
+          <template v-else>
+            <v-col cols="4">
+            <v-row class="ml-1">
+            <v-col class="pa-0">
+               <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+            </v-col>
+          </v-row>
+          </v-col>
+            <v-col cols = "8">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "5" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
           </v-row>
           <v-col cols="auto" class="mb-5">
           </v-col>
@@ -103,6 +222,7 @@
           name="input-7-4"
           label="Quantidade"
           value=""
+          v-model="quantity"
         ></v-textarea>
           </v-col>
           <v-col cols="5">
@@ -143,7 +263,7 @@
            </v-col>
             <v-col cols="auto">
             <v-btn
-              @click="$router.push('ABCfinal2')"
+              @click="nextScreen()"
               class="d-flex flex-column"
               outlined
               rounded
@@ -170,8 +290,26 @@ export default {
   },
 
   data: () => ({
-    store
+    store,
+    quantity: null,
+    checkbox: false,
   }),
+
+  methods: {
+    nextScreen () {
+      store.currentCost = store.currentCost * this.quantity
+      if(this.checkbox){
+        store.currentCost += 500
+      }
+      var quantidade = this.quantity
+      store.costPerBrand.forEach(function(value, key) {
+        var newValue = value * quantidade
+        store.costPerBrand.set(key, newValue)
+      })
+      console.log(store.costPerBrand)
+      this.$router.push({name: 'ABCfinal2'});
+    }
+  }
 };
 </script>
 

@@ -1,3 +1,5 @@
+import AddressDto from '@/models/AddressDto';
+
 export default class ClientDto {
   id = null // Long
   name = null // String
@@ -15,9 +17,9 @@ export default class ClientDto {
       this.phone = obj.phone
       this.addresses = []
 
-      for (address in obj.addresses) {
+      obj.addresses.forEach(address => {
         this.addresses.append(new AddressDto(address))
-      }
+      });
     }
   }
 }

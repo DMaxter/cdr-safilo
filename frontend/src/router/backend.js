@@ -29,6 +29,15 @@ export default class Backend {
     })
   }
 
+  static async getUsers() {
+    return httpClient.get("/auth/all").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
   static async redefineWithToken(username) {
     return httpClient.post(`/auth/forgot/${username}`).then(response => {
       return response.data
@@ -82,6 +91,89 @@ export default class Backend {
       throw Error(await this.errorMessage(error.reponse))
     })
   }
+
+  static async getBrands() {
+    return httpClient.get("/brand").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async addBrand(brand) {
+    return httpClient.post(`/brand/${brand}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async deleteBrand(id) {
+    return httpClient.delete(`/brand/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async addClient(client) {
+    return httpClient.post("/client", client).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async getClients() {
+    return httpClient.get("/client").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async addStore(id, store) {
+    return httpClient.put(`/client/address/${id}`, store).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async updatePlafond(user, brand, ammount) {
+    return httpClient.put(`/user/plafond/${user}/${brand}/${ammount}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async logout() {
+    return httpClient.delete('/auth/logout')
+      .then(response => {
+        return response.data
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error.response))
+      })
+  }
+
+  static async addComercial(client) {
+    return httpClient.post("/auth/register", client).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
 
   static async errorMessage(error) {
     if (error.status == 400) {

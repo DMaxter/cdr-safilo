@@ -63,11 +63,13 @@
           <v-row justify="center" align="center" class="d-flex flex-column mt-0">
             <v-col cols="auto" >
           <v-select style="width: 200px;"
-          :items="items"
+          :items="brands"
+          v-model="brand"
           label="Marca"
           dense
           outlined
           hide-details
+          v-on:change="loadImages"
           ></v-select>
           </v-col>
           </v-row>
@@ -78,6 +80,7 @@
            <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pr-2">
             <v-text-field style="width: 120px;"
+            v-model="width"
             label=""
             placeholder="Largura"
             filled
@@ -89,6 +92,7 @@
             <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pl-2">
             <v-text-field style="width: 120px;"
+            v-model="height"
             label=""
             placeholder="Altura"
             filled
@@ -100,7 +104,8 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-2">
           <v-select style="width: 200px;"
-          :items="items"
+          :items="materials"
+          v-model="material"
           label="Material"
           dense
           outlined
@@ -110,6 +115,7 @@
           <v-row justify="center" align="center" class="d-flex flex-column mt-8">
             <v-col cols="auto">
           <v-text-field
+            v-model="quantity"
             label=""
             placeholder="Quantidade"
             filled
@@ -146,7 +152,7 @@
         >
           <v-item v-slot="{ active, toggle }">
             <v-img
-              :src= image.src
+              :src= image.link
               height="150"
               @click="toggle"
             >
@@ -155,7 +161,7 @@
                   v-if="active"
                   class="text-h2 flex-grow-1 text-center selected"
                 >
-                  <span style="opacity: 0">Ahahahahahahahaha que cheatcode do caralho</span>
+                  <span style="opacity: 0">Ahahahahahaha</span>
                 </div>
               </v-scroll-y-transition>
             </v-img>
@@ -242,6 +248,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerOrder2',
@@ -251,30 +258,37 @@ export default {
 
   data: () => ({
     store,
+    allMaterials: null,
+    allBrands: null,
+    checkbox: false,
+    width: null,
+    height: null,
+    quantity: null,
+    brand: null,
+    material: null,
     collapseOnScroll: true,
     items: ['Novo','Em Produção'],
+    materials: [],
+    brands: [],
     myImage: require('@/assets/default-placeholder.png'),
     dialog: false,
     ex4: false,
     picked: null,
     images: [
-        {
-          src: require('@/assets/uno.jpg'),
-        },
-        {
-          src: require('@/assets/dos.jpg'),
-        },
-        {
-          src: require('@/assets/trese.png'),
-        },
-        {
-          src: require('@/assets/quatre.png'),
-        },
-      ],
+    ],
 
   }),
     methods: {
       nextScreen () {
+        var cost = 0;
+        this.allMaterials.forEach(element => {
+          if(element.name == this.material){
+            cost = element.cost
+          }
+        });
+        store.currentCost = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
+        store.currentBrand = this.brand
+        console.log(store.currentBrand)
         if(this.ex4){
           this.$router.push({name: 'order22'});
         } else {
@@ -283,9 +297,47 @@ export default {
       },
 
       getFace () {
-        this.myImage = this.images[this.picked]
+        this.myImage = this.images[this.picked].link
         store.face1 = this.myImage
+      },
+
+        
+  getMaterials: async function () {
+      try {
+        this.allMaterials = await Backend.getMaterials()
+        this.allMaterials.forEach(element => {
+          this.materials.push(element.name)
+        });
+        console.log(this.materials)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
       }
+    },
+    getBrands: async function () {
+      try {
+        this.allBrands = await Backend.getBrands()
+        console.log(this.allBrands)
+        this.allBrands.forEach(element => {
+          this.brands.push(element.name)
+        });
+        console.log(this.brands)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+    loadImages() {
+      this.allBrands.forEach(element => {
+          if(this.brand == element.name){
+            this.images = element.images
+          }
+        });
+    }
+    },
+    created: async function () {
+      this.getMaterials()
+      this.getBrands()
     }
 };
 
@@ -300,11 +352,6 @@ export default {
 }
 
 .selected {
-    background-image: repeating-linear-gradient(-45deg,
-                        rgba(255,0,0,.25),
-                        rgba(255,0,0,.25) 5px,
-                        rgba(0,0,255,.25) 5px,
-                        rgba(0,0,255,.25) 10px
-                      );
+    background-image: linear-gradient(to top, #F0E68C 0%, transparent 72px);
   }
 </style>

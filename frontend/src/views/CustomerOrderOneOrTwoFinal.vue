@@ -4,8 +4,9 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
+          <v-card elevation="12" color="#FAFAFA" height="610" width="800" tile style="background-color: rgba(235,235,238, 0.6);">
           <v-row no-gutters justify="space-between" align="center" class="mr-1 ml-2">
+            <v-col cols="auto">
                         <v-menu
             :offset-x="true"
             >
@@ -14,7 +15,7 @@
                 height="64"
                 width="100"
                 round
-                class="white--text"
+                class="white--text mb-1"
                 color="#6e4e5d"
                 dark
                 v-bind="attrs"
@@ -59,16 +60,19 @@
 
             </v-btn-toggle>
           </v-menu>
-          <v-card elevation="2" outlined color="#FAFAFA" height="80" style="width: 250px; border-radius: 15px">
-            <v-row justify="center" align="center" class="d-flex flex-column mt-3">
-            <v-col cols="auto" class="pa-0">
-            Créditos atuais para marca XYZ:
+          </v-col>
+          <v-col cols="auto">
+          <v-card elevation="2" color="#FAFAFA" tile height="80" style="width: 300px">
+            <v-row justify="center" align="center" class="d-flex flex-column mt-1">
+            <v-col cols="auto" class="pa-3">
+            Créditos atuais para marca {{store.currentBrand}}:
             </v-col>
             <v-col cols="auto" class="pa-0">
               3000 <v-icon>mdi-currency-eur</v-icon>
             </v-col>
             </v-row>
             </v-card>
+            </v-col>
           </v-row> 
           <v-row justify="center" align="center" no-gutters class="d-flex flex-column mt-5">
             <v-carousel hide-delimiters :continuous=false height="175" style="width: 400px;">
@@ -98,7 +102,7 @@
             Créditos a debitar
             </v-col>
              <v-col cols="auto">
-              440 <v-icon>mdi-currency-eur</v-icon>
+              {{store.currentCost}} <v-icon>mdi-currency-eur</v-icon>
             </v-col>
             </v-row>
             </v-card>
