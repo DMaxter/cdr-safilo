@@ -26,7 +26,7 @@ private const val PROPERTY = "type"
     discriminatorProperty = PROPERTY,
     oneOf = [OneFace::class, TwoFaces::class, LeftShowcase::class, RightShowcase::class]
 )
-abstract class RequestTypeDto() {
+abstract class RequestTypeDto {
     companion object {
         fun from(request: RequestType): RequestTypeDto {
             return when (request) {
@@ -40,14 +40,14 @@ abstract class RequestTypeDto() {
     }
 }
 
-abstract class ShowcaseDto() : RequestTypeDto() {
+abstract class ShowcaseDto: RequestTypeDto() {
     lateinit var top: RequestSlotDto
     lateinit var bottom: RequestSlotDto
     lateinit var left: RequestSlotDto
     lateinit var right: RequestSlotDto
     lateinit var side: RequestSlotDto
 
-    constructor(request: Showcase) : this() {
+    fun fromRequest(request: Showcase) {
         this.top = RequestSlotDto(request.top)
         this.bottom = RequestSlotDto(request.bottom)
         this.left = RequestSlotDto(request.left)
@@ -76,8 +76,16 @@ class TwoFaces() : RequestTypeDto() {
     }
 }
 
-class LeftShowcase(request: LeftRequest) : ShowcaseDto(request)
-class RightShowcase(request: RightRequest) : ShowcaseDto(request)
+class LeftShowcase() : ShowcaseDto() {
+    constructor(request: LeftRequest) : this() {
+        this.fromRequest(request)
+    }
+}
+class RightShowcase() : ShowcaseDto() {
+    constructor(request: RightRequest) : this() {
+        this.fromRequest(request)
+    }
+}
 
 private fun fromOneFace(request: OneFaceRequest): OneFace {
     return OneFace(request)
