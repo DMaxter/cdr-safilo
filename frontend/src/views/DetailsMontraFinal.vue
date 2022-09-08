@@ -75,27 +75,52 @@
             <v-col cols = "8">
               <v-row class="d-flex flex-column">
                 <v-col class="pa-0">
-                   <v-img :src=store.pedidoAtual.images[0].src height="40px" width="250.5px"></v-img>
+                  <v-tooltip bottom color="white" content-class="custom-tooltip">
+                  <v-img :src=store.pedidoAtual.images[0] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[0] height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                 </v-col>
                 <v-col>
                 <v-row justify="space-between">
                   <v-col cols = "5" class="pa-0">
-                  <v-img :src=store.pedidoAtual.images[2].src height="60px" width="80px"></v-img>
+                  <v-tooltip bottom color="white" content-class="custom-tooltip">
+                  <v-img :src=store.pedidoAtual.images[2] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[2] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                   </v-col>
                   <v-col cols = "4" class="pa-0">
-                  <v-img :src=store.pedidoAtual.images[3].src height="60px" width="80px"></v-img>
+                  <v-tooltip bottom color="white" content-class="custom-tooltip">
+                  <v-img :src=store.pedidoAtual.images[3] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[3] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                   </v-col>
                 </v-row>
                 </v-col>
                 <v-col class="pa-0">
-                  <v-img :src=store.pedidoAtual.images[1].src height="40px" width="250.5px"></v-img>
+                  <v-tooltip bottom color="white" content-class="custom-tooltip">
+                  <v-img :src=store.pedidoAtual.images[1] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[1] height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                 </v-col>
               </v-row>
             </v-col>
             <v-col cols="4">
             <v-row class="ml-1">
             <v-col class="pa-0">
-              <v-img :src=store.pedidoAtual.images[4].src height="140px" width="80px"></v-img>
+              <v-tooltip bottom color="white" content-class="custom-tooltip">
+                  <v-img :src=store.pedidoAtual.images[4] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[4] height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
             </v-col>
           </v-row>
           </v-col>
@@ -188,6 +213,9 @@ export default {
 </script>
 
 <style>
+  .custom-tooltip {
+    opacity: 1!important;
+}
 #app {
     background: #3A1C71;
     background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);

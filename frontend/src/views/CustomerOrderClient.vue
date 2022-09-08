@@ -139,7 +139,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="store.currentAddress = selectedAdress; dialog1 = false; $router.push('order');"
+            @click="nextPage()"
           >
             Selecionar
           </v-btn>
@@ -158,7 +158,6 @@
 <script>
 import { store } from '@/store.js'
 import Backend from '@/router/backend'
-import ClientDto from '@/models/ClientDto';
 
 export default {
   name: 'CustomerHistory',
@@ -192,7 +191,7 @@ data () {
         // Filter models.
         dates: [],
         menu: false,
-        client: new ClientDto(),
+        selectedClient: null,
       }
     },
     async created() { 
@@ -229,12 +228,26 @@ data () {
       getSpecificClient(item){
         this.allClients.forEach(element => {
           if(element.name == item.name){
+            this.selectedClient = element
             element.addresses.forEach(element2 => {
-              this.items.push((element2.address + ", " + element2.postalCode))
+              this.items.push(element2.address)
             })
           }
         });
         this.dialog1 = true
+      },
+
+      nextPage(){
+        this.selectedClient.addresses.forEach(element => {
+          if(element.address == this.selectedAdress){
+            store.currentAddress = element.id
+            store.currentClient = this.selectedClient.id
+          }
+        })
+        this.dialog1 = false
+        console.log(store.currentAddress)
+        console.log(store.currentClient)
+        this.$router.push({name: 'order'});
       }
     }
   }

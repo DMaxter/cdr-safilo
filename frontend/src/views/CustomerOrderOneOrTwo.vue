@@ -284,11 +284,20 @@ export default {
         this.allMaterials.forEach(element => {
           if(element.name == this.material){
             cost = element.cost
+            store.selectedMaterial.push(element.id)
           }
         });
         store.currentCost = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
+        store.dimensions.push({width: this.width, height: this.height})
+        store.quantity = this.quantity
         store.currentBrand = this.brand
-        console.log(store.currentBrand)
+        this.allBrands.forEach(element => {
+          if(element.name == this.brand){
+            store.currentBrandId.push(element.id)
+          }
+        });
+        store.application = this.checkbox
+
         if(this.ex4){
           this.$router.push({name: 'order22'});
         } else {
@@ -299,6 +308,7 @@ export default {
       getFace () {
         this.myImage = this.images[this.picked].link
         store.face1 = this.myImage
+        store.images.push(this.images[this.picked].id)
       },
 
         

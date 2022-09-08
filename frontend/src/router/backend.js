@@ -174,6 +174,49 @@ export default class Backend {
     })
   }
 
+  static async placeRequest(request) {
+    return httpClient.post("/request", request).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async getRequests() {
+    return httpClient.get("/request").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async updateStatus(id, op) {
+    if(op == 'IN_PRODUCTION'){
+    return httpClient.put(`/request/production/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error.response))
+      })
+    } else if(op == 'DONE'){
+      return httpClient.put(`/request/finish/${id}`).then(response => {
+        return response.data
+      })
+        .catch(async error => {
+          throw Error(await this.errorMessage(error.response))
+        })
+    } else if( op == 'CANCELLED'){
+      return httpClient.put(`/request/cancel/${id}`).then(response => {
+        return response.data
+      })
+        .catch(async error => {
+          throw Error(await this.errorMessage(error.response))
+        })
+    }
+  }
+
 
   static async errorMessage(error) {
     if (error.status == 400) {

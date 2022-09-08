@@ -62,13 +62,13 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-0">
             <v-col cols="auto" >
-          <v-select style="width: 300px;"
-          disabled
-          :label=store.pedidoAtual.marca
+          <v-text-field style="width: 200px; pointer-events: none"
+          label="Marca"
+          :value="store.pedidoAtual.marca[n]"
           dense
           outlined
           hide-details
-          ></v-select>
+          ></v-text-field>
           </v-col>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-5 mb-3">
@@ -77,50 +77,48 @@
            <v-row no-gutters justify="center" align="center" class="mt-4">
            <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pr-2">
-            <v-text-field style="width: 120px;"
-            :label= getHeight()
-            disabled
-            filled
-            rounded
+            <v-text-field style="width: 120px; pointer-events: none"
+            label=  "Altura"
+            :value="getHeight()"
             dense
+            outlined
             hide-details
           ></v-text-field>
             </v-row>
            </v-col>
             <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pl-2">
-            <v-text-field style="width: 120px;"
-            :label= getWidth()
-            disabled
-            filled
-            rounded
+            <v-text-field style="width: 120px; pointer-events: none"
+            label= "Largura"
+            :value="getWidth()"
+            outlined
             dense
             hide-details
           ></v-text-field>
             </v-row>
            </v-col>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-          <v-select style="width: 200px;"
-          disabled
-          :label = getMaterial()
+          <v-row justify="center" align="center" class="d-flex flex-column mt-8">
+          <v-text-field style="width: 200px; pointer-events: none;"
+          label = "Material"
+          :value="getMaterial()"
           dense
           hide-details
           outlined
-          ></v-select>
+          ></v-text-field>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-8">
             <v-col cols="auto">
           <v-text-field
             disabled
-            :label= store.pedidoAtual.quantity[this.n]
+            :label= store.pedidoAtual.quantity
             filled
             rounded
             hide-details
             dense
           ></v-text-field>
               <v-checkbox
-            v-model= store.pedidoAtual.application[this.n]
+            v-model= store.pedidoAtual.application
             disabled
             hide-details
             :label="`Aplicação?`"
@@ -129,7 +127,7 @@
           </v-row>
            <v-row justify="center" align="center" class="d-flex mt-8">
             <v-col cols="auto">
-            <v-img :src=store.pedidoAtual.images[this.n] contain height="80px" width="80px" @click.stop="dialog = true"></v-img>
+            <v-img :src=store.pedidoAtual.images[n] contain height="80px" width="80px" @click.stop="dialog = true"></v-img>
             </v-col>
             <v-col cols=3> 
               <v-row justify="center" align="start" class="d-flex flex-column">
@@ -158,7 +156,7 @@
            </v-col>
             <v-col cols="auto">
             <v-btn
-              @click = nextScreen()
+              @click = "nextScreen()"
               class="d-flex flex-column"
               outlined
               rounded
@@ -209,28 +207,36 @@ export default {
       ],
 
   }),
-    watch: {
-        n: function () {
-          this.getHeight()
-          this.getWidth()
-          this.getMaterial()
-        } 
-    },
     methods: {
       getHeight() {
-        return store.pedidoAtual.dimensoes[this.n].split(" ")[0]
+        if(store.pedidoAtual.modelo == "OneFace"){
+          return store.pedidoAtual.dimensoes.height;
+        } else if(store.pedidoAtual.modelo == "TwoFaces") {
+          return store.pedidoAtual.dimensoes[this.n].height;
+        }
       },
       getWidth() {
-        return store.pedidoAtual.dimensoes[this.n].split(" ")[2]
+        if(store.pedidoAtual.modelo == "OneFace"){
+          return store.pedidoAtual.dimensoes.width;
+        } else if(store.pedidoAtual.modelo == "TwoFaces") {
+          return store.pedidoAtual.dimensoes[this.n].width;
+        }
       },         
       getMaterial() {
-        return store.pedidoAtual.material[this.n]
+        if(store.pedidoAtual.modelo == "OneFace"){
+          return store.pedidoAtual.material;
+        } else if(store.pedidoAtual.modelo == "TwoFaces") {
+          return store.pedidoAtual.material[this.n];
+        }
       },   
       nextScreen () {
-        if(store.pedidoAtual.material.length > 1 && this.n < 1 ){
-          this.n++
-        } else {
+        if(store.pedidoAtual.modelo == "OneFace"){
           this.$router.push({name: 'detailsOneOrTwoFinal'});
+        } else if(store.pedidoAtual.modelo == "TwoFaces"){
+            if(this.n == 1){
+              this.$router.push({name: 'detailsOneOrTwoFinal'});
+            }
+          this.n = this.n + 1
         }
       },
 

@@ -61,7 +61,7 @@
           </v-menu>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column">
-          <h3> Código - Loja do Cliente</h3>
+          <h3> {{store.currentClient.id}}- Loja do Cliente</h3>
           <h3 class="mb-2"> Portfólio </h3>
           <v-col>
           <v-row justify="center" align="center" class="d-flex flex-column">
@@ -69,28 +69,28 @@
           <v-avatar color="#6e4e5d" size="30" class="d-flex mt-5"></v-avatar>
           <v-col>
           Código
-          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> 500 </v-main> 
+          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{store.clientAddress.id}} </v-main> 
           </v-col>
           </v-col>
           <v-col class="d-flex" cols = 4>
           <v-avatar color="#6e4e5d" size="30" class="d-flex mt-5"></v-avatar>
           <v-col>
           Nome
-          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> 500 </v-main> 
+          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{store.currentClient.name}} </v-main> 
           </v-col>
           </v-col>    
           <v-col class="d-flex" cols = 4>
           <v-avatar color="#6e4e5d" size="30" class="d-flex mt-5"></v-avatar>
           <v-col>
           Morada
-          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> 500 </v-main> 
+          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{store.clientAddress.address}} </v-main> 
           </v-col>
           </v-col>    
           <v-col class="d-flex" cols = 4>
           <v-avatar color="#6e4e5d" size="30" class="d-flex mt-5"></v-avatar>
           <v-col>
           Telefone
-          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> 500 </v-main> 
+          <v-main class="grey lighten-2 text-no-wrap rounded-pill" align="center"> {{store.currentClient.phone}} </v-main> 
           </v-col>
           </v-col>    
           <v-col class="d-flex" cols = 4>
@@ -125,7 +125,9 @@ data () {
         store,
       }
     },
-
+created() {
+  console.log(store.clientAddress)
+},
 methods: {
   getPedido() {
     if(store.pedidoAtual.modelo == "montra"){

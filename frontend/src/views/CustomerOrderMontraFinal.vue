@@ -100,9 +100,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[0].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -114,9 +114,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <v-img :src=store.facesDefault[2].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -126,9 +126,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <v-img :src=store.facesDefault[3].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -140,9 +140,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <v-img :src=store.facesDefault[1].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>                
                   </v-col>
@@ -156,9 +156,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
             </v-col>
@@ -174,9 +174,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
             </v-col>
@@ -190,9 +190,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <v-img :src=store.facesDefault[0].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[0].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -204,9 +204,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <v-img :src=store.facesDefault[2].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -216,9 +216,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <v-img :src=store.facesDefault[3].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>                  </v-col>
                 </v-row>
@@ -229,9 +229,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <v-img :src=store.facesDefault[1].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -302,6 +302,7 @@
               outlined
               rounded
               color="#6e4e5d"
+              @click="placeRequest()"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -333,7 +334,7 @@ export default {
   async created () {
     var currentUser = await Backend.getProfile()
     currentUser.credits.forEach(element => {
-      if(store.currentBrand.includes(element.brand)){
+      if(store.uniqueBrands.includes(element.brand)){
         this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
       }
     });
@@ -347,7 +348,184 @@ export default {
   },
 
   methods: {
-
+    async placeRequest() {
+      var request = null
+      if(store.isActive2){
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        addressId: store.currentAddress,
+        observations: store.observations,
+        application: store.application,
+        type: {
+          type: "RightShowcase",
+          top: {
+            brand: {
+              id: store.currentBrandId[0],
+            },
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          },
+          bottom: {
+            brand: {
+              id: store.currentBrandId[1],
+            },
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            }
+          },
+          left: {
+            brand: {
+              id: store.currentBrandId[2],
+            },
+            image: { 
+              id: store.images[2]
+            },
+            measurements: {
+              width: store.dimensions[2].width,
+              height: store.dimensions[2].height
+            },
+            material: { 
+              id: store.selectedMaterial[2]
+            }
+          },
+          right: {
+            brand: {
+              id: store.currentBrandId[3],
+            },
+            image: { 
+              id: store.images[3]
+            },
+            measurements: {
+              width: store.dimensions[3].width,
+              height: store.dimensions[3].height
+            },
+            material: { 
+              id: store.selectedMaterial[3]
+            }
+          },
+          side: {
+            brand: {
+              id: store.currentBrandId[4],
+            },
+            image: { 
+              id: store.images[4]
+            },
+            measurements: {
+              width: store.dimensions[4].width,
+              height: store.dimensions[4].height
+            },
+            material: { 
+              id: store.selectedMaterial[4]
+            }
+          }
+        },
+      }
+    } else if(store.isActive3) { 
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        addressId: store.currentAddress,
+        observations: store.observations,
+        application: store.application,
+        type: {
+          type: "LeftShowcase",
+          top: {
+            brand: {
+              id: store.currentBrandId[0],
+            },
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          },
+          bottom: {
+            brand: {
+              id: store.currentBrandId[1],
+            },
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            }
+          },
+          left: {
+            brand: {
+              id: store.currentBrandId[2],
+            },
+            image: { 
+              id: store.images[2]
+            },
+            measurements: {
+              width: store.dimensions[2].width,
+              height: store.dimensions[2].height
+            },
+            material: { 
+              id: store.selectedMaterial[2]
+            }
+          },
+          right: {
+            brand: {
+              id: store.currentBrandId[3],
+            },
+            image: { 
+              id: store.images[3]
+            },
+            measurements: {
+              width: store.dimensions[3].width,
+              height: store.dimensions[3].height
+            },
+            material: { 
+              id: store.selectedMaterial[3]
+            }
+          },
+          side: {
+            brand: {
+              id: store.currentBrandId[4],
+            },
+            image: { 
+              id: store.images[4]
+            },
+            measurements: {
+              width: store.dimensions[4].width,
+              height: store.dimensions[4].height
+            },
+            material: { 
+              id: store.selectedMaterial[4]
+            }
+          }
+        },
+      }
+    }
+      console.log(request)
+      await Backend.placeRequest(request)
+    },
   }
 };
 </script>

@@ -116,6 +116,7 @@
           name="input-7-4"
           label="Observações sobre o pedido"
           value=""
+          v-model="observacoes"
         ></v-textarea>
           </v-col>
 
@@ -138,6 +139,7 @@
               outlined
               rounded
               color="#6e4e5d"
+              @click="placeRequest()"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -152,6 +154,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerOrder3',
@@ -171,7 +174,8 @@ export default {
     }
   ],
   store,
-  facetas: null
+  facetas: null,
+  observacoes: "",
   }),
 
   created () {
@@ -180,6 +184,82 @@ export default {
     } else {
       this.facetas = [store.face1, store.face2]
     }
+  },
+
+  methods: {
+    async placeRequest() {
+      var request = null
+      if(store.face2 == null){
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        addressId: store.currentAddress,
+        observations: this.observacoes,
+        application: store.application,
+        type: {
+          type: "OneFace",
+          cover: {
+            brand: {
+              id: store.currentBrandId[0],
+            },
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          }
+        },
+      }
+    } else { 
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        addressId: store.currentAddress,
+        observations: this.observacoes,
+        application: store.application,
+        type: {
+          type: "TwoFaces",
+          cover: {
+            brand: {
+              id: store.currentBrandId[0],
+            },
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          },
+          back: {
+            brand: {
+              id: store.currentBrandId[1],
+            },
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            }
+          }
+        },
+      }
+    }
+      console.log(request)
+      await Backend.placeRequest(request)
+    },
   }
   
 };

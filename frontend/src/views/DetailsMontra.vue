@@ -60,33 +60,154 @@
             </v-btn-toggle>
           </v-menu>
           <v-row class="mt-1 mb-2" justify="center">
+            <template v-if="store.isActive2">
             <v-col cols = "4">
               <v-row class="d-flex flex-column">
                 <v-col class="pa-0">
-                   <v-img :src=store.pedidoAtual.images[0].src height="40px" width="250.5px"></v-img>
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[0] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[0] height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                 </v-col>
                 <v-col>
                 <v-row justify="space-between">
-                  <v-col cols = "5" class="pa-0">
-                  <v-img :src=store.pedidoAtual.images[2].src height="60px" width="80px"></v-img>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[2] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[2] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                   </v-col>
                   <v-col cols = "4" class="pa-0">
-                  <v-img :src=store.pedidoAtual.images[3].src height="60px" width="80px"></v-img>
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[3]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[3] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                   </v-col>
                 </v-row>
                 </v-col>
                 <v-col class="pa-0">
-                  <v-img :src=store.pedidoAtual.images[1].src height="40px" width="250.5px"></v-img>
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[1]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[1] height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                 </v-col>
               </v-row>
             </v-col>
             <v-col cols="2">
             <v-row class="ml-1">
             <v-col class="pa-0">
-              <v-img :src=store.pedidoAtual.images[4].src height="140px" width="80px"></v-img>
+              <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[4] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[4] height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
             </v-col>
           </v-row>
           </v-col>
+          </template>
+          <template v-else>
+          <v-col cols="2">
+            <v-row class="ml-1">
+            <v-col class="pa-0">
+              <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[4]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[4] height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+            </v-col>
+          </v-row>
+          </v-col>
+            <v-col cols = "4">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[0]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[0] height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[2]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[2] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[3]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[3] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  >
+                  <v-img :src=store.pedidoAtual.images[1] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[1] height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
           </v-row>
           </v-row>
           <v-row
@@ -119,17 +240,17 @@
               <h2> Face {{faces[n-1]}} </h2>
             </v-col>
           <v-col cols="auto" >
-          <v-select
-          disabled
-          :label = store.pedidoAtual.material[n-1]
+          <v-text-field style="pointer-events: none;"
+          label = "material"
+          :value = store.pedidoAtual.material[n-1]
           dense
           hide-details
           outlined
-        ></v-select>
+        ></v-text-field>
             </v-col>
             <v-row justify="center" align="center" class="d-flex">
             <v-col cols=4>
-            <v-img :src = store.pedidoAtual.images[n-1].src contain height="100px" width="100px" @click.stop="dialog = true"></v-img>
+            <v-img :src = store.pedidoAtual.images[n-1] contain height="100px" width="100px" @click.stop="dialog = true"></v-img>
             </v-col>
             <v-col cols=8> 
               <v-row justify="center" align="start" class="d-flex flex-column">
@@ -147,9 +268,9 @@
               Medidas (cm)
               </v-col>
               <v-col class="pa-0">
-            <v-text-field style="width: 200px;"
-            :label= getHeight(n-1)
-            disabled
+            <v-text-field style="width: 200px; pointer-events: none;"
+            label= "Altura"
+            :value="getHeight(n-1)"
             filled
             rounded
             dense
@@ -157,10 +278,9 @@
           ></v-text-field>
               </v-col>
             <v-col class="pa-0 mt-3">
-            <v-text-field style="width: 200px;"
-            :label= getWidth(n-1)
-            disabled
-            placeholder="Altura"
+            <v-text-field style="width: 200px; pointer-events: none;"
+            label="Largura"
+            :value="getWidth(n-1)"
             filled
             rounded
             dense
@@ -281,10 +401,10 @@ export default {
   }),
   methods: {
       getHeight(n) {
-        return store.pedidoAtual.dimensoes[n].split(" ")[0]
+        return store.pedidoAtual.dimensoes[n].height
       },
       getWidth(n) {
-        return store.pedidoAtual.dimensoes[n].split(" ")[2]
+        return store.pedidoAtual.dimensoes[n].width
       },      
       next () {
         this.onboarding = this.onboarding + 1 === this.length

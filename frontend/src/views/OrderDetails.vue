@@ -70,9 +70,60 @@
               <v-col cols="auto"> Material: {{store.pedidoAtual.material}} </v-col>
               <v-col cols="auto"> Dimensões: {{store.pedidoAtual.dimensoes}} </v-col>
               <v-col cols="auto" class="d-flex"> Estado: {{store.pedidoAtual.estado}}
-            <v-btn class="d-flex ml-5 white--text" color="#6e4e5d" height="25" elevation="2" rounded  @click="$router.push('stateChange')"> Alterar 
+                <template>
+    <v-dialog
+      v-model="dialog1"
+      persistent
+      max-width="500px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn class="d-flex ml-5 white--text" color="#6e4e5d" height="25" elevation="2" v-bind="attrs" v-on="on"> Alterar 
               <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
-            </v-btn>  
+        </v-btn>  
+      </template>
+      <v-card>
+        <v-card-title class="justify-center">
+          <span class="text-h5"> Alterar estado do pedido </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <v-col
+                cols="8"
+              >
+                <v-select
+                  :items=available
+                  required
+                  v-model = picked
+                ></v-select>
+              </v-col>
+              <v-col
+                cols="12"
+              >
+              Estado atual: {{store.pedidoAtual.estado}}
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog1 = false;"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="updateStatus(); dialog1 = false;"
+          >
+            Alterar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+</template>
               </v-col>
               </v-row>
             </v-card>
@@ -92,6 +143,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerHistory',
@@ -102,16 +154,27 @@ export default {
 data () {
       return {
         store,
+        picked: null,
+        dialog1: false,
+        available: [
+          "IN_PRODUCTION",
+          "DONE",
+          "CANCELLED"
+        ]
       }
     },
 
 methods: {
   getPedido() {
-    if(store.pedidoAtual.modelo == "montra"){
-      this.$router.push({name: 'detailsMontra'});
-    } else {
+    console.log(store.pedidoAtual)
+    if(store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"){
       this.$router.push({name: 'detailsOneOrTwo'});
+    } else {
+      this.$router.push({name: 'detailsMontra'});
     }
+  },
+  async updateStatus() {
+    await Backend.updateStatus(store.pedidoAtual.cod, this.picked)
   }
 }
   }

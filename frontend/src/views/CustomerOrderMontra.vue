@@ -73,9 +73,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[0].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -87,9 +87,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <v-img :src=store.facesDefault[2].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -99,9 +99,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <v-img :src=store.facesDefault[3].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -113,9 +113,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <v-img :src=store.facesDefault[1].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -129,9 +129,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <v-img :src=store.facesDefault[4].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
             </v-col>
@@ -147,9 +147,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
             </v-col>
@@ -163,9 +163,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[0].src height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -177,9 +177,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <v-img :src=store.facesDefault[2].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -189,9 +189,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <v-img :src=store.facesDefault[3].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -203,9 +203,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <v-img :src=store.facesDefault[1].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[1].src height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -266,6 +266,7 @@
           hide-details
           outlined
           v-model="brand[`brand`+n]"
+          v-on:change="loadImages()"
         ></v-select>
         </v-col>
           </v-row>
@@ -291,7 +292,7 @@
         >
           <v-item v-slot="{ active, toggle }">
             <v-img
-              :src= image.src
+              :src= image.link
               height="150"
               @click="toggle"
             >
@@ -462,20 +463,8 @@ export default {
     faces: ["A", "B", "C", "D", "E"],
     myImage: require('@/assets/default-placeholder.png'),
     picked: null,
-    images: [
-        {
-          src: require('@/assets/uno.jpg'),
-        },
-        {
-          src: require('@/assets/dos.jpg'),
-        },
-        {
-          src: require('@/assets/trese.png'),
-        },
-        {
-          src: require('@/assets/quatre.png'),
-        },
-      ],
+    images: [    
+    ],
     dialog: false,
     right: require('@/assets/right.jpg'),
     ex4: false,
@@ -498,20 +487,27 @@ export default {
     nextScreen () {
       var uniqueBrands = []
       var costPerBrand = new Map()
+      this.allBrands.forEach(element => {
         for (let n = 1; n < 6; n++) {
+          if(element.name == this.brand[`brand`+n]){
+            store.currentBrandId.push(element.id)
+          }
           if(!uniqueBrands.includes(this.brand[`brand`+n])){
             uniqueBrands.push(this.brand[`brand`+n])
             costPerBrand.set(this.brand[`brand`+n], 0)
           }
         }
+      });
         uniqueBrands.pop()
         costPerBrand.delete(null)
       var cost = 0;
       this.allMaterials.forEach(element => {
         for (let n = 1; n < 6; n++) {
           if(element.name == this.material[`material`+n]){
+            store.selectedMaterial.push(element.id)
             var price = element.cost
             cost += (((this.widths[`width`+n]/100) * (this.heights[`height`+n]/100)) * price)
+            store.dimensions.push({width: this.widths[`width`+n], height: this.heights[`height`+n]})
             var currCost = costPerBrand.get(this.brand[`brand`+n])
             currCost += (((this.widths[`width`+n]/100) * (this.heights[`height`+n]/100)) * price)
             costPerBrand.set(this.brand[`brand`+n], currCost)
@@ -519,8 +515,9 @@ export default {
         }
         });
         store.currentCost = cost
-        store.currentBrand = uniqueBrands
+        store.uniqueBrands = uniqueBrands
         store.costPerBrand = costPerBrand
+        console.log(store)
         this.$router.push({name: 'ABCfinal'});
       },
 
@@ -537,12 +534,11 @@ export default {
       },
       getRefs () {
         store.facesDefault.forEach(element => {
-          console.log(this.onboarding)
           if (element.face === this.faces[this.onboarding]){
-            console.log(element.src)
-            element.src = this.images[this.picked].src
-            console.log(element.src)
+            element.link = this.images[this.picked].link
+            var id = this.images[this.picked].id
             this.picked = null
+            store.images.push(id)
           }
         });
       },
@@ -571,6 +567,14 @@ export default {
         console.error(error)
       }
     },
+    loadImages() { 
+      var n = this.onboarding + 1
+      this.allBrands.forEach(element => {
+          if(this.brand[`brand`+n] == element.name){
+            this.images = element.images
+          }
+        });
+    }
     },
      created: async function () {
       this.getMaterials()

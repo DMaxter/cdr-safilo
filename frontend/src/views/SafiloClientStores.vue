@@ -65,7 +65,7 @@
             </v-row>
             <v-divider></v-divider>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="desserts" fixed-header item-key="name" hide-default-footer height="210" style="width: 600px;" class="elevation-1">
+        <v-data-table :headers="headers" :items="addresses" fixed-header item-key="name" hide-default-footer height="210" style="width: 600px;" class="elevation-1">
         <template v-slot:top>
 
             <!-- v-container, v-col and v-row are just for decoration purposes. -->
@@ -220,6 +220,7 @@ data () {
         dates: [],
         menu: false,
         address: new AddressDto(),
+        adresses: null,
         desserts: [
           {
             name: '1234',
@@ -247,12 +248,7 @@ data () {
     },
     async created() { 
       try {
-        var allClients = Backend.getClients()
-        allClients.forEach(element => {
-          if(store.currentClient.name == element.name){
-            store.currentClient = element
-          }
-        });
+        this.addresses = store.currentClient.addresses
         console.log(store.currentClient)
         } catch (error) {
         // TODO: Show something
@@ -266,11 +262,16 @@ data () {
             text: 'Código',
             align: 'left',
             sortable: false,
-            value: 'name',
+            value: 'id',
           },
           {
-            text: 'Nome',
-            value: 'fat',
+            text: 'Morada',
+            value: 'address',
+            align: "center",
+          },
+          {
+            text: 'Código postal',
+            value: 'postalCode',
             align: "center",
           },
           { text: "", value: "actions", sortable: false },
@@ -281,6 +282,7 @@ data () {
     methods: {
       getRequest(item) {
         console.log(item)
+        store.clientAddress = item
         this.$router.push({name: 'storeInfo'});
       },
 

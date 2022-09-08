@@ -7,23 +7,23 @@ export const store = reactive({
   facesDefault:[
     {
       face: "A",
-      src: require('@/assets/A.png'),
+      link: require('@/assets/A.png'),
     },
           {
       face: "B",
-      src: require('@/assets/B.png'),
+      link: require('@/assets/B.png'),
     },
           {
       face: "C",
-      src: require('@/assets/C.png'),
+      link: require('@/assets/C.png'),
     },
           {
       face: "D",
-      src: require('@/assets/D.png'),
+      link: require('@/assets/D.png'),
     },
           {
       face: "E",
-      src: require('@/assets/E.png'),
+      link: require('@/assets/E.png'),
     },
   ],
   face1: null,
@@ -46,5 +46,18 @@ export const store = reactive({
   currentAddress: null,
   currentCost: null,
   currentBrand: null,
+  uniqueBrands: null,
+  currentBrandId: [],
+  observations: null,
   costPerBrand: null,
+  dimensions: [],
+  application: null,
+  selectedMaterial: [],
+  images: [],
+  quantity: null,
+  currentRequest: null,
+  clientAddress: null,
+  codeSearch: null,
+  estadoSearch: null,
+  materialSearch: null,
 })

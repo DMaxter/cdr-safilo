@@ -71,9 +71,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[0].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -85,9 +85,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <v-img :src=store.facesDefault[2].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -97,9 +97,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <v-img :src=store.facesDefault[3].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>                  </v-col>
                 </v-row>
@@ -110,9 +110,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <v-img :src=store.facesDefault[1].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -126,9 +126,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <v-img :src=store.facesDefault[4].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
             </v-col>
@@ -144,9 +144,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[4].src ></v-img>
+                  <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[4].src height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
             </v-col>
@@ -160,9 +160,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[0].src ></v-img>
+                  <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[0].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -174,9 +174,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[2].src ></v-img>
+                  <v-img :src=store.facesDefault[2].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[2].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                   </v-col>
@@ -186,9 +186,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[3].src ></v-img>
+                  <v-img :src=store.facesDefault[3].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[3].src height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>                  </v-col>
                 </v-row>
@@ -199,9 +199,9 @@
                   color="white"
                   content-class="custom-tooltip"
                   >
-                  <v-img :src=store.facesDefault[1].src ></v-img>
+                  <v-img :src=store.facesDefault[1].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
-                  <v-img :src=store.facesDefault[1].src height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -246,6 +246,7 @@
           name="input-7-4"
           label="Observações sobre o pedido"
           value=""
+          v-model="observations"
         ></v-textarea>
           </v-col>
           </v-row>
@@ -293,6 +294,7 @@ export default {
     store,
     quantity: null,
     checkbox: false,
+    observations: null,
   }),
 
   methods: {
@@ -306,7 +308,10 @@ export default {
         var newValue = value * quantidade
         store.costPerBrand.set(key, newValue)
       })
-      console.log(store.costPerBrand)
+      store.quantity = this.quantity
+      store.observations = this.observations
+      store.application = this.checkbox
+      console.log(this.observations)
       this.$router.push({name: 'ABCfinal2'});
     }
   }

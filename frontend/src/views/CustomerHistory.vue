@@ -60,7 +60,7 @@
             </v-btn-toggle>
           </v-menu>
           <v-menu
-            :offset-y="true"
+            :offset-x="true"
             left
             tile
             scale
@@ -80,7 +80,7 @@
                 Filtros
               </v-btn>
             </template>
-            <v-card>
+            <v-card max-width="600">
              <v-container fluid>
                 <v-row>
 
@@ -107,7 +107,7 @@
                         </v-row>
                     </v-col>
 
-                    <v-col cols="7">
+                    <v-col cols="5">
                         <v-row class="pa-2">
                             <!-- Filter for calories -->
                             <v-menu
@@ -158,6 +158,26 @@
                             </v-menu>
                         </v-row>
                     </v-col>
+                    <v-col cols="4">
+                        <v-row class="pa-2">
+                            <!-- Filter for calories -->
+                            <v-text-field
+                                    style="width: 150px;"
+                                    v-model="dessertFilterValue"
+                                    label="Cliente"
+                            ></v-text-field>
+                        </v-row>
+                    </v-col>
+                    <v-col cols="4">
+                        <v-row class="pa-2">
+                            <!-- Filter for calories -->
+                            <v-text-field
+                                    style="width: 150px;"
+                                    v-model="nomeFilterValue"
+                                    label="Comercial"
+                            ></v-text-field>
+                        </v-row>
+                    </v-col>
 
                 </v-row>
             </v-container>
@@ -167,9 +187,8 @@
             <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
               Nome Comerciante
             </v-row>
-            <v-divider></v-divider>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="desserts" fixed-header item-key="name" hide-default-footer height="380" style="width: 600px;" class="elevation-1 my-header-style">
+        <v-data-table :headers="headers" :items="requests" fixed-header item-key="name" hide-default-footer height="380" style="width: 800px;" class="elevation-1 my-header-style">
         
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="getRequest(item)">mdi-plus</v-icon>
@@ -208,6 +227,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerHistory',
@@ -220,19 +240,17 @@ data () {
         store,
         estadosList: [
           {text: "Qualquer", value: null},
-          {text: "Novo", value: "novo"},
-          {text: "Em Produção", value: "em produção"},
+          {text: "Encomendado", value: "ORDERED"},
+          {text: "Em Produção", value: "IN_PRODUCTION"},
+          {text: "Terminado", value: "DONE"},
+          {text: "Cancelado", value: "CANCELLED"},
         ],
-        marcasList: [
-          {text: "Qualquer", value: null},
-          {text: "HUGO BOSS", value: "hugo boss"},
-          {text: "CAROLINA HERRERA", value: "carolina herrera"},
-          {text: "TOMMY HILFIGER", value: "tommy hilfiger"},
-        ],
+        marcasList: [],
         // Filter models.
         marcasFilterValue: null,
         estadosFilterValue: null,
-
+        dessertFilterValue: null,
+        nomeFilterValue: null,
         desserts: [
           {
             name: 'FCH 2022.06.05 1254',
@@ -340,34 +358,73 @@ data () {
         ],
         dates: [],
         menu: false,
+        requests: [],
+        allBrands: null,
       }
+    },
+    async created() {
+      this.requests = await Backend.getRequests()
+      this.allBrands = await Backend.getBrands()
+      this.allBrands.forEach(element => {
+          this.marcasList.push({ text: element.name, value: element.name })
+        });
+      console.log(this.marcasList)
+      this.requests.forEach(element => {
+        var date = element.created
+        date = date.slice(0, 10)
+        element.created = date
+          var brands = null
+          if(element.type.type == "OneFace"){
+            brands = [element.type.cover.brand.name]
+          } else if(element.type.type == "TwoFaces"){
+            brands = [element.type.cover.brand.name, element.type.back.brand.name]
+          } else if(element.type.type == "RightShowcase" || element.type.type == "LeftShowcase"){
+            brands = [element.type.top.brand.name, element.type.bottom.brand.name, element.type.left.brand.name, element.type.right.brand.name, element.type.side.brand.name]
+          }
+          element.brands = brands
+      });
+      console.log(this.requests)
     },
     computed: {
       headers() {
         return [
           {
-            text: 'COD/DATA/NUM',
+            text: 'ID', //replace with tracking code
             align: 'left',
             sortable: false,
-            value: 'name',
-            filter: this.dateFilter,
+            value: 'id',
             class: 'my-header-style'
           },
           {
             text: 'Estado',
-            value: 'calories',
-            align: ' d-none',
+            value: 'status',
+            class: 'my-header-style',
             filter: this.estadoFilter,
           },
           {
-            text: 'Marca',
-            value: 'fat',
-            filter: this.marcasFilter,
+            text: 'Cliente',
+            value: 'client',
+            filter: this.nameFilter,
+            class: 'my-header-style'
+
+          },
+          {
+            text: 'Comerciante',
+            value: 'user',
+            filter: this.nomeFilter,
+            class: 'my-header-style'
+
+          },
+          {
+            text: 'Data',
+            value: 'created',
+            filter: this.dateFilter,
             class: 'my-header-style'
 
           },
           { text: "", value: "actions", sortable: false, class: 'my-header-style'},
           { text: "", value: "modelo", align: ' d-none', sortable: false },
+          { text: "", value: "brands", align: ' d-none', sortable: false, filter: this.marcasFilter},
           { text: "", value: "material", align: ' d-none', sortable: false },
           { text: "", value: "dimensões", align: ' d-none', sortable: false },
         ]
@@ -382,21 +439,58 @@ data () {
         }
       },
       getRequest(item) {
+        console.log(item)
+        if(item.type.type == "OneFace"){
         store.pedidoAtual = {
-            cod: item.name.split(" ")[0],
-            data: item.name.split(" ")[1],
-            marca: item.fat,
-            modelo: item.modelo,
-            material: item.material,
-            dimensoes: item.dimensões,
-            estado: item.calories,
-            images: item.images,
+            cod: item.id,
+            data: item.created,
+            marca: [item.type.cover.brand.name],
+            modelo: item.type.type,
+            material: item.type.cover.material.name,
+            dimensoes: item.type.cover.measurements,
+            estado: item.status,
+            images: [item.type.cover.image.link],
             quantity: item.quantidade,
-            observations: item.observacoes,
-            cost: item.custo,
-            application: item.aplicacao
-          },
-  
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application
+          }
+        } else if(item.type.type == "TwoFaces"){
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: [item.type.cover.brand.name, item.type.back.brand.name],
+            modelo: item.type.type,
+            material: [item.type.cover.material.name, item.type.back.material.name],
+            dimensoes: [item.type.cover.measurements, item.type.back.measurements],
+            estado: item.status,
+            images: [item.type.cover.image.link, item.type.back.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application
+          }
+        } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
+            if(item.type.type == "RightShowcase"){
+              store.isActive2 = true
+            } else if(item.type.type == "LeftShowcase"){
+              store.isActive3 = true
+            }
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: [item.type.top.brand.name, item.type.bottom.brand.name, item.type.left.brand.name, item.type.right.brand.name, item.type.side.brand.name],
+            modelo: item.type.type,
+            material: [item.type.top.material.name, item.type.bottom.material.name, item.type.left.material.name, item.type.right.material.name, item.type.side.material.name],
+            dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements, item.type.side.measurements],
+            estado: item.status,
+            images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link, item.type.side.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application
+          }
+        }
         this.$router.push({name: 'details'});
       },
       /**
@@ -411,7 +505,24 @@ data () {
         }
         // Check if the current loop value (The dessert name)
         // partially contains the searched word.
+        console.log(this.dessertFilterValue)
         return value.toLowerCase().includes(this.dessertFilterValue.toLowerCase());
+      },
+            /**
+       * Filter for dessert names column.
+       * @param value Value to be tested.
+       * @returns {boolean}
+       */
+       nomeFilter(value) {
+        // If this filter has no value we just skip the entire filter.
+        if (!this.nomeFilterValue) {
+          return true;
+        }
+        // Check if the current loop value (The dessert name)
+        // partially contains the searched word.
+        console.log(value)
+        console.log(this.nomeFilterValue)
+        return value.toLowerCase().includes(this.nomeFilterValue.toLowerCase());
       },
         estadoFilter(value) {
         // If this filter has no value we just skip the entire filter.
@@ -429,14 +540,17 @@ data () {
         }
         // Check if the current loop value (The calories value)
         // equals to the selected value at the <v-select>.
-        return value.toLowerCase().includes(this.marcasFilterValue.toLowerCase());
+       
+        return value.includes(String(this.marcasFilterValue))
       },
        dateFilter (value) {
         if (this.dates.length != 2) {
           return true;
         }
         var gaga = value.split(" ")
-        var converted = new Date(gaga[1])
+        console.log(gaga)
+        console.log(value)
+        var converted = new Date(gaga).setHours(0,0,0,0)
         var date1
         var date2
         if(new Date(this.dates[0]).setHours(0,0,0,0) > new Date(this.dates[1]).setHours(0,0,0,0)){
@@ -446,9 +560,10 @@ data () {
           date1 = new Date(this.dates[0]).setHours(0,0,0,0)
           date2 = new Date(this.dates[1]).setHours(0,0,0,0)
         }
+        console.log(date1, date2, converted)
         return converted >= date1 && converted <= date2
        }
-    }
+    },
   }
 </script>
 

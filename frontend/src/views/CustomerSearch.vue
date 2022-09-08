@@ -126,6 +126,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerSearch',
@@ -139,34 +140,32 @@ export default {
     material: "",
     estado: "",
     collapseOnScroll: true,
-    items: ['Novo','Em Produção'],
-    items2: ['BACKLIT','BANNER','MICROPERFURADO',
-    'PAPEL FOTOGRÁFICO', 'PVC 3 mm', 'PVC 5 mm',
-    'TÊXTIL BACKLIT MA', 'VINIL', 'Vinil imp + recort',
-    'VINIL INTERIOR MON', 'VINIL METALIZADO', 'VINIL REPOSICIONÁ']
+    items: [
+          {text: "Encomendado", value: "ORDERED"},
+          {text: "Em Produção", value: "IN_PRODUCTION"},
+          {text: "Terminado", value: "DONE"},
+          {text: "Cancelado", value: "CANCELLED"},
+        ],
+    items2: [],
+    allMaterials: null,
   }),
+  async created () {
+    this.allMaterials = await Backend.getMaterials()
+        this.allMaterials.forEach(element => {
+          this.items2.push(element.name)
+        });
+  },
   methods: { 
     searchFilters() {
-      if(this.text == ""){
-        console.log("no text")
-      } else if (this.text != "") {
-        console.log(this.text)
-        this.$router.push({name: 'details'})
-      }
-      if(this.material == ""){
-        console.log("no material")
-      } else if (this.material != "") {
+      if (this.text != "") {
+        store.codeSearch = this.text
+      } if (this.material != "") {
         store.materialSearch = this.material
-        this.$router.push({name: 'searchResults'})
       }
-      if(this.estado == ""){
-        console.log("no estado")
-      } else if (this.estado != "") {
+      if (this.estado != "") {
         store.estadoSearch = this.estado
-        this.$router.push({name: 'searchResults'})
       }
-
-      // this.$router.push({name: 'searchResults'});
+      this.$router.push({name: 'searchResults'});
     }  
   }
 };

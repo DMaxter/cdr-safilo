@@ -364,7 +364,6 @@
           dates: [],
           menu: false,
           requests: [],
-          idFilterValue: null,
         }
       },
       async created() {
@@ -374,22 +373,7 @@
           date = date.slice(0, 10)
           element.created = date
         });
-        if(store.materialSearch != null){
-        this.requests = this.requests.filter(function (element) {
-          var material = null
-          if(element.type.type == "OneFace"){
-            material = [element.type.cover.material.name]
-          } else if(element.type.type == "TwoFaces"){
-            material = [element.type.cover.material.name, element.type.back.material.name]
-          } else if(element.type.type == "RightShowcase" || element.type.type == "LeftShowcase"){
-            material = [element.type.top.material.name, element.type.bottom.material.name, element.type.left.material.name, element.type.right.material.name, element.type.side.material.name]
-          }
-          return material.includes(store.materialSearch)
-        })}
-        console.log(this.requests)
-        this.estadosFilterValue = store.estadoSearch
-        this.idFilterValue = store.codeSearch
-        console.log(this.idFilterValue)
+        this.dessertFilterValue = store.currentClient.name
       },
       computed: {
         headers() {
@@ -399,8 +383,7 @@
               align: 'left',
               sortable: false,
               value: 'id',
-              class: 'my-header-style',
-              filter: this.idFilter,
+              class: 'my-header-style'
             },
             {
               text: 'Estado',
@@ -513,22 +496,6 @@
           // partially contains the searched word.
           console.log(this.dessertFilterValue)
           return value.toLowerCase().includes(this.dessertFilterValue.toLowerCase());
-        },
-        /**
-         * Filter for dessert names column.
-         * @param value Value to be tested.
-         * @returns {boolean}
-         */
-         idFilter(value) {
-          console.log(String(value))
-          console.log(String(this.idFilterValue))
-          // If this filter has no value we just skip the entire filter.
-          if (!this.idFilterValue) {
-            return true;
-          }
-          // Check if the current loop value (The dessert name)
-          // partially contains the searched word.
-          return String(value).includes(String(this.idFilterValue));
         },
               /**
          * Filter for dessert names column.

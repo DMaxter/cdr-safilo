@@ -163,6 +163,7 @@ export default {
 
   created () {
     this.facetas = store.pedidoAtual.images
+    console.log(this.facetas)
   }
   
 };
