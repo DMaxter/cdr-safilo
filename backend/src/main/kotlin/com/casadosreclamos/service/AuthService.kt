@@ -42,7 +42,16 @@ private const val TOKEN_LEN: Long = 64
 
 // Default user credentials
 private const val ADMIN_NAME = "admin"
+private const val ADMIN_MAIL = "admin"
 private const val ADMIN_PASS = "S4f!l0CDR"
+
+private const val CDR_NAME = "CDR"
+private const val CDR_MAIL = "CDR"
+private const val CDR_PASS = "123"
+
+private const val SAFILO_NAME = "safilo"
+private const val SAFILO_MAIL = "safilo"
+private const val SAFILO_PASS = "123"
 
 private const val TIME: Long = 3 // hours
 
@@ -84,7 +93,7 @@ class AuthService {
         logger.info("Creating admin user")
 
         val admin = User(
-            "Admin", ADMIN_NAME, BcryptUtil.bcryptHash(ADMIN_PASS), mutableSetOf(Role.ADMIN)
+            ADMIN_NAME, ADMIN_MAIL, BcryptUtil.bcryptHash(ADMIN_PASS), mutableSetOf(Role.ADMIN)
         )
         admin.credits = mutableSetOf()
 
@@ -103,6 +112,62 @@ class AuthService {
                     logger.error("Failed to find admin: $fail")
                 } else {
                     logger.warn("Admin already created")
+                }
+
+                return@transformToUni Uni.createFrom().nullItem()
+            }
+        }.await().indefinitely()
+
+        logger.info("Creating CDR user")
+
+        val cdr = User(
+            CDR_NAME, CDR_MAIL, BcryptUtil.bcryptHash(CDR_PASS), mutableSetOf(Role.CDR)
+        )
+        cdr.credits = mutableSetOf()
+
+        Panache.withTransaction {
+            userRepository.findByName(CDR_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
+                if (user == null) {
+                    return@transformToUni userRepository.persist(cdr).onItemOrFailure()
+                        .invoke { _: User?, error: Throwable? ->
+                            if (fail == null) {
+                                logger.info("CDR user created successfully")
+                            } else {
+                                logger.error("Failed to create CDR user: $error")
+                            }
+                        }
+                } else if (fail != null) {
+                    logger.error("Failed to find CDR user: $fail")
+                } else {
+                    logger.warn("CDR user already created")
+                }
+
+                return@transformToUni Uni.createFrom().nullItem()
+            }
+        }.await().indefinitely()
+
+        logger.info("Creating Safilo user")
+
+        val safilo = User(
+            SAFILO_NAME, SAFILO_MAIL, BcryptUtil.bcryptHash(SAFILO_PASS), mutableSetOf(Role.MANAGER)
+        )
+        safilo.credits = mutableSetOf()
+
+        Panache.withTransaction {
+            userRepository.findByName(SAFILO_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
+                if (user == null) {
+                    return@transformToUni userRepository.persist(safilo).onItemOrFailure()
+                        .invoke { _: User?, error: Throwable? ->
+                            if (fail == null) {
+                                logger.info("Safilo user created successfully")
+                            } else {
+                                logger.error("Failed to create Safilo user: $error")
+                            }
+                        }
+                } else if (fail != null) {
+                    logger.error("Failed to find Safilo user: $fail")
+                } else {
+                    logger.warn("Safilo user already created")
                 }
 
                 return@transformToUni Uni.createFrom().nullItem()
