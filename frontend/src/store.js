@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 
 export const store = reactive({
+  currentUser: null,
   isActive1: false,
   isActive2: false,
   isActive3: false,

@@ -4,21 +4,21 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" color="#FAFAFA" :height="$vuetify.breakpoint.lg
+          <v-card elevation="12" tile color="#FAFAFA" :height="$vuetify.breakpoint.lg
                 ? '650px' 
-                : '900px'" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
+                : '900px'" width="800" style="border-radius: 15px; background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
             <v-menu
             :offset-x="true"
+            tile
             >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 height="64"
                 width="100"
-                round
-                class="white--text"
-                color="#6e4e5d"
-                dark
+                class="white--text customGradient"
+                tile
+                color="#808080"
                 v-bind="attrs"
                 v-on="on"
               >
@@ -26,8 +26,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" @click="$router.push('profileComercial')">
+              <v-btn-toggle v-model="icon" tile dark borderless>
+              <v-btn color="#808080" value="left" height="64" width="170" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -35,7 +35,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" height="60" width="170" @click="$router.push('history')">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -43,7 +43,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" height="60" width="170"  @click="$router.push('search')" >
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -51,7 +51,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" class="v-btn--active" height="60" width="170">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -421,10 +421,10 @@
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click = "$router.push('order')"
-              class="d-flex flex-column"
-              outlined
-              rounded
-              color="#6e4e5d"
+              class="d-flex flex-column customGradient"
+              small
+              dark
+              tile
             > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
             Voltar
             </v-btn>
@@ -432,16 +432,22 @@
             <v-col cols="auto">
             <v-btn
               @click="nextScreen()"
-              class="d-flex flex-column"
-              outlined
-              rounded
-              color="#6e4e5d"
+              class="d-flex flex-column customGradient"
+              small
+              dark
+              tile
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
            </v-row>
           </v-card>
         </v-col>
+    </v-row>
+    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
+      <v-img :src="myImage2" contain height="180" width="180"></v-img>
+    </v-row>
+    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
+        <span style="font-size: 10px;">© 2022 casa dos reclamos, todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -460,6 +466,7 @@ export default {
 
   data: () => ({
     store,
+    myImage2: require('@/assets/logologo1.png'),
     faces: ["A", "B", "C", "D", "E"],
     myImage: require('@/assets/default-placeholder.png'),
     picked: null,
@@ -589,12 +596,16 @@ export default {
     opacity: 1!important;
 }
 #app {
-    background: #3A1C71;
-    background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-    background: linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
+  background: url('@/assets/background.jpg') center center fixed !important;
+  background-size: cover;
 }
 
 .selected {
     background-image: linear-gradient(to top, #F0E68C 0%, transparent 72px);
   }
+
+  .customGradient {
+  background-image: linear-gradient(#616161, grey);
+}
+
 </style>

@@ -4,20 +4,20 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" color="#FAFAFA" height="635" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
+          <v-card elevation="12" tile height="600" width="800" style="border-radius: 15px; background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2">
             <v-col cols="2">
-            <v-menu
+              <v-menu
             :offset-x="true"
+            tile
             >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 height="64"
                 width="100"
-                round
-                class="white--text"
-                color="#6e4e5d"
-                dark
+                class="white--text customGradient mr-4"
+                tile
+                color="#808080"
                 v-bind="attrs"
                 v-on="on"
               >
@@ -25,8 +25,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170" class="v-btn--active" @click="$router.push('profileComercial')">
+              <v-btn-toggle v-model="icon" tile dark mandatory borderless>
+              <v-btn color="#808080" value="left" height="64" width="170" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -34,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" height="60" width="170" @click="$router.push('history')">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -42,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" height="60" width="170"  @click="$router.push('search')" >
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -50,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" height="60" width="170" @click="$router.push('order')">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -63,7 +63,7 @@
           </v-col>
           <v-col cols="8">
           <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-1">
-              <v-avatar color="#6e4e5d" size="100" class="mb-6">
+              <v-avatar color="#6e4e5d" size="100" class="mb-6 customGradient">
                 <v-icon size="60" dark>
                   mdi-account-circle
                 </v-icon>
@@ -74,7 +74,7 @@
             </v-col>
           </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-              <v-avatar color="#6e4e5d" size="40" class="mb-2">
+              <v-avatar color="#6e4e5d" size="40" class="mb-2 customGradient">
                 <v-icon size="24" dark>
                   mdi-lock
                 </v-icon>
@@ -87,7 +87,8 @@
                               class="mt-2"
                               label="Palavra Passe"
                               type="text"
-                              rounded
+                              tile
+                              dense
                               outlined
                               hide-details
                               v-model="currentPassword"></v-text-field>
@@ -99,7 +100,8 @@
                               class="mt-2"
                               label="Nova Palavra Passe"
                               type="text"
-                              rounded
+                              tile
+                              dense
                               outlined
                               hide-details
                               v-model="newPassword"></v-text-field>
@@ -111,30 +113,31 @@
                               class="mt-2"
                               label="Nova Palavra Passe"
                               type="text"
-                              rounded
+                              tile
+                              dense
                               outlined
                               hide-details
                               v-model="newPassword2"></v-text-field>
             </v-col>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 15px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mt-2">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click="$router.push('profileComercial')"
-              class="d-flex flex-column"
-              outlined
-              rounded
-              color="#6e4e5d"
+              class="d-flex flex-column customGradient"
+              small
+              tile
+              dark
             > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
             Voltar
             </v-btn>
            </v-col>
             <v-col cols="auto">
             <v-btn
-              class="d-flex flex-column"
-              outlined
-              rounded
-              color="#6e4e5d"
+              class="d-flex flex-column customGradient"
+              small
+              tile
+              dark
               @click="changePassword"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
@@ -142,6 +145,12 @@
            </v-row>
           </v-card>
         </v-col>
+    </v-row>
+    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
+      <v-img :src="myImage" contain height="180" width="180"></v-img>
+    </v-row>
+    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
+        <span style="font-size: 10px;">© 2022 casa dos reclamos, todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -158,6 +167,7 @@ export default {
   },
 
   data: () => ({
+    myImage: require('@/assets/logologo1.png'),
     currentPassword: null,
     newPassword: null,
     newPassword2: null
@@ -178,10 +188,13 @@ export default {
 </script>
 
 <style>
+.customGradient {
+  background-image: linear-gradient(#616161, grey);
+}
+
 
 #app {
-    background: #3A1C71;
-    background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-    background: linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
+  background: url('@/assets/background.jpg') center center fixed !important;
+  background-size: cover;
 }
 </style>

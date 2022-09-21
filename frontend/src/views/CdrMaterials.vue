@@ -4,19 +4,19 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
+          <v-card elevation="12" height="600" width="800" tile style="background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
-           <v-menu
+            <v-menu
             :offset-x="true"
+            tile
             >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 height="64"
                 width="100"
-                round
-                class="white--text"
+                tile
+                class="white--text customGradient"
                 color="#6e4e5d"
-                dark
                 v-bind="attrs"
                 v-on="on"
               >
@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense mandatory>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170">
+              <v-btn-toggle v-model="icon" dark dense tile>
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileCdr')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="60" width="170">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="60" width="170">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="v-btr--active customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
@@ -60,7 +60,7 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="500" class="mb-3" v-bind="attrs" v-on="on"> Adicionar Materiais à base de dados </v-btn>
+      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on"> Adicionar Materiais à base de dados </v-btn>
       </template>
       <v-card>
         <v-card-title class="justify-center">
@@ -116,7 +116,7 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="500" class="mb-3" v-bind="attrs" v-on="on" @click="getMaterials"> Alterar Materiais na base de dados </v-btn>
+      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getMaterials"> Alterar Materiais na base de dados </v-btn>
       </template>
       <v-card>
         <v-card-title class="justify-center">
@@ -198,6 +198,12 @@
           </v-card>         
         </v-col>
     </v-row>
+    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
+      <v-img :src="myImage" contain height="180" width="180"></v-img>
+    </v-row>
+    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
+        <span style="font-size: 10px;">© 2022 casa dos reclamos, todos os direitos reservados.</span>
+    </v-row>
     </v-container>
 
   </v-app>
@@ -215,6 +221,7 @@ export default {
 
 data () {
       return {
+        myImage: require('@/assets/logologo1.png'),
         dialog: false,
         dialog1: false,
         store,
@@ -290,8 +297,11 @@ methods: {
 <style>
 
 #app {
-    background: #3A1C71;
-    background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-    background: linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
+  background: url('@/assets/background.jpg') center center fixed !important;
+  background-size: cover;
+}
+
+.customGradient {
+  background-image: linear-gradient(#616161, grey);
 }
 </style>

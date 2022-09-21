@@ -192,6 +192,15 @@ export default class Backend {
     })
   }
 
+  static async isLoggedIn() {
+    return httpClient.get("/auth/logged").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async updateStatus(id, op) {
     if(op == 'IN_PRODUCTION'){
     return httpClient.put(`/request/production/${id}`).then(response => {

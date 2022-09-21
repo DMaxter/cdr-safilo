@@ -4,19 +4,19 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" color="#FAFAFA" height="600" width="800" style="border-radius: 15px; background-color: rgba(235,235,238, 0.6);">
+          <v-card elevation="12" height="600" width="800" tile style="background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
-      <v-menu
+            <v-menu
             :offset-x="true"
+            tile
             >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 height="64"
                 width="100"
-                round
-                class="white--text"
+                tile
+                class="white--text customGradient"
                 color="#6e4e5d"
-                dark
                 v-bind="attrs"
                 v-on="on"
               >
@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense mandatory>
-              <v-btn color="#6e4e5d" value="left" height="60" width="170">
+              <v-btn-toggle v-model="icon" tile dark borderless>
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="60" width="170">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="60" width="170">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="60" width="170">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -69,6 +69,7 @@
             v-model="user"
             :items="userNames"
             dense
+            outlined
             label="nome"
           ></v-autocomplete>
             </v-col>
@@ -82,6 +83,7 @@
             v-model="brand"
             :items="brandNames"
             dense
+            outlined
             label="marca"
           ></v-autocomplete>
             </v-col>
@@ -95,23 +97,23 @@
             v-model= valor
             label=""
             placeholder="Quantidade"
-            filled
-            rounded
+            outlined
+            tile
             dense
             hide-details
           ></v-text-field>
             </v-col>
             <v-col cols="auto" >
-              <v-btn-toggle v-model="toggle_exclusive">
-                <v-btn v-model="add">
+              <v-btn-toggle v-model="toggle_exclusive" borderless>
+                <v-btn v-model="add" class="customGradient" dark>
                   Acrescentar
                 </v-btn>
 
-                <v-btn v-model="remove">
+                <v-btn v-model="remove" class="customGradient" dark>
                   Retirar
                 </v-btn>
 
-                <v-btn v-model="change">
+                <v-btn v-model="change" class="customGradient" dark>
                   Alterar
                 </v-btn>
             </v-btn-toggle>
@@ -124,16 +126,14 @@
         id="dialogo"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-row justify="end" align="end" class="d-flex flex-column mt-4 mr-0">
+          <v-row justify="end" align="end" class="d-flex flex-column mt-1 mr-0">
             <v-col cols="auto">
               <v-btn
-              class="d-flex flex-column"
-              outlined
+              class="d-flex flex-column customGradient"
               v-bind="attrs"
               v-on="on"
-              x-large
-              rounded
-              color="#6e4e5d"
+              title
+              dark
               @click= "changePlafond(); dialog = true"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
@@ -157,6 +157,12 @@
           </v-card>
         </v-col>
     </v-row>
+    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
+      <v-img :src="myImage2" contain height="180" width="180"></v-img>
+    </v-row>
+    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
+        <span style="font-size: 10px;">© 2022 casa dos reclamos, todos os direitos reservados.</span>
+    </v-row>
     </v-container>
 
   </v-app>
@@ -174,6 +180,7 @@ export default {
 
   data: () => ({
     dialog: false,
+    myImage2: require('@/assets/logologo1.png'),
     user: null,
     add: false,
     remove: false,
@@ -277,10 +284,12 @@ export default {
 </script>
 
 <style>
+.customGradient {
+  background-image: linear-gradient(#616161, grey);
+}
 
 #app {
-    background: #3A1C71;
-    background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-    background: linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
+  background: url('@/assets/background.jpg') center center fixed !important;
+  background-size: cover;
 }
 </style>

@@ -78,6 +78,7 @@
 
 import Backend from '@/router/backend'
 import AuthDto from '@/models/AuthDto';
+import { store } from '@/store.js'
 
 export default {
   name: 'App',
@@ -97,7 +98,16 @@ export default {
     login: async function () {
       try {
         await Backend.login(this.auth)
-        this.$router.push("profileComercial")
+        store.currentUser = await Backend.getProfile()
+        if(store.currentUser.roles[0] == 'COMMERCIAL' || store.currentUser.roles[0] == 'ADMIN'){
+          this.$router.push("profileComercial")
+        }
+        if(store.currentUser.roles[0] == 'CDR'){
+          this.$router.push("profileCdr")
+        }
+        if(store.currentUser.roles[0] == 'MANAGER'){
+          this.$router.push("profileSafilo")
+        }
       } catch (error) {
         this.dialog = true
         console.error(error)

@@ -88,9 +88,11 @@
                 <v-main class="text-no-wrap" align="center" style="background-color: #cfcfcf;"> {{ this.credits }}
                 <v-icon size="15"> mdi-currency-eur </v-icon> </v-main> </v-col>
               <v-col cols = 1 align="left" class>
-                 <v-avatar color="#808080" size="20" class="d-flex customGradient" @click = "$router.push('plafond')">
+                <template v-if="this.role">
+                 <v-avatar color="#808080" size="20" class="d-flex customGradient2"  @click = "$router.push('plafond')">
                   <v-icon size="15" dark class="d-flex"> mdi-help </v-icon>
                 </v-avatar>
+              </template>
               </v-col>
              </v-row>
              <v-row justify="left" align="left" class="d-flex ml-4 pt-7">
@@ -112,7 +114,7 @@
               <v-col cols = 3 class="d-flex flex-column ml-10" align="left"> Password
                 <v-main class="text-no-wrap" width="" align="center" style="background-color: #cfcfcf;"> ****** </v-main>
             </v-col>
-            <v-btn class="d-flex mt-9 white--text customGradient" color="#808080" height="25" elevation="2"  @click="$router.push('passwordChange')"> Alterar
+            <v-btn class="d-flex mt-9 white--text customGradient" tile height="25" elevation="2"  @click="$router.push('passwordChange')"> Alterar
               <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
             </v-btn>
              </v-row>
@@ -143,11 +145,15 @@ export default {
   data: () => ({
     myImage: require('@/assets/logologo1.png'),
     credits: null,
-    profile: new UserDto()
+    profile: new UserDto(),
+    role: false,
   }),
 
   created: async function() {
     this.profile = await Backend.getProfile()
+    if(this.profile.roles[0] == 'COMMERCIAL' || this.profile.roles[0] == 'ADMIN'){ 
+      this.role = true
+    }
     this.credits = 0
     this.profile.credits.forEach(element => {
       this.credits += element.amount
@@ -171,5 +177,10 @@ export default {
 
 .customGradient {
   background-image: linear-gradient(#616161, grey);
+}
+
+.customGradient2 {
+  background-image: linear-gradient(#616161, grey);
+  cursor:pointer;
 }
 </style>
