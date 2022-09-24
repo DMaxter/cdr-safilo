@@ -9,6 +9,42 @@ on:
 jobs:
   build_backend:
     runs-on: ubuntu-latest
+
+    env:
+      DOMAIN_NAME: ${{ secrets.HOST }}
+
+      QUARKUS_HTTP_PORT: 8080
+      QUARKUS_HTTP_SSL_CERTIFICATE_FILE: ${{ secrets.SSL_CERT }}
+      QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE: ${{ secrets.SSL_KEY }}
+      QUARKUS_HTTP_CORS: true
+      QUARKUS_HTTP_CORS_ORIGINS: https://${{ secrets.HOST }}
+      QUARKUS_HTTP_CORS_METHODS: GET,PUT,POST,DELETE
+
+      QUARKUS_DATASOURCE_JDBC: false
+      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://${{ secrets.MYSQL_HOST }}:3306/${{ secrets.DB_NAME }}
+      QUARKUS_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USER }}
+      QUARKUS_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASS }}
+
+      QUARKUS_HTTP_AUTH_PROACTIVE: false
+      QUARKUS_SECURITY_SECURITY_PROVIDERS: BC
+
+      MP_JWT_TOKEN_HEADER: Cookie
+      MP_JWT_TOKEN_COOKIE: identity
+      SMALLRYE_JWT_PATH_GROUPS: roles
+      MP_JWT_VERIFY_ISSUER: https://${{ secrets.HOST }}:8080
+      MP_JWT_VERIFY_PUBLICKEY_ALGORITHM: RS256
+      MP_JWT_VERIFY_PUBLICKEY_LOCATION: /safilo/pub.pem
+      SMALLRYE_JWT_SIGN_KEY_LOCATION: /safilo/priv.pem
+
+      QUARKUS_MAILER_HOST: ${{ secrets.SMTP_HOST }}
+      QUARKUS_MAILER_PORT: ${{ secrets.SMTP_PORT }}
+      QUARKUS_MAILER_USERNAME: ${{ secrets.SMTP_USER }}
+      QUARKUS_MAILER_PASSWORD: ${{ secrets.SMTP_PASS }}
+      QUARKUS_MAILER_FROM: ${{ secrets.SMTP_MAIL }}
+      CDR_EMAIL: ${{ secrets.CDR_MAIL }}
+
+      QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY: ${{ secrets.IMAGE_DIR }}
+
     steps:
       - name: "Download repository"
         uses: actions/checkout@v3
@@ -34,23 +70,62 @@ jobs:
           name: backend
           path: backend/build/quarkus-app
 
+      - name: "Publish ansible artifacts"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ansible
+          path: deploy
+
   build_frontend:
     runs-on: ubuntu-latest
+
+    env:
+      ROOT_API: https://${{ secrets.HOST }}:8889
+
     steps:
+      - name: "Download repository"
+        uses: actions/checkout@v3
+
       - name: "Set up Node.JS 16"
         uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: "yarn"
+          cache-dependency-path: frontend/yarn.lock
 
       - name: "Build frontend"
         run: |
           cd frontend
           yarn install
-          yarn run serve
+          yarn run build
 
       - name: "Publish frontend"
         uses: actions/upload-artifact@v3
         with:
           name: frontend
           path: frontend/dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOMAIN_NAME: ${{ secrets.HOST }}
+      CDR_EMAIL: ${{ secrets.CDR_MAIL }}
+    needs:
+      - build_backend
+      - build_frontend
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Move artifacts to ansible folder
+        run: |
+          mkdir ansible/files
+          mv {backend,frontend} ansible/files
+
+      - name: Run ansible playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: ansible/deploy.yml
+          key: ${{ secrets.SSH_KEY }}
+          inventory: |
+            safilo ansible_host=${{ secrets.HOST }} ansible_user=${{ secrets.SSH_USER }} ansible_port=${{ secrets.SSH_PORT }}
