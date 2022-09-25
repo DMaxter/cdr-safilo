@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ROOT_API: https://${{ secrets.HOST }}:8889
+      VUE_APP_ROOT_API: https://${{ secrets.HOST }}:8889
 
     steps:
       - name: "Download repository"
