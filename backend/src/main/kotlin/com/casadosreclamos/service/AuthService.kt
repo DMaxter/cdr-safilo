@@ -16,12 +16,14 @@ import io.quarkus.hibernate.reactive.panache.Panache
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.reactive.ReactiveMailer
 import io.quarkus.runtime.Startup
+import io.quarkus.runtime.configuration.ProfileManager
 import io.smallrye.jwt.build.Jwt
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.bouncycastle.util.io.pem.PemReader
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
+import java.io.File
 import java.io.InputStreamReader
 import java.security.KeyFactory
 import java.security.MessageDigest
@@ -175,7 +177,7 @@ class AuthService {
         }.await().indefinitely()
 
         logger.info("Initializing Authentication Service")
-        val file = AuthService::class.java.getResourceAsStream(keyPath)
+        val file = if (ProfileManager.getActiveProfile() == "dev") AuthService::class.java.getResourceAsStream(keyPath) else File(keyPath).inputStream()
 
         if (file != null) {
             logger.debug("Found key file")
