@@ -11,15 +11,34 @@ ExecStart=java -jar quarkus-run.jar
 Restart=always
 RestartSec=30
 
-Environment=QUARKUS_HTTP_CORS=true
-Environment=QUARKUS_HTTP_CORS_ORIGINS=https://{{ lookup("env", "DOMAIN_NAME") }}
-Environment=QUARKUS_HTTP_CORS_METHODS=GET,PUT,POST,DELETE
-Environment=QUARKUS_HTTP_AUTH_PROACTIVE=false
 Environment=DOMAIN_NAME={{ lookup("env", "DOMAIN_NAME") }}
+Environment=CDR_EMAIL={{ lookup("env", "CDR_EMAIL") }}
+# HTTP Config
+Environment=QUARKUS_HTTP_PORT=8080
+Environment=QUARKUS_HTTP_SSL_CERTIFICATE_FILE={{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_FILE") }}
+Environment=QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE={{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE") }}
+Environment=QUARKUS_HTTP_CORS={{ lookup("env", "QUARKUS_HTTP_CORS") }}
+Environment=QUARKUS_HTTP_CORS_ORIGINS={{ lookup("env", "QUARKUS_HTTP_CORS_ORIGINS") }}
+Environment=QUARKUS_HTTP_CORS_METHODS={{ lookup("env", "QUARKUS_HTTP_CORS_METHODS") }}
+Environment=QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY={{ lookup("env", "QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY") }}
+Environment=QUARKUS_HTTP_AUTH_PROACTIVE=false
+
+# JWT Config
 Environment=MP_JWT_TOKEN_COOKIE=identity
 Environment=MP_JWT_VERIFY_ISSUER=https://{{ lookup("env", "DOMAIN_NAME") }}:8080
 Environment=SMALLRYE_JWT_SIGN_KEY_LOCATION=/safilo/priv.pem
-Environment=CDR_EMAIL={{ lookup("env", "CDR_EMAIL") }}
+
+# MySQL Config
+Environment=QUARKUS_DATASOURCE_REACTIVE_URL={{ lookup("env", "QUARKUS_DATASOURCE_REACTIVE_URL") }}
+Environment=QUARKUS_DATASOURCE_USERNAME={{ lookup("env", "QUARKUS_DATASOURCE_USERNAME") }}
+Environment=QUARKUS_DATASOURCE_PASSWORD={{ lookup("env", "QUARKUS_DATASOURCE_PASSWORD") }}
+
+# Mailer Config
+Environment=QUARKUS_MAILER_HOST={{ lookup("env", "QUARKUS_MAILER_HOST") }}
+Environment=QUARKUS_MAILER_PORT={{ lookup("env", "QUARKUS_MAILER_PORT") }}
+Environment=QUARKUS_MAILER_USERNAME={{ lookup("env", "QUARKUS_MAILER_USERNAME") }}
+Environment=QUARKUS_MAILER_PASSWORD={{ lookup("env", "QUARKUS_MAILER_PASSWORD") }}
+Environment=QUARKUS_MAILER_FROM={{ lookup("env", "QUARKUS_MAILER_FROM") }}
 
 [Install]
 WantedBy=multi-user.target

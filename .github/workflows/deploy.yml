@@ -13,17 +13,7 @@ jobs:
     env:
       DOMAIN_NAME: ${{ secrets.HOST }}
 
-      QUARKUS_HTTP_PORT: 8080
-      QUARKUS_HTTP_SSL_CERTIFICATE_FILE: ${{ secrets.SSL_CERT }}
-      QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE: ${{ secrets.SSL_KEY }}
-      QUARKUS_HTTP_CORS: true
-      QUARKUS_HTTP_CORS_ORIGINS: https://${{ secrets.HOST }}
-      QUARKUS_HTTP_CORS_METHODS: GET,PUT,POST,DELETE
-
       QUARKUS_DATASOURCE_JDBC: false
-      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://${{ secrets.MYSQL_HOST }}:3306/${{ secrets.DB_NAME }}
-      QUARKUS_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USER }}
-      QUARKUS_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASS }}
 
       QUARKUS_HTTP_AUTH_PROACTIVE: false
       QUARKUS_SECURITY_SECURITY_PROVIDERS: BC
@@ -35,15 +25,6 @@ jobs:
       MP_JWT_VERIFY_PUBLICKEY_ALGORITHM: RS256
       MP_JWT_VERIFY_PUBLICKEY_LOCATION: /safilo/pub.pem
       SMALLRYE_JWT_SIGN_KEY_LOCATION: /safilo/priv.pem
-
-      QUARKUS_MAILER_HOST: ${{ secrets.SMTP_HOST }}
-      QUARKUS_MAILER_PORT: ${{ secrets.SMTP_PORT }}
-      QUARKUS_MAILER_USERNAME: ${{ secrets.SMTP_USER }}
-      QUARKUS_MAILER_PASSWORD: ${{ secrets.SMTP_PASS }}
-      QUARKUS_MAILER_FROM: ${{ secrets.SMTP_MAIL }}
-      CDR_EMAIL: ${{ secrets.CDR_MAIL }}
-
-      QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY: ${{ secrets.IMAGE_DIR }}
 
     steps:
       - name: "Download repository"
@@ -110,6 +91,23 @@ jobs:
     env:
       DOMAIN_NAME: ${{ secrets.HOST }}
       CDR_EMAIL: ${{ secrets.CDR_MAIL }}
+
+      QUARKUS_HTTP_SSL_CERTIFICATE_FILE: ${{ secrets.SSL_CERT }}
+      QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE: ${{ secrets.SSL_KEY }}
+      QUARKUS_HTTP_CORS: true
+      QUARKUS_HTTP_CORS_ORIGINS: https://${{ secrets.HOST }}
+      QUARKUS_HTTP_CORS_METHODS: GET,PUT,POST,DELETE
+      QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY: ${{ secrets.IMAGE_DIR }}
+
+      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://${{ secrets.MYSQL_HOST }}:3306/${{ secrets.DB_NAME }}
+      QUARKUS_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USER }}
+      QUARKUS_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASS }}
+
+      QUARKUS_MAILER_HOST: ${{ secrets.SMTP_HOST }}
+      QUARKUS_MAILER_PORT: ${{ secrets.SMTP_PORT }}
+      QUARKUS_MAILER_USERNAME: ${{ secrets.SMTP_USER }}
+      QUARKUS_MAILER_PASSWORD: ${{ secrets.SMTP_PASS }}
+      QUARKUS_MAILER_FROM: ${{ secrets.SMTP_MAIL }}
     needs:
       - build_backend
       - build_frontend
