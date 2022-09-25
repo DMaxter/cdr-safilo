@@ -9,7 +9,7 @@ httpClient.defaults.timeout = 10000;
 if (process.env.VUE_APP_ROOT_API) {
   httpClient.defaults.baseURL = process.env.VUE_APP_ROOT_API
 } else {
-  httpClient.defaults.baseURL = "https://localhost:8081"
+  httpClient.defaults.baseURL = "http://localhost:8080"
 }
 
 httpClient.defaults.headers.post['Content-Type'] = 'application/json'

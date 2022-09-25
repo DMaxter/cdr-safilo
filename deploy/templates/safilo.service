@@ -13,7 +13,9 @@ RestartSec=30
 
 Environment=DOMAIN_NAME={{ lookup("env", "DOMAIN_NAME") }}
 Environment=CDR_EMAIL={{ lookup("env", "CDR_EMAIL") }}
+
 # HTTP Config
+Environment=QUARKUS_HTTP_PORT=8081
 Environment=QUARKUS_HTTP_SSL_PORT=8080
 Environment=QUARKUS_HTTP_SSL_CERTIFICATE_FILE={{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_FILE") }}
 Environment=QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE={{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE") }}
