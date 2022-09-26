@@ -207,6 +207,15 @@ export default class Backend {
     })
   }
 
+  static async addImage(id, image) {
+    return httpClient.post(`/brand/image/${id}`, image).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async updateStatus(id, op) {
     if(op == 'IN_PRODUCTION'){
     return httpClient.put(`/request/production/${id}`).then(response => {

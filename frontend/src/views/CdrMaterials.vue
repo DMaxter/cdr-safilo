@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" dark dense tile>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileCdr')" class="customGradient">
+              <v-btn-toggle v-model="icon" dark borderless tile>
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="v-btr--active customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
@@ -57,12 +57,13 @@
     <v-dialog
       v-model="dialog"
       persistent
+      content-class="rounded-0"
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
       <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on"> Adicionar Materiais à base de dados </v-btn>
       </template>
-      <v-card>
+      <v-card tile>
         <v-card-title class="justify-center">
           <span class="text-h5"> Adicionar Material à base de dados</span>
         </v-card-title>
@@ -113,12 +114,13 @@
     <v-dialog
       v-model="dialog1"
       persistent
+      content-class="rounded-0"
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
       <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getMaterials"> Alterar Materiais na base de dados </v-btn>
       </template>
-      <v-card>
+      <v-card tile>
         <v-card-title class="justify-center">
           <span class="text-h5"> Materiais </span>
         </v-card-title>
@@ -160,11 +162,10 @@
                 v-show="selected"
               >
                 <v-btn
-                  class="mx-2"
+                  class="mx-2 customGradient"
                   fab
                   dark
                   small
-                  color="primary"
                   @click="deleteMaterial"
                 >
                   <v-icon dark>
@@ -179,7 +180,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog1 = false;"
+            @click="dialog1 = false; selected = false; picked = null;"
           >
             Voltar
           </v-btn>

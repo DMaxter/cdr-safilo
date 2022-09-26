@@ -11,31 +11,13 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/CustomerLogin.vue')
   },
   {
-    path: '/profileComercial',
-    name: 'profileComercial',
+    path: '/profile',
+    name: 'profile',
     meta: { requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/CustomerProfile.vue')
-  },
-  {
-    path: '/profileCdr',
-    name: 'profileCdr',
-    meta: { requiresAuth: true },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/CdrProfile.vue')
-  },
-  {
-    path: '/profileSafilo',
-    name: 'profileSafilo',
-    meta: { requiresAuth: true },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/SafiloProfile.vue')
   },
   {
     path: '/search',
@@ -85,7 +67,6 @@ const routes = [
   {
     path: '/recoverCode',
     name: 'recoverCode',
-    meta: { requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -94,7 +75,6 @@ const routes = [
   {
     path: '/redefinePassword',
     name: 'redefinePassword',
-    meta: { requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.

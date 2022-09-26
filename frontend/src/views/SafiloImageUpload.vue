@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -66,13 +66,13 @@
           :items="brands"
           v-model="brand"
           label="Marca"
-          class="mt-10"
+          class="mt-16"
           dense
           outlined
           hide-details
           ></v-select>
           </v-col>
-          <v-col cols="auto" class="d-flex mt-16">
+          <!-- <v-col cols="auto" class="d-flex mt-16">
             <v-img :src="myImage" contain height="80px" width="80px" @click.stop="handleFileImport"></v-img>
             <input 
             ref="uploader" 
@@ -83,6 +83,17 @@
                 <v-col cols="auto" class="text-decoration-underline mb-15">
                   Escolher Imagem
                 </v-col>
+          </v-col> -->
+          <v-col class="mt-16 d-flex flex-column">
+            Link para a imagem:
+          <v-col cols="auto" align="center">
+          <v-text-field style="width: 400px;"
+          v-model="image"
+          dense
+          outlined
+          hide-details
+          ></v-text-field>
+          </v-col>
           </v-col>
           </v-row>
 <v-dialog
@@ -91,14 +102,15 @@
         id="dialogo"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-row justify="end" align="end" class="d-flex flex-column mt-15 mr-5">
+          <v-row justify="center" align="center" class="d-flex flex-column mt-16">
             <v-col cols="auto">
               <v-btn
               class="d-flex flex-column mt-16 customGradient"
               v-bind="attrs"
               v-on="on"
               dark
-              @click= "dialog.value = true"
+              tile
+              @click= "addImage()"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -150,6 +162,7 @@ data () {
         brand: null,
         selectedFile: null,
         store,
+        image: null,
         myImage: require('@/assets/default-placeholder.png'),
       }
     },
@@ -177,6 +190,13 @@ methods: {
         console.error(error)
       }
     },
+    async addImage(){
+      this.allBrands.forEach(async element => {
+          if(element.name == this.brand){
+            await Backend.addImage(element.id, [String(this.image)])
+          }
+        });
+    }
 },
     created: async function () {
       this.getBrands()

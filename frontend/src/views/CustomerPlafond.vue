@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark mandatory borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -81,10 +81,10 @@
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
            <v-col cols="auto" class="pl-3">
             <v-btn
-              @click="$router.push('profileComercial')"
+              @click="$router.push('profile')"
               class="d-flex flex-column customGradient mb-2"
-              height="30"
-              width="110"
+              small
+              tile
               dark
             > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
             Voltar

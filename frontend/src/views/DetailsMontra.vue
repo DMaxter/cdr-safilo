@@ -6,6 +6,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="650" width="800" tile style="background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
+            <template v-if="this.menu1">
             <v-menu
             :offset-x="true"
             tile
@@ -25,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -59,6 +60,109 @@
 
             </v-btn-toggle>
           </v-menu>
+        </template>
+        <template v-else-if="this.menu2">
+          <v-menu
+            :offset-x="true"
+            tile
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                height="64"
+                width="100"
+                tile
+                class="white--text customGradient"
+                color="#6e4e5d"
+                v-bind="attrs"
+                v-on="on"
+              >
+                Menu
+              </v-btn>
+            </template>
+
+              <v-btn-toggle v-model="icon" dark borderless tile>
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+                  <span class="white--text" style="font-size: 12px">Perfil</span>
+
+                <v-icon right>
+                  mdi-account-circle
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+                <span class="white--text" style="font-size: 12px">Procurar</span>
+
+                <v-icon right>
+                  mdi-magnify
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Materiais</span>
+
+                <v-icon right>
+                  mdi-book
+                </v-icon>
+              </v-btn>
+
+            </v-btn-toggle>
+          </v-menu>
+        </template>
+        <template v-else-if="this.menu3">
+          <v-menu
+            :offset-x="true"
+            tile
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                height="64"
+                width="100"
+                tile
+                class="white--text customGradient"
+                color="#6e4e5d"
+                v-bind="attrs"
+                v-on="on"
+              >
+                Menu
+              </v-btn>
+            </template>
+
+              <v-btn-toggle v-model="icon" tile dark borderless>
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+                  <span class="white--text" style="font-size: 12px">Perfil</span>
+
+                <v-icon right>
+                  mdi-account-circle
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Clientes</span>
+
+                <v-icon right>
+                  mdi-account-group
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+                <span class="white--text" style="font-size: 12px">Procurar</span>
+
+                <v-icon right>
+                  mdi-magnify
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Configurar</span>
+
+                <v-icon right>
+                  mdi-cog
+                </v-icon>
+              </v-btn>
+
+            </v-btn-toggle>
+          </v-menu>
+        </template>
           <v-row class="mt-1 mb-2" justify="center">
             <template v-if="store.isActive2">
             <v-col cols = "4">
@@ -383,6 +487,7 @@
 
 <script>
 import { store } from '@/store.js'
+import Backend from '@/router/backend'
 
 export default {
   name: 'CustomerOrderABC',
@@ -418,8 +523,21 @@ export default {
     items2: ['BACKLIT','BANNER','MICROPERFURADO',
     'PAPEL FOTOGRÁFICO', 'PVC 3 mm', 'PVC 5 mm',
     'TÊXTIL BACKLIT MA', 'VINIL', 'Vinil imp + recort',
-    'VINIL INTERIOR MON', 'VINIL METALIZADO', 'VINIL REPOSICIONÁ']
+    'VINIL INTERIOR MON', 'VINIL METALIZADO', 'VINIL REPOSICIONÁ'],
+    menu1: false,
+    menu2: false,
+    menu3: false,
   }),
+  async created() {
+    var profile = await Backend.getProfile()
+    if(profile.roles[0] == 'COMMERCIAL' || profile.roles[0] == 'ADMIN'){ 
+      this.menu1 = true
+    } else if(profile.roles[0] == 'CDR'){ 
+      this.menu2 = true
+    } else if(profile.roles[0] == 'MANAGER'){
+      this.menu3 = true
+    }
+  },
   methods: {
       getHeight(n) {
         return store.pedidoAtual.dimensoes[n].height

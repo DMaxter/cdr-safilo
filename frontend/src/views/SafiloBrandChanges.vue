@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -62,9 +62,8 @@
           </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
             </v-row>
-            <v-divider></v-divider>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="250" style="width: 600px;" class="elevation-1 my-header-style mt-10">
+        <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="330" style="width: 600px;" class="elevation-1 my-header-style mt-3">
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="deleteBrand(item)">mdi-delete</v-icon>
           </template>
@@ -78,7 +77,7 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="200" class="mb-3 mt-5 customGradient" dark v-bind="attrs" v-on="on"> Adicionar Marca </v-btn>
+      <v-btn height="60" width="200" class="mb-3 mt-5 customGradient" tile dark v-bind="attrs" v-on="on"> Adicionar Marca </v-btn>
       </template>
       <v-card>
         <v-card-title class="justify-center">
@@ -119,10 +118,10 @@
     </v-dialog>
 </template>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 100px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 62px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profile')"
+              @click="$router.push('configure')"
               class="d-flex flex-column customGradient"
               tile
               small
@@ -215,6 +214,11 @@ data () {
       addBrand: async function () {
       try {
         await Backend.addBrand(this.brandName)
+        this.allBrands = await Backend.getBrands()
+        this.desserts2 = []
+        this.allBrands.forEach(element => {
+          this.desserts2.push({ name: element.name })
+        });
       } catch (error) {
         // TODO: Show something
         console.error(error)
@@ -229,6 +233,11 @@ data () {
           }
         });
         await Backend.deleteBrand(id)
+        this.allBrands = await Backend.getBrands()
+        this.desserts2 = []
+        this.allBrands.forEach(element => {
+          this.desserts2.push({ name: element.name })
+        });
       } catch (error) {
         // TODO: Show something
         console.error(error)
@@ -251,6 +260,7 @@ data () {
 
   
 .my-header-style {
-    background-color: rgb(225, 225, 225) !important;
+    border-radius: 0px;
+    background-color: rgb(243, 243, 243) !important;
   }
 </style>

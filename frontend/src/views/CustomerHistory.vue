@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profileComercial')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -184,20 +184,19 @@
           </v-menu>
           </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
-              Nome Comerciante
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="requests" fixed-header item-key="name" hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style">
+        <v-data-table :headers="headers" :items="requests" fixed-header item-key="name" hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style mt-5">
         
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="getRequest(item)">mdi-plus</v-icon>
           </template>
     </v-data-table>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 90px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profileComercial')"
+              @click="$router.push('profile')"
               class="d-flex flex-column customGradient"
               small
               tile
@@ -445,8 +444,8 @@ data () {
             data: item.created,
             marca: [item.type.cover.brand.name],
             modelo: item.type.type,
-            material: item.type.cover.material.name,
-            dimensoes: item.type.cover.measurements,
+            material: [item.type.cover.material.name],
+            dimensoes: [item.type.cover.measurements],
             estado: item.status,
             images: [item.type.cover.image.link],
             quantity: item.quantidade,

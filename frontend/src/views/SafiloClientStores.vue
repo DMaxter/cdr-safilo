@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -107,12 +107,13 @@
     <v-dialog
       v-model="dialog1"
       persistent
+      content-class="rounded-0"
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="240" class="mb-3 mt-5 customGradient" dark v-bind="attrs" v-on="on"> Adicionar Loja a Cliente </v-btn>
+      <v-btn height="60" width="240" class="mb-3 mt-5 customGradient" tile dark v-bind="attrs" v-on="on"> Adicionar Loja a Cliente </v-btn>
       </template>
-      <v-card>
+      <v-card tile>
         <v-card-title class="justify-center">
           <span class="text-h5"> Adicionar Loja a Cliente </span>
         </v-card-title>
@@ -172,7 +173,7 @@
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 70px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profileSafilo')"
+              @click="$router.push('profile')"
               class="d-flex flex-column customGradient"
               tile
               small
@@ -220,7 +221,7 @@ data () {
         dates: [],
         menu: false,
         address: new AddressDto(),
-        adresses: null,
+        addresses: null,
         desserts: [
           {
             name: '1234',
@@ -296,6 +297,12 @@ data () {
         this.address.postalCode = this.storePostCode
         console.log(this.address)
         await Backend.addStore(store.currentClient.id, this.address)
+        var allClients = await Backend.getClients()
+        allClients.forEach(element => {
+          if(element.id == store.currentClient.id){
+            this.addresses = element.addresses
+          }
+        });
       } catch (error) {
         // TODO: Show something
         console.error(error)

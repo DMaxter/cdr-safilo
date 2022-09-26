@@ -1,9 +1,5 @@
 <template>
-<v-app style="
-    background: #3A1C71;
-    background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-    background: linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-  ">
+<v-app>
 
   <v-container fill-height>
      <v-row justify="center" align="center">
@@ -68,3 +64,9 @@ export default {
   }
 };
 </script>
+<style>
+  #app {
+  background: url('@/assets/background.jpg') center center fixed !important;
+  background-size: cover;
+}
+</style>

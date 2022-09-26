@@ -68,7 +68,7 @@
                   mdi-account-circle
                 </v-icon>
               </v-avatar>
-              Nome empregado safilo
+              {{this.profile.name}}
             </v-row>
             <v-divider></v-divider>
             </v-col>
@@ -123,7 +123,7 @@
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mt-2">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profileComercial')"
+              @click="$router.push('profile')"
               class="d-flex flex-column customGradient"
               small
               tile
@@ -170,8 +170,13 @@ export default {
     myImage: require('@/assets/logologo1.png'),
     currentPassword: null,
     newPassword: null,
-    newPassword2: null
+    newPassword2: null,
+    profile: null,
   }),
+
+  created: async function() {
+    this.profile = await Backend.getProfile()
+  },
 
   methods: {
     changePassword: async function () {

@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -104,16 +104,16 @@
           ></v-text-field>
             </v-col>
             <v-col cols="auto" >
-              <v-btn-toggle v-model="toggle_exclusive" borderless>
-                <v-btn v-model="add" class="customGradient" dark>
+              <v-btn-toggle v-model="toggle_exclusive" tile dark borderless mandatory>
+                <v-btn v-model="add" class="customGradient">
                   Acrescentar
                 </v-btn>
 
-                <v-btn v-model="remove" class="customGradient" dark>
+                <v-btn v-model="remove" class="customGradient">
                   Retirar
                 </v-btn>
 
-                <v-btn v-model="change" class="customGradient" dark>
+                <v-btn v-model="change" class="customGradient">
                   Alterar
                 </v-btn>
             </v-btn-toggle>
@@ -132,7 +132,7 @@
               class="d-flex flex-column customGradient"
               v-bind="attrs"
               v-on="on"
-              title
+              tile
               dark
               @click= "changePlafond(); dialog = true"
             > Confirmar <v-icon >mdi-play</v-icon>

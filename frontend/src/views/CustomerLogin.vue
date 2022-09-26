@@ -1,9 +1,5 @@
 <template>
-<v-app style="
-    background: #3A1C71;
-    background: -webkit-linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-    background: linear-gradient(180deg, #a54676, #8c4b6c, #6e4e5d);
-  ">
+<v-app>
 
   <v-container fill-height>
      <v-row justify="center" align="center">
@@ -34,12 +30,12 @@
               </v-card-text>
                 <v-card-actions>
                   <div justify="center" align="center">
-                  <v-btn color="#6e4e5d" text @click="$router.push('recoverCode')">
+                  <v-btn color="#616161" text @click="$router.push('recoverCode')">
                     Esqueceu-se da palavra passe?
                   </v-btn>
 
           <v-btn
-            width="33%" class="mt-16 white--text" color="#6e4e5d"
+            width="33%" class="mt-16 white--text customGradient"
             @click="login"
           >Entrar</v-btn>
 
@@ -99,15 +95,7 @@ export default {
       try {
         await Backend.login(this.auth)
         store.currentUser = await Backend.getProfile()
-        if(store.currentUser.roles[0] == 'COMMERCIAL' || store.currentUser.roles[0] == 'ADMIN'){
-          this.$router.push("profileComercial")
-        }
-        if(store.currentUser.roles[0] == 'CDR'){
-          this.$router.push("profileCdr")
-        }
-        if(store.currentUser.roles[0] == 'MANAGER'){
-          this.$router.push("profileSafilo")
-        }
+        this.$router.push("profile")
       } catch (error) {
         this.dialog = true
         console.error(error)
@@ -116,3 +104,12 @@ export default {
   }
 };
 </script>
+<style>
+  #app {
+  background: url('@/assets/background.jpg') center center fixed !important;
+  background-size: cover;
+}
+.customGradient {
+  background-image: linear-gradient(#616161, grey);
+}
+</style>

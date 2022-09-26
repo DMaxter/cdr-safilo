@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -60,15 +60,15 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 350px">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 349px">
           <h3 class="mb-8"> {{store.currentClient.id}} - {{store.currentClient.name}}</h3>
-          <v-btn height="60" width="500" dark class="mb-3 customGradient" @click="$router.push('clientStores')"> Lojas </v-btn>
-          <v-btn height="60" width="500" dark class="mb-3 customGradient" @click="$router.push('clientHistory')"> Histórico </v-btn>
+          <v-btn height="60" width="500" dark tile class="mb-3 customGradient" @click="$router.push('clientStores')"> Lojas </v-btn>
+          <v-btn height="60" width="500" dark tile class="mb-3 customGradient" @click="$router.push('clientHistory')"> Histórico </v-btn>
           </v-row>
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 170px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('profileSafilo')"
+              @click="$router.push('profile')"
               class="d-flex flex-column customGradient"
               small
               dark

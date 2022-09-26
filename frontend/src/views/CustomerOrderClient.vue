@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profileComercial')" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -64,40 +64,7 @@
               Selecionar cliente e morada de entrega
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="210" style="width: 600px;" class="elevation-1 my-header-style">
-        <template v-slot:top>
-
-            <!-- v-container, v-col and v-row are just for decoration purposes. -->
-            <v-container fluid>
-                <v-row>
-
-                    <v-col cols="5">
-                        <v-row class="pa-2">
-                             <v-select
-                                    style="width: 150px;"
-                                    :items="marcasList"
-                                    v-model="marcasFilterValue"
-                                    label="Faturação"
-                            ></v-select>
-                        </v-row>
-                    </v-col>
-
-                    <v-col cols="4">
-                        <v-row class="pa-2">
-                            <!-- Filter for calories -->
-                            <v-select
-                                    style="width: 150px;"
-                                    :items="estadosList"
-                                    v-model="estadosFilterValue"
-                                    label="Ativo"
-                            ></v-select>
-                        </v-row>
-                    </v-col>
-
-                </v-row>
-            </v-container>
-
-        </template>
+        <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style">
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="getSpecificClient(item)">mdi-plus</v-icon>
           </template>

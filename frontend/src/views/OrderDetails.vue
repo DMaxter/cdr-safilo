@@ -6,6 +6,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="600" width="800" tile style="background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
+            <template v-if="this.menu1">
             <v-menu
             :offset-x="true"
             tile
@@ -25,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -59,19 +60,186 @@
 
             </v-btn-toggle>
           </v-menu>
+        </template>
+        <template v-else-if="this.menu2">
+          <v-menu
+            :offset-x="true"
+            tile
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                height="64"
+                width="100"
+                tile
+                class="white--text customGradient"
+                color="#6e4e5d"
+                v-bind="attrs"
+                v-on="on"
+              >
+                Menu
+              </v-btn>
+            </template>
+
+              <v-btn-toggle v-model="icon" dark borderless tile>
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+                  <span class="white--text" style="font-size: 12px">Perfil</span>
+
+                <v-icon right>
+                  mdi-account-circle
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+                <span class="white--text" style="font-size: 12px">Procurar</span>
+
+                <v-icon right>
+                  mdi-magnify
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Materiais</span>
+
+                <v-icon right>
+                  mdi-book
+                </v-icon>
+              </v-btn>
+
+            </v-btn-toggle>
+          </v-menu>
+        </template>
+        <template v-else-if="this.menu3">
+          <v-menu
+            :offset-x="true"
+            tile
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                height="64"
+                width="100"
+                tile
+                class="white--text customGradient"
+                color="#6e4e5d"
+                v-bind="attrs"
+                v-on="on"
+              >
+                Menu
+              </v-btn>
+            </template>
+
+              <v-btn-toggle v-model="icon" tile dark borderless>
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+                  <span class="white--text" style="font-size: 12px">Perfil</span>
+
+                <v-icon right>
+                  mdi-account-circle
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Clientes</span>
+
+                <v-icon right>
+                  mdi-account-group
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+                <span class="white--text" style="font-size: 12px">Procurar</span>
+
+                <v-icon right>
+                  mdi-magnify
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Configurar</span>
+
+                <v-icon right>
+                  mdi-cog
+                </v-icon>
+              </v-btn>
+
+            </v-btn-toggle>
+          </v-menu>
+        </template>
           </v-row>
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 470px">
           <h3> PEDIDO {{store.pedidoAtual.cod}}</h3>
-            <v-card elevation="12" color="#FAFAFA" height="400" width="400">
-              <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0 ml-4">
-              <v-col cols="auto"> Data:  {{store.pedidoAtual.data}}</v-col>
-              <v-col cols="auto"> Marca: {{store.pedidoAtual.marca}} </v-col>
-              <v-col cols="auto"> Modelo: {{store.pedidoAtual.modelo}} </v-col>
-              <v-col cols="auto"> Material: {{store.pedidoAtual.material}} </v-col>
-              <v-col cols="auto"> Dimensões: {{store.pedidoAtual.dimensoes}} </v-col>
-              <v-col cols="auto" class="d-flex"> Estado: {{store.pedidoAtual.estado}}
+            <v-card elevation="12" color="#FAFAFA" height="400" width="400" tile>
+              <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0">
+              <v-col cols="auto" class="ml-4"> Data:  {{store.pedidoAtual.data}}</v-col>
+              <v-col cols="auto" class="ml-4"> Marca: </v-col>
+              <v-slide-group
+                multiple
+                show-arrows
+                :class="{'ml-4': theme}"
+              >
+                <v-slide-item
+                  v-for="n in store.pedidoAtual.marca.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    active-class="purple white--text"
+                    depressed
+                    dense
+                    @click="toggle"
+                  >
+                    {{store.pedidoAtual.marca[n-1]}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
+              <v-col cols="auto" class="ml-4"> Modelo: {{store.pedidoAtual.modelo}} </v-col>
+              <v-col cols="auto" class="ml-4"> Material:</v-col>
+              <v-slide-group
+                multiple
+                show-arrows
+                :class="{'ml-4': theme}"
+              >
+                <v-slide-item
+                  v-for="n in store.pedidoAtual.material.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    active-class="purple white--text"
+                    depressed
+                    dense
+                    @click="toggle"
+                  >
+                    {{store.pedidoAtual.material[n-1]}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
+              <v-col cols="auto" class="ml-4"> Dimensões (altura x largura, em cm):</v-col>
+              <v-slide-group
+                multiple
+                show-arrows
+                :class="{'ml-4': theme}"
+              >
+                <v-slide-item
+                  v-for="n in store.pedidoAtual.dimensoes.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    active-class="purple white--text"
+                    depressed
+                    dense
+                    @click="toggle"
+                  >
+                    {{store.pedidoAtual.dimensoes[n-1].height}}, {{store.pedidoAtual.dimensoes[n-1].width}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
+              <v-col cols="auto" class="d-flex ml-4"> Estado: {{store.pedidoAtual.estado}}
                 <template>
     <v-dialog
+      v-if="this.show"
       v-model="dialog1"
       persistent
       max-width="500px"
@@ -129,7 +297,7 @@
             </v-card>
           </v-row>
           <v-row no-gutters justify="end" class="mr-9">
-            <v-btn dark class="customGradient" @click="getPedido()">
+            <v-btn dark tile class="customGradient" @click="getPedido()">
               Ver Pedido
             </v-btn>
           </v-row> 
@@ -150,6 +318,7 @@
 <script>
 import { store } from '@/store.js'
 import Backend from '@/router/backend'
+import UserDto from "@/models/UserDto";
 
 export default {
   name: 'CustomerHistory',
@@ -161,8 +330,14 @@ data () {
       return {
         myImage2: require('@/assets/logologo1.png'),
         store,
+        show: false,
+        profile: new UserDto(),
         picked: null,
         dialog1: false,
+        menu1: false,
+        menu2: false,
+        menu3: false,
+        theme: (store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"),
         available: [
           "IN_PRODUCTION",
           "DONE",
@@ -170,10 +345,21 @@ data () {
         ]
       }
     },
-
+async created(){
+  this.profile = await Backend.getProfile()
+  if(this.profile.roles[0] == 'CDR'){
+    this.menu2 = true
+    this.show = true
+  } else if(this.profile.roles[0] == 'COMMERCIAL' || this.profile.roles[0] == 'ADMIN'){ 
+    this.menu1 = true
+  } else if(this.profile.roles[0] == 'MANAGER'){
+    this.menu3 = true
+  }
+  console.log(this.show)
+},
 methods: {
   getPedido() {
-    console.log(store.pedidoAtual)
+    console.log(this.theme)
     if(store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"){
       this.$router.push({name: 'detailsOneOrTwo'});
     } else {

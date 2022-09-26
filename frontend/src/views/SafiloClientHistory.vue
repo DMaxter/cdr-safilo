@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -197,7 +197,7 @@
               <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 90px;">
              <v-col cols="auto" class="pl-4">
               <v-btn
-                @click="$router.push('profileSafilo')"
+                @click="$router.push('profile')"
                 class="d-flex flex-column customGradient"
                 tile
                 small

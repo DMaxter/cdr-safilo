@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profileSafilo')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -61,18 +61,19 @@
           </v-menu>
           </v-row>
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 330px">
-          <v-btn height="60" width="500" class="mb-3 customGradient" dark @click="$router.push('imageUpload')"> Imagens </v-btn>
-          <v-btn height="60" width="500" class="mb-3 customGradient" dark @click="$router.push('plafondChange')"> Plafond </v-btn>
-          <v-btn height="60" width="500" class="mb-3 customGradient" dark @click="$router.push('brandChange')"> Marcas </v-btn>
+          <v-btn height="60" width="500" class="mb-3 customGradient" dark tile @click="$router.push('imageUpload')"> Imagens </v-btn>
+          <v-btn height="60" width="500" class="mb-3 customGradient" dark tile @click="$router.push('plafondChange')"> Plafond </v-btn>
+          <v-btn height="60" width="500" class="mb-3 customGradient" dark tile @click="$router.push('brandChange')"> Marcas </v-btn>
           <v-dialog
       v-model="dialog1"
       persistent
+      content-class="rounded-0"
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn height="60" width="500" class="mb-3 customGradient" dark v-bind="attrs" v-on="on"> Registar Comercial </v-btn>
+        <v-btn height="60" width="500" class="mb-3 customGradient" dark tile v-bind="attrs" v-on="on"> Registar Comercial </v-btn>
       </template>
-      <v-card>
+      <v-card tile>
         <v-card-title class="justify-center">
           <span class="text-h5"> Registar Comercial </span>
         </v-card-title>
@@ -140,7 +141,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 190px;">
              <v-col cols="auto" class="pl-4">
               <v-btn
-                @click="$router.push('profileSafilo')"
+                @click="$router.push('profile')"
                 class="d-flex flex-column customGradient"
                 tile
                 small
