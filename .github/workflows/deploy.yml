@@ -62,6 +62,7 @@ jobs:
 
     env:
       VUE_APP_ROOT_API: https://${{ secrets.HOST }}:8889
+      VUE_APP_NAME: Casa dos Reclamos
 
     steps:
       - name: "Download repository"

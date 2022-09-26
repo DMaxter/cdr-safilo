@@ -8,12 +8,14 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerLogin.vue')
+    base: process.env.BASE_URL,
+    component: () => import(/* webpackChunkName: "about" */ '../views/CustomerLogin.vue'),
+    meta: { title: process.env.VUE_APP_NAME, requiresAuth: false }
   },
   {
     path: '/profile',
     name: 'profile',
-    meta: { requiresAuth: true },
+    meta: { title: "Perfil | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -22,7 +24,7 @@ const routes = [
   {
     path: '/search',
     name: 'search',
-    meta: { requiresAuth: true },
+    meta: { title: "Pesquisar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -31,7 +33,7 @@ const routes = [
   {
     path: '/order',
     name: 'order',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -40,7 +42,7 @@ const routes = [
   {
     path: '/orderClient',
     name: 'orderClient',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -49,7 +51,7 @@ const routes = [
   {
     path: '/order2',
     name: 'order2',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -58,7 +60,7 @@ const routes = [
   {
     path: '/order3',
     name: 'order3',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -67,6 +69,7 @@ const routes = [
   {
     path: '/recoverCode',
     name: 'recoverCode',
+    meta: { title: "Recuperar Palavra-passe | " + process.env.VUE_APP_NAME, requiresAuth: false},
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -75,6 +78,7 @@ const routes = [
   {
     path: '/redefinePassword',
     name: 'redefinePassword',
+    meta: { title: "Redefinir Palavra-passe | " + process.env.VUE_APP_NAME, requiresAuth: false },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -83,7 +87,7 @@ const routes = [
   {
     path: '/passwordChange',
     name: 'passwordChange',
-    meta: { requiresAuth: true },
+    meta: { title: "Alterar Palavra-passe | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -92,7 +96,7 @@ const routes = [
   {
     path: '/history',
     name: 'history',
-    meta: { requiresAuth: true },
+    meta: { title: "Histórico | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -101,7 +105,7 @@ const routes = [
   {
     path: '/plafond',
     name: 'plafond',
-    meta: { requiresAuth: true },
+    meta: { title: "Plafond | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -110,7 +114,7 @@ const routes = [
   {
     path: '/ABC',
     name: 'ABC',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -119,7 +123,7 @@ const routes = [
   {
     path: '/order22',
     name: 'order22',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -128,7 +132,7 @@ const routes = [
   {
     path: '/ABCfinal',
     name: 'ABCfinal',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -137,7 +141,7 @@ const routes = [
   {
     path: '/ABCfinal2',
     name: 'ABCfinal2',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -146,7 +150,7 @@ const routes = [
   {
     path: '/Details',
     name: 'details',
-    meta: { requiresAuth: true },
+    meta: { title: "Detalhes | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -155,7 +159,7 @@ const routes = [
   {
     path: '/DetailsMontra',
     name: 'detailsMontra',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -164,7 +168,7 @@ const routes = [
   {
     path: '/DetailsMontraFinal',
     name: 'detailsMontraFinal',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -173,7 +177,7 @@ const routes = [
   {
     path: '/DetailsOneOrTwo',
     name: 'detailsOneOrTwo',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -182,7 +186,7 @@ const routes = [
   {
     path: '/DetailsOneOrTwoFinal',
     name: 'detailsOneOrTwoFinal',
-    meta: { requiresAuth: true },
+    meta: { title: "Encomendar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -191,7 +195,7 @@ const routes = [
   {
     path: '/SearchResults',
     name: 'searchResults',
-    meta: { requiresAuth: true },
+    meta: { title: "Resultados da Pesquisa | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -200,7 +204,7 @@ const routes = [
   {
     path: '/Clients',
     name: 'clients',
-    meta: { requiresAuth: true },
+    meta: { title: "Clientes | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -209,7 +213,7 @@ const routes = [
   {
     path: '/ClientInfo',
     name: 'clientInfo',
-    meta: { requiresAuth: true },
+    meta: { title: "Informação de Cliente | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -218,7 +222,7 @@ const routes = [
   {
     path: '/ClientStores',
     name: 'clientStores',
-    meta: { requiresAuth: true },
+    meta: { title: "Lojas do Cliente | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -227,7 +231,7 @@ const routes = [
   {
     path: '/StoreInfo',
     name: 'storeInfo',
-    meta: { requiresAuth: true },
+    meta: { title: "Informação de Loja | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -236,7 +240,7 @@ const routes = [
   {
     path: '/Configure',
     name: 'configure',
-    meta: { requiresAuth: true },
+    meta: { title: "Configurar | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -245,7 +249,7 @@ const routes = [
   {
     path: '/ImageUpload',
     name: 'imageUpload',
-    meta: { requiresAuth: true },
+    meta: { title: "Adicionar Imagem | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -254,7 +258,7 @@ const routes = [
   {
     path: '/PlafondChange',
     name: 'plafondChange',
-    meta: { requiresAuth: true },
+    meta: { title: "Atribuir Plafond | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -263,7 +267,7 @@ const routes = [
   {
     path: '/Materiais',
     name: 'materiais',
-    meta: { requiresAuth: true },
+    meta: { title: "Materiais | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -272,7 +276,7 @@ const routes = [
   {
     path: '/brandChange',
     name: 'brandChange',
-    meta: { requiresAuth: true },
+    meta: { title: "Marcas | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -281,7 +285,7 @@ const routes = [
   {
     path: '/clientHistory',
     name: 'clientHistory',
-    meta: { requiresAuth: true },
+    meta: { title: "Histórico do Cliente | " + process.env.VUE_APP_NAME, requiresAuth: true },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -297,6 +301,7 @@ const router = new VueRouter({
 router.beforeEach(async (to,from,next) => {
   //get the authenticated user 
   let authUser = await Backend.isLoggedIn()
+
   //check sensitive routes
   if (to.meta.requiresAuth) {
       if (!authUser) {
@@ -307,6 +312,10 @@ router.beforeEach(async (to,from,next) => {
   } else {
       next();
   }
-})
+});
+
+router.afterEach(async (to) => {
+    document.title = to.meta.title;
+});
 
 export default router
