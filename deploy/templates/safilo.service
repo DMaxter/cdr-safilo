@@ -26,8 +26,12 @@ Environment=QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY={{ lookup("env", "QUARKUS_HTTP_B
 Environment=QUARKUS_HTTP_AUTH_PROACTIVE=false
 
 # JWT Config
+Environment=MP_JWT_TOKEN_HEADER=Cookie
 Environment=MP_JWT_TOKEN_COOKIE=identity
+Environment=SMALLRYE_JWT_PATH_GROUPS=roles
 Environment=MP_JWT_VERIFY_ISSUER=https://{{ lookup("env", "DOMAIN_NAME") }}:8080
+Environment=MP_JWT_VERIFY_PUBLICKEY_ALGORITHM=RS256
+Environment=MP_JWT_VERIFY_PUBLICKEY_LOCATION=/safilo/pub.pem
 Environment=SMALLRYE_JWT_SIGN_KEY_LOCATION=/safilo/priv.pem
 
 # MySQL Config
