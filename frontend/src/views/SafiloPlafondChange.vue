@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -66,6 +66,7 @@
             </v-col>
             <v-col cols="auto" >
               <v-autocomplete
+              style="width: 250px"
             v-model="user"
             :items="userNames"
             dense
@@ -80,6 +81,7 @@
             </v-col>
             <v-col cols="auto" >
               <v-autocomplete
+              style="width: 250px"
             v-model="brand"
             :items="brandNames"
             dense
@@ -94,6 +96,7 @@
             </v-col>
             <v-col cols="auto" >
           <v-text-field
+            style="width: 250px"
             v-model= valor
             label=""
             placeholder="Quantidade"
@@ -126,15 +129,27 @@
         id="dialogo"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-row justify="end" align="end" class="d-flex flex-column mt-1 mr-0">
-            <v-col cols="auto">
+          <v-row justify="space-between" class="d-flex mt-3 mr-0">
+            <v-col cols="auto pl-7">
+              <v-btn
+              @click="$router.push('configure')"
+              class="d-flex flex-column customGradient"
+              tile
+              small
+              dark
+            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
+            Voltar
+            </v-btn>
+            </v-col>
+            <v-col cols="auto pr-7">
               <v-btn
               class="d-flex flex-column customGradient"
               v-bind="attrs"
               v-on="on"
               tile
               dark
-              @click= "changePlafond(); dialog = true"
+              small
+              @click= "success = false; failed = false; changePlafond(); dialog = true"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -143,7 +158,8 @@
         <template v-slot:default="dialog">
           <v-card>
             <v-card-text>
-              <div class="text-h6 pt-12">Alterado com sucesso!</div>
+              <div class="text-h6 pt-12" v-show="success"> Plafond alterado com sucesso! </div>
+              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a alterar o plafond </div>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn
@@ -161,7 +177,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -192,6 +208,8 @@ export default {
     brandNames: [],
     allBrands: null,
     store,
+    success: false,
+    failed: false,
     text: "",
     material: "",
     estado: "",
@@ -203,7 +221,13 @@ export default {
     'VINIL INTERIOR MON', 'VINIL METALIZADO', 'VINIL REPOSICIONÁ']
   }),
   async created() { 
-       try {
+       this.initialization()
+    },
+  methods: { 
+    async initialization(){
+      try {
+        this.userNames = []
+        this.brandNames = []
         this.allUsers = await Backend.getUsers()
         this.allBrands = await Backend.getBrands()
         this.allUsers.forEach(element => {
@@ -212,14 +236,11 @@ export default {
         this.allBrands.forEach(element => {
           this.brandNames.push(element.name)
         });
-        console.log(this.allBrands)
-        console.log(this.allUsers)
       } catch (error) {
         // TODO: Show something
         console.error(error)
       }
     },
-  methods: { 
     searchFilters() {
       if(this.text == ""){
         console.log("no text")
@@ -251,6 +272,7 @@ export default {
           currentUser = element;
         }
       });
+      console.log(currentUser)
       var existingBrand = false;
       var idToUse = null
       var currentPlafond = null;
@@ -260,23 +282,45 @@ export default {
           existingBrand = true;
           currentUser.credits.forEach(element2 => {
             if (element2.brand == this.brand){
+              console.log(element2.amount)
               currentPlafond = element2.amount
             }
           })
         }
       });
-      console.log(this.user, idToUse, this.valor)
+      console.log(currentPlafond)
       if(existingUser && existingBrand) {
         if(this.change){
-          await Backend.updatePlafond(this.user, idToUse, this.valor)
+          try{
+            console.log(currentUser.email, idToUse, this.valor)
+            await Backend.updatePlafond(currentUser.email, idToUse, this.valor)
+            this.initialization()
+            this.success = true;
+          }catch (error) {
+            this.failed = true
+          }
         } else if (this.add){
           currentPlafond = Number(this.valor) + Number(currentPlafond)
           console.log(currentPlafond)
-          await Backend.updatePlafond(this.user, idToUse, currentPlafond)
+          try{
+            await Backend.updatePlafond(currentUser.email, idToUse, currentPlafond)
+            this.initialization()
+            this.success = true;
+          }catch (error) {
+            this.failed = true
+          }
         } else if (this.remove){
           currentPlafond = Number(currentPlafond) - Number(this.valor)
-          await Backend.updatePlafond(this.user, idToUse, currentPlafond)
+          try{
+            await Backend.updatePlafond(currentUser.email, idToUse, currentPlafond)
+            this.initialization()
+            this.success = true;
+          }catch (error) {
+            this.failed = true
+          }
         }
+      } else { 
+        this.failed = true
       }
     }  
   }

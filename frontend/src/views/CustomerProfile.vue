@@ -26,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="160" class="v-btn--active customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -34,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -42,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -50,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -81,7 +81,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark borderless tile>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="v-btn--active customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -89,7 +89,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -97,7 +97,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
@@ -128,7 +128,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="v-btn--active customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -136,7 +136,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -144,7 +144,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -152,7 +152,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -180,7 +180,7 @@
                   mdi-account-circle
                 </v-icon>
               </v-avatar>
-              {{ this.profile.name }}
+              {{ store.currentUser.name }}
             </v-row>
              <v-row justify="left" align="left" class="d-flex ml-4">
               <v-col cols = 1>
@@ -206,7 +206,7 @@
                 </v-avatar>
               </v-col>
               <v-col cols = 4 class="d-flex flex-column ml-10" align="left"> Email
-                <v-main class="text-no-wrap" align="center" style="background-color: #cfcfcf;"> {{ profile.email }} </v-main>
+                <v-main class="text-no-wrap" align="center" style="background-color: #cfcfcf;"> {{ store.currentUser.email }} </v-main>
             </v-col>
              </v-row>
              <v-row justify="left" align="left" class="d-flex ml-4 pt-7">
@@ -228,8 +228,8 @@
     <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
       <v-img :src="myImage" contain height="180" width="180"></v-img>
     </v-row>
-    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex"> 
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -238,7 +238,7 @@
 
 <script>
 import Backend from "@/router/backend";
-import UserDto from "@/models/UserDto";
+import { store } from '@/store.js';
 
 export default {
   name: 'CustomerProfile',
@@ -249,7 +249,8 @@ export default {
   data: () => ({
     myImage: require('@/assets/logologo1.png'),
     credits: null,
-    profile: new UserDto(),
+    store,
+    profile: null,
     role: false,
     menu1: false,
     menu2: false,
@@ -258,19 +259,21 @@ export default {
   }),
 
   created: async function() {
-    this.profile = await Backend.getProfile()
-    if(this.profile.roles[0] == 'COMMERCIAL' || this.profile.roles[0] == 'ADMIN'){ 
-      this.role = true
-    }
-    if(this.profile.roles[0] == 'COMMERCIAL' || this.profile.roles[0] == 'ADMIN'){ 
-      this.menu1 = true
-    } else if(this.profile.roles[0] == 'CDR'){ 
-      this.menu2 = true
-    } else if(this.profile.roles[0] == 'MANAGER'){
-      this.menu3 = true
-    }
-    this.credits = 0
-    this.profile.credits.forEach(element => {
+    if(store.currentUser == null){
+        store.currentUser = await Backend.getProfile()
+      }
+      if(store.currentUser.roles[0] == 'COMMERCIAL' || store.currentUser.roles[0] == 'ADMIN'){ 
+        this.role = true
+      }
+      if(store.currentUser.roles[0] == 'COMMERCIAL' || store.currentUser.roles[0] == 'ADMIN'){ 
+        this.menu1 = true
+      } else if(store.currentUser.roles[0] == 'CDR'){ 
+        this.menu2 = true
+      } else if(store.currentUser.roles[0] == 'MANAGER'){
+        this.menu3 = true
+      }
+      this.credits = 0
+      store.currentUser.credits.forEach(element => {
       this.credits += element.amount
     });
   },
@@ -290,7 +293,6 @@ export default {
   background: url('@/assets/background.jpg') center center fixed !important;
   background-size: cover;
 }
-
 .customGradient {
   background-image: linear-gradient(#616161, grey);
 }

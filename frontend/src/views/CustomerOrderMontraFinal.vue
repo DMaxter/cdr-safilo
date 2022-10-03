@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -59,10 +59,10 @@
 
             </v-btn-toggle>
           </v-menu>
-          <v-card elevation="2" tile outlined color="#FAFAFA" height="80" style="width: 260px;">
+          <v-card elevation="2" tile outlined color="#FAFAFA" height="80" style="width: 280px;">
             <v-row justify="center" align="center" class="d-flex flex-column mt-3">
             <v-col cols="auto" class="pa-0">
-            Créditos atuais para por marca:
+            Créditos atuais por marca:
             </v-col>
             <v-col cols="auto" class="pa-0">
               <v-slide-group
@@ -76,6 +76,7 @@
                 >
                   <v-btn
                     :input-value="active"
+                    style="pointer-events: none;"
                     active-class="purple white--text"
                     depressed
                     dense
@@ -99,6 +100,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -113,6 +116,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[2].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -125,6 +130,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[3].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -139,6 +146,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[1].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -155,6 +164,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -173,6 +184,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -189,6 +202,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[0].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -203,6 +218,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[2].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -215,6 +232,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[3].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -228,6 +247,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[1].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -269,6 +290,7 @@
                 >
                   <v-btn
                     :input-value="active"
+                    style="pointer-events: none;"
                     active-class="purple white--text"
                     depressed
                     dense
@@ -282,7 +304,27 @@
             </v-row>
             </v-card>
           </v-col>
-
+          <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        max-width="600"
+        id="dialogo"
+      >
+        <template>
+          <v-card>
+            <v-card-text>
+              <div class="text-h6 pt-12" v-show="added"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
+              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil  </div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                @click="dialog = false"
+              >Voltar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
           </v-row>
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 137px;">
            <v-col cols="auto" class="pl-4">
@@ -302,7 +344,7 @@
               small
               dark
               tile
-              @click="placeRequest()"
+              @click="added = false; failed = false; placeRequest(); dialog = true"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -314,7 +356,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -335,16 +377,22 @@ export default {
     store,
     myImage2: require('@/assets/logologo1.png'),
     brandsWithPlafonds: [],
-    brandCost: []
+    brandCost: [],
+    dialog: false,
+    added: false,
+    failed: false
   }),
   
   async created () {
     var currentUser = await Backend.getProfile()
+    console.log(currentUser.credits)
+    console.log(store.uniqueBrands)
     currentUser.credits.forEach(element => {
       if(store.uniqueBrands.includes(element.brand)){
         this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
       }
     });
+    console.log(this.brandsWithPlafonds)
     var brandCosts = []
     store.costPerBrand.forEach(function(value, key) {
       console.log(key,value)  
@@ -356,6 +404,7 @@ export default {
 
   methods: {
     async placeRequest() {
+      try{
       var request = null
       if(store.isActive2){
       request = {
@@ -531,7 +580,13 @@ export default {
       }
     }
       console.log(request)
-      await Backend.placeRequest(request)
+        await Backend.placeRequest(request)
+        this.added = true
+        setTimeout(() => this.$router.push({name: 'profile'}), 3000);
+      } catch (error) {
+        setTimeout(() => this.$router.push({name: 'profile'}), 3000);
+        this.failed = true
+      }
     },
   }
 };
@@ -544,5 +599,9 @@ export default {
 }
 .customGradient {
   background-image: linear-gradient(#616161, grey);
+}
+
+.custom-tooltip {
+    opacity: 1!important;
 }
 </style>

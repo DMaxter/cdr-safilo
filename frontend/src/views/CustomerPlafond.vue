@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark mandatory borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -66,7 +66,7 @@
                   mdi-account-circle
                 </v-icon>
               </v-avatar>
-              Nome Comerciante
+              {{profile}}
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-4">
                 <v-data-table
@@ -100,7 +100,7 @@
       <v-img :src="myImage" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -109,7 +109,7 @@
 
 <script>
 import Backend from "@/router/backend";
-
+import { store } from '@/store.js'
 export default {
   name: 'CustomerHistory',
 
@@ -126,11 +126,16 @@ data () {
         desserts: [
         
         ],
+        store,
+        profile: null,
       }
     },
   async created () {
-    var currentUser = await Backend.getProfile()
-    currentUser.credits.forEach(element => {
+    if(store.currentUser == null){
+        store.currentUser = await Backend.getProfile()
+      }
+      this.profile = store.currentUser.name
+    store.currentUser.credits.forEach(element => {
       this.desserts.push({ marca: element.brand, plafond: element.amount})
     });
   }

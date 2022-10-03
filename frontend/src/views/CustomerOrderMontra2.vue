@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -70,6 +70,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -84,6 +86,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[2].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -96,6 +100,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[3].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -109,6 +115,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[1].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -125,6 +133,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[4].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -143,6 +153,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -159,6 +171,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -173,6 +187,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[2].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -184,6 +200,8 @@
                   <v-tooltip
                   bottom
                   color="white"
+                  max-width = "400px"
+                  max-height ="400px"
                   content-class="custom-tooltip"
                   >
                   <v-img :src=store.facesDefault[3].link ></v-img>
@@ -198,6 +216,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[1].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -282,7 +302,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -335,5 +355,7 @@ export default {
 .customGradient {
   background-image: linear-gradient(#616161, grey);
 }
-
+.custom-tooltip {
+    opacity: 1!important;
+}
 </style>

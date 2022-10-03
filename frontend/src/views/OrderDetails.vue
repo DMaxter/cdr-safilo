@@ -26,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -34,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -42,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -50,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -81,7 +81,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark borderless tile>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -89,7 +89,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -97,7 +97,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
@@ -128,7 +128,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -136,7 +136,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -144,7 +144,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -152,7 +152,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -165,7 +165,7 @@
         </template>
           </v-row>
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 470px">
-          <h3> PEDIDO {{store.pedidoAtual.cod}}</h3>
+          <h3 class="mb-2 mt-2"> PEDIDO {{store.pedidoAtual.cod}}</h3>
             <v-card elevation="12" color="#FAFAFA" height="400" width="400" tile>
               <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0">
               <v-col cols="auto" class="ml-4"> Data:  {{store.pedidoAtual.data}}</v-col>
@@ -183,6 +183,7 @@
                   <v-btn
                     :input-value="active"
                     active-class="purple white--text"
+                    class="ml-5 mr-5"
                     depressed
                     dense
                     @click="toggle"
@@ -207,6 +208,7 @@
                     :input-value="active"
                     active-class="purple white--text"
                     depressed
+                    class="ml-5 mr-5"
                     dense
                     @click="toggle"
                   >
@@ -229,6 +231,7 @@
                     :input-value="active"
                     active-class="purple white--text"
                     depressed
+                    class="ml-5 mr-5"
                     dense
                     @click="toggle"
                   >
@@ -296,11 +299,29 @@
               </v-row>
             </v-card>
           </v-row>
-          <v-row no-gutters justify="end" class="mr-9">
-            <v-btn dark tile class="customGradient" @click="getPedido()">
-              Ver Pedido
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mt-4" style="height: 28px">
+           <v-col cols="auto" class="pl-4">
+            <v-btn
+              @click="$router.go(-1)"
+              class="d-flex flex-column customGradient"
+              small
+              tile
+              dark
+            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
+            Voltar
             </v-btn>
-          </v-row> 
+           </v-col>
+            <v-col cols="auto">
+            <v-btn
+              class="d-flex flex-column customGradient"
+              small
+              tile
+              dark
+              @click="getPedido()"
+            > Ver Pedido <v-icon >mdi-play</v-icon>
+            </v-btn>
+            </v-col>
+           </v-row>
           </v-card>         
         </v-col>
     </v-row>
@@ -308,7 +329,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -368,6 +389,7 @@ methods: {
   },
   async updateStatus() {
     await Backend.updateStatus(store.pedidoAtual.cod, this.picked)
+    store.pedidoAtual.estado =  this.picked
   }
 }
   }

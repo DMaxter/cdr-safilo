@@ -26,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -34,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -42,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -50,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -81,7 +81,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark borderless tile>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -89,7 +89,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -97,7 +97,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
@@ -128,7 +128,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -136,7 +136,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -144,7 +144,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -152,7 +152,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -289,9 +289,9 @@
             </v-menu>
             </v-row>
               <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
-                Nome Comerciante
+                
               </v-row>
-              <v-row justify="center" align="center" class="d-flex flex-column mt-2">
+              <v-row justify="center" align="center" class="d-flex flex-column mt-9">
           <v-data-table :headers="headers" :items="requests" fixed-header item-key="name" hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style">
           
           <template v-slot:[`item.actions`]="{ item }">
@@ -299,7 +299,7 @@
             </template>
       </v-data-table>
               </v-row>
-              <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
+              <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 90px;">
              <v-col cols="auto" class="pl-4">
               <v-btn
                 @click="$router.push('search')"
@@ -321,7 +321,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
       </v-container>
   
@@ -349,12 +349,7 @@
             {text: "Terminado", value: "DONE"},
             {text: "Cancelado", value: "CANCELLED"},
           ],
-          marcasList: [
-            {text: "Qualquer", value: null},
-            {text: "HUGO BOSS", value: "hugo boss"},
-            {text: "CAROLINA HERRERA", value: "carolina herrera"},
-            {text: "TOMMY HILFIGER", value: "tommy hilfiger"},
-          ],
+          marcasList: [{text: "Qualquer", value: null}],
           // Filter models.
           marcasFilterValue: null,
           estadosFilterValue: null,
@@ -472,14 +467,28 @@
           menu1: false,
           menu2: false,
           menu3: false,
+          allBrands: null,
         }
       },
       async created() {
         this.requests = await Backend.getRequests()
+        this.allBrands = await Backend.getBrands()
+        this.allBrands.forEach(element => {
+          this.marcasList.push({ text: element.name, value: element.name })
+        });
         this.requests.forEach(element => {
           var date = element.created
           date = date.slice(0, 10)
           element.created = date
+          var brands = null
+          if(element.type.type == "OneFace"){
+            brands = [element.type.cover.brand.name]
+          } else if(element.type.type == "TwoFaces"){
+            brands = [element.type.cover.brand.name, element.type.back.brand.name]
+          } else if(element.type.type == "RightShowcase" || element.type.type == "LeftShowcase"){
+            brands = [element.type.top.brand.name, element.type.bottom.brand.name, element.type.left.brand.name, element.type.right.brand.name, element.type.side.brand.name]
+          }
+          element.brands = brands
         });
         if(store.materialSearch != null){
         this.requests = this.requests.filter(function (element) {
@@ -546,6 +555,7 @@
             },
             { text: "", value: "actions", sortable: false, class: 'my-header-style'},
             { text: "", value: "modelo", align: ' d-none', sortable: false },
+            { text: "", value: "brands", align: ' d-none', sortable: false, filter: this.marcasFilter},
             { text: "", value: "material", align: ' d-none', sortable: false },
             { text: "", value: "dimensões", align: ' d-none', sortable: false },
           ]
@@ -635,8 +645,6 @@
          * @returns {boolean}
          */
          idFilter(value) {
-          console.log(String(value))
-          console.log(String(this.idFilterValue))
           // If this filter has no value we just skip the entire filter.
           if (!this.idFilterValue) {
             return true;
@@ -675,7 +683,7 @@
           }
           // Check if the current loop value (The calories value)
           // equals to the selected value at the <v-select>.
-          return value.toLowerCase().includes(this.marcasFilterValue.toLowerCase());
+          return value.includes(String(this.marcasFilterValue))
         },
          dateFilter (value) {
           if (this.dates.length != 2) {

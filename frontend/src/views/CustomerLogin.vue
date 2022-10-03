@@ -35,7 +35,7 @@
                   </v-btn>
 
           <v-btn
-            width="33%" class="mt-16 white--text customGradient"
+            width="33%" tile class="mt-16 white--text customGradient"
             @click="login"
           >Entrar</v-btn>
 

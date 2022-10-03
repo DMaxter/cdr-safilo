@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -63,9 +63,8 @@
             <v-row justify="center" align="center" class="d-flex flex-column mb-11 mt-5">
               
             </v-row>
-            <v-divider></v-divider>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="desserts2" fixed-header tile item-key="name" hide-default-footer height="210" style="width: 600px;" class="elevation-1 my-header-style">
+        <v-data-table :headers="headers" :items="desserts2" fixed-header tile item-key="name" hide-default-footer height="260" style="width: 600px;" class="elevation-1 my-header-style">
         <template v-slot:top>
 
             <!-- v-container, v-col and v-row are just for decoration purposes. -->
@@ -74,24 +73,15 @@
 
                     <v-col cols="5">
                         <v-row class="pa-2">
-                             <v-select
-                                    style="width: 150px;"
-                                    :items="marcasList"
-                                    v-model="marcasFilterValue"
-                                    label="Faturação"
-                            ></v-select>
-                        </v-row>
-                    </v-col>
-
-                    <v-col cols="4">
-                        <v-row class="pa-2">
-                            <!-- Filter for calories -->
-                            <v-select
-                                    style="width: 150px;"
-                                    :items="estadosList"
-                                    v-model="estadosFilterValue"
-                                    label="Ativo"
-                            ></v-select>
+                          <v-text-field
+                                    style="width: 150px; border-radius: 0px;"
+                                    v-model="dessertFilterValue"
+                                    label="Cliente"
+                                    hide-details
+                                    outlined
+                                    dense
+                                    
+                            ></v-text-field>
                         </v-row>
                     </v-col>
 
@@ -111,17 +101,20 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="200" class="mb-3 mt-5 customGradient" dark tile v-bind="attrs" v-on="on"> Adicionar Cliente </v-btn>
+      <v-btn height="60" width="200" class="mb-3 mt-5 customGradient" dark tile v-bind="attrs" v-on="on" @click="added = false; failed = false;"> Adicionar Cliente </v-btn>
       </template>
       <v-card tile>
         <v-card-title class="justify-center">
-          <span class="text-h5"> Adicionar Cliente </span>
+          <span class="text-h5" v-show="!added && !failed"> Adicionar Cliente </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row justify="center">
+              <span class="text-h5" v-show="added"> Cliente adicionada com sucesso! </span>
+              <span class="text-h5" v-show="failed"> Ocorreu um erro a adicionar o Cliente </span>
               <v-col
                 cols="8"
+                v-show="!added && !failed"
               >
                 <v-text-field
                   label="Código do cliente"
@@ -131,6 +124,7 @@
               </v-col>
               <v-col
                 cols="8"
+                v-show="!added && !failed"
               >
                 <v-text-field
                   label="Nome do cliente"
@@ -140,6 +134,7 @@
               </v-col>
               <v-col
                 cols="8"
+                v-show="!added && !failed"
               >
                 <v-text-field
                   label="NIF do cliente"
@@ -149,6 +144,7 @@
               </v-col>
               <v-col
                 cols="8"
+                v-show="!added && !failed"
               >
                 <v-text-field
                   label="Email do cliente"
@@ -158,6 +154,7 @@
               </v-col>
               <v-col
                 cols="8"
+                v-show="!added && !failed"
               >
                 <v-text-field
                   label="Número de telefone do cliente"
@@ -179,7 +176,8 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="addClient(); dialog1 = false;"
+            v-show="!added && !failed"
+            @click="addClient();"
           >
             Adicionar
           </v-btn>
@@ -188,7 +186,7 @@
     </v-dialog>
 </template>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 70px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 60px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click="$router.push('profile')"
@@ -211,7 +209,7 @@
       <v-img :src="myImage" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -240,6 +238,9 @@ data () {
         clientPhone: null,
         clientNIF: null,
         dialog1: false,
+        added: false,
+        failed: false,
+        dessertFilterValue: null,
         store,
         estadosList: [
           {text: "Qualquer", value: null},
@@ -283,7 +284,8 @@ data () {
             text: 'Nome',
             value: 'name',
             align: "center",
-            class: 'my-header-style'
+            class: 'my-header-style',
+            filter: this.nameFilter
           },
           { text: "", value: "actions", align: "right", sortable: false, class: 'my-header-style' },
         ]
@@ -304,7 +306,9 @@ data () {
         this.allClients.forEach(element => {
           this.desserts2.push({ name: element.name, fat: element.id })
         });
+        this.added = true
       } catch (error) {
+        this.failed = true
         // TODO: Show something
         console.error(error)
       }
@@ -317,6 +321,17 @@ data () {
         });
         console.log(store.currentClient)
         this.$router.push({name: 'clientInfo'});
+      },
+
+      nameFilter(value) {
+        // If this filter has no value we just skip the entire filter.
+        if (!this.dessertFilterValue) {
+          return true;
+        }
+        // Check if the current loop value (The dessert name)
+        // partially contains the searched word.
+        console.log(this.dessertFilterValue)
+        return value.toLowerCase().includes(this.dessertFilterValue.toLowerCase());
       },
     }
   }

@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -102,14 +102,26 @@
         id="dialogo"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-row justify="center" align="center" class="d-flex flex-column mt-16">
-            <v-col cols="auto">
+          <v-row justify="space-between" align="center" class="d-flex mt-16" style="height: 160px;">
+            <v-col cols="auto pl-7">
+              <v-btn
+              @click="$router.push('configure')"
+              class="d-flex flex-column customGradient mt-16"
+              tile
+              small
+              dark
+            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
+            Voltar
+            </v-btn>
+            </v-col>
+            <v-col cols="auto pr-7">
               <v-btn
               class="d-flex flex-column mt-16 customGradient"
               v-bind="attrs"
               v-on="on"
               dark
               tile
+              small
               @click= "addImage()"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
@@ -119,12 +131,14 @@
         <template v-slot:default="dialog">
           <v-card>
             <v-card-text>
-              <div class="text-h6 pt-12">Alterado com sucesso!</div>
+              <div class="text-h6 pt-12" v-show="success"> Imagem adicionada com sucesso!</div>
+              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a adicionar a imagem </div>
+
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn
                 text
-                @click="dialog.value = false"
+                @click="dialog.value = false; success = false; failed = false"
               >Voltar</v-btn>
             </v-card-actions>
           </v-card>
@@ -137,7 +151,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -162,6 +176,8 @@ data () {
         brand: null,
         selectedFile: null,
         store,
+        success: false,
+        failed: false,
         image: null,
         myImage: require('@/assets/default-placeholder.png'),
       }
@@ -191,13 +207,20 @@ methods: {
       }
     },
     async addImage(){
-      this.allBrands.forEach(async element => {
-          if(element.name == this.brand){
-            await Backend.addImage(element.id, [String(this.image)])
+      var done = false
+        this.allBrands.forEach(async element => {
+            if(element.name == this.brand){
+              done = true
+              await Backend.addImage(element.id, [String(this.image)])
+            }
+          });
+          if(done){
+            this.success = true
+          } else { 
+            this.failed = true
           }
-        });
-    }
-},
+        }
+    },
     created: async function () {
       this.getBrands()
     }

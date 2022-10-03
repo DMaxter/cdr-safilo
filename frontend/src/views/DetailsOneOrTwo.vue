@@ -26,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -34,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -42,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -50,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -81,7 +81,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark borderless tile>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -89,7 +89,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -97,7 +97,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
@@ -128,7 +128,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -136,7 +136,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -144,7 +144,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -152,7 +152,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -166,7 +166,7 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-0">
             <v-col cols="auto" >
-          <v-text-field style="width: 200px; pointer-events: none"
+          <v-text-field style="width: 257px; pointer-events: none; border-radius: 0px;"
           label="Marca"
           :value="store.pedidoAtual.marca[n]"
           dense
@@ -181,7 +181,7 @@
            <v-row no-gutters justify="center" align="center" class="mt-4">
            <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pr-2">
-            <v-text-field style="width: 120px; pointer-events: none"
+            <v-text-field style="width: 120px; pointer-events: none; border-radius: 0px;"
             label=  "Altura"
             :value="getHeight()"
             dense
@@ -192,7 +192,7 @@
            </v-col>
             <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pl-2">
-            <v-text-field style="width: 120px; pointer-events: none"
+            <v-text-field style="width: 120px; pointer-events: none; border-radius: 0px;"
             label= "Largura"
             :value="getWidth()"
             outlined
@@ -203,7 +203,7 @@
            </v-col>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-8">
-          <v-text-field style="width: 200px; pointer-events: none;"
+          <v-text-field style="width: 257px; pointer-events: none; border-radius: 0px;"
           label = "Material"
           :value="getMaterial()"
           dense
@@ -214,16 +214,14 @@
           <v-row justify="center" align="center" class="d-flex flex-column mt-8">
             <v-col cols="auto">
           <v-text-field
-            disabled
+            style="width: 257px; pointer-events: none; border-radius: 0px;"
             :label= store.pedidoAtual.quantity
-            filled
-            rounded
             hide-details
             dense
+            outlined
           ></v-text-field>
               <v-checkbox
             v-model= store.pedidoAtual.application
-            disabled
             hide-details
             :label="`Aplicação?`"
             ></v-checkbox>
@@ -265,7 +263,7 @@
               small
               dark
               tile
-            > Confirmar <v-icon >mdi-play</v-icon>
+            > Seguinte <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
            </v-row>
@@ -276,7 +274,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 

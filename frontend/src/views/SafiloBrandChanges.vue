@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -65,7 +65,7 @@
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
         <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="330" style="width: 600px;" class="elevation-1 my-header-style mt-3">
         <template v-slot:[`item.actions`]="{ item }">
-            <v-icon @click="deleteBrand(item)">mdi-delete</v-icon>
+            <v-icon @click="currentItem = item; toDelete = true, dialog1 = true">mdi-delete</v-icon>
           </template>
     </v-data-table>
             </v-row>
@@ -74,18 +74,23 @@
     <v-dialog
       v-model="dialog1"
       persistent
+      content-class="rounded-0"
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="200" class="mb-3 mt-5 customGradient" tile dark v-bind="attrs" v-on="on"> Adicionar Marca </v-btn>
+      <v-btn height="60" width="200" class="mb-3 mt-5 customGradient" tile @click="added = false; toDelete = false; toDelete2 = false; failed = false" dark v-bind="attrs" v-on="on"> Adicionar Marca </v-btn>
       </template>
-      <v-card>
+      <v-card tile>
         <v-card-title class="justify-center">
-          <span class="text-h5"> Adicionar Marca </span>
+          <span class="text-h5" v-show="!added && !failed && !toDelete && !toDelete2"> Adicionar Marca </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row justify="center">
+              <span class="text-h5" v-show="added"> Marca adicionada com sucesso! </span>
+              <span class="text-h5" v-show="failed"> Ocorreu um erro a adicionar a marca </span>
+              <span class="text-h5" v-show="toDelete"> Tem a certeza que pretende eliminar a marca da base de dados? (pressione o botão novamente para apagar) </span>
+              <span class="text-h5" v-show="toDelete2"> Marca eliminada com sucesso! </span>
               <v-col
                 cols="8"
               >
@@ -93,6 +98,7 @@
                   label="Nome da marca a adicionar"
                   required
                   v-model="brandName"
+                  v-show="!added && !failed && !toDelete && !toDelete2"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -102,14 +108,27 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog1 = false;"
+            @click="dialog1 = false; brandName = null; added = false"
           >
             Voltar
           </v-btn>
           <v-btn
+                  class="mx-2 customGradient"
+                  fab
+                  dark
+                  small
+                  v-show="toDelete"
+                  @click="deleteBrand(); added = false; toDelete = false; failed = false; toDelete2 = true"
+                >
+                  <v-icon dark>
+                    mdi-delete
+                  </v-icon>
+                </v-btn>
+          <v-btn
             color="blue darken-1"
             text
-            @click="addBrand(); dialog1 = false;"
+            v-show="!added && !failed && !toDelete && !toDelete2"
+            @click="addBrand()"
           >
             Adicionar
           </v-btn>
@@ -141,7 +160,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -162,6 +181,7 @@ data () {
       return {
         dialog1: false,
         store,
+        currentItem: null,
         myImage2: require('@/assets/logologo1.png'),
         desserts: [
           {
@@ -177,6 +197,10 @@ data () {
         desserts2: [],
         allBrands: null,
         brandName: null,
+        added: false,
+        failed: false,
+        toDelete: false,
+        toDelete2: false,
       }
     },
     async created() { 
@@ -219,16 +243,18 @@ data () {
         this.allBrands.forEach(element => {
           this.desserts2.push({ name: element.name })
         });
+        this.added = true
       } catch (error) {
+        this.failed = true
         // TODO: Show something
         console.error(error)
       }
     },
-    deleteBrand: async function (item) {
+    deleteBrand: async function () {
       try {
         var id = null
         this.allBrands.forEach(element => {
-          if(element.name == item.name){
+          if(element.name == this.currentItem.name){
             id = element.id
           }
         });
@@ -238,6 +264,8 @@ data () {
         this.allBrands.forEach(element => {
           this.desserts2.push({ name: element.name })
         });
+        this.toDelete = false
+        this.toDelete2 = true
       } catch (error) {
         // TODO: Show something
         console.error(error)

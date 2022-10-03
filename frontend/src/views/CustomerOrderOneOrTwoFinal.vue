@@ -4,8 +4,8 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" height="610" width="800" tile style="background-color: #E0E0E0">
-          <v-row no-gutters justify="space-between" align="center" class="mr-1 ml-2">
+          <v-card elevation="12" height="600" width="800" tile style="background-color: #E0E0E0">
+          <v-row no-gutters justify="space-between" align="center" class="ml-2">
             <v-col cols="auto">
               <v-menu
             :offset-x="true"
@@ -15,7 +15,7 @@
               <v-btn
                 height="64"
                 width="100"
-                class="white--text customGradient"
+                class="white--text customGradient mb-1"
                 tile
                 color="#808080"
                 v-bind="attrs"
@@ -26,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -34,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -42,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -50,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -62,13 +62,33 @@
           </v-menu>
           </v-col>
           <v-col cols="auto">
-          <v-card elevation="2" color="#FAFAFA" tile height="80" style="width: 300px">
-            <v-row justify="center" align="center" class="d-flex flex-column mt-1">
-            <v-col cols="auto" class="pa-3">
-            Créditos atuais para marca {{store.currentBrand}}:
+          <v-card elevation="2" color="#FAFAFA" tile height="80" style="width: 280px">
+            <v-row justify="center" align="center" class="d-flex flex-column mt-0">
+            <v-col cols="auto" class="pa-0 pt-2">
+            Créditos atuais por marca:
             </v-col>
-            <v-col cols="auto" class="pa-0">
-              3000 <v-icon>mdi-currency-eur</v-icon>
+            <v-col cols="auto" class="pa-0 pt-1">
+              <v-slide-group
+                multiple
+                show-arrows
+              >
+                <v-slide-item
+                  v-for="n in brandsWithPlafonds.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    style="pointer-events: none;"
+                    active-class="purple white--text"
+                    depressed
+                    dense
+                    @click="toggle"
+                  >
+                    {{brandsWithPlafonds[n-1]}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
             </v-col>
             </v-row>
             </v-card>
@@ -96,39 +116,78 @@
             </v-col>
             </v-row>
             </v-card>
-          <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" class="mt-5" style="width: 400px;">
+          <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" tile class="mt-5" style="width: 400px;">
             <v-row justify="center" align="center" class="d-flex flex-column">
-            <v-col class="pt-4">
-            Créditos a debitar
+            <v-col class="pa-0 pt-4">
+            Créditos a debitar: {{store.currentCost}} <v-icon>mdi-currency-eur</v-icon>
             </v-col>
-             <v-col cols="auto">
-              {{store.currentCost}} <v-icon>mdi-currency-eur</v-icon>
+             <v-col cols="auto" class="pa-0 pt-1">
+              <v-slide-group
+                multiple
+                show-arrows
+              >
+                <v-slide-item
+                  v-for="n in brandsWithPlafonds.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    style="pointer-events: none;"
+                    active-class="purple white--text"
+                    depressed
+                    dense
+                    @click="toggle"
+                  >
+                    {{brandCost[n-1]}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
             </v-col>
             </v-row>
             </v-card>
           <v-textarea
           class="mt-5" 
-          style="width: 400px;"
+          style="width: 400px; border-radius: 0px;"
           rows="2"
           no-resize
           hide-details
           outlined
-          tile
           name="input-7-4"
           label="Observações sobre o pedido"
-          value=""
           v-model="observacoes"
         ></v-textarea>
           </v-col>
-
+          <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        max-width="600"
+        id="dialogo"
+      >
+        <template>
+          <v-card>
+            <v-card-text>
+              <div class="text-h6 pt-12" v-show="added"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
+              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil </div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                @click="dialog = false"
+              >Voltar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
           </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 35px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 27px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click="$router.push('order2')"
               class="d-flex flex-column customGradient"
               small
               dark
+              tile
             > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
             Voltar
             </v-btn>
@@ -138,7 +197,8 @@
             class="d-flex flex-column customGradient"
               small
               dark
-              @click="placeRequest()"
+              tile
+              @click="added = false; failed = false; placeRequest(); dialog = true"
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -150,7 +210,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -182,14 +242,30 @@ export default {
   store,
   facetas: null,
   observacoes: "",
+  dialog: false,
+  added: false,
+  failed: false,
+  brandsWithPlafonds: [],
+  brandCost: [],
   }),
 
-  created () {
+  async created () {
     if (store.face2 == null){
       this.facetas = [store.face1]
     } else {
       this.facetas = [store.face1, store.face2]
     }
+    var currentUser = await Backend.getProfile()
+    currentUser.credits.forEach(element => {
+      if(store.uniqueBrands.includes(element.brand)){
+        this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
+      }
+    });
+    var brandCosts = []
+    store.costPerBrand.forEach(function(value, key) {
+      brandCosts.push(key + ": " + value)
+      })
+      this.brandCost = brandCosts
   },
 
   methods: {
@@ -264,7 +340,14 @@ export default {
       }
     }
       console.log(request)
-      await Backend.placeRequest(request)
+      try{
+        await Backend.placeRequest(request)
+        this.added = true
+        setTimeout(() => this.$router.push({name: 'profile'}), 3000);
+      } catch (error) {
+        setTimeout(() => this.$router.push({name: 'profile'}), 3000);
+        this.failed = true
+      }
     },
   }
   

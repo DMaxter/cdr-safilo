@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -125,19 +125,28 @@
             </v-row>
            </v-col>
            </v-row>
-           <v-row no-gutters align="end" justify="end" class="d-flex flex-column pr-3" style="height: 55px;">
-           <v-col cols="auto">
+           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mt-4" style="height: 36px">
+           <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = nextScreen()
+              @click="$router.push('orderClient')"
               class="d-flex flex-column customGradient"
+              small
               tile
               dark
-              small
-              color="#6e4e5d"
-            > Confirmar <v-icon >mdi-play</v-icon>
+            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
+            Voltar
             </v-btn>
            </v-col>
-
+            <v-col cols="auto">
+            <v-btn
+              class="d-flex flex-column customGradient"
+              small
+              tile
+              dark
+              @click="nextScreen()"
+            > Confirmar <v-icon >mdi-play</v-icon>
+            </v-btn>
+            </v-col>
            </v-row>
           
           </v-card>
@@ -147,7 +156,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 

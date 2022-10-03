@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -60,7 +60,7 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 330px">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column mt-16" style="height: 330px">
           <v-btn height="60" width="500" class="mb-3 customGradient" dark tile @click="$router.push('imageUpload')"> Imagens </v-btn>
           <v-btn height="60" width="500" class="mb-3 customGradient" dark tile @click="$router.push('plafondChange')"> Plafond </v-btn>
           <v-btn height="60" width="500" class="mb-3 customGradient" dark tile @click="$router.push('brandChange')"> Marcas </v-btn>
@@ -71,17 +71,20 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn height="60" width="500" class="mb-3 customGradient" dark tile v-bind="attrs" v-on="on"> Registar Comercial </v-btn>
+        <v-btn height="60" width="500" class="mb-3 customGradient" dark tile v-bind="attrs" v-on="on" @click="added = false; failed = false"> Registar Comercial </v-btn>
       </template>
       <v-card tile>
         <v-card-title class="justify-center">
-          <span class="text-h5"> Registar Comercial </span>
+          <span class="text-h5" v-show="!added & !failed"> Registar Comercial </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row justify="center">
+              <span class="text-h5" v-show="added"> Comercial registado com sucesso! </span>
+              <span class="text-h5" v-show="failed"> Ocorreu um erro a registar o comercial </span>
               <v-col
                 cols="8"
+                v-show="!added & !failed"
               >
                 <v-text-field
                   label="Email"
@@ -91,6 +94,7 @@
               </v-col>
               <v-col
                 cols="8"
+                v-show="!added & !failed"
               >
                 <v-text-field
                   label="Nome"
@@ -100,6 +104,7 @@
               </v-col>
               <v-col
                 cols="8"
+                v-show="!added & !failed"
               >
                 <v-text-field
                   label="Palavra Passe"
@@ -109,6 +114,7 @@
               </v-col>
               <v-col
                 cols="8"
+                v-show="!added & !failed"
               >
                 <v-text-field
                   label="Confirmar Palavra Passe"
@@ -123,14 +129,15 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog1 = false;"
+            @click="dialog1 = false; comercialEmail = null; comercialName = null; password1 = null; password2 = null"
           >
             Voltar
           </v-btn>
           <v-btn
             color="blue darken-1"
             text
-            @click="addComercial(); dialog1 = false;"
+            v-show="!added & !failed"
+            @click="addComercial()"
           >
             Adicionar
           </v-btn>
@@ -138,7 +145,7 @@
       </v-card>
     </v-dialog>
           </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 190px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 138px;">
              <v-col cols="auto" class="pl-4">
               <v-btn
                 @click="$router.push('profile')"
@@ -160,7 +167,7 @@
       <v-img :src="myImage" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -187,7 +194,9 @@ data () {
         comercialName: null,
         password1: null,
         password2: null,
-        user: new RegisterDto()
+        user: new RegisterDto(),
+        added: false,
+        failed: false
       }
     },
 
@@ -206,8 +215,12 @@ methods: {
           this.user.password = this.password1
           this.user.name = this.comercialName
           await Backend.addComercial(this.user)
+          this.added = true
+        } else { 
+          this.failed = true
         }
       } catch (error) {
+        this.failed = true
         // TODO: Show something
         console.error(error)
       }

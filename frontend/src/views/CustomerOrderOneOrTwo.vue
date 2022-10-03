@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -62,7 +62,7 @@
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-0">
             <v-col cols="auto" >
-          <v-select style="width: 200px;"
+          <v-select style="width: 257px; border-radius: 0px;"
           :items="brands"
           v-model="brand"
           label="Marca"
@@ -79,31 +79,27 @@
            <v-row no-gutters justify="center" align="center" class="mt-4">
            <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pr-2">
-            <v-text-field style="width: 120px;"
+            <v-text-field style="width: 120px; border-radius: 0px;"
             v-model="width"
-            label=""
-            placeholder="Largura"
-            filled
-            rounded
+            label="Largura"
+            outlined
             dense
           ></v-text-field>
             </v-row>
            </v-col>
             <v-col cols="auto">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column pl-2">
-            <v-text-field style="width: 120px;"
+            <v-text-field style="width: 120px; border-radius: 0px;"
             v-model="height"
-            label=""
-            placeholder="Altura"
-            filled
-            rounded
+            label="Altura"
+            outlined
             dense
           ></v-text-field>
             </v-row>
            </v-col>
           </v-row>
           <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-          <v-select style="width: 200px;"
+          <v-select style="width: 257px; border-radius: 0px"
           :items="materials"
           v-model="material"
           label="Material"
@@ -115,13 +111,12 @@
           <v-row justify="center" align="center" class="d-flex flex-column mt-8">
             <v-col cols="auto">
           <v-text-field
+            style="width: 257px; border-radius: 0px"
             v-model="quantity"
-            label=""
-            placeholder="Quantidade"
-            filled
-            rounded
+            label="Quantidade"
             hide-details
             dense
+            outlined
           ></v-text-field>
           <v-checkbox
             v-model="checkbox"
@@ -222,6 +217,7 @@
               class="d-flex flex-column customGradient"
               small
               dark
+              tile
             > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
             Voltar
             </v-btn>
@@ -232,6 +228,7 @@
               class="d-flex flex-column customGradient"
               small
               dark
+              tile
             > Confirmar <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
@@ -243,7 +240,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -285,6 +282,17 @@ export default {
   }),
     methods: {
       nextScreen () {
+        var uniqueBrands = []
+        var costPerBrand = new Map()
+        this.allBrands.forEach(element => {
+          if(element.name == this.brand){
+            store.currentBrandId.push(element.id)
+          }
+          if(!uniqueBrands.includes(this.brand)){
+            uniqueBrands.push(this.brand)
+            costPerBrand.set(this.brand, 0)
+          }
+        });
         var cost = 0;
         this.allMaterials.forEach(element => {
           if(element.name == this.material){
@@ -293,16 +301,13 @@ export default {
           }
         });
         store.currentCost = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
+        costPerBrand.set(this.brand, store.currentCost)
         store.dimensions.push({width: this.width, height: this.height})
         store.quantity = this.quantity
         store.currentBrand = this.brand
-        this.allBrands.forEach(element => {
-          if(element.name == this.brand){
-            store.currentBrandId.push(element.id)
-          }
-        });
         store.application = this.checkbox
-
+        store.uniqueBrands = uniqueBrands
+        store.costPerBrand = costPerBrand
         if(this.ex4){
           this.$router.push({name: 'order22'});
         } else {

@@ -27,7 +27,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#808080" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -35,7 +35,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -43,7 +43,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -51,7 +51,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -72,6 +72,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -86,6 +88,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[2].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -98,6 +102,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[3].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -112,6 +118,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[1].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -128,6 +136,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[4].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -146,6 +156,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[4].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -162,6 +174,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[0].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -176,6 +190,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[2].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -188,6 +204,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[3].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -202,6 +220,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[1].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -250,6 +270,7 @@
           <v-row justify="center" align="center" class="d-flex">
             <v-col cols="5" >
           <v-select
+          style="border-radius: 0px;"
           :items="materials"
           label="Material"
           dense
@@ -260,6 +281,7 @@
         </v-col>
           <v-col cols="5" >
           <v-select
+          style="border-radius: 0px;"
           :items="brands"
           label="Marca"
           dense
@@ -353,22 +375,18 @@
               Medidas (cm)
               </v-col>
               <v-col class="pa-0">
-            <v-text-field style="width: 200px;"
-            label=""
-            placeholder="Largura"
-            filled
-            rounded
+            <v-text-field style="width: 200px; border-radius: 0px;"
+            label="Largura"
             dense
+            outlined
             hide-details
             v-model = "widths[`width`+n]"
           ></v-text-field>
               </v-col>
             <v-col class="pa-0 mt-3">
-            <v-text-field style="width: 200px;"
-            label=""
-            placeholder="Altura"
-            filled
-            rounded
+            <v-text-field style="width: 200px; border-radius: 0px;"
+            label="Altura"
+            outlined
             dense
             hide-details
             v-model="heights[`height`+n]"
@@ -447,7 +465,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -505,8 +523,6 @@ export default {
           }
         }
       });
-        uniqueBrands.pop()
-        costPerBrand.delete(null)
       var cost = 0;
       this.allMaterials.forEach(element => {
         for (let n = 1; n < 6; n++) {
@@ -584,6 +600,7 @@ export default {
     }
     },
      created: async function () {
+      store.images = []
       this.getMaterials()
       this.getBrands()
     }

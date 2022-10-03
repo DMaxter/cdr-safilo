@@ -26,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -34,7 +34,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -42,7 +42,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -50,7 +50,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="170" class="customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
@@ -81,7 +81,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" dark borderless tile>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -89,7 +89,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -97,7 +97,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
                 <v-icon right>
@@ -128,7 +128,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" @click="$router.push('profile')" width="160" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -136,7 +136,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -144,7 +144,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -152,7 +152,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -164,7 +164,7 @@
           </v-menu>
         </template>
           <v-row class="mt-1 mb-2" justify="center">
-            <template v-if="store.isActive2">
+            <template v-if="store.pedidoAtual.modelo == `RightShowcase`">
             <v-col cols = "4">
               <v-row class="d-flex flex-column">
                 <v-col class="pa-0">
@@ -172,6 +172,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[0] ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -186,6 +188,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[2] ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -197,6 +201,8 @@
                   <v-tooltip
                   bottom
                   color="white"
+                  max-width = "400px"
+                  max-height ="400px"
                   content-class="custom-tooltip"
                   >
                   <v-img :src=store.pedidoAtual.images[3]></v-img>
@@ -211,6 +217,8 @@
                   <v-tooltip
                   bottom
                   color="white"
+                  max-width = "400px"
+                  max-height ="400px"
                   content-class="custom-tooltip"
                   >
                   <v-img :src=store.pedidoAtual.images[1]></v-img>
@@ -228,6 +236,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[4] ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -246,6 +256,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[4]></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -262,6 +274,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[0]></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -276,6 +290,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[2]></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -288,6 +304,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[3]></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -302,6 +320,8 @@
                   bottom
                   color="white"
                   content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
                   >
                   <v-img :src=store.pedidoAtual.images[1] ></v-img>
                   <template v-slot:activator="{ on, attrs }">
@@ -349,7 +369,7 @@
             </v-col>
             <v-row justify="center" align="center" class="d-flex">
           <v-col cols="5" >
-          <v-text-field style="pointer-events: none;"
+          <v-text-field style="pointer-events: none; border-radius: 0px;"
           label = "material"
           :value = store.pedidoAtual.material[n-1]
           dense
@@ -358,7 +378,7 @@
         ></v-text-field>
             </v-col>
             <v-col cols="5" >
-          <v-text-field style="pointer-events: none;"
+          <v-text-field style="pointer-events: none; border-radius: 0px;"
           label="Marca"
           :value = store.pedidoAtual.marca[n-1]
           dense
@@ -387,21 +407,19 @@
               Medidas (cm)
               </v-col>
               <v-col class="pa-0">
-            <v-text-field style="width: 200px; pointer-events: none;"
+            <v-text-field style="width: 200px; pointer-events: none; border-radius: 0px;"
             label= "Altura"
             :value="getHeight(n-1)"
-            filled
-            rounded
+            outlined
             dense
             hide-details
           ></v-text-field>
               </v-col>
             <v-col class="pa-0 mt-3">
-            <v-text-field style="width: 200px; pointer-events: none;"
+            <v-text-field style="width: 200px; pointer-events: none; border-radius: 0px;"
             label="Largura"
             :value="getWidth(n-1)"
-            filled
-            rounded
+            outlined
             dense
             hide-details
           ></v-text-field>
@@ -451,7 +469,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.push('history')"
+              @click = "$router.go(-1)"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -467,7 +485,7 @@
               small
               dark
               tile
-            > Confirmar <v-icon >mdi-play</v-icon>
+            > Seguinte <v-icon >mdi-play</v-icon>
             </v-btn>
             </v-col>
            </v-row>
@@ -478,7 +496,7 @@
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 
@@ -530,6 +548,7 @@ export default {
   }),
   async created() {
     var profile = await Backend.getProfile()
+    console.log(store.pedidoAtual)
     if(profile.roles[0] == 'COMMERCIAL' || profile.roles[0] == 'ADMIN'){ 
       this.menu1 = true
     } else if(profile.roles[0] == 'CDR'){ 
@@ -578,5 +597,9 @@ export default {
 
   .customGradient {
   background-image: linear-gradient(#616161, grey);
+}
+
+.custom-tooltip {
+    opacity: 1!important;
 }
 </style>

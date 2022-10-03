@@ -25,7 +25,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="170" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="170" class="v-btn--active customGradient">
+              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Clientes</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,7 +49,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="170" class="customGradient">
+              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Configurar</span>
 
                 <v-icon right>
@@ -106,7 +106,7 @@
                         </v-row>
                     </v-col>
 
-                    <v-col cols="5">
+                    <v-col cols="6">
                         <v-row class="pa-2">
                             <!-- Filter for calories -->
                             <v-menu
@@ -162,16 +162,6 @@
                             <!-- Filter for calories -->
                             <v-text-field
                                     style="width: 150px;"
-                                    v-model="dessertFilterValue"
-                                    label="Cliente"
-                            ></v-text-field>
-                        </v-row>
-                    </v-col>
-                    <v-col cols="4">
-                        <v-row class="pa-2">
-                            <!-- Filter for calories -->
-                            <v-text-field
-                                    style="width: 150px;"
                                     v-model="nomeFilterValue"
                                     label="Comercial"
                             ></v-text-field>
@@ -187,7 +177,7 @@
                 Nome Comerciante
               </v-row>
               <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-          <v-data-table :headers="headers" :items="requests" fixed-header item-key="name" hide-default-footer height="380" style="width: 800px;" class="elevation-1 my-header-style">
+          <v-data-table :headers="headers" :items="requests" fixed-header item-key="name" hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style">
           
           <template v-slot:[`item.actions`]="{ item }">
               <v-icon @click="getRequest(item)">mdi-plus</v-icon>
@@ -197,7 +187,7 @@
               <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 90px;">
              <v-col cols="auto" class="pl-4">
               <v-btn
-                @click="$router.push('profile')"
+                @click="$router.go(-1)"
                 class="d-flex flex-column customGradient"
                 tile
                 small
@@ -216,7 +206,7 @@
       <v-img :src="myImage" contain height="180" width="180"></v-img>
     </v-row>
     <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-        <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
       </v-container>
   
@@ -243,12 +233,7 @@
             {text: "Terminado", value: "DONE"},
             {text: "Cancelado", value: "CANCELLED"},
           ],
-          marcasList: [
-            {text: "Qualquer", value: null},
-            {text: "HUGO BOSS", value: "hugo boss"},
-            {text: "CAROLINA HERRERA", value: "carolina herrera"},
-            {text: "TOMMY HILFIGER", value: "tommy hilfiger"},
-          ],
+          marcasList: [],
           // Filter models.
           marcasFilterValue: null,
           estadosFilterValue: null,
@@ -363,14 +348,29 @@
           menu: false,
           requests: [],
           myImage: require('@/assets/logologo1.png'),
+          allBrands: null,
         }
       },
       async created() {
         this.requests = await Backend.getRequests()
+        this.allBrands = await Backend.getBrands()
+        this.allBrands.forEach(element => {
+            this.marcasList.push({ text: element.name, value: element.name })
+          });
+        console.log(this.marcasList)
         this.requests.forEach(element => {
           var date = element.created
           date = date.slice(0, 10)
           element.created = date
+            var brands = null
+            if(element.type.type == "OneFace"){
+              brands = [element.type.cover.brand.name]
+            } else if(element.type.type == "TwoFaces"){
+              brands = [element.type.cover.brand.name, element.type.back.brand.name]
+            } else if(element.type.type == "RightShowcase" || element.type.type == "LeftShowcase"){
+              brands = [element.type.top.brand.name, element.type.bottom.brand.name, element.type.left.brand.name, element.type.right.brand.name, element.type.side.brand.name]
+            }
+            element.brands = brands
         });
         this.dessertFilterValue = store.currentClient.name
       },
@@ -555,7 +555,7 @@
   <style>
   
   .my-header-style {
-    background-color: rgb(225, 225, 225) !important;
+    background-color: rgb(243, 243, 243) !important;
   }
   #app {
     background: url('@/assets/background.jpg') center center fixed !important;
