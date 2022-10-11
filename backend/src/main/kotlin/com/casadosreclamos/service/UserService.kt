@@ -56,7 +56,7 @@ class UserService {
 
     @Throws(InvalidIdException::class, InvalidUserException::class, InvalidAmountException::class)
     fun setPlafond(userId: String?, brandId: Long, credits: Double): Uni<Response> {
-        if (userId == null || userId.isEmpty()) {
+        if (userId.isNullOrEmpty()) {
             throw InvalidUserException()
         } else if (brandId <= 0) {
             throw InvalidIdException("brand")
