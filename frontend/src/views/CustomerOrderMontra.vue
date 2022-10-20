@@ -438,7 +438,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.push('order')"
+              @click = "$router.push('orderClient')"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -512,20 +512,22 @@ export default {
     nextScreen () {
       var uniqueBrands = []
       var costPerBrand = new Map()
-      this.allBrands.forEach(element => {
         for (let n = 1; n < 6; n++) {
+          this.allBrands.forEach(element => {
           if(element.name == this.brand[`brand`+n]){
             store.currentBrandId.push(element.id)
-          }
-          if(!uniqueBrands.includes(this.brand[`brand`+n])){
+            if(!uniqueBrands.includes(this.brand[`brand`+n])){
             uniqueBrands.push(this.brand[`brand`+n])
             costPerBrand.set(this.brand[`brand`+n], 0)
           }
+          }
+        });
         }
-      });
+
       var cost = 0;
-      this.allMaterials.forEach(element => {
+      
         for (let n = 1; n < 6; n++) {
+          this.allMaterials.forEach(element => {
           if(element.name == this.material[`material`+n]){
             store.selectedMaterial.push(element.id)
             var price = element.cost
@@ -535,8 +537,8 @@ export default {
             currCost += (((this.widths[`width`+n]/100) * (this.heights[`height`+n]/100)) * price)
             costPerBrand.set(this.brand[`brand`+n], currCost)
           }
-        }
         });
+        }
         store.currentCost = cost
         store.uniqueBrands = uniqueBrands
         store.costPerBrand = costPerBrand

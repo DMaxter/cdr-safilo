@@ -106,16 +106,6 @@
           <v-col cols="auto" class="mb-5">
           </v-col>
           <v-col cols="auto" >
-          <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" tile style="width: 400px;">
-            <v-row justify="center" align="center" class="d-flex flex-column">
-            <v-col class="pt-4">
-            Referência do Pedido:
-            </v-col>
-            <v-col>
-              AE3456
-            </v-col>
-            </v-row>
-            </v-card>
           <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" tile class="mt-5" style="width: 400px;">
             <v-row justify="center" align="center" class="d-flex flex-column">
             <v-col class="pa-0 pt-4">
@@ -147,9 +137,9 @@
             </v-row>
             </v-card>
           <v-textarea
-          class="mt-5" 
+          class="mt-10" 
           style="width: 400px; border-radius: 0px;"
-          rows="2"
+          rows="3"
           no-resize
           hide-details
           outlined
@@ -180,10 +170,10 @@
         </template>
       </v-dialog>
           </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 27px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 62px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('order2')"
+              @click="$router.push('orderClient')"
               class="d-flex flex-column customGradient"
               small
               dark

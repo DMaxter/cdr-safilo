@@ -438,6 +438,7 @@ data () {
       },
       getRequest(item) {
         console.log(item)
+        store.address = item.address
         if(item.type.type == "OneFace"){
         store.pedidoAtual = {
             cod: item.id,

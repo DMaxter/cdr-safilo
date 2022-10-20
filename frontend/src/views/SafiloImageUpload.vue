@@ -60,7 +60,7 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 330px">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 380px">
           <v-col cols="auto">
           <v-select style="width: 200px;"
           :items="brands"
@@ -95,14 +95,96 @@
           ></v-text-field>
           </v-col>
           </v-col>
+          <v-btn
+              class="d-flex flex-column customGradient"
+              tile
+              small
+              dark
+              @click="dialog = true;"
+            >
+            Ver Imagens
+            </v-btn>
           </v-row>
+          <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="800"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Imagens
+        </v-card-title>
+        
+          <v-autocomplete style="width: 200px;"
+          :items="brands"
+          v-model="brandFilter"
+          label="Marca"
+          class="ml-6 mt-1 mb-1"
+          dense
+          outlined
+          hide-details
+          @change="loadImages()"
+          ></v-autocomplete>
+
+        <v-card-text>
+          <v-item-group active-class="selected" v-model="picked">
+    <v-container>
+      <v-row>
+        <v-col
+          v-for="(image, i) in images"
+          :key="i"
+          cols="3"
+        >
+          <v-item v-slot="{ active, toggle }">
+            <v-img
+              contain
+              :src= image.link
+              height="150"
+              @click="toggle"
+            >
+                <v-scroll-y-transition>
+                <div
+                  v-if="active"
+                  class="text-h2 flex-grow-1 text-center selected"
+                >
+                  <span style="opacity: 0">Ahahahahahaha</span>
+                </div>
+              </v-scroll-y-transition>
+            </v-img>
+          </v-item>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-item-group>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            text
+            @click="dialog = false; picked = null; images = defaultImages; brandFilter = null;"
+          >
+            Voltar
+          </v-btn>
+
+          <v-btn
+            v-show="picked != null"
+            text
+            @click="deleteImage()"
+          >
+            Apagar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 <v-dialog
         transition="dialog-bottom-transition"
         max-width="600"
         id="dialogo"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-row justify="space-between" align="center" class="d-flex mt-16" style="height: 160px;">
+          <v-row justify="space-between" align="center" class="d-flex" style="height: 188px;">
             <v-col cols="auto pl-7">
               <v-btn
               @click="$router.push('configure')"
@@ -175,15 +257,32 @@ data () {
         brands: [],
         brand: null,
         selectedFile: null,
+        brandFilter: null,
         store,
         success: false,
         failed: false,
         image: null,
+        defaultImages: [],
+        picked: null,
+        images: null,
+        dialog: false,
         myImage: require('@/assets/default-placeholder.png'),
       }
     },
 
 methods: {
+  loadImages() {
+      this.allBrands.forEach(element => {
+          if(this.brandFilter == element.name){
+            this.images = element.images
+          }
+        });
+    },
+  async deleteImage(){
+    await Backend.deleteImage(this.images[this.picked].id)
+    this.picked = null; this.brandFilter = null;
+    this.getBrands();
+  },
   handleFileImport() {
                 this.$refs.uploader.click();
             },
@@ -197,21 +296,31 @@ methods: {
       try {
         this.allBrands = await Backend.getBrands()
         console.log(this.allBrands)
+        this.defaultImages = []
+        this.brands = []
         this.allBrands.forEach(element => {
           this.brands.push(element.name)
+            if(element.images.length > 0){
+              element.images.forEach(element2 => {
+                this.defaultImages.push(element2);
+              });
+            }
         });
         console.log(this.brands)
+        this.images = this.defaultImages
       } catch (error) {
         // TODO: Show something
         console.error(error)
       }
     },
     async addImage(){
+      console.log(this.picked)
       var done = false
         this.allBrands.forEach(async element => {
             if(element.name == this.brand){
               done = true
               await Backend.addImage(element.id, [String(this.image)])
+              this.getBrands()
             }
           });
           if(done){
@@ -233,6 +342,10 @@ methods: {
   background: url('@/assets/background.jpg') center center fixed !important;
   background-size: cover;
 }
+
+.selected {
+    background-image: linear-gradient(to top, #F0E68C 0%, transparent 72px);
+  }
 
 .customGradient {
   background-image: linear-gradient(#616161, grey);

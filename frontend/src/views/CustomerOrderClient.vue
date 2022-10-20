@@ -196,6 +196,31 @@ data () {
         store.isActive1 = false
         store.isActive2 = false
         store.isActive3 = false
+        store.face1 = null
+        store.face2 = null
+        store.address = null
+        store.uniqueBrands = null
+        store.quantity = null
+        store.observations = null
+        store.currentCost = null
+        store.application = false
+        store.currentClient = null 
+        store.currentAddress = null 
+        store.costPerBrand = null
+        store.pedidoAtual = {
+          cod: null,
+          data: null,
+          marca: null,
+          modelo: null,
+          material: null,
+          dimensoes: null,
+          estado: null,
+          images: null,
+          quantity: null,
+          observations: null,
+          cost: null,
+          application: null
+        },
         store.facesDefault = [
                   {
                     face: "A",
@@ -218,6 +243,7 @@ data () {
                     link: require('@/assets/E.png'),
                   },
                 ]
+        console.log(store)
       } catch (error) {
         // TODO: Show something
         console.error(error)

@@ -61,4 +61,5 @@ export const store = reactive({
   codeSearch: null,
   estadoSearch: null,
   materialSearch: null,
+  address: null,
 })

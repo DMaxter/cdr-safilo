@@ -90,7 +90,7 @@
             </v-row>
             </v-card>
           </v-row> 
-          <v-row justify="center" align="center" no-gutters class="d-flex flex-column mt-5">
+          <v-row justify="center" align="center" no-gutters class="d-flex flex-column mt-15">
             <v-row class="mt-1 mb-2" justify="center">
             <template v-if="store.isActive2">
             <v-col cols = "8">
@@ -262,17 +262,8 @@
           </v-row>
           <v-col cols="auto" class="mb-5">
           </v-col>
-          <v-col cols="auto" >
-          <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" tile style="width: 400px;">
-            <v-row justify="center" align="center" class="d-flex flex-column">
-            <v-col class="pt-4">
-            Referência do Pedido:
-            </v-col>
-            <v-col>
-              AE3456
-            </v-col>
-            </v-row>
-            </v-card>
+          <v-col cols="auto" class="mt-10">
+
           <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" tile class="mt-5" style="width: 400px">
             <v-row justify="center" align="center" class="d-flex flex-column">
             <v-col class="pt-4">
@@ -329,7 +320,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 137px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('ABCfinal')"
+              @click="$router.push('orderClient')"
               class="d-flex flex-column customGradient"
               small
               dark

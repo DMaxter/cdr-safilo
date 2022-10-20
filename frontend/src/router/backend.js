@@ -5,13 +5,7 @@ const httpClient = axios.create();
 
 // Set default configuration for requests
 httpClient.defaults.timeout = 10000;
-
-if (process.env.VUE_APP_ROOT_API) {
-  httpClient.defaults.baseURL = process.env.VUE_APP_ROOT_API
-} else {
-  httpClient.defaults.baseURL = "http://localhost:8080"
-}
-
+httpClient.defaults.baseURL = process.env.ROOT_API || 'http://localhost:8080'
 httpClient.defaults.headers.post['Content-Type'] = 'application/json'
 httpClient.defaults.withCredentials = true // Send cookies
 
@@ -209,6 +203,15 @@ export default class Backend {
 
   static async addImage(id, image) {
     return httpClient.post(`/brand/image/${id}`, image).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async deleteImage(id) {
+    return httpClient.delete(`/brand/image/${id}`).then(response => {
       return response.data
     })
       .catch(async error => {

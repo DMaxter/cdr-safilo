@@ -207,7 +207,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.go(-1)"
+              @click = "$router.push('orderClient')"
               class="d-flex flex-column customGradient"
               small
               dark
