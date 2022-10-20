@@ -5,7 +5,13 @@ const httpClient = axios.create();
 
 // Set default configuration for requests
 httpClient.defaults.timeout = 10000;
-httpClient.defaults.baseURL = process.env.ROOT_API || 'http://localhost:8080'
+
+if (process.env.VUE_APP_ROOT_API) {
+  httpClient.defaults.baseURL = process.env.VUE_APP_ROOT_API
+} else {
+  httpClient.defaults.baseURL = "http://localhost:8080"
+}
+
 httpClient.defaults.headers.post['Content-Type'] = 'application/json'
 httpClient.defaults.withCredentials = true // Send cookies
 
