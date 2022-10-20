@@ -76,4 +76,16 @@ class BrandService {
         return Panache.withTransaction { brandRepository.deleteById(id) }.onItem()
             .transform { Response.ok().build() }.onFailure().transform { InvalidIdException("brand") }
     }
+
+    fun deleteImage(id: Long): Uni<Response> {
+        return Panache.withTransaction {
+            imageRepository.findById(id).onItem().transformToUni { image ->
+                Uni.join().all(brandRepository.findByIdWithImages(image.brand.id).onItem().transform { brand ->
+                    brand.images.remove(image)
+                }, imageRepository.deleteById(id)).andFailFast().onItem().transform {
+                    Response.ok().build()
+                }
+            }
+        }
+    }
 }

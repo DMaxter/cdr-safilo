@@ -2,7 +2,6 @@ package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.BrandDto
 import com.casadosreclamos.model.ADMIN_ROLE
-import com.casadosreclamos.model.CDR_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.BrandService
 import io.quarkus.security.Authenticated
@@ -91,13 +90,30 @@ class BrandController {
     @APIResponses(
         APIResponse(responseCode = "200", description = "Successful brand deletion"),
         APIResponse(responseCode = "401", description = "User is not logged in"),
-        APIResponse(responseCode = "403", description = "User doesn't have authorization to add images to a brand")
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to delete brand")
     )
     fun deleteBrand(@PathParam("id") brand: Long): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is deleting brand with id $brand")
 
             return@transformToUni brandService.delete(brand)
+        }
+    }
+
+    @DELETE
+    @Path("/image/{id}")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Delete image")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful image deletion"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to delete image")
+    )
+    fun deleteImage(@PathParam("id") image: Long): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is deleting image with id $image")
+
+            return@transformToUni brandService.deleteImage(image)
         }
     }
 }
