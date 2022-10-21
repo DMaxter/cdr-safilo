@@ -319,7 +319,15 @@ methods: {
         this.allBrands.forEach(async element => {
             if(element.name == this.brand){
               done = true
-              await Backend.addImage(element.id, [String(this.image)])
+              var link = "";
+              if(String(this.image).includes("https://drive.google.com/file/d/") && String(this.image).includes("/view?usp=sharing")){
+                var code = String(this.image).replace('https://drive.google.com/file/d/','');
+                code = code.replace('/view?usp=sharing','')
+                link = "https://drive.google.com/uc?export=view&id=" + code
+              } else { 
+                link = String(this.image)
+              }
+              await Backend.addImage(element.id, [link])
               this.getBrands()
             }
           });
