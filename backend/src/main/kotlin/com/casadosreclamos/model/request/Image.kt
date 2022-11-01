@@ -12,5 +12,7 @@ open class Image {
     @ManyToOne
     open lateinit var brand: Brand
 
+    open var obsolete: Boolean = false
+
     open lateinit var link: String
 }
