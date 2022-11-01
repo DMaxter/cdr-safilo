@@ -550,12 +550,13 @@ export default {
         this.onboarding = this.onboarding + 1 === this.length
           ? 0
           : this.onboarding + 1
-
+        this.images = []
       },
       prev () {
         this.onboarding = this.onboarding - 1 < 0
           ? this.length - 1
           : this.onboarding - 1
+          this.images = []
       },
       getRefs () {
         store.facesDefault.forEach(element => {
@@ -597,6 +598,12 @@ export default {
       this.allBrands.forEach(element => {
           if(this.brand[`brand`+n] == element.name){
             this.images = element.images
+            var filteredImages = []
+              this.images.forEach(image => {
+                if(image.obsolete == false) 
+                  filteredImages.push(image)
+              })
+              this.images = filteredImages
           }
         });
     }

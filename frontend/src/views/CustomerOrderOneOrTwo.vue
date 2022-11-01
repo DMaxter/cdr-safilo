@@ -351,6 +351,12 @@ export default {
       this.allBrands.forEach(element => {
           if(this.brand == element.name){
             this.images = element.images
+            var filteredImages = []
+              this.images.forEach(image => {
+                if(image.obsolete == false) 
+                  filteredImages.push(image)
+              })
+              this.images = filteredImages
           }
         });
     }

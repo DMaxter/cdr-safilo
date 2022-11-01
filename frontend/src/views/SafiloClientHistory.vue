@@ -187,7 +187,7 @@
               <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 90px;">
              <v-col cols="auto" class="pl-4">
               <v-btn
-                @click="$router.go(-1)"
+                @click="$router.push('clientInfo')"
                 class="d-flex flex-column customGradient"
                 tile
                 small

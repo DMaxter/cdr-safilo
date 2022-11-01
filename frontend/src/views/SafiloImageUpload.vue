@@ -137,6 +137,7 @@
         >
           <v-item v-slot="{ active, toggle }">
             <v-img
+              :content-class = "{ obsolete:  image.obsolete}"
               contain
               :src= image.link
               height="150"
@@ -174,6 +175,14 @@
             @click="deleteImage()"
           >
             Apagar
+          </v-btn>
+
+          <v-btn
+            v-show="picked != null"
+            text
+            @click="obsoleteImage()"
+          >
+            Obsoleto
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -278,6 +287,12 @@ methods: {
           }
         });
     },
+
+    async obsoleteImage(){
+      console.log(this.images[this.picked].id)
+    await Backend.obsoleteImage(this.images[this.picked].id)
+    this.getBrands();
+  },
   async deleteImage(){
     await Backend.deleteImage(this.images[this.picked].id)
     this.picked = null; this.brandFilter = null;
@@ -354,6 +369,17 @@ methods: {
 .selected {
     background-image: linear-gradient(to top, #F0E68C 0%, transparent 72px);
   }
+
+  .obsolete {
+    background-image: linear-gradient(90deg, rgba(139, 139, 139, 0.5) 0%, rgba(139, 139, 139, 0.5) 100%), 
+         linear-gradient(to top right,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 3.0px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 3.0px),
+             rgba(0,0,0,0) 100%);
+  }
+
 
 .customGradient {
   background-image: linear-gradient(#616161, grey);
