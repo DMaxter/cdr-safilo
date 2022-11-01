@@ -224,6 +224,15 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
+  
+    static async obsoleteImage(id) {
+    return httpClient.put(`/image/obsolete/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
 
   static async updateStatus(id, op) {
     if(op == 'IN_PRODUCTION'){
