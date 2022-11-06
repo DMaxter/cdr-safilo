@@ -6,15 +6,20 @@ import com.casadosreclamos.service.ImageService
 import io.quarkus.security.identity.CurrentIdentityAssociation
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType
+import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.jboss.logging.Logger
+import org.jboss.resteasy.reactive.PartType
+import org.jboss.resteasy.reactive.RestForm
+import org.jboss.resteasy.reactive.multipart.FileUpload
+import java.io.File
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
+import javax.ws.rs.*
+import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/image")

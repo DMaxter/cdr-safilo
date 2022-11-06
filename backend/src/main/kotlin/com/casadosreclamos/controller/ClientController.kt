@@ -3,17 +3,20 @@ package com.casadosreclamos.controller
 import com.casadosreclamos.dto.AddressDto
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.model.ADMIN_ROLE
-import com.casadosreclamos.model.Client
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.ClientService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
+import io.smallrye.common.annotation.Blocking
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.jboss.logging.Logger
+import org.jboss.resteasy.reactive.RestForm
+import org.jboss.resteasy.reactive.multipart.FileUpload
+import java.io.File
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -40,7 +43,7 @@ class ClientController {
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
     fun getAllClients(): Multi<ClientDto> {
-        return identity.deferredIdentity.onItem().transformToMulti {id ->
+        return identity.deferredIdentity.onItem().transformToMulti { id ->
             logger.info("User ${id.principal.name} is requesting all clients")
 
             return@transformToMulti clientService.getAll()
@@ -59,7 +62,9 @@ class ClientController {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is registering client with name \"${client.name}\"")
 
-            return@transformToUni clientService.register(client)
+            return@transformToUni clientService.register(client).onItem().transform {
+                Response.ok(ClientDto(it)).build()
+            }
         }
     }
 
@@ -78,5 +83,27 @@ class ClientController {
 
             return@transformToUni clientService.addAddress(client, address)
         }
+    }
+
+    @POST
+    @Path("/import")
+    @Blocking
+    @Operation(summary = "Import clients from XLSX file")
+    //@RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun importClients(/*@RestForm file: FileUpload*/): Uni<Response> {
+        //return identity.deferredIdentity.onItem().transformToUni { id ->
+        //logger.info("User ${id.principal.name} is importing clients from Excel file")
+
+        //return clientService.importClients(file.uploadedFile().toFile()).onItem().transform { _ ->
+        return clientService.importClients(File("/home/daniel/test.csv")).collect().asList().onItem()
+            .transform { _ ->
+                return@transform Response.ok().build()
+            }
+        //}
     }
 }

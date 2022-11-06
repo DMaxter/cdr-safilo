@@ -12,7 +12,11 @@ import com.casadosreclamos.repo.ClientRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
 import org.jboss.logging.Logger
+import java.io.File
+import java.nio.charset.Charset
 
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -38,7 +42,7 @@ class ClientService {
         InvalidEmailException::class,
         InvalidNameException::class,
     )
-    fun register(clientDto: ClientDto): Uni<Response> {
+    fun register(clientDto: ClientDto): Uni<Client> {
         val client = Client()
 
         if (clientDto.id == null || clientDto.id!! <= 0) {
@@ -60,11 +64,7 @@ class ClientService {
         client.phone = clientDto.phone!!
         client.addresses = mutableListOf()
 
-        return Panache.withTransaction { clientRepository.persist(client) }.onItem().transform { Response.ok().build() }
-            .onFailure().recoverWithItem { e ->
-                logger.error(e)
-                Response.serverError().build()
-            }
+        return Panache.withTransaction { clientRepository.persist(client) }
     }
 
     @Throws(InvalidIdException::class, InvalidAddressException::class, InvalidPostalCodeException::class)
@@ -90,8 +90,47 @@ class ClientService {
 
                 address.client = client
                 client.addresses.add(address)
+
                 return@transformToUni addressRepository.persist(address)
             }
         }.onItem().transform { Response.ok().build() }
+    }
+
+    fun importClients(file: File): Multi<Uni<Void>> {
+        val contents = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.EXCEL)
+
+        val multi: Multi<Uni<Void>> = Multi.createFrom().emitter { em ->
+            // Remove column names
+            for (record in contents.records.drop(1)) {
+                val id = record[0].toLong()
+                val name = record[1] + record[2]
+                val fiscalNumber = record[6].toLong()
+                val email = record[8]
+                val phone = record[5]
+                val address = record[3]
+                val postalCode = record[4]
+
+                val clientDto = ClientDto(id, name, null, fiscalNumber, email, phone)
+                val addressDto = AddressDto(null, address, postalCode)
+
+                val clientUni = clientRepository.findById(id).onItem().ifNull().switchTo {
+                    return@switchTo register(clientDto)
+                }
+
+                val addressUni = clientUni.onItem().transformToUni { client ->
+                    return@transformToUni addAddress(client.id, addressDto)
+                }
+
+                em.emit(addressUni.onItem().transformToUni { _ ->
+                    return@transformToUni Uni.createFrom().voidItem()
+                })
+            }
+
+            em.complete()
+        }
+
+        return multi.invoke { pipeline ->
+            pipeline.await().indefinitely()
+        }
     }
 }
