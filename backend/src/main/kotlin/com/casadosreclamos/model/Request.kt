@@ -17,9 +17,6 @@ open class Request {
     @ManyToOne
     open lateinit var client: Client
 
-    @ManyToOne
-    open lateinit var address: Address
-
     open lateinit var created: Date
 
     open lateinit var lastUpdate: Date

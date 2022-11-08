@@ -1,6 +1,5 @@
 package com.casadosreclamos.controller
 
-import com.casadosreclamos.dto.AddressDto
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
@@ -14,8 +13,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.jboss.logging.Logger
-import org.jboss.resteasy.reactive.RestForm
-import org.jboss.resteasy.reactive.multipart.FileUpload
 import java.io.File
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
@@ -68,42 +65,25 @@ class ClientController {
         }
     }
 
-    @PUT
-    @Path("/address/{id}")
-    @Operation(summary = "Add address to client")
-    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
-    @APIResponses(
-        APIResponse(responseCode = "200", description = "Successful address registration"),
-        APIResponse(responseCode = "401", description = "User is not logged in"),
-        APIResponse(responseCode = "403", description = "User doesn't have authorization to add a client address")
-    )
-    fun addClientAddress(@PathParam("id") client: Long, address: AddressDto): Uni<Response> {
-        return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} is adding an address to client with id $client")
-
-            return@transformToUni clientService.addAddress(client, address)
-        }
-    }
-
     @POST
     @Path("/import")
     @Blocking
     @Operation(summary = "Import clients from XLSX file")
-    //@RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
     @APIResponses(
         APIResponse(responseCode = "200", description = "Successful operation"),
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "Insufficient privileges")
     )
     fun importClients(/*@RestForm file: FileUpload*/): Uni<Response> {
-        //return identity.deferredIdentity.onItem().transformToUni { id ->
-        //logger.info("User ${id.principal.name} is importing clients from Excel file")
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is importing clients from Excel file")
 
-        //return clientService.importClients(file.uploadedFile().toFile()).onItem().transform { _ ->
-        return clientService.importClients(File("/home/daniel/test.csv")).collect().asList().onItem()
-            .transform { _ ->
-                return@transform Response.ok().build()
-            }
-        //}
+            //return@transformToUni clientService.importClients(file.uploadedFile().toFile()).onItem().transform { _ ->
+            return@transformToUni clientService.importClients(File("/home/daniel/test.csv")).collect().asList().onItem()
+                .transform {
+                    return@transform Response.ok().build()
+                }
+        }
     }
 }

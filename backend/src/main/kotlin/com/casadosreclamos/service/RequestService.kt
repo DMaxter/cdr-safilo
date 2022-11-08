@@ -47,9 +47,6 @@ class RequestService {
     lateinit var requestTypeRepository: RequestTypeRepository
 
     @Inject
-    lateinit var imageRepository: ImageRepository
-
-    @Inject
     lateinit var userRepository: UserRepository
 
     @Inject
@@ -89,37 +86,39 @@ class RequestService {
         lateinit var userName: String
 
         return Panache.withTransaction {
-            val clientUni = clientRepository.findByIdWithAddresses(requestDto.clientId!!)
+            val clientUni = clientRepository.findById(requestDto.clientId!!)
             val userUni = userRepository.findByName(username)
 
             Uni.combine().all().unis(clientUni, userUni).asTuple().onItem().transformToUni { tuple ->
-                    val client = tuple.item1
-                    val user = tuple.item2
+                // Obtain client and user
+                val client = tuple.item1
+                val user = tuple.item2
 
-                    if (client == null) {
-                        throw InvalidIdException("client")
-                    }
-
-                    clientName = client.name
-                    userName = user.name
-
-                    // TODO: check plafond
-
-                    request.address =
-                        client.addresses.stream().filter { it.id == requestDto.addressId }.findFirst().orElse(null)
-                            ?: throw InvalidIdException("address")
-                    request.requester = user
-                    request.client = client
-
-                    requestRepository.persistAndFlush(request)
-                }.onItem().transformToUni { _ ->
-                    toRequestType(requestDto.type!!)
-                }.onItem().transformToUni { requestType ->
-                    requestType.request = request
-                    request.type = requestType
-                    requestTypeRepository.persist(requestType)
+                if (client == null) {
+                    throw InvalidIdException("client")
                 }
+
+                clientName = client.name
+                userName = user.name
+
+                // TODO: check plafond
+
+                request.requester = user
+                request.client = client
+
+                requestRepository.persistAndFlush(request)
+            }.onItem().transformToUni { _ ->
+                // Create RequestType instance
+                toRequestType(requestDto.type!!)
+            }.onItem().transformToUni { requestType ->
+                // Create request
+                requestType.request = request
+                request.type = requestType
+
+                requestTypeRepository.persist(requestType)
+            }
         }.onItem().transformToUni { _ ->
+            // Send email
             mailer.send(
                 Mail.withText(
                     cdrMail, "Novo pedido efetuado por comercial da Safilo", """
@@ -201,6 +200,9 @@ class RequestService {
         }
     }
 
+    /**
+     * Create a RequestType instance
+     */
     private fun toRequestType(request: RequestTypeDto): Uni<out RequestType> {
         return when (request) {
             is OneDto -> toOneFace(request)
@@ -211,6 +213,9 @@ class RequestService {
         }
     }
 
+    /**
+     * Create a OneFace instance
+     */
     private fun toOneFace(request: OneDto): Uni<OneFace> {
         return doSlot(request.cover).onItem().transform { slot ->
             val type = OneFace()
@@ -219,6 +224,9 @@ class RequestService {
         }
     }
 
+    /**
+     * Create a TwoFace instance
+     */
     private fun toTwoFaces(request: TwoDto): Uni<TwoFaces> {
         val coverSlot = doSlot(request.cover)
         val backSlot = doSlot(request.back)
@@ -231,6 +239,9 @@ class RequestService {
         }
     }
 
+    /**
+     * Create a showcase instance
+     */
     private fun toShowcase(request: ShowcaseDto, output: Showcase): Uni<Showcase> {
         val topSlot = doSlot(request.top)
         val bottomSlot = doSlot(request.bottom)
@@ -250,18 +261,27 @@ class RequestService {
             }
     }
 
+    /**
+     * Create a LeftShowcase instance
+     */
     private fun toLeftShowcase(request: LeftDto): Uni<Showcase> {
         val showcase = LeftShowcase()
 
         return toShowcase(request, showcase)
     }
 
+    /**
+     * Create a RightShowcase instance
+     */
     private fun toRightShowcase(request: RightDto): Uni<Showcase> {
         val showcase = RightShowcase()
 
         return toShowcase(request, showcase)
     }
 
+    /**
+     * Create a request slot
+     */
     private fun doSlot(slotDto: RequestSlotDto): Uni<RequestSlot> {
         val materialUni = materialRepository.findById(slotDto.material!!.id)
         val brandUni = brandRepository.findByIdWithImages(slotDto.brand!!.id!!)
@@ -289,6 +309,9 @@ class RequestService {
         }
     }
 
+    /**
+     * Get request type
+     */
     private fun getType(request: RequestTypeDto): String {
         return when (request) {
             is OneDto -> "Uma face"
@@ -298,15 +321,20 @@ class RequestService {
         }
     }
 
+    /**
+     * Validate the request type
+     */
     private fun validateType(request: RequestTypeDto) {
         return when (request) {
             is OneDto -> {
                 validateSlot(request.cover)
             }
+
             is TwoDto -> {
                 validateSlot(request.cover)
                 validateSlot(request.back)
             }
+
             is ShowcaseDto -> {
                 validateSlot(request.top)
                 validateSlot(request.bottom)
@@ -314,6 +342,7 @@ class RequestService {
                 validateSlot(request.right)
                 validateSlot(request.side)
             }
+
             else -> throw InvalidRequestTypeException()
         }
     }

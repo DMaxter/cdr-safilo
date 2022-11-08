@@ -9,8 +9,7 @@ import java.util.*
 data class RequestDto(
     var id: Long?,
     var user: String?,
-    var client: String?,
-    var address: AddressDto?,
+    var client: ClientDto?,
     var created: Date?,
     var lastUpdate: Date?,
     var trackingCode: String?,
@@ -23,8 +22,7 @@ data class RequestDto(
     constructor(request: Request) : this(
         request.id,
         request.requester.name,
-        request.client.name,
-        AddressDto(request.address),
+        ClientDto(request.client),
         request.created,
         request.lastUpdate,
         request.trackingCode,

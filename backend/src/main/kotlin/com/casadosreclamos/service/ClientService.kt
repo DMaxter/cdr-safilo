@@ -2,12 +2,11 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.EMAIL_REGEX
 import com.casadosreclamos.PHONE_REGEX
-import com.casadosreclamos.dto.AddressDto
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.exception.*
-import com.casadosreclamos.model.Address
+import com.casadosreclamos.model.Banner
 import com.casadosreclamos.model.Client
-import com.casadosreclamos.repo.AddressRepository
+import com.casadosreclamos.repo.BannerRepository
 import com.casadosreclamos.repo.ClientRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
@@ -17,10 +16,8 @@ import org.apache.commons.csv.CSVParser
 import org.jboss.logging.Logger
 import java.io.File
 import java.nio.charset.Charset
-
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class ClientService {
@@ -31,22 +28,29 @@ class ClientService {
     lateinit var clientRepository: ClientRepository
 
     @Inject
-    lateinit var addressRepository: AddressRepository
+    lateinit var bannerRepository: BannerRepository
 
     fun getAll(): Multi<ClientDto> {
-        return clientRepository.streamAllWithAddresses().map { ClientDto(it) }
+        return clientRepository.streamAll().map { ClientDto(it) }
     }
 
     @Throws(
         InvalidIdException::class,
+        InvalidBannerException::class,
         InvalidEmailException::class,
         InvalidNameException::class,
+        InvalidFiscalNumberException::class,
+        InvalidPhoneException::class,
+        InvalidAddressException::class,
+        InvalidPostalCodeException::class
     )
     fun register(clientDto: ClientDto): Uni<Client> {
         val client = Client()
 
         if (clientDto.id == null || clientDto.id!! <= 0) {
             throw InvalidIdException("client")
+        } else if (clientDto.banner == null || clientDto.banner!!.isEmpty()) {
+            throw InvalidBannerException()
         } else if (clientDto.email == null || clientDto.email!!.isEmpty() || !EMAIL_REGEX.matches(clientDto.email!!)) {
             throw InvalidEmailException()
         } else if (clientDto.name == null || clientDto.name!!.isEmpty()) {
@@ -55,74 +59,50 @@ class ClientService {
             throw InvalidFiscalNumberException()
         } else if (clientDto.phone == null || clientDto.phone!!.isEmpty() || !PHONE_REGEX.matches(clientDto.phone!!)) {
             throw InvalidPhoneException()
+        } else if (clientDto.address == null || clientDto.address!!.isEmpty()) {
+            throw InvalidAddressException()
+        } else if (clientDto.postalCode == null || clientDto.postalCode!!.isEmpty()) {
+            throw InvalidPostalCodeException()
         }
+
 
         client.id = clientDto.id!!
         client.email = clientDto.email!!
         client.name = clientDto.name!!
         client.fiscalNumber = clientDto.fiscalNumber!!
         client.phone = clientDto.phone!!
-        client.addresses = mutableListOf()
+        client.address = clientDto.address!!
+        client.postalCode = clientDto.postalCode!!
 
-        return Panache.withTransaction { clientRepository.persist(client) }
-    }
+        return createBannerIfNotExists(clientDto.banner!!).onItem().transformToUni { banner ->
+            client.banner = banner
 
-    @Throws(InvalidIdException::class, InvalidAddressException::class, InvalidPostalCodeException::class)
-    fun addAddress(clientId: Long, addressDto: AddressDto): Uni<Response> {
-        val address = Address()
-
-        if (clientId <= 0) {
-            throw InvalidIdException("client")
-        } else if (addressDto.address == null || addressDto.address!!.isEmpty()) {
-            throw InvalidAddressException()
-        } else if (addressDto.postalCode == null || addressDto.postalCode!!.isEmpty()) {
-            throw InvalidPostalCodeException()
-        }
-
-        address.street = addressDto.address!!
-        address.postalCode = addressDto.postalCode!!
-
-        return Panache.withTransaction {
-            clientRepository.findByIdWithAddresses(clientId).onItem().transformToUni { client ->
-                if (client == null) {
-                    throw InvalidIdException("client")
-                }
-
-                address.client = client
-                client.addresses.add(address)
-
-                return@transformToUni addressRepository.persist(address)
+            Panache.withTransaction {
+                clientRepository.persist(client)
             }
-        }.onItem().transform { Response.ok().build() }
+        }
     }
 
-    fun importClients(file: File): Multi<Uni<Void>> {
+    fun importClients(file: File): Multi<Uni<Client>> {
         val contents = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.EXCEL)
 
-        val multi: Multi<Uni<Void>> = Multi.createFrom().emitter { em ->
+        val multi: Multi<Uni<Client>> = Multi.createFrom().emitter { em ->
             // Remove column names
             for (record in contents.records.drop(1)) {
                 val id = record[0].toLong()
-                val name = record[1] + record[2]
+                val banner = record[7]
+                val name = record[1]
                 val fiscalNumber = record[6].toLong()
                 val email = record[8]
                 val phone = record[5]
                 val address = record[3]
                 val postalCode = record[4]
 
-                val clientDto = ClientDto(id, name, null, fiscalNumber, email, phone)
-                val addressDto = AddressDto(null, address, postalCode)
+                val clientDto = ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode)
 
-                val clientUni = clientRepository.findById(id).onItem().ifNull().switchTo {
+
+                em.emit(clientRepository.findById(id).onItem().ifNull().switchTo {
                     return@switchTo register(clientDto)
-                }
-
-                val addressUni = clientUni.onItem().transformToUni { client ->
-                    return@transformToUni addAddress(client.id, addressDto)
-                }
-
-                em.emit(addressUni.onItem().transformToUni { _ ->
-                    return@transformToUni Uni.createFrom().voidItem()
                 })
             }
 
@@ -131,6 +111,18 @@ class ClientService {
 
         return multi.invoke { pipeline ->
             pipeline.await().indefinitely()
+        }
+    }
+
+    private fun createBannerIfNotExists(id: String): Uni<Banner> {
+        return Panache.withTransaction {
+            bannerRepository.findById(id).onItem().ifNull().switchTo {
+                val banner = Banner()
+                banner.name = id
+                banner.clients = mutableListOf()
+
+                bannerRepository.persist(banner)
+            }
         }
     }
 }
