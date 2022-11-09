@@ -534,7 +534,7 @@
             },
             {
               text: 'Cliente',
-              value: 'client',
+              value: 'client.name',
               filter: this.nameFilter,
               class: 'my-header-style'
   

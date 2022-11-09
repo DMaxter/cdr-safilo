@@ -61,8 +61,9 @@
           </v-menu>
           </v-row>
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 350px">
-          <h3 class="mb-8"> {{store.currentClient.id}} - {{store.currentClient.name}}</h3>
-          <v-btn height="60" width="500" dark tile class="mb-3 customGradient" @click="$router.push('clientStores')"> Lojas </v-btn>
+          <h4 class="mb-2"> Código - Nome - Banner: {{store.currentClient.id}} - {{store.currentClient.name}} - {{store.currentClient.banner}}</h4>
+          <h4 class="mb-2"> Morada - Código Postal: {{store.currentClient.address}} - {{store.currentClient.postalCode}}</h4>
+          <h4 class="mb-8"> Email - Telefone: {{store.currentClient.email}} - {{store.currentClient.phone}}</h4>
           <v-btn height="60" width="500" dark tile class="mb-3 customGradient" @click="$router.push('clientHistory')"> Histórico </v-btn>
           </v-row>
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 170px;">

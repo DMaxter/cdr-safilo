@@ -401,7 +401,7 @@ data () {
           },
           {
             text: 'Cliente',
-            value: 'client',
+            value: 'client.name',
             filter: this.nameFilter,
             class: 'my-header-style'
 
@@ -438,7 +438,8 @@ data () {
       },
       getRequest(item) {
         console.log(item)
-        store.address = item.address
+        store.address = item.client.address
+        store.postalCode = item.client.postalCode
         if(item.type.type == "OneFace"){
         store.pedidoAtual = {
             cod: item.id,

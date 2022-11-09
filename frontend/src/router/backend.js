@@ -134,6 +134,15 @@ export default class Backend {
     })
   }
 
+  static async addClients(file) {
+    return httpClient.post("/client/import", file).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async getClients() {
     return httpClient.get("/client").then(response => {
       return response.data

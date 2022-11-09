@@ -265,7 +265,6 @@ export default {
       request = {
         clientId: store.currentClient,
         amount: store.quantity,
-        addressId: store.currentAddress,
         observations: this.observacoes,
         application: store.application,
         type: {
@@ -291,7 +290,6 @@ export default {
       request = {
         clientId: store.currentClient,
         amount: store.quantity,
-        addressId: store.currentAddress,
         observations: this.observacoes,
         application: store.application,
         type: {

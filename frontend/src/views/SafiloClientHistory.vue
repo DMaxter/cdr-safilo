@@ -392,7 +392,7 @@
             },
             {
               text: 'Cliente',
-              value: 'client',
+              value: 'client.name',
               filter: this.nameFilter,
               class: 'my-header-style'
   
@@ -434,8 +434,8 @@
               data: item.created,
               marca: [item.type.cover.brand.name],
               modelo: item.type.type,
-              material: item.type.cover.material.name,
-              dimensoes: item.type.cover.measurements,
+              material: [item.type.cover.material.name],
+              dimensoes: [item.type.cover.measurements],
               estado: item.status,
               images: [item.type.cover.image.link],
               quantity: item.quantidade,
@@ -445,19 +445,19 @@
             }
           } else if(item.type.type == "TwoFaces"){
             store.pedidoAtual = {
-              cod: item.id,
-              data: item.created,
-              marca: [item.type.cover.brand.name, item.type.back.brand.name],
-              modelo: item.type.type,
-              material: [item.type.cover.material.name, item.type.back.material.name],
-              dimensoes: [item.type.cover.measurements, item.type.back.measurements],
-              estado: item.status,
-              images: [item.type.cover.image.link, item.type.back.image.link],
-              quantity: item.quantidade,
-              observations: item.observations,
-              cost: item.cost,
-              application: item.application
-            }
+            cod: item.id,
+            data: item.created,
+            marca: [item.type.cover.brand.name, item.type.back.brand.name],
+            modelo: item.type.type,
+            material: [item.type.cover.material.name, item.type.back.material.name],
+            dimensoes: [item.type.cover.measurements, item.type.back.measurements],
+            estado: item.status,
+            images: [item.type.cover.image.link, item.type.back.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application
+          }
           } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
               if(item.type.type == "RightShowcase"){
                 store.isActive2 = true

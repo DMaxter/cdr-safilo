@@ -76,21 +76,12 @@
     >
       <v-card>
         <v-card-title class="justify-center">
-          <span class="text-h5"> Selecionar Morada </span>
+          <span class="text-h5"> Morada do cliente: </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row justify="center">
-              <v-col
-                cols="8"
-              >
-          <v-autocomplete
-            v-model="selectedAdress"
-            :items="items"
-            dense
-            label="Morada"
-          ></v-autocomplete>
-              </v-col>
+              <span class="text-h6">{{this.selectedClient.address}}, {{this.selectedClient.postalCode}}</span>
             </v-row>
           </v-container>
         </v-card-text>
@@ -105,7 +96,6 @@
           <v-btn
             color="blue darken-1"
             text
-            v-show="selectedAdress != null"
             @click="nextPage()"
           >
             Selecionar
@@ -180,7 +170,7 @@ data () {
         // Filter models.
         dates: [],
         menu: false,
-        selectedClient: null,
+        selectedClient: {address: ""},
       }
     },
     async created() { 
@@ -275,21 +265,14 @@ data () {
         this.allClients.forEach(element => {
           if(element.name == item.name){
             this.selectedClient = element
-            element.addresses.forEach(element2 => {
-              this.items.push(element2.address)
-            })
           }
         });
         this.dialog1 = true
       },
 
       nextPage(){
-        this.selectedClient.addresses.forEach(element => {
-          if(element.address == this.selectedAdress){
-            store.currentAddress = element.id
-            store.currentClient = this.selectedClient.id
-          }
-        })
+        store.currentAddress = this.selectedClient.address
+        store.currentClient = this.selectedClient.id
         this.dialog1 = false
         this.$router.push({name: 'order'});
       }

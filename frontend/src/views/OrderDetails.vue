@@ -367,7 +367,7 @@
 
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Endereço de entrega: </h3>
-              {{store.address.address}}, {{store.address.postalCode}}
+              {{store.address}}, {{store.postalCode}}
 
             </v-col>
 
@@ -465,7 +465,7 @@
 
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Endereço de entrega: </h3>
-              {{store.address.address}}, {{store.address.postalCode}}
+              {{store.address}}, {{store.postalCode}}
 
             </v-col>
 
@@ -668,7 +668,7 @@
 
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Endereço de entrega: </h3>
-              {{store.address.address}}, {{store.address.postalCode}}
+              {{store.address}}, {{store.postalCode}}
 
             </v-col>
 

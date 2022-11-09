@@ -196,7 +196,6 @@
 <script>
 import { store } from '@/store.js'
 import Backend from '@/router/backend'
-import AddressDto from '@/models/AddressDto';
 
 export default {
   name: 'CustomerHistory',
@@ -215,7 +214,6 @@ data () {
         dates: [],
         dessertFilterValue: null,
         menu: false,
-        address: new AddressDto(),
         addresses: null,
         desserts: [
           {

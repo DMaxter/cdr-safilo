@@ -113,7 +113,7 @@
               <span class="text-h5" v-show="added"> Cliente adicionada com sucesso! </span>
               <span class="text-h5" v-show="failed"> Ocorreu um erro a adicionar o Cliente </span>
               <v-col
-                cols="8"
+                cols="6"
                 v-show="!added && !failed"
               >
                 <v-text-field
@@ -123,7 +123,7 @@
                 ></v-text-field>
               </v-col>
               <v-col
-                cols="8"
+                cols="6"
                 v-show="!added && !failed"
               >
                 <v-text-field
@@ -133,17 +133,7 @@
                 ></v-text-field>
               </v-col>
               <v-col
-                cols="8"
-                v-show="!added && !failed"
-              >
-                <v-text-field
-                  label="NIF do cliente"
-                  required
-                  v-model="clientNIF"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
+                cols="12"
                 v-show="!added && !failed"
               >
                 <v-text-field
@@ -153,13 +143,53 @@
                 ></v-text-field>
               </v-col>
               <v-col
-                cols="8"
+                cols="6"
+                v-show="!added && !failed"
+              >
+                <v-text-field
+                  label="NIF do cliente"
+                  required
+                  v-model="clientNIF"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="6"
                 v-show="!added && !failed"
               >
                 <v-text-field
                   label="Número de telefone do cliente"
                   required
                   v-model="clientPhone"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="12"
+                v-show="!added && !failed"
+              >
+                <v-text-field
+                  label="Endereço do cliente"
+                  required
+                  v-model="clientAddress"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="6"
+                v-show="!added && !failed"
+              >
+                <v-text-field
+                  label="Código postal do cliente"
+                  required
+                  v-model="clientPostalCode"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="6"
+                v-show="!added && !failed"
+              >
+                <v-text-field
+                  label="Banner do cliente"
+                  required
+                  v-model="clientBanner"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -256,6 +286,9 @@ data () {
         dates: [],
         menu: false,
         client: new ClientDto(),
+        clientPostalCode: null,
+        clientBanner: null,
+        clientAddress: null,
       }
     },
     async created() { 
@@ -300,6 +333,9 @@ data () {
         this.client.fiscalNumber = this.clientNIF
         this.client.email = this.clientEmail
         this.client.phone = this.clientPhone
+        this.client.banner = this.clientBanner
+        this.client.address = this.clientAddress
+        this.client.postalCode = this.clientPostalCode
         await Backend.addClient(this.client)
         this.allClients = await Backend.getClients()
         this.desserts2 = []
