@@ -15,7 +15,7 @@ val quarkusPlatformVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    implementation(platform("${quarkusPlatformGroupId}:quarkus-camel-bom:2.13.0.Final"))
+    implementation(platform("${quarkusPlatformGroupId}:quarkus-camel-bom:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-smallrye-context-propagation")
     implementation("org.bouncycastle:bcprov-jdk15on")
     implementation("io.quarkus:quarkus-smallrye-jwt")
@@ -30,7 +30,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy-reactive")
-    implementation("org.apache.camel.quarkus:camel-quarkus-csv:2.13.0")
+    implementation("org.apache.camel.quarkus:camel-quarkus-csv")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 }

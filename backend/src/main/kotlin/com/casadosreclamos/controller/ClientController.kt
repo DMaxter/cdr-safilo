@@ -13,6 +13,8 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.jboss.logging.Logger
+import org.jboss.resteasy.reactive.RestForm
+import org.jboss.resteasy.reactive.multipart.FileUpload
 import java.io.File
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
@@ -75,13 +77,12 @@ class ClientController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "Insufficient privileges")
     )
-    fun importClients(/*@RestForm file: FileUpload*/): Uni<Response> {
+    fun importClients(@RestForm file: FileUpload): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is importing clients from Excel file")
 
-            //return@transformToUni clientService.importClients(file.uploadedFile().toFile()).onItem().transform { _ ->
-            return@transformToUni clientService.importClients(File("/home/daniel/test.csv")).collect().asList().onItem()
-                .transform {
+            return@transformToUni clientService.importClients(file.uploadedFile().toFile()).collect().asList().onItem()
+                .transform { _ ->
                     return@transform Response.ok().build()
                 }
         }
