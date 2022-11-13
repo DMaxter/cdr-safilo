@@ -81,9 +81,16 @@ class ClientController {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is importing clients from Excel file")
 
-            return@transformToUni clientService.importClients(file.uploadedFile().toFile()).collect().asList().onItem()
-                .transform { _ ->
-                    return@transform Response.ok().build()
+            return@transformToUni clientService.importClients(file.uploadedFile().toFile()).collect().asList().onItemOrFailure()
+                .transform { _, e ->
+                    // Delete uploaded file
+                    file.uploadedFile().toFile().delete()
+
+                    if (e == null) {
+                        return@transform Response.ok().build()
+                    }
+
+                    return@transform Response.serverError().build()
                 }
         }
     }
