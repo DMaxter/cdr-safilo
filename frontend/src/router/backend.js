@@ -135,7 +135,13 @@ export default class Backend {
   }
 
   static async addClients(file) {
-    return httpClient.post("/client/import", file).then(response => {
+    var formData = new FormData()
+    formData.append("file", file)
+    return httpClient.post("/client/import", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    }).then(response => {
       return response.data
     })
       .catch(async error => {

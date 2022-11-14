@@ -95,6 +95,55 @@
     </v-data-table>
     <template>
     <v-dialog
+      v-model="dialog2"
+      persistent
+      content-class="rounded-0"
+      max-width="500px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+      <v-btn height="60" width="200" class="mb-3 mt-5 customGradient" dark tile v-bind="attrs" v-on="on" @click="added = false; failed = false;"> Importar Clientes </v-btn>
+      </template>
+      <v-card tile>
+        <v-card-title class="justify-center">
+          <span class="text-h5" v-show="!added && !failed"> Adicionar Cliente </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <span class="text-h5" v-show="added"> Clientes importados com sucesso! </span>
+              <span class="text-h5" v-show="failed"> Ocorreu um erro a importar clientes </span>
+              <v-col
+                cols="6"
+                v-show="!added && !failed"
+              >
+                <span>Apenas ficheiros .CSV suportados</span>
+                <v-file-input type="file" v-model="file"></v-file-input>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog2 = false;"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            v-show="!added && !failed"
+            @click="addClients();"
+          >
+            Importar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+</template>
+    <template>
+    <v-dialog
       v-model="dialog1"
       persistent
       content-class="rounded-0"
@@ -268,9 +317,11 @@ data () {
         clientPhone: null,
         clientNIF: null,
         dialog1: false,
+        dialog2: false,
         added: false,
         failed: false,
         dessertFilterValue: null,
+        file: null,
         store,
         estadosList: [
           {text: "Qualquer", value: null},
@@ -369,7 +420,24 @@ data () {
         console.log(this.dessertFilterValue)
         return value.toLowerCase().includes(this.dessertFilterValue.toLowerCase());
       },
+    addClients: async function () {
+      try {
+        console.log("A")
+        console.log(this.file)
+        console.log("B")
+        await Backend.addClients(this.file)
+        this.allClients = await Backend.getClients()
+        this.allClients.forEach(element => {
+          this.desserts2.push({ name: element.name, fat: element.id })
+        });
+        this.added = true
+      } catch (error) {
+        this.failed = true
+        // TODO: Show something
+        console.error(error)
+      }
     }
+    },
   }
 </script>
 
