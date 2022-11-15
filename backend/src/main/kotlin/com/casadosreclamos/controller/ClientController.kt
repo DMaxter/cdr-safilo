@@ -2,6 +2,7 @@ package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.model.ADMIN_ROLE
+import com.casadosreclamos.model.COMMERCIAL_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.ClientService
 import io.quarkus.security.Authenticated
@@ -15,7 +16,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.jboss.logging.Logger
 import org.jboss.resteasy.reactive.RestForm
 import org.jboss.resteasy.reactive.multipart.FileUpload
-import java.io.File
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -45,7 +45,9 @@ class ClientController {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
             logger.info("User ${id.principal.name} is requesting all clients")
 
-            return@transformToMulti clientService.getAll()
+            return@transformToMulti clientService.getAll().onItem().transform {
+                ClientDto(it)
+            }
         }
     }
 
@@ -81,7 +83,8 @@ class ClientController {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is importing clients from Excel file")
 
-            return@transformToUni clientService.importClients(file.uploadedFile().toFile()).collect().asList().onItemOrFailure()
+            return@transformToUni clientService.importClients(file.uploadedFile().toFile()).collect().asList()
+                .onItemOrFailure()
                 .transform { _, e ->
                     // Delete uploaded file
                     file.uploadedFile().toFile().delete()
@@ -92,6 +95,25 @@ class ClientController {
 
                     return@transform Response.serverError().build()
                 }
+        }
+    }
+
+    @GET
+    @Path("/banner/{banner}")
+    @Operation(summary = "Obtain clients of a banner")
+    @RolesAllowed(COMMERCIAL_ROLE, MANAGER_ROLE, ADMIN_ROLE)
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun getBannerClients(@PathParam("banner") banner: String): Multi<ClientDto> {
+        return identity.deferredIdentity.onItem().transformToMulti { id ->
+            logger.info("User ${id.principal.name} is obtaining clients for banner $banner")
+
+            return@transformToMulti clientService.getByBanner(banner).onItem().transform {
+                ClientDto(it)
+            }
         }
     }
 }

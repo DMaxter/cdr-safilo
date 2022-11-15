@@ -30,8 +30,12 @@ class ClientService {
     @Inject
     lateinit var bannerRepository: BannerRepository
 
-    fun getAll(): Multi<ClientDto> {
-        return clientRepository.streamAll().map { ClientDto(it) }
+    fun getAll(): Multi<Client> {
+        return clientRepository.streamAll()
+    }
+
+    fun getByBanner(banner: String): Multi<Client> {
+        return clientRepository.streamByBanner(banner)
     }
 
     @Throws(

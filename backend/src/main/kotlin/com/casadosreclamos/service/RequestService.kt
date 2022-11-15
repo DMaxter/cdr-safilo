@@ -1,10 +1,6 @@
 package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.*
-import com.casadosreclamos.dto.OneFace as OneDto
-import com.casadosreclamos.dto.TwoFaces as TwoDto
-import com.casadosreclamos.dto.LeftShowcase as LeftDto
-import com.casadosreclamos.dto.RightShowcase as RightDto
 import com.casadosreclamos.exception.*
 import com.casadosreclamos.model.Request
 import com.casadosreclamos.model.Role
@@ -15,13 +11,21 @@ import io.quarkus.mailer.Mail
 import io.quarkus.mailer.reactive.ReactiveMailer
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVPrinter
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
+import java.io.File
+import java.io.FileWriter
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.Status
+import com.casadosreclamos.dto.LeftShowcase as LeftDto
+import com.casadosreclamos.dto.OneFace as OneDto
+import com.casadosreclamos.dto.RightShowcase as RightDto
+import com.casadosreclamos.dto.TwoFaces as TwoDto
 
 @ApplicationScoped
 class RequestService {
@@ -200,6 +204,29 @@ class RequestService {
         }
     }
 
+    fun exportBanner(banner: String): Uni<File> {
+        val file = kotlin.io.path.createTempFile().toFile()
+        val writer = CSVPrinter(FileWriter(file), CSVFormat.EXCEL)
+
+        val bannerRequests = requestRepository.streamByBanner(banner)
+
+        writer.printRecord("Banner", "Nr. Cliente", "Cliente", "Tipo de Pedido", "Custo")
+        println(file)
+
+        return bannerRequests.onItem().transform { request ->
+            writer.printRecord(request.client.banner.name, request.client.id, request.client.name, getType(request.type), request.cost)
+            request
+        }.collect().asList().onItemOrFailure().transform { _ , e ->
+            writer.close(true)
+
+            if (e != null) {
+                throw e
+            }
+
+            return@transform file
+        }
+    }
+
     /**
      * Create a RequestType instance
      */
@@ -317,6 +344,15 @@ class RequestService {
             is OneDto -> "Uma face"
             is TwoDto -> "Duas faces"
             is ShowcaseDto -> "Montra"
+            else -> throw InvalidRequestTypeException()
+        }
+    }
+
+    private fun getType(request: RequestType): String {
+        return when (request) {
+            is OneFace -> "Uma face"
+            is TwoFaces -> "Duas faces"
+            is Showcase -> "Montra"
             else -> throw InvalidRequestTypeException()
         }
     }

@@ -12,4 +12,8 @@ class ClientRepository : PanacheRepository<Client> {
     fun findByName(name: String): Uni<Client> {
         return find("name = :name", Parameters.with("name", name).map()).firstResult()
     }
+
+    fun streamByBanner(banner: String): Multi<Client> {
+        return stream("banner.name = :banner", Parameters.with("banner", banner).map())
+    }
 }

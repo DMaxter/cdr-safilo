@@ -13,10 +13,12 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import org.jboss.logging.Logger
+import java.io.File
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.*
+import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/request")
@@ -109,6 +111,24 @@ class RequestController {
             logger.info("User ${id.principal.name} is cancelling request with id $request")
 
             return@transformToUni requestService.cancel(request, id.principal.name)
+        }
+    }
+
+    @GET
+    @Path("/export/banner/{banner}")
+    @Operation(summary = "Export clients of a banner")
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun exportBannerRequests(@PathParam("banner") banner: String): Uni<File> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is exporting requests from banner $banner")
+
+            return@transformToUni requestService.exportBanner(banner)
         }
     }
 }
