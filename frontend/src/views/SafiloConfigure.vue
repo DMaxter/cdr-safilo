@@ -144,55 +144,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="dialog2"
-      persistent
-      content-class="rounded-0"
-      max-width="500px"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn height="60" width="500" class="mb-3 customGradient" dark tile v-bind="attrs" v-on="on" @click="added = false; failed = false"> Carregar Clientes </v-btn>
-      </template>
-      <v-card tile>
-        <v-card-title class="justify-center">
-          Carregar Clientes
-        </v-card-title>
-        <div align="center">
-          <v-img :src="myImage2" contain height="60px" width="60px" class="mb-6 mt-3" @click.stop="handleFileImport"></v-img>
-          <input 
-          ref="uploader" 
-          class="d-none" 
-          type="file"
-          name="file" 
-          @change="onFileChanged"
-          >
-          <span v-show="!fileSelected">
-          Selecione um ficheiro
-          </span>
-          <span v-show="fileSelected">
-          ficheiro selecionado : {{this.selectedFile.name}}
-          </span>
-        </div>
-  
-        <v-card-actions class="justify-center">
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="dialog2 = false; fileSelected = false; changeSelectedFile()"
-          >
-            Voltar
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            v-show="fileSelected"
-            @click="addClients()"
-          >
-            Adicionar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+
           </v-row>
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 98px;">
              <v-col cols="auto" class="pl-4">
