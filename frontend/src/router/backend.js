@@ -106,6 +106,15 @@ export default class Backend {
       throw Error(await this.errorMessage(error.reponse))
     })
   }
+  
+    static async getRequestsByBanner(banner) {
+    return httpClient.get(`/request/export/banner/${banner}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
 
   static async addBrand(brand) {
     return httpClient.post(`/brand/${brand}`).then(response => {
