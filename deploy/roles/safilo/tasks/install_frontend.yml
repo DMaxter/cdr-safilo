@@ -1,0 +1,6 @@
+---
+
+- name: Transfer new frontend to the server
+  copy:
+    src: "{{ src_frontend }}"
+    dest: "{{ frontend_path }}"

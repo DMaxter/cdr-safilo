@@ -1,0 +1,7 @@
+---
+
+- name: Prepare frontend
+  import_tasks: prepare_frontend.yml
+
+- name: Install frontend
+  import_tasks: install_frontend.yml

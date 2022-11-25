@@ -1,0 +1,10 @@
+backend_group: backend
+frontend_group: frontend
+backend_path: /safilo/backend
+frontend_path: /var/www/safilo
+safilo_user: safilo
+jwt_priv_path: /safilo/priv.pem
+jwt_pub_path: /safilo/pub.pem
+src_backend: "{{ lookup('env', 'BACKEND') | default('/tmp/backend/') }}"
+src_frontend: "{{ lookup('env', 'FRONTEND') | default('/tmp/frontend/') }}"
+uploaded_images_path: /var/www/safilo-images

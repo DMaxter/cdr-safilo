@@ -1,0 +1,10 @@
+---
+
+- name: Prepare Caddy installation
+  import_tasks: prepare.yml
+
+- name: Install Caddy
+  import_tasks: install.yml
+
+- name: Configure Caddy
+  import_tasks: configure.yml

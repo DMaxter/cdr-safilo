@@ -1,0 +1,7 @@
+---
+
+- name: Handle backend
+  import_tasks: backend.yml
+
+- name: handle frontend
+  import_tasks: frontend.yml

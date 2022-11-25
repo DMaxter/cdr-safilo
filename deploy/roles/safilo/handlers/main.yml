@@ -1,0 +1,11 @@
+- name: restart backend
+  become: yes
+  systemd:
+    name: safilo
+    state: restarted
+
+- name: restart frontend
+  become: yes
+  systemd:
+    name: nginx
+    state: restarted

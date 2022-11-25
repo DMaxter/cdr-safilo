@@ -1,0 +1,4 @@
+---
+
+- name: Install OpenJDK
+  import_tasks: install.yml

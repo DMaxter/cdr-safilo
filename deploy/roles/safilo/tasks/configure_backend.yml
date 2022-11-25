@@ -1,0 +1,61 @@
+---
+
+- name: Install Python package
+  become: yes
+  apt:
+    name: python3-mysqldb
+    state: present
+    update_cache: true
+
+- name: Create MySQL user
+  become: yes
+  mysql_user:
+    name: '{{ lookup("env", "QUARKUS_DATASOURCE_USERNAME") }}'
+    password: '{{ lookup("env", "QUARKUS_DATASOURCE_PASSWORD") }}'
+  failed_when: false
+
+- name: Create MySQL database
+  mysql_db:
+    name: safilo
+    login_user: '{{ lookup("env", "QUARKUS_DATASOURCE_USERNAME") }}'
+    login_password: '{{ lookup("env", "QUARKUS_DATASOURCE_PASSWORD") }}'
+
+- name: Ensure access to SSL path
+  become: yes
+  file:
+    owner: caddy
+    group: frontend
+    mode: 0750
+    recurse: true
+    path: /var/lib/caddy
+    state: directory
+
+- name: Ensure access to SSL key
+  become: yes
+  file:
+    owner: caddy
+    group: frontend
+    mode: 0640
+    path: '{{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE") }}'
+
+- name: Ensure access to SSL certificate
+  become: yes
+  file:
+    owner: caddy
+    group: frontend
+    mode: 0640
+    path: '{{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_FILE") }}'
+
+- name: Copy SystemD service
+  become: yes
+  template:
+    src: safilo.service
+    dest: /etc/systemd/system/
+  notify: restart backend
+
+- name: Start backend service
+  become: yes
+  systemd:
+    name: safilo
+    state: started
+    enabled: yes

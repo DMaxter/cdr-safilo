@@ -1,0 +1,7 @@
+---
+
+- name: Transfer new backend to the server
+  copy:
+    src: "{{ src_backend }}"
+    dest: "{{ backend_path }}"
+  register: backend_files

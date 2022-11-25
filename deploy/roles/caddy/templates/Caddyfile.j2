@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+
+# Configure for desired domain
+{{ lookup("env", "DOMAIN_NAME") }}:443 {
+  # Compress responses
+  encode gzip zstd
+
+  handle_path /images/* {
+    file_server {
+      root /var/www/safilo-images
+    }
+  }
+
+  handle {
+    file_server {
+      root /var/www/safilo
+    }
+  }
+}

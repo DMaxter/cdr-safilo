@@ -1,0 +1,8 @@
+---
+
+- name: Install MySQL
+  become: yes
+  apt:
+    name: mysql-server
+    state: present
+    update_cache: yes

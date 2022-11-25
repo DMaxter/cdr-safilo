@@ -1,0 +1,45 @@
+---
+
+- name: Create backend group
+  become: yes
+  group:
+    name: "{{ backend_group }}"
+    state: present
+
+- name: Add Safilo user to backend group
+  become: yes
+  user:
+    name: "{{ safilo_user }}"
+    append: yes
+    groups:
+      - "{{ backend_group }}"
+
+- name: Create backend folder
+  become: yes
+  file:
+    path: "{{ backend_path }}"
+    group: "{{ backend_group }}"
+    owner: "{{ safilo_user }}"
+    mode: 0775
+    recurse: yes
+    state: directory
+
+- name: Create OpenSSL JWT signing key
+  become: yes
+  openssl_privatekey:
+    size: 8192
+    group: "{{ backend_group }}"
+    owner: "{{ safilo_user }}"
+    mode: 0600
+    type: RSA
+    path: "{{ jwt_priv_path }}"
+    state: present
+
+- name: Create OpenSSL JWT public key
+  become: yes
+  openssl_publickey:
+    group: "{{ backend_group }}"
+    owner: "{{ safilo_user }}"
+    path: "{{ jwt_pub_path }}"
+    privatekey_path: "{{ jwt_priv_path }}"
+    state: present

@@ -1,0 +1,29 @@
+---
+
+- name: Create Caddy group
+  become: true
+  ansible.builtin.group:
+    name: "{{ frontend_group }}"
+    state: present
+
+- name: Install dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - debian-keyring
+      - debian-archive-keyring
+      - apt-transport-https
+    state: present
+    update_cache: true
+
+- name: Add Caddy repository certificate
+  become: true
+  ansible.builtin.apt_key:
+    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+    state: present
+
+- name: Add Caddy repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    state: present

@@ -1,0 +1,14 @@
+---
+
+- name: Copy Caddyfile
+  become: true
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+
+- name: Copy Caddy service configuration
+  become: true
+  ansible.builtin.template:
+    src: caddy.service.j2
+    dest: /lib/systemd/system/caddy.service
+  notify: restart caddy

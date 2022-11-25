@@ -1,0 +1,29 @@
+---
+
+- name: Create frontend folder
+  become: yes
+  file:
+    path: "{{ frontend_path }}"
+    group: "{{ frontend_group }}"
+    owner: "{{ safilo_user }}"
+    mode: 0775
+    recurse: yes
+    state: directory
+
+- name: Add Safilo user to frontend group
+  become: yes
+  user:
+    name: "{{ safilo_user }}"
+    append: yes
+    groups:
+      - "{{ frontend_group }}"
+
+- name: Create uploaded images folder
+  become: yes
+  file:
+    path: "{{ uploaded_images_path }}"
+    group: "{{ frontend_group }}"
+    owner: "{{ safilo_user }}"
+    mode: 0775
+    recurse: yes
+    state: directory

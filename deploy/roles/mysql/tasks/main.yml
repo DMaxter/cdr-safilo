@@ -1,0 +1,7 @@
+---
+
+- name: Install MySQL
+  import_tasks: install.yml
+
+- name: Configure MySQL
+  import_tasks: configure.yml

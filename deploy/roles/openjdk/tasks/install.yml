@@ -1,0 +1,8 @@
+---
+
+- name: "Install OpenJDK {{ java_version }}"
+  become: yes
+  apt:
+    name: "openjdk-{{ java_version }}-jre"
+    state: present
+    update_cache: yes
