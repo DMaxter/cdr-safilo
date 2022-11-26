@@ -31,7 +31,7 @@ class MaterialController {
     lateinit var materialService: MaterialService
 
     @POST
-    @Path("/{material}/{cost}")
+    @Path("/{material}")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
     @Operation(summary = "Register a material")
     @APIResponses(
@@ -39,11 +39,11 @@ class MaterialController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
     )
-    fun addMaterial(@PathParam("material") name: String, @PathParam("cost") cost: Double): Uni<Response> {
+    fun addMaterial(@PathParam("material") name: String): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is adding material \"$name\"")
 
-            return@transformToUni materialService.add(name, cost)
+            return@transformToUni materialService.add(name)
         }
     }
 
@@ -63,7 +63,7 @@ class MaterialController {
     }
 
     @PUT
-    @Path("/{id}/{name}/{cost}")
+    @Path("/{id}/{name}")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
     @Operation(summary = "Updates a material")
     @APIResponses(
@@ -71,11 +71,11 @@ class MaterialController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
     )
-    fun updateMaterial(@PathParam("id") materialId: Long, @PathParam("name") name: String, @PathParam("cost") cost: Double): Uni<Response> {
+    fun updateMaterial(@PathParam("id") materialId: Long, @PathParam("name") name: String): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is updating material with id $materialId")
 
-            return@transformToUni materialService.update(materialId, name, cost)
+            return@transformToUni materialService.update(materialId, name)
         }
     }
 

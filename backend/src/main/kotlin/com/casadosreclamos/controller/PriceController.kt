@@ -3,8 +3,10 @@ package com.casadosreclamos.controller
 import com.casadosreclamos.dto.PriceDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.CDR_ROLE
+import com.casadosreclamos.model.COMMERCIAL_ROLE
 import com.casadosreclamos.service.PriceService
 import io.quarkus.security.identity.CurrentIdentityAssociation
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
@@ -14,6 +16,7 @@ import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.DELETE
+import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.PUT
 import javax.ws.rs.Path
@@ -30,6 +33,18 @@ class PriceController {
 
     @Inject
     lateinit var priceService: PriceService
+
+    @GET
+    @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Get all registered prices")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun getPrices(): Multi<PriceDto> {
+        return priceService.getAll().onItem().transform { PriceDto(it) }
+    }
 
     @POST
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)

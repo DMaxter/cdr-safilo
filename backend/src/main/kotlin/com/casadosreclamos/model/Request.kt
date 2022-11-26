@@ -28,7 +28,7 @@ open class Request {
 
     open var amount: Int = 0
 
-    open var cost: Double = 0.0
+    open var cost: Double? = null
 
     open var observations: String? = null
 

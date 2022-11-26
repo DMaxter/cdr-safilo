@@ -54,6 +54,9 @@ class RequestService {
     lateinit var userRepository: UserRepository
 
     @Inject
+    lateinit var priceService: PriceService
+
+    @Inject
     lateinit var mailer: ReactiveMailer
 
     @Inject
@@ -118,6 +121,7 @@ class RequestService {
                 // Create request
                 requestType.request = request
                 request.type = requestType
+                request.cost = requestType.cost
 
                 requestTypeRepository.persist(requestType)
             }
@@ -247,6 +251,7 @@ class RequestService {
         return doSlot(request.cover).onItem().transform { slot ->
             val type = OneFace()
             type.cover = slot
+            type.cost = slot.cost
             type
         }
     }
@@ -262,6 +267,13 @@ class RequestService {
             val type = TwoFaces()
             type.cover = cover
             type.back = back
+
+            if (cover.cost == null || back.cost == null) {
+                type.cost = null
+            } else {
+                type.cost = cover.cost!! + back.cost!!
+            }
+
             type
         }
     }
@@ -283,6 +295,12 @@ class RequestService {
                 output.left = left
                 output.right = right
                 output.side = side
+
+                if (top.cost == null || bottom.cost == null || left.cost == null || right.cost == null || side.cost == null) {
+                    output.cost = null
+                } else {
+                    output.cost = top.cost!! + bottom.cost!! + left.cost!! + right.cost!! + side.cost!!
+                }
 
                 output
             }
@@ -312,10 +330,12 @@ class RequestService {
     private fun doSlot(slotDto: RequestSlotDto): Uni<RequestSlot> {
         val materialUni = materialRepository.findById(slotDto.material!!.id)
         val brandUni = brandRepository.findByIdWithImages(slotDto.brand!!.id!!)
+        val priceUni = priceService.getPrice(slotDto.measurements!!)
 
-        return Uni.combine().all().unis(materialUni, brandUni).asTuple().onItem().transformToUni { tuple ->
+        return Uni.combine().all().unis(materialUni, brandUni, priceUni).asTuple().onItem().transformToUni { tuple ->
             val material = tuple.item1
             val brand = tuple.item2
+            val price = tuple.item3
 
             if (material == null) {
                 throw InvalidIdException("material")
@@ -331,6 +351,7 @@ class RequestService {
             slot.material = material
             slot.brand = brand
             slot.measurements = slotDto.measurements!!
+            slot.cost = price?.cost
 
             requestSlotRepository.persist(slot)
         }

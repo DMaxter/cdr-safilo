@@ -27,16 +27,13 @@ class MaterialService {
         return materialRepository.streamAll().map { MaterialDto(it) }
     }
 
-    @Throws(InvalidNameException::class, InvalidCostException::class)
-    fun add(name: String, cost: Double): Uni<Response> {
+    @Throws(InvalidNameException::class)
+    fun add(name: String): Uni<Response> {
         if (name.isEmpty()) {
             throw InvalidNameException()
-        } else if (cost <= 0.0) {
-            throw InvalidCostException()
         }
 
         val material = Material()
-        material.cost = cost
         material.name = name
 
         return Panache.withTransaction {
@@ -50,18 +47,15 @@ class MaterialService {
         }.onItem().transform { Response.ok().build() }
     }
 
-    @Throws(InvalidNameException::class, InvalidCostException::class)
-    fun update(id: Long, name: String, cost: Double): Uni<Response> {
+    @Throws(InvalidNameException::class)
+    fun update(id: Long, name: String): Uni<Response> {
         if (name.isEmpty()) {
             throw InvalidNameException()
-        } else if (cost <= 0.0) {
-            throw InvalidCostException()
         }
 
         return Panache.withTransaction {
             materialRepository.findById(id).onItem().transform { material ->
                 material.name = name
-                material.cost = cost
 
                 Response.ok().build()
             }

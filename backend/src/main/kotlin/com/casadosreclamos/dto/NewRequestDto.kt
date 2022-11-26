@@ -5,7 +5,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema
 data class NewRequestDto(
     var clientId: Long?,
     var amount: Int?,
-    var addressId: Long?,
     var observations: String?,
     var application: Boolean?,
 

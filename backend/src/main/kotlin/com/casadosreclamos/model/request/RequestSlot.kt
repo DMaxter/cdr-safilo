@@ -1,6 +1,6 @@
 package com.casadosreclamos.model.request
 
-import java.io.Serializable
+import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -23,4 +23,6 @@ open class RequestSlot {
     open lateinit var material: Material
 
     open lateinit var measurements: Measurements
+
+    open var cost: Double? = null
 }

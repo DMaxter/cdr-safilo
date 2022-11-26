@@ -10,6 +10,4 @@ open class Material {
 
     @Column(unique = true)
     open lateinit var name: String
-
-    open var cost: Double = 0.0
 }

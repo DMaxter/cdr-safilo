@@ -1,6 +1,7 @@
 package com.casadosreclamos.model.request
 
 import com.casadosreclamos.model.Request
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -14,6 +15,9 @@ abstract class RequestType {
     @JoinColumn(name = "id")
     @MapsId
     open lateinit var request: Request
+
+    @Transient
+    open var cost: Double? = null
 }
 
 @MappedSuperclass

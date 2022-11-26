@@ -8,6 +8,7 @@ import com.casadosreclamos.model.request.Measurements
 import com.casadosreclamos.model.request.Price
 import com.casadosreclamos.repo.PriceRepository
 import io.quarkus.hibernate.reactive.panache.Panache
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
@@ -20,6 +21,10 @@ class PriceService {
 
     @Inject
     lateinit var priceRepository: PriceRepository
+
+    fun getAll(): Multi<Price> {
+        return priceRepository.streamAll()
+    }
 
     fun getPrice(measurements: Measurements): Uni<Price> {
         if (measurements.height <= 0 || measurements.width <= 0) {
