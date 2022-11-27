@@ -514,7 +514,9 @@
       },
       getRequests: async function () {
         try {
+          console.log("A")
           await Backend.getRequestsByBanner(this.selectedBanner)
+          console.log("B")
           this.added = true
         } catch (error) {
           this.failed = true

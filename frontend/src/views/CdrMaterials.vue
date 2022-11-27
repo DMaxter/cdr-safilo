@@ -52,7 +52,7 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 330px">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 460px">
           <template>
     <v-dialog
       v-model="dialog"
@@ -84,16 +84,6 @@
                   label="Nome do Material"
                   required
                   v-model="materialName"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="8"
-                v-show="!added1 && !failed1"
-              >
-                <v-text-field
-                  label="Custo do Material"
-                  required
-                  v-model="materialCost"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -169,16 +159,7 @@
                   v-model="newMaterialName"
                 ></v-text-field>
               </v-col>
-              <v-col
-                cols="8"
-                v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
-              >
-                <v-text-field
-                  label="Novo custo do Material"
-                  required
-                  v-model="newMaterialCost"
-                ></v-text-field>
-              </v-col>
+
               <v-col
                 cols="8"
                 v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
@@ -230,6 +211,187 @@
       </v-card>
     </v-dialog>
 </template>
+<v-dialog
+      v-model="dialog3"
+      persistent
+      content-class="rounded-0"
+      max-width="500px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="added1 = false; failed1 = false"> Adicionar preço por medida </v-btn>
+      </template>
+      <v-card tile>
+        <v-card-title class="justify-center">
+          <span class="text-h5" v-show="!added1 && !failed1"> Adicionar preço por medida</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <v-col v-show="added1">
+              <span class="text-h5"> O preço foi adicionado com sucesso! </span> 
+              </v-col>
+              <v-col v-show="failed1">
+              <span class="text-h5"> Ocorreu um erro a adicionar o preço </span> 
+              </v-col>
+              <v-col
+                cols="4"
+                v-show="!added1 && !failed1"
+              >
+                <v-text-field
+                  label="Altura"
+                  required
+                  v-model="height"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="4"
+                v-show="!added1 && !failed1"
+              >
+                <v-text-field
+                  label="Largura"
+                  required
+                  v-model="width"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="8"
+                v-show="!added1 && !failed1"
+              >
+                <v-text-field
+                  label="Preço"
+                  required
+                  v-model="price"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog3 = false; height = null; width = null; price = null"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            v-show="!added1 && !failed1"
+            @click="addPrice();"
+          >
+            Adicionar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <template>
+    <v-dialog
+      v-model="dialog4"
+      persistent
+      content-class="rounded-0"
+      max-width="500px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getPrices(); added2 = false, failed2 = false"> Alterar preço de medida </v-btn>
+      </template>
+      <v-card tile>
+        <v-card-title class="justify-center">
+          <span class="text-h5" v-show="!added2 && !failed2 && !toDelete && !toDelete2"> Preços por medida (altura x largura) </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <v-col cols="auto" v-show="added2">
+              <span class="text-h5"> O preço foi alterado com sucesso! </span> 
+              </v-col>
+              <v-col cols="auto" v-show="failed2">
+              <span class="text-h5"> Ocorreu um erro a alterar o preço </span> 
+              </v-col>
+              <v-col cols="auto" v-show="toDelete">
+              <span class="text-h6"> Tem a certeza que pretende eliminar o preço para a medida da base de dados? (pressione o botão novamente para apagar) </span> 
+              </v-col>
+              <v-col cols="auto" v-show="toDelete2">
+              <span class="text-h5"> O preço foi eliminado com sucesso! </span> 
+              </v-col>
+              <v-col
+                cols="8"
+              >
+                <v-select
+                  :items=pricesList
+                  required
+                  v-model = picked
+                  @change="selected=true; getPriceForSpecific()"
+                  v-show="!added2 && !failed2 && !toDelete && !toDelete2"
+                ></v-select>
+              </v-col>
+              <v-col
+                cols="8"
+                v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
+              >
+              Preço atual da medida: {{currPrice}}
+            </v-col>
+              <v-col
+                cols="8"
+                v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
+              >
+                <v-text-field
+                  label="Novo preço da medida"
+                  required
+                  v-model="newPrice"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="8"
+                v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
+              >
+                <v-btn
+                  class="mx-2 customGradient"
+                  fab
+                  dark
+                  small
+                  @click="toDelete = true"
+                >
+                  <v-icon dark>
+                    mdi-delete
+                  </v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog4 = false; selected = false; picked = null; toDelete = false, toDelete2 = false;"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+                  class="mx-2 customGradient"
+                  fab
+                  dark
+                  small
+                  v-show="toDelete"
+                  @click="deletePrice(); toDelete = false; toDelete2 = true;"
+                >
+                  <v-icon dark>
+                    mdi-delete
+                  </v-icon>
+                </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
+            @click="updatePrice(); selected = false; picked = null; newPrice = null; newWidth = null; newHeight = null"
+          >
+            Alterar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+</template>
           </v-row>
           </v-card>         
         </v-col>
@@ -260,11 +422,11 @@ data () {
         myImage: require('@/assets/logologo1.png'),
         dialog: false,
         dialog1: false,
+        dialog3: false,
+        dialog4: false,
         store,
         materialName: null,
-        materialCost: null,
         newMaterialName: null,
-        newMaterialCost: null,
         allMaterials: null,
         available: [],
         selected: false,
@@ -275,6 +437,15 @@ data () {
         failed2: false,
         toDelete: false,
         toDelete2: false,
+        price: null,
+        height: null,
+        width: null,
+        newPrice: null,
+        newHeight: null,
+        newWidth: null,
+        pricesList: [],
+        allPrices: null,
+        currPrice: 0,
       }
     },
 
@@ -282,8 +453,30 @@ methods: {
   
   addMaterial: async function () {
       try {
-        console.log(this.materialName, this.materialCost)
-        await Backend.addMaterial(this.materialName, this.materialCost)
+        console.log(this.materialName)
+        await Backend.addMaterial(this.materialName)
+        this.added1 = true
+      } catch (error) {
+
+        this.failed1 = true
+        console.error(error)
+      }
+    },
+
+    getPriceForSpecific(){
+      var measures = this.picked.split(' x ')
+      this.allPrices.forEach(element => {
+        if(element.height == measures[0] && element.width == measures[1]){
+          this.currPrice = element.cost
+        }
+      })
+    },
+
+    addPrice: async function () {
+      try {
+        var costToAdd = {width: this.width, height: this.height, cost: this.price}
+        console.log(costToAdd)
+        await Backend.addPrice(costToAdd)
         this.added1 = true
       } catch (error) {
 
@@ -298,6 +491,19 @@ methods: {
         this.available = []
         this.allMaterials.forEach(element => {
           this.available.push(element.name)
+        });
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+
+    getPrices: async function () {
+      try {
+        this.allPrices = await Backend.getPrices()
+        this.pricesList = []
+        this.allPrices.forEach(element => {
+          this.pricesList.push(element.height + " x " + element.width)
         });
       } catch (error) {
         // TODO: Show something
@@ -320,6 +526,41 @@ methods: {
       }
     },
 
+    deletePrice: async function () {
+      var measures = this.picked.split(' x ')
+      try {
+        this.allPrices.forEach(async element => {
+        if(element.height == measures[0] && element.width == measures[1]){
+          var costToRemove = {width: element.width, height: element.height, cost: element.cost}
+          console.log(costToRemove)
+          await Backend.deletePrice(costToRemove);
+          this.getPrices();
+        }
+      })
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+
+    updatePrice: async function () {
+      var measures = this.picked.split(' x ')
+      var costToChange = null
+      try {
+        this.allPrices.forEach(async element => {
+        if(element.height == measures[0] && element.width == measures[1]){
+          costToChange = {width: element.width, height: element.height, cost: this.newPrice}
+        }
+      })
+      console.log(costToChange)
+          await Backend.updatePrice(costToChange);
+          this.getPrices();
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+
     updateMaterial: async function () {
       try {
         var id = null
@@ -328,7 +569,7 @@ methods: {
             id = element.id
           }
         });
-        await Backend.updateMaterial(id, this.newMaterialName, this.newMaterialCost)
+        await Backend.updateMaterial(id, this.newMaterialName)
         this.added2 = true
       } catch (error) {
         this.failed2 = true 

@@ -62,14 +62,15 @@ export default class Backend {
     })
   }
 
-  static async addMaterial(material, cost) {
-    return httpClient.post(`/material/${material}/${cost}`).then(response => {
+  static async addMaterial(material) {
+    return httpClient.post(`/material/${material}`).then(response => {
       return response.data
     })
       .catch(async error => {
       throw Error(await this.errorMessage(error.response))
     })
   }
+  
 
   static async getMaterials() {
     return httpClient.get("/material").then(response => {
@@ -89,8 +90,8 @@ export default class Backend {
     })
   }
 
-  static async updateMaterial(id, name, cost) {
-    return httpClient.put(`/material/${id}/${name}/${cost}`).then(response => {
+  static async updateMaterial(id, name) {
+    return httpClient.put(`/material/${id}/${name}`).then(response => {
       return response.data
     })
       .catch(async error => {
@@ -100,15 +101,6 @@ export default class Backend {
 
   static async getBrands() {
     return httpClient.get("/brand").then(response => {
-      return response.data
-    })
-      .catch(async error => {
-      throw Error(await this.errorMessage(error.reponse))
-    })
-  }
-  
-    static async getRequestsByBanner(banner) {
-    return httpClient.get(`/request/export/banner/${banner}`).then(response => {
       return response.data
     })
       .catch(async error => {
@@ -167,6 +159,15 @@ export default class Backend {
     })
   }
 
+  static async getRequestsByBanner(banner) {
+    return httpClient.get(`/request/export/banner/${banner}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
   static async addStore(id, store) {
     return httpClient.put(`/client/address/${id}`, store).then(response => {
       return response.data
@@ -206,6 +207,42 @@ export default class Backend {
 
   static async placeRequest(request) {
     return httpClient.post("/request", request).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async addPrice(price) {
+    return httpClient.post("/price", price).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async deletePrice(price) {
+    return httpClient.delete("/price", price).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async updatePrice(price) {
+    return httpClient.put("/price", price).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+  
+  static async getPrices() {
+    return httpClient.get("/price").then(response => {
       return response.data
     })
       .catch(async error => {
