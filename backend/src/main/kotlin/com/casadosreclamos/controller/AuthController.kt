@@ -47,15 +47,6 @@ class AuthController {
         }
     }
 
-    @GET
-    @PermitAll
-    @Path("/all")
-    fun getAllUsers(): Multi<UserDto> {
-        logger.info("Obtaining all users")
-
-        return authService.getAll()
-    }
-
     @POST
     @PermitAll
     @Path("/login")

@@ -14,6 +14,7 @@ import com.casadosreclamos.repo.PlafondRepository
 import com.casadosreclamos.repo.UserRepository
 import io.quarkus.elytron.security.common.BcryptUtil
 import io.quarkus.hibernate.reactive.panache.Panache
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -30,12 +31,13 @@ class UserService {
     @Inject
     lateinit var brandRepository: BrandRepository
 
-    fun getInfo(user: String): Uni<Response> {
+    fun getAllUsers(): Multi<User> {
+        return userRepository.streamAllWithCredits()
+    }
+
+    fun getInfo(user: String): Uni<User> {
         return Panache.withTransaction {
-            userRepository.findByNameWithCredits(user).onItem()
-                .transform { user ->
-                    Response.ok(UserDto(user!!)).build()
-                }
+            userRepository.findByNameWithCredits(user)
         }
     }
 

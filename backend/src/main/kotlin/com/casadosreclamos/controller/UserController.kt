@@ -1,11 +1,12 @@
 package com.casadosreclamos.controller
 
+import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
-import com.casadosreclamos.model.User
 import com.casadosreclamos.service.UserService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
@@ -33,6 +34,22 @@ class UserController {
     lateinit var userService: UserService
 
     @GET
+    @Path("/all")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Obtain all users with plafond")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Information obtained"),
+        APIResponse(responseCode = "401", description = "No user session exists")
+    )
+    fun getAllUsers(): Multi<UserDto> {
+        return identity.deferredIdentity.onItem().transformToMulti { id ->
+            logger.info("User ${id.principal.name} is requesting all users with plafond")
+
+            return@transformToMulti userService.getAllUsers().onItem().transform { UserDto(it) }
+        }
+    }
+
+    @GET
     @Authenticated
     @Operation(summary = "Obtain logged user information")
     @APIResponses(
@@ -43,7 +60,9 @@ class UserController {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is requesting their personal information")
 
-            userService.getInfo(id.principal.name)
+            userService.getInfo(id.principal.name).onItem().transform {
+                Response.ok(UserDto(it)).build()
+            }
         }
     }
 

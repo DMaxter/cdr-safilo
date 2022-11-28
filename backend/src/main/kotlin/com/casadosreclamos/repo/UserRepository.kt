@@ -17,7 +17,7 @@ class UserRepository : PanacheRepository<User> {
     }
 
     fun streamAllWithCredits(): Multi<User> {
-        return stream("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.credits")
+        return stream("FROM User u LEFT JOIN FETCH u.credits")
     }
 
     fun exists(user: String): Uni<Boolean> {
