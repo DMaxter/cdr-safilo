@@ -80,21 +80,15 @@ class ClientController {
         APIResponse(responseCode = "403", description = "Insufficient privileges")
     )
     fun importClients(@RestForm file: FileUpload): Uni<Response> {
-        return identity.deferredIdentity.onItem().transformToUni { id ->
+        return identity.deferredIdentity.onItem().transform { id ->
             logger.info("User ${id.principal.name} is importing clients from Excel file")
 
-            return@transformToUni clientService.importClients(file.uploadedFile().toFile()).collect().asList()
-                .onItemOrFailure()
-                .transform { _, e ->
-                    // Delete uploaded file
-                    file.uploadedFile().toFile().delete()
+            clientService.importClients(file.uploadedFile().toFile()).collect().asList().await().indefinitely()
 
-                    if (e == null) {
-                        return@transform Response.ok().build()
-                    }
+            // Delete uploaded file
+            file.uploadedFile().toFile().delete()
 
-                    return@transform Response.serverError().build()
-                }
+            Response.ok().build()
         }
     }
 

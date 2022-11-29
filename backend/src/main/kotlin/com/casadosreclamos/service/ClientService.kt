@@ -114,6 +114,7 @@ class ClientService {
         }
 
         return multi.invoke { pipeline ->
+            // Wait for all clients to finish
             pipeline.await().indefinitely()
         }
     }
