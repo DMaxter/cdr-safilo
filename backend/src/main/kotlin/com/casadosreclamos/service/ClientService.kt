@@ -88,7 +88,7 @@ class ClientService {
     }
 
     fun importClients(file: File): Multi<Uni<Client>> {
-        val contents = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.EXCEL)
+        val contents = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.EXCEL.withDelimiter(';'))
 
         val multi: Multi<Uni<Client>> = Multi.createFrom().emitter { em ->
             // Remove column names
@@ -96,7 +96,7 @@ class ClientService {
                 val id = record[0].toLong()
                 val banner = record[7]
                 val name = record[1]
-                val fiscalNumber = record[6].toLong()
+                val fiscalNumber = record[6]
                 val email = record[8]
                 val phone = record[5]
                 val address = record[3]

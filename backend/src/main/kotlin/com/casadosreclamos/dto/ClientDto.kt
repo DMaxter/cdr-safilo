@@ -6,7 +6,7 @@ data class ClientDto(
     var id: Long?,
     var banner: String?,
     var name: String?,
-    var fiscalNumber: Long?,
+    var fiscalNumber: String?,
     var email: String?,
     var phone: String?,
     var address: String?,

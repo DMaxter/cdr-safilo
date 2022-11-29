@@ -14,7 +14,7 @@ open class Client {
 
     open lateinit var name: String
 
-    open var fiscalNumber: Long = 0
+    open lateinit var fiscalNumber: String
 
     open lateinit var email: String
 
