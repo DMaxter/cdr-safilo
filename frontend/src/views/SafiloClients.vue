@@ -64,7 +64,7 @@
                 
               </v-row>
               <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-          <v-data-table :headers="headers" :items="desserts2" fixed-header tile item-key="name" hide-default-footer height="260" style="width: 600px;" class="elevation-1 my-header-style">
+          <v-data-table :headers="headers" :items="desserts2" fixed-header disable-pagination :search="dessertFilterValue" tile item-key="name" hide-default-footer height="260" style="width: 600px;" class="elevation-1 my-header-style">
           <template v-slot:top>
   
               <!-- v-container, v-col and v-row are just for decoration purposes. -->
@@ -76,7 +76,7 @@
                             <v-text-field
                                       style="width: 150px; border-radius: 0px;"
                                       v-model="dessertFilterValue"
-                                      label="Cliente"
+                                      label="Procurar"
                                       hide-details
                                       outlined
                                       dense
@@ -432,7 +432,6 @@
               value: 'name',
               align: "center",
               class: 'my-header-style',
-              filter: this.nameFilter
             },
             { text: "", value: "actions", align: "right", sortable: false, class: 'my-header-style' },
           ]
@@ -485,16 +484,6 @@
           this.$router.push({name: 'clientInfo'});
         },
   
-        nameFilter(value) {
-          // If this filter has no value we just skip the entire filter.
-          if (!this.dessertFilterValue) {
-            return true;
-          }
-          // Check if the current loop value (The dessert name)
-          // partially contains the searched word.
-          console.log(this.dessertFilterValue)
-          return value.toLowerCase().includes(this.dessertFilterValue.toLowerCase());
-        },
       addClients: async function () {
         try {
           console.log("A")
