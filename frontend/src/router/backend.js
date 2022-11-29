@@ -36,7 +36,7 @@ export default class Backend {
   }
 
   static async getUsers() {
-    return httpClient.get("/auth/all").then(response => {
+    return httpClient.get("/user/all").then(response => {
       return response.data
     })
       .catch(async error => {
