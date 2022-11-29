@@ -9,7 +9,6 @@ import com.casadosreclamos.service.AuthService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
 import io.quarkus.security.runtime.QuarkusSecurityIdentity
-import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
@@ -39,11 +38,11 @@ class AuthController {
     @Path("/register")
     @Operation(summary = "Register a new commercial user")
     @APIResponses(APIResponse(responseCode = "200", description = "Successful user registration"))
-    fun registerUser(credentials: RegisterDto): Uni<Response> {
+    fun registerUser(credentials: RegisterDto): Uni<UserDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is registering user \"${credentials.email}\"")
 
-            return@transformToUni authService.register(credentials)
+            return@transformToUni authService.register(credentials).onItem().transform { UserDto(it) }
         }
     }
 

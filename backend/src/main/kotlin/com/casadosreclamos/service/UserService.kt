@@ -1,6 +1,5 @@
 package com.casadosreclamos.service
 
-import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.exception.InvalidAmountException
 import com.casadosreclamos.exception.InvalidCredentialsException
 import com.casadosreclamos.exception.InvalidIdException
@@ -57,7 +56,7 @@ class UserService {
     }
 
     @Throws(InvalidIdException::class, InvalidUserException::class, InvalidAmountException::class)
-    fun setPlafond(userId: String?, brandId: Long, credits: Double): Uni<Response> {
+    fun setPlafond(userId: String?, brandId: Long, credits: Double): Uni<User> {
         if (userId.isNullOrEmpty()) {
             throw InvalidUserException()
         } else if (brandId <= 0) {
@@ -74,7 +73,7 @@ class UserService {
             val userUni = userRepository.findByNameWithCredits(userId)
             val brandUni = brandRepository.findById(brandId)
 
-            (Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
+            Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
                 val userItem = tuple.item1 ?: throw InvalidUserException()
                 val brandItem = tuple.item2 ?: throw InvalidIdException("brand")
 
@@ -84,21 +83,26 @@ class UserService {
                 plafondId.userId = user!!.name
                 plafondId.brandId = brand!!.id
 
-                plafondRepository.findById(plafondId)
-            }).onItem().ifNotNull().transform { plafond ->
-                plafond.amount = credits
-                plafond
-            }.onItem().ifNull().switchTo {
-                val plafond = Plafond()
-                plafond.amount = credits
-                plafond.id = plafondId
-                plafond.user = user!!
-                plafond.brand = brand!!
+                plafondRepository.findById(user!!.email, brand!!.id)
+            }.onItem().transformToUni { plafond ->
+                if (plafond != null) {
+                    plafond.amount = credits
 
+                    Uni.createFrom().item(plafond)
+                } else {
+                    val newPlafond = Plafond()
+
+                    newPlafond.amount = credits
+                    newPlafond.id = plafondId
+                    newPlafond.user = user!!
+                    newPlafond.brand = brand!!
+
+                    plafondRepository.persist(newPlafond)
+                }
+            }.onItem().transform { plafond ->
                 user!!.credits.add(plafond)
-
-                plafondRepository.persist(plafond)
+                user
             }
-        }.onItem().transform { Response.ok().build() }
+        }
     }
 }

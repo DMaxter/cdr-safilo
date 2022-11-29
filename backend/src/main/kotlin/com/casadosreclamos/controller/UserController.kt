@@ -56,12 +56,12 @@ class UserController {
         APIResponse(responseCode = "200", description = "Information obtained"),
         APIResponse(responseCode = "401", description = "No user session exists")
     )
-    fun getUserInfo(): Uni<Response> {
+    fun getUserInfo(): Uni<UserDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is requesting their personal information")
 
             userService.getInfo(id.principal.name).onItem().transform {
-                Response.ok(UserDto(it)).build()
+                UserDto(it)
             }
         }
     }
@@ -95,11 +95,11 @@ class UserController {
         @PathParam("user") user: String,
         @PathParam("brand") brand: Long,
         @PathParam("amount") amount: Double
-    ): Uni<Response> {
+    ): Uni<UserDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is updating plafond for user $user on brand with id $brand")
 
-            userService.setPlafond(user, brand, amount)
+            userService.setPlafond(user, brand, amount).onItem().transform { UserDto(it) }
         }
     }
 }

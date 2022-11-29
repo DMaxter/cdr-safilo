@@ -177,7 +177,10 @@ class AuthService {
         }.await().indefinitely()
 
         logger.info("Initializing Authentication Service")
-        val file = if (ProfileManager.getActiveProfile() == "dev") AuthService::class.java.getResourceAsStream(keyPath) else File(keyPath).inputStream()
+        val file =
+            if (ProfileManager.getActiveProfile() == "dev" || ProfileManager.getActiveProfile() == "test") AuthService::class.java.getResourceAsStream(keyPath) else File(
+                keyPath
+            ).inputStream()
 
         if (file != null) {
             logger.debug("Found key file")
@@ -196,7 +199,7 @@ class AuthService {
     }
 
     @Throws(InvalidCredentialsException::class)
-    fun register(credentials: RegisterDto): Uni<Response> {
+    fun register(credentials: RegisterDto): Uni<User> {
         val user = User()
 
         if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
@@ -235,7 +238,7 @@ class AuthService {
                         Este é um email automático, por favor não responda"""
                 )
             )
-        }.onItem().transform { Response.ok().build() }
+        }.onItem().transform { user }
     }
 
     fun getAll(): Multi<UserDto> {

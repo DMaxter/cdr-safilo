@@ -43,11 +43,11 @@ class BrandController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a brand")
     )
-    fun addBrand(@PathParam("brand") brand: String): Uni<Response> {
+    fun addBrand(@PathParam("brand") brand: String): Uni<BrandDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is adding brand \"$brand\"")
 
-            return@transformToUni brandService.add(brand)
+            return@transformToUni brandService.add(brand).onItem().transform { BrandDto(it) }
         }
     }
 

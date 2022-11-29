@@ -32,7 +32,7 @@ class BrandService {
     }
 
     @Throws(InvalidNameException::class)
-    fun add(brandName: String): Uni<Response> {
+    fun add(brandName: String): Uni<Brand> {
         if (brandName.isEmpty()) {
             throw InvalidNameException()
         }
@@ -49,7 +49,7 @@ class BrandService {
                     brandRepository.persist(brand)
                 }
             }
-        }.onItem().transform { Response.ok().build() }
+        }
     }
 
     fun addImages(brandId: Long, images: List<String>): Uni<Response> {

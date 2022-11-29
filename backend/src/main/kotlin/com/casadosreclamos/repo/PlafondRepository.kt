@@ -16,8 +16,4 @@ class PlafondRepository : PanacheRepositoryBase<Plafond, PlafondId> {
             Parameters.with("user", user).and("brand", brand).map()
         ).firstResult()
     }
-
-    fun findByUser(user: String): Multi<Plafond> {
-        return stream("user = :user", Parameters.with("user", user).map())
-    }
 }
