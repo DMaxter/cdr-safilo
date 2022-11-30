@@ -2,10 +2,12 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.PriceDto
 import com.casadosreclamos.exception.InvalidCostException
+import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.InvalidMeasurementsException
 import com.casadosreclamos.exception.PriceNotFoundException
 import com.casadosreclamos.model.request.Measurements
 import com.casadosreclamos.model.request.Price
+import com.casadosreclamos.model.request.PriceId
 import com.casadosreclamos.repo.PriceRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
@@ -22,17 +24,26 @@ class PriceService {
     @Inject
     lateinit var priceRepository: PriceRepository
 
+    @Inject
+    lateinit var materialService: MaterialService
+
     fun getAll(): Multi<Price> {
         return priceRepository.streamAll()
     }
 
-    fun getPrice(measurements: Measurements): Uni<Price> {
+    fun get(measurements: Measurements, material: Long): Uni<Price> {
         if (measurements.height <= 0 || measurements.width <= 0) {
             throw InvalidMeasurementsException()
+        } else if (material <= 0) {
+            throw InvalidIdException("material")
         }
 
+        val id = PriceId()
+        id.measurements = measurements
+        id.materialId = material
+
         return Panache.withTransaction {
-            priceRepository.findById(measurements)
+            priceRepository.findById(id)
         }
     }
 
@@ -41,16 +52,29 @@ class PriceService {
             throw InvalidMeasurementsException()
         } else if (priceDto.cost == null || priceDto.cost!! <= 0) {
             throw InvalidCostException()
+        } else if (priceDto.material == null || priceDto.material!! <= 0) {
+            throw InvalidIdException("material")
         }
 
-        val price = Price()
-        price.measurements = Measurements()
-        price.measurements.height = priceDto.height!!
-        price.measurements.width = priceDto.width!!
-        price.cost = priceDto.cost!!
+        return materialService.find(priceDto.material!!).onItem().transformToUni { material ->
+            if (material == null) {
+                throw InvalidIdException("material")
+            }
 
-        return Panache.withTransaction {
-            priceRepository.persist(price)
+            val priceId = PriceId()
+            priceId.measurements = Measurements()
+            priceId.measurements.height = priceDto.height!!
+            priceId.measurements.width = priceDto.width!!
+            priceId.materialId = material.id
+
+            val price = Price()
+            price.id = priceId
+            price.cost = priceDto.cost!!
+            price.material = material
+
+            Panache.withTransaction {
+                priceRepository.persist(price)
+            }
         }
     }
 
@@ -59,14 +83,18 @@ class PriceService {
             throw InvalidMeasurementsException()
         } else if (priceDto.cost == null || priceDto.cost!! <= 0) {
             throw InvalidCostException()
+        } else if (priceDto.material == null || priceDto.material!! <= 0) {
+            throw InvalidIdException("material")
         }
 
-        val measurements = Measurements()
-        measurements.height = priceDto.height!!
-        measurements.width = priceDto.width!!
+        val id = PriceId()
+        id.measurements = Measurements()
+        id.measurements.height = priceDto.height!!
+        id.measurements.width = priceDto.width!!
+        id.materialId = priceDto.material!!
 
         return Panache.withTransaction {
-            priceRepository.findById(measurements).onItem().transform { price ->
+            priceRepository.findById(id).onItem().transform { price ->
                 if (price == null) {
                     throw PriceNotFoundException()
                 }
@@ -81,14 +109,18 @@ class PriceService {
     fun delete(priceDto: PriceDto): Uni<Void> {
         if (priceDto.width == null || priceDto.width!! <= 0 || priceDto.height == null || priceDto.height!! <= 0) {
             throw InvalidMeasurementsException()
+        } else if (priceDto.material == null || priceDto.material!! <= 0) {
+            throw InvalidIdException("material")
         }
 
-        val measurements = Measurements()
-        measurements.height = priceDto.height!!
-        measurements.width = priceDto.width!!
+        val id = PriceId()
+        id.measurements = Measurements()
+        id.measurements.height = priceDto.height!!
+        id.measurements.width = priceDto.width!!
+        id.materialId = priceDto.material!!
 
         return Panache.withTransaction {
-            priceRepository.deleteById(measurements).onItem().transformToUni { deleted ->
+            priceRepository.deleteById(id).onItem().transformToUni { deleted ->
                 if (!deleted) {
                     throw PriceNotFoundException()
                 }

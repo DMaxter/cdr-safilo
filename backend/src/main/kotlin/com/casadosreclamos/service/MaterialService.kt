@@ -28,7 +28,7 @@ class MaterialService {
     }
 
     @Throws(InvalidNameException::class)
-    fun add(name: String): Uni<Response> {
+    fun add(name: String): Uni<Material> {
         if (name.isEmpty()) {
             throw InvalidNameException()
         }
@@ -44,7 +44,7 @@ class MaterialService {
                     materialRepository.persist(material)
                 }
             }
-        }.onItem().transform { Response.ok().build() }
+        }
     }
 
     @Throws(InvalidNameException::class)
@@ -66,5 +66,9 @@ class MaterialService {
     fun delete(id: Long): Uni<Response> {
         return Panache.withTransaction { materialRepository.deleteById(id) }.onItem()
             .transform { Response.ok().build() }.onFailure().transform { InvalidIdException("material") }
+    }
+
+    fun find(id: Long): Uni<Material> {
+        return materialRepository.findById(id)
     }
 }

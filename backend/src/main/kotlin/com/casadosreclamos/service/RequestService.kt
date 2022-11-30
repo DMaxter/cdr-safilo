@@ -328,9 +328,9 @@ class RequestService {
      * Create a request slot
      */
     private fun doSlot(slotDto: RequestSlotDto): Uni<RequestSlot> {
-        val materialUni = materialRepository.findById(slotDto.material!!.id)
+        val materialUni = materialRepository.findById(slotDto.material!!.id!!)
         val brandUni = brandRepository.findByIdWithImages(slotDto.brand!!.id!!)
-        val priceUni = priceService.getPrice(slotDto.measurements!!)
+        val priceUni = priceService.get(slotDto.measurements!!, slotDto.material!!.id!!)
 
         return Uni.combine().all().unis(materialUni, brandUni, priceUni).asTuple().onItem().transformToUni { tuple ->
             val material = tuple.item1

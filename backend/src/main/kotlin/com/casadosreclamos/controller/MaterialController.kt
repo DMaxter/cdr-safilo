@@ -39,11 +39,11 @@ class MaterialController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
     )
-    fun addMaterial(@PathParam("material") name: String): Uni<Response> {
+    fun addMaterial(@PathParam("material") name: String): Uni<MaterialDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is adding material \"$name\"")
 
-            return@transformToUni materialService.add(name)
+            return@transformToUni materialService.add(name).onItem().transform { MaterialDto(it) }
         }
     }
 
