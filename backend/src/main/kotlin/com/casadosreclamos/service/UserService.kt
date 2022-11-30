@@ -67,7 +67,7 @@ class UserService {
 
         val plafondId = PlafondId()
         var user: User? = null
-        var brand: Brand?
+        var brand: Brand? = null
 
         val userUni = userRepository.findByNameWithCredits(userId)
         val brandUni = brandRepository.findById(brandId)
@@ -76,26 +76,24 @@ class UserService {
             user = tuple.item1 ?: throw InvalidUserException()
             brand = tuple.item2 ?: throw InvalidIdException("brand")
 
-            plafondId.userId = user!!.name
-            plafondId.brandId = brand!!.id
+            plafondRepository.findById(user!!, brand!!)
+        }.onItem().transformToUni { plafond ->
+            Panache.withTransaction {
+                if (plafond != null) {
+                    plafond.amount = credits
 
-            val plafond = user!!.credits.filter {
-                it.brand.id == brand!!.id
-            }.firstOrNull()
+                    Uni.createFrom().item(plafond)
+                } else {
+                    val newPlafond = Plafond()
 
-            if (plafond != null) {
-                plafond.amount = credits
+                    plafondId.userId = user!!.name
+                    plafondId.brandId = brand!!.id
 
-                Uni.createFrom().item(plafond)
-            } else {
-                val newPlafond = Plafond()
+                    newPlafond.amount = credits
+                    newPlafond.id = plafondId
+                    newPlafond.user = user!!
+                    newPlafond.brand = brand!!
 
-                newPlafond.amount = credits
-                newPlafond.id = plafondId
-                newPlafond.user = user!!
-                newPlafond.brand = brand!!
-
-                Panache.withTransaction {
                     plafondRepository.persist(newPlafond)
                 }
             }
