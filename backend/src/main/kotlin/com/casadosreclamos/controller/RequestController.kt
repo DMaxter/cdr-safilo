@@ -42,11 +42,11 @@ class RequestController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to issue a new request")
     )
-    fun addRequest(request: NewRequestDto): Uni<Response> {
+    fun addRequest(request: NewRequestDto): Uni<RequestDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is creating a request for client \"${request.clientId}\"")
 
-            return@transformToUni requestService.add(request, id.principal.name)
+            return@transformToUni requestService.add(request, id.principal.name).onItem().transform { RequestDto(it) }
         }
     }
 

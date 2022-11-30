@@ -1,6 +1,7 @@
 package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.BrandDto
+import com.casadosreclamos.dto.ImageDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.BrandService
@@ -75,11 +76,11 @@ class BrandController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to add images to a brand")
     )
-    fun addImages(@PathParam("id") brand: Long, images: List<String>): Uni<Response> {
+    fun addImages(@PathParam("id") brand: Long, image: String): Uni<ImageDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} is adding ${images.size} images to brand with id $brand")
+            logger.info("User ${id.principal.name} is adding an image to brand with id $brand")
 
-            return@transformToUni brandService.addImages(brand, images)
+            return@transformToUni brandService.addImage(brand, image).onItem().transform { ImageDto(it) }
         }
     }
 

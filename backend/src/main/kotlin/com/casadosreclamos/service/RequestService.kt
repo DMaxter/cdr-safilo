@@ -68,7 +68,7 @@ class RequestService {
     }
 
     @Throws(InvalidIdException::class, InvalidMeasurementsException::class, InvalidRequestTypeException::class)
-    fun add(requestDto: NewRequestDto, username: String): Uni<Response> {
+    fun add(requestDto: NewRequestDto, username: String): Uni<Request> {
         if (requestDto.clientId == null || requestDto.clientId!! <= 0) {
             throw InvalidIdException("client")
         } else if (requestDto.amount == null || requestDto.amount!! <= 0) {
@@ -77,6 +77,8 @@ class RequestService {
             throw InvalidRequestTypeException()
         } else if (requestDto.application == null) {
             requestDto.application = false
+        } else if (requestDto.brand == null || requestDto.brand!!.id!! <= 0) {
+            throw InvalidIdException("brand")
         }
 
         validateType(requestDto.type!!)
@@ -92,31 +94,35 @@ class RequestService {
         lateinit var clientName: String
         lateinit var userName: String
 
-        return Panache.withTransaction {
-            val clientUni = clientRepository.findById(requestDto.clientId!!)
-            val userUni = userRepository.findByName(username)
+        val clientUni = clientRepository.findById(requestDto.clientId!!)
+        val userUni = userRepository.findByName(username)
+        val brandUni = brandRepository.findByIdWithImages(requestDto.brand!!.id!!)
 
-            Uni.combine().all().unis(clientUni, userUni).asTuple().onItem().transformToUni { tuple ->
+        return Panache.withTransaction {
+
+            Uni.combine().all().unis(clientUni, userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
                 // Obtain client and user
                 val client = tuple.item1
                 val user = tuple.item2
+                val brand = tuple.item3
 
                 if (client == null) {
                     throw InvalidIdException("client")
+                } else if (brand == null) {
+                    throw InvalidIdException("brand")
                 }
 
                 clientName = client.name
                 userName = user.name
 
-                // TODO: check plafond
-
                 request.requester = user
                 request.client = client
+                request.brand = brand
 
                 requestRepository.persistAndFlush(request)
             }.onItem().transformToUni { _ ->
                 // Create RequestType instance
-                toRequestType(requestDto.type!!)
+                toRequestType(requestDto.type!!, request.brand.images)
             }.onItem().transformToUni { requestType ->
                 // Create request
                 requestType.request = request
@@ -145,7 +151,7 @@ class RequestService {
                 )
             )
         }.onItem().transform {
-            Response.ok().build()
+            request
         }
     }
 
@@ -234,12 +240,12 @@ class RequestService {
     /**
      * Create a RequestType instance
      */
-    private fun toRequestType(request: RequestTypeDto): Uni<out RequestType> {
+    private fun toRequestType(request: RequestTypeDto, images: List<Image>): Uni<out RequestType> {
         return when (request) {
-            is OneDto -> toOneFace(request)
-            is TwoDto -> toTwoFaces(request)
-            is LeftDto -> toLeftShowcase(request)
-            is RightDto -> toRightShowcase(request)
+            is OneDto -> toOneFace(request, images)
+            is TwoDto -> toTwoFaces(request, images)
+            is LeftDto -> toLeftShowcase(request, images)
+            is RightDto -> toRightShowcase(request, images)
             else -> throw InvalidRequestTypeException()
         }
     }
@@ -247,8 +253,8 @@ class RequestService {
     /**
      * Create a OneFace instance
      */
-    private fun toOneFace(request: OneDto): Uni<OneFace> {
-        return doSlot(request.cover).onItem().transform { slot ->
+    private fun toOneFace(request: OneDto, images: List<Image>): Uni<OneFace> {
+        return doSlot(request.cover, images).onItem().transform { slot ->
             val type = OneFace()
             type.cover = slot
             type.cost = slot.cost
@@ -259,9 +265,9 @@ class RequestService {
     /**
      * Create a TwoFace instance
      */
-    private fun toTwoFaces(request: TwoDto): Uni<TwoFaces> {
-        val coverSlot = doSlot(request.cover)
-        val backSlot = doSlot(request.back)
+    private fun toTwoFaces(request: TwoDto, images: List<Image>): Uni<TwoFaces> {
+        val coverSlot = doSlot(request.cover, images)
+        val backSlot = doSlot(request.back, images)
 
         return Uni.join().all(coverSlot, backSlot).andFailFast().onItem().transform { (cover, back) ->
             val type = TwoFaces()
@@ -281,12 +287,12 @@ class RequestService {
     /**
      * Create a showcase instance
      */
-    private fun toShowcase(request: ShowcaseDto, output: Showcase): Uni<Showcase> {
-        val topSlot = doSlot(request.top)
-        val bottomSlot = doSlot(request.bottom)
-        val leftSlot = doSlot(request.left)
-        val rightSlot = doSlot(request.right)
-        val sideSlot = doSlot(request.side)
+    private fun toShowcase(request: ShowcaseDto, output: Showcase, images: List<Image>): Uni<Showcase> {
+        val topSlot = doSlot(request.top, images)
+        val bottomSlot = doSlot(request.bottom, images)
+        val leftSlot = doSlot(request.left, images)
+        val rightSlot = doSlot(request.right, images)
+        val sideSlot = doSlot(request.side, images)
 
         return Uni.join().all(topSlot, bottomSlot, leftSlot, rightSlot, sideSlot).andFailFast().onItem()
             .transform { (top, bottom, left, right, side) ->
@@ -309,47 +315,42 @@ class RequestService {
     /**
      * Create a LeftShowcase instance
      */
-    private fun toLeftShowcase(request: LeftDto): Uni<Showcase> {
+    private fun toLeftShowcase(request: LeftDto, images: List<Image>): Uni<Showcase> {
         val showcase = LeftShowcase()
 
-        return toShowcase(request, showcase)
+        return toShowcase(request, showcase, images)
     }
 
     /**
      * Create a RightShowcase instance
      */
-    private fun toRightShowcase(request: RightDto): Uni<Showcase> {
+    private fun toRightShowcase(request: RightDto, images: List<Image>): Uni<Showcase> {
         val showcase = RightShowcase()
 
-        return toShowcase(request, showcase)
+        return toShowcase(request, showcase, images)
     }
 
     /**
      * Create a request slot
      */
-    private fun doSlot(slotDto: RequestSlotDto): Uni<RequestSlot> {
+    private fun doSlot(slotDto: RequestSlotDto, images: List<Image>): Uni<RequestSlot> {
         val materialUni = materialRepository.findById(slotDto.material!!.id!!)
-        val brandUni = brandRepository.findByIdWithImages(slotDto.brand!!.id!!)
         val priceUni = priceService.get(slotDto.measurements!!, slotDto.material!!.id!!)
 
-        return Uni.combine().all().unis(materialUni, brandUni, priceUni).asTuple().onItem().transformToUni { tuple ->
+        return Uni.combine().all().unis(materialUni, priceUni).asTuple().onItem().transformToUni { tuple ->
             val material = tuple.item1
-            val brand = tuple.item2
-            val price = tuple.item3
+            val price = tuple.item2
 
             if (material == null) {
                 throw InvalidIdException("material")
-            } else if (brand == null) {
-                throw InvalidIdException("brand")
             }
 
-            val image = brand.images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
+            val image = images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
                 ?: throw InvalidIdException("image")
 
             val slot = RequestSlot()
             slot.image = image
             slot.material = material
-            slot.brand = brand
             slot.measurements = slotDto.measurements!!
             slot.cost = price?.cost
 
@@ -405,16 +406,9 @@ class RequestService {
     }
 
     private fun validateSlot(slot: RequestSlotDto?) {
-        validateBrand(slot?.brand)
         validateImage(slot?.image)
         validateMaterial(slot?.material)
         validateMeasurements(slot?.measurements)
-    }
-
-    private fun validateBrand(brand: BrandDto?) {
-        if (brand?.id == null || brand.id!! <= 0) {
-            throw InvalidIdException("brand")
-        }
     }
 
     private fun validateImage(image: ImageDto?) {

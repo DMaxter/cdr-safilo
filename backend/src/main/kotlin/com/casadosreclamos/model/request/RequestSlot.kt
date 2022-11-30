@@ -14,9 +14,6 @@ open class RequestSlot {
     open var id: Long = 0
 
     @ManyToOne
-    open lateinit var brand: Brand
-
-    @ManyToOne
     open lateinit var image: Image
 
     @ManyToOne

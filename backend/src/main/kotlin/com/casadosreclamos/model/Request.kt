@@ -1,5 +1,6 @@
 package com.casadosreclamos.model
 
+import com.casadosreclamos.model.request.Brand
 import com.casadosreclamos.model.request.RequestStatus
 import com.casadosreclamos.model.request.RequestType
 import java.util.*
@@ -25,6 +26,9 @@ open class Request {
     open lateinit var status: RequestStatus
 
     open var trackingCode: String? =  null
+
+    @ManyToOne
+    open lateinit var brand: Brand
 
     open var amount: Int = 0
 

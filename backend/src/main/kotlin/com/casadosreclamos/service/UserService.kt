@@ -67,42 +67,41 @@ class UserService {
 
         val plafondId = PlafondId()
         var user: User? = null
-        var brand: Brand? = null
+        var brand: Brand?
 
-        return Panache.withTransaction {
-            val userUni = userRepository.findByNameWithCredits(userId)
-            val brandUni = brandRepository.findById(brandId)
+        val userUni = userRepository.findByNameWithCredits(userId)
+        val brandUni = brandRepository.findById(brandId)
 
-            Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
-                val userItem = tuple.item1 ?: throw InvalidUserException()
-                val brandItem = tuple.item2 ?: throw InvalidIdException("brand")
+        return Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
+            user = tuple.item1 ?: throw InvalidUserException()
+            brand = tuple.item2 ?: throw InvalidIdException("brand")
 
-                user = userItem
-                brand = brandItem
+            plafondId.userId = user!!.name
+            plafondId.brandId = brand!!.id
 
-                plafondId.userId = user!!.name
-                plafondId.brandId = brand!!.id
+            val plafond = user!!.credits.filter {
+                it.brand.id == brand!!.id
+            }.firstOrNull()
 
-                plafondRepository.findById(user!!.email, brand!!.id)
-            }.onItem().transformToUni { plafond ->
-                if (plafond != null) {
-                    plafond.amount = credits
+            if (plafond != null) {
+                plafond.amount = credits
 
-                    Uni.createFrom().item(plafond)
-                } else {
-                    val newPlafond = Plafond()
+                Uni.createFrom().item(plafond)
+            } else {
+                val newPlafond = Plafond()
 
-                    newPlafond.amount = credits
-                    newPlafond.id = plafondId
-                    newPlafond.user = user!!
-                    newPlafond.brand = brand!!
+                newPlafond.amount = credits
+                newPlafond.id = plafondId
+                newPlafond.user = user!!
+                newPlafond.brand = brand!!
 
+                Panache.withTransaction {
                     plafondRepository.persist(newPlafond)
                 }
-            }.onItem().transform { plafond ->
-                user!!.credits.add(plafond)
-                user
             }
+        }.onItem().transform { plafond ->
+            user!!.credits.add(plafond)
+            user
         }
     }
 }

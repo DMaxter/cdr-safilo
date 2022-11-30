@@ -48,7 +48,7 @@ class ClientService {
         InvalidAddressException::class,
         InvalidPostalCodeException::class
     )
-    fun register(clientDto: ClientDto): Uni<Client> {
+    fun add(clientDto: ClientDto): Uni<Client> {
         val client = Client()
 
         if (clientDto.id == null || clientDto.id!! <= 0) {
@@ -106,7 +106,7 @@ class ClientService {
 
 
                 em.emit(clientRepository.findById(id).onItem().ifNull().switchTo {
-                    return@switchTo register(clientDto)
+                    return@switchTo add(clientDto)
                 })
             }
 

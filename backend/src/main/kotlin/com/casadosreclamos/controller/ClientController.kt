@@ -59,12 +59,12 @@ class ClientController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a client")
     )
-    fun registerClient(client: ClientDto): Uni<Response> {
+    fun addClient(client: ClientDto): Uni<ClientDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is registering client with name \"${client.name}\"")
 
-            return@transformToUni clientService.register(client).onItem().transform {
-                Response.ok(ClientDto(it)).build()
+            return@transformToUni clientService.add(client).onItem().transform {
+                ClientDto(it)
             }
         }
     }

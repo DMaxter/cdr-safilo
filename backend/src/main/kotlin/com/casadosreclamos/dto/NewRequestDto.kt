@@ -7,6 +7,7 @@ data class NewRequestDto(
     var amount: Int?,
     var observations: String?,
     var application: Boolean?,
+    var brand: BrandDto?,
 
     @Schema(oneOf = [OneFace::class, TwoFaces::class, LeftShowcase::class, RightShowcase::class])
     var type: RequestTypeDto?

@@ -52,22 +52,20 @@ class BrandService {
         }
     }
 
-    fun addImages(brandId: Long, images: List<String>): Uni<Response> {
-        // TODO: Check brand id and upload images
-
+    fun addImage(brandId: Long, imageLink: String): Uni<Image> {
         return Panache.withTransaction {
             brandRepository.findByIdWithImages(brandId).onItem().transformToUni { brand ->
-                Uni.join().all(images.stream().map {
-                    val image = Image()
-                    image.link = it
-                    image.brand = brand
-                    brand.images.add(image)
-                    imageRepository.persist(image)
-                }.toList()).andFailFast()
+                if (brand == null) {
+                    throw InvalidIdException("brand")
+                }
+
+                val image = Image()
+                image.link = imageLink
+                image.brand = brand
+                brand.images.add(image)
+
+                imageRepository.persist(image)
             }
-        }.onItem().transform { Response.ok().build() }.onFailure().recoverWithItem { e ->
-            logger.error(e)
-            Response.serverError().build()
         }
     }
 
