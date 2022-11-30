@@ -17,7 +17,7 @@ class ExceptionMapper {
         LOGGER.error("Received general exception $e")
         e.printStackTrace()
 
-        return Uni.createFrom().item(Response.serverError().build())
+        return Uni.createFrom().item(Response.serverError().entity(e).build())
     }
 
     @ServerExceptionMapper
