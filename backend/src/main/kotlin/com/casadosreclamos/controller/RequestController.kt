@@ -78,7 +78,7 @@ class RequestController {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
             logger.debug("User ${id.principal.name} is requesting all clients")
 
-            return@transformToMulti requestService.getAll()
+            return@transformToMulti requestService.getAll().onItem().transform { RequestDto(it) }
         }
     }
 

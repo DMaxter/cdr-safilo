@@ -32,6 +32,6 @@ data class RequestDto(
         request.cost,
         request.observations,
         request.application,
-        BrandDto(request.brand)
+        BrandDto(request.brand.id, request.brand.name, null)
     )
 }

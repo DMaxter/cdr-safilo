@@ -63,8 +63,8 @@ class RequestService {
     @ConfigProperty(name = "cdr.email")
     lateinit var cdrMail: String
 
-    fun getAll(): Multi<RequestDto> {
-        return requestRepository.streamAll().map { RequestDto(it) }
+    fun getAll(): Multi<Request> {
+        return requestRepository.streamAll()
     }
 
     @Throws(InvalidIdException::class, InvalidMeasurementsException::class, InvalidRequestTypeException::class)

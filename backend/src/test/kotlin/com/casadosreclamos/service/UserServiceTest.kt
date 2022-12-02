@@ -55,17 +55,17 @@ class UserServiceTest {
         expectedPlafond.amount = PLAFOND1
 
         val user = userService.setPlafond(EMAIL, brand.id, PLAFOND1).await().indefinitely()
-         Assertions.assertNotNull(user)
-         Assertions.assertEquals(EMAIL, user.email)
-         Assertions.assertEquals(USER_NAME, user.name)
-         Assertions.assertEquals(1, user.credits.size)
+        Assertions.assertNotNull(user)
+        Assertions.assertEquals(EMAIL, user.email)
+        Assertions.assertEquals(USER_NAME, user.name)
+        Assertions.assertEquals(1, user.credits.size)
 
-         val plafond = user.credits.elementAt(0)
+        val plafond = user.credits.elementAt(0)
 
-         Assertions.assertNotNull(plafond)
-         Assertions.assertEquals(brand.id, plafond.brand.id)
-         Assertions.assertEquals(brand.name, plafond.brand.name)
-         Assertions.assertEquals(PLAFOND1, plafond.amount)
+        Assertions.assertNotNull(plafond)
+        Assertions.assertEquals(brand.id, plafond.brand.id)
+        Assertions.assertEquals(brand.name, plafond.brand.name)
+        Assertions.assertEquals(PLAFOND1, plafond.amount)
     }
 
     @Test
@@ -76,7 +76,7 @@ class UserServiceTest {
         expectedPlafond.user = user
         expectedPlafond.amount = PLAFOND2
 
-       val user = userService.setPlafond(EMAIL, brand.id, PLAFOND2).invoke { edited ->
+        userService.setPlafond(EMAIL, brand.id, PLAFOND2).invoke { edited ->
             Assertions.assertNotNull(user)
             Assertions.assertEquals(EMAIL, edited.email)
             Assertions.assertEquals(USER_NAME, edited.name)
