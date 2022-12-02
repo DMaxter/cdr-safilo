@@ -2,8 +2,10 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.*
 import com.casadosreclamos.exception.*
+import com.casadosreclamos.model.Plafond
 import com.casadosreclamos.model.Request
 import com.casadosreclamos.model.Role
+import com.casadosreclamos.model.User
 import com.casadosreclamos.model.request.*
 import com.casadosreclamos.repo.*
 import io.quarkus.hibernate.reactive.panache.Panache
@@ -57,6 +59,9 @@ class RequestService {
     lateinit var priceService: PriceService
 
     @Inject
+    lateinit var plafondRepository: PlafondRepository
+
+    @Inject
     lateinit var mailer: ReactiveMailer
 
     @Inject
@@ -68,7 +73,7 @@ class RequestService {
     }
 
     @Throws(InvalidIdException::class, InvalidMeasurementsException::class, InvalidRequestTypeException::class)
-    fun add(requestDto: NewRequestDto, username: String): Uni<Request> {
+    fun add(requestDto: NewRequestDto, email: String): Uni<Request> {
         if (requestDto.clientId == null || requestDto.clientId!! <= 0) {
             throw InvalidIdException("client")
         } else if (requestDto.amount == null || requestDto.amount!! <= 0) {
@@ -92,38 +97,53 @@ class RequestService {
         request.amount = requestDto.amount!!
 
         lateinit var clientName: String
-        lateinit var userName: String
+        lateinit var user: User
+        lateinit var brand: Brand
+        lateinit var requestType: RequestType
 
         val clientUni = clientRepository.findById(requestDto.clientId!!)
-        val userUni = userRepository.findByEmail(username)
+        val userUni = userRepository.findByEmail(email)
         val brandUni = brandRepository.findByIdWithImages(requestDto.brand!!.id!!)
 
         return Panache.withTransaction {
-
             Uni.combine().all().unis(clientUni, userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
                 // Obtain client and user
                 val client = tuple.item1
-                val user = tuple.item2
-                val brand = tuple.item3
+                user = tuple.item2 ?: throw InvalidUserException()
+                brand = tuple.item3 ?: throw InvalidIdException("brand")
+
 
                 if (client == null) {
                     throw InvalidIdException("client")
-                } else if (brand == null) {
-                    throw InvalidIdException("brand")
                 }
 
                 clientName = client.name
-                userName = user.name
 
                 request.requester = user
                 request.client = client
                 request.brand = brand
 
-                requestRepository.persistAndFlush(request)
-            }.onItem().transformToUni { _ ->
                 // Create RequestType instance
                 toRequestType(requestDto.type!!, request.brand.images)
-            }.onItem().transformToUni { requestType ->
+            }.onItem().transformToUni { type ->
+                requestType = type
+
+                plafondRepository.findById(user, brand)
+            }.onItem().transformToUni { plafond ->
+                if (plafond == null) {
+                    throw NotEnoughCreditsException()
+                }
+
+                if (requestType.cost != null) {
+                    if (plafond.amount < requestType.cost!!) {
+                        throw NotEnoughCreditsException()
+                    } else {
+                        plafond.amount -= requestType.cost!!
+                    }
+                }
+
+                requestRepository.persistAndFlush(request)
+            }.onItem().transformToUni { _ ->
                 // Create request
                 requestType.request = request
                 request.type = requestType
@@ -139,7 +159,7 @@ class RequestService {
                     Foi efetuado um novo pedido à Casa dos Reclamos pelo utilizador.
                     Resumo do pedido:
                     
-                    Comercial: $userName
+                    Comercial: ${user.name}
                     Cliente: $clientName
                     Tipo de pedido: ${getType(requestDto.type!!)}
                     
@@ -184,20 +204,20 @@ class RequestService {
         }
     }
 
-    fun cancel(requestId: Long, username: String): Uni<Response> {
+    fun cancel(requestId: Long, email: String): Uni<Response> {
         lateinit var roles: Set<Role>
 
         // TODO: Send mail
 
         return Panache.withTransaction {
-            userRepository.findByEmail(username).onItem().transformToUni { user ->
+            userRepository.findByEmail(email).onItem().transformToUni { user ->
                 roles = user.roles
 
                 requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
                     // Prevent other commercials from cancelling arbitrary requests
                     if (roles.contains(Role.ADMIN) || roles.contains(Role.CDR) || roles.contains(Role.MANAGER) || (roles.contains(
                             Role.COMMERCIAL
-                        ) && request.requester.name == username)
+                        ) && request.requester.name == email)
                     ) {
                         request.status = RequestStatus.CANCELLED
                         request.lastUpdate = Date()
@@ -224,9 +244,11 @@ class RequestService {
         println(file)
 
         return bannerRequests.onItem().transform { request ->
-            writer.printRecord(request.client.banner.name, request.client.id, request.client.name, getType(request.type), request.cost)
+            writer.printRecord(
+                request.client.banner.name, request.client.id, request.client.name, getType(request.type), request.cost
+            )
             request
-        }.collect().asList().onItemOrFailure().transform { _ , e ->
+        }.collect().asList().onItemOrFailure().transform { _, e ->
             writer.close(true)
 
             if (e != null) {
