@@ -16,11 +16,7 @@ import org.jboss.logging.Logger
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.DELETE
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
+import javax.ws.rs.*
 import javax.ws.rs.core.Response
 
 @Path("/brand")
@@ -49,6 +45,23 @@ class BrandController {
             logger.info("User ${id.principal.name} is adding brand \"$brand\"")
 
             return@transformToUni brandService.add(brand).onItem().transform { BrandDto(it) }
+        }
+    }
+
+    @PUT
+    @Path("/{id}/{name}")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Update a brand")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun updateBrand(@PathParam("id") brandId: Long, @PathParam("name") name: String) : Uni<BrandDto> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is changing brand with id ${brandId} to ${name}")
+
+            brandService.update(brandId, name).onItem().transform { BrandDto(it) }
         }
     }
 

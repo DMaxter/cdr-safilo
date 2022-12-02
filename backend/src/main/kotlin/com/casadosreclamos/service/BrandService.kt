@@ -44,7 +44,7 @@ class BrandService {
         return Panache.withTransaction {
             brandRepository.exists(brandName).onItem().transformToUni { value ->
                 return@transformToUni if (value) {
-                    throw AlreadyExistsException("Brand ")
+                    throw AlreadyExistsException("Brand")
                 } else {
                     brandRepository.persist(brand)
                 }
@@ -65,6 +65,32 @@ class BrandService {
                 brand.images.add(image)
 
                 imageRepository.persist(image)
+            }
+        }
+    }
+
+    fun update(id: Long, name: String): Uni<Brand> {
+        if (id <= 0) {
+            throw InvalidIdException("brand")
+        } else if (name.isEmpty()) {
+            throw InvalidNameException()
+        }
+
+        return Panache.withTransaction {
+            brandRepository.exists(name).onItem().transformToUni { value ->
+                if (value) {
+                    throw AlreadyExistsException("Brand")
+                }
+
+                brandRepository.findByIdWithImages(id).onItem().transform { brand ->
+                    if (brand == null) {
+                        throw InvalidIdException("brand")
+                    }
+
+                    brand.name = name
+
+                    brand
+                }
             }
         }
     }
