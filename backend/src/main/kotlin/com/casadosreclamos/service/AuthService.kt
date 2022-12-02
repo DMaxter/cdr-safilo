@@ -100,7 +100,7 @@ class AuthService {
         admin.credits = mutableSetOf()
 
         Panache.withTransaction {
-            userRepository.findByName(ADMIN_NAME).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
+            userRepository.findByEmail(ADMIN_NAME).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
                 if (user == null) {
                     return@transformToUni userRepository.persist(admin).onItemOrFailure()
                         .invoke { _: User?, error: Throwable? ->
@@ -128,7 +128,7 @@ class AuthService {
         cdr.credits = mutableSetOf()
 
         Panache.withTransaction {
-            userRepository.findByName(CDR_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
+            userRepository.findByEmail(CDR_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
                 if (user == null) {
                     return@transformToUni userRepository.persist(cdr).onItemOrFailure()
                         .invoke { _: User?, error: Throwable? ->
@@ -156,7 +156,7 @@ class AuthService {
         safilo.credits = mutableSetOf()
 
         Panache.withTransaction {
-            userRepository.findByName(SAFILO_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
+            userRepository.findByEmail(SAFILO_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
                 if (user == null) {
                     return@transformToUni userRepository.persist(safilo).onItemOrFailure()
                         .invoke { _: User?, error: Throwable? ->
@@ -252,7 +252,7 @@ class AuthService {
             throw InvalidCredentialsException()
         }
 
-        return Panache.withTransaction { userRepository.findByName(credentials.email!!) }.onItem().ifNull()
+        return Panache.withTransaction { userRepository.findByEmail(credentials.email!!) }.onItem().ifNull()
             .failWith { InvalidCredentialsException() }.onItem().ifNotNull().transformToUni { user ->
                 if (!BcryptUtil.matches(credentials.password!!, user.password)) {
                     Uni.createFrom().failure(InvalidCredentialsException())
@@ -286,7 +286,7 @@ class AuthService {
         ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
 
         return Panache.withTransaction {
-            userRepository.findByName(username).onItem().ifNotNull().transformToUni { user ->
+            userRepository.findByEmail(username).onItem().ifNotNull().transformToUni { user ->
                 val token = PasswordToken()
                 token.id = PasswordTokenId()
                 token.id.user = user.email
@@ -339,7 +339,7 @@ class AuthService {
         val tokenHashed = sha512(tryToken.toByteArray())
 
         return Panache.withTransaction {
-            val userUni = userRepository.findByName(username)
+            val userUni = userRepository.findByEmail(username)
             val tokenUni = tokenRepository.findById(username, tokenHashed)
 
             Uni.combine().all().unis(userUni, tokenUni).asTuple().onItem().transformToUni { tuple ->

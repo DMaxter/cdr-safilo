@@ -95,7 +95,7 @@ class RequestService {
         lateinit var userName: String
 
         val clientUni = clientRepository.findById(requestDto.clientId!!)
-        val userUni = userRepository.findByName(username)
+        val userUni = userRepository.findByEmail(username)
         val brandUni = brandRepository.findByIdWithImages(requestDto.brand!!.id!!)
 
         return Panache.withTransaction {
@@ -190,7 +190,7 @@ class RequestService {
         // TODO: Send mail
 
         return Panache.withTransaction {
-            userRepository.findByName(username).onItem().transformToUni { user ->
+            userRepository.findByEmail(username).onItem().transformToUni { user ->
                 roles = user.roles
 
                 requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->

@@ -36,14 +36,14 @@ class UserService {
 
     fun getInfo(user: String): Uni<User> {
         return Panache.withTransaction {
-            userRepository.findByNameWithCredits(user)
+            userRepository.findByEmailWithCredits(user)
         }
     }
 
     @Throws(InvalidCredentialsException::class)
     fun changePassword(username: String, old: String, new: String): Uni<Response> {
         return Panache.withTransaction {
-            userRepository.findByName(username).onItem().transform { user ->
+            userRepository.findByEmail(username).onItem().transform { user ->
                 return@transform if (BcryptUtil.matches(old, user.password)) {
                     user.password = BcryptUtil.bcryptHash(new)
 
@@ -69,7 +69,7 @@ class UserService {
         var user: User? = null
         var brand: Brand? = null
 
-        val userUni = userRepository.findByNameWithCredits(userId)
+        val userUni = userRepository.findByEmailWithCredits(userId)
         val brandUni = brandRepository.findById(brandId)
 
         return Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
