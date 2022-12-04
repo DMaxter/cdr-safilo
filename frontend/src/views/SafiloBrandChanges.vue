@@ -66,6 +66,7 @@
         <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="330" style="width: 600px;" class="elevation-1 my-header-style mt-3">
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="currentItem = item; toDelete = true, dialog1 = true">mdi-delete</v-icon>
+            <v-icon @click="currentItem = item; dialog2 = true">mdi-pen</v-icon>
           </template>
     </v-data-table>
             </v-row>
@@ -135,6 +136,55 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="dialog2"
+      persistent
+      content-class="rounded-0"
+      max-width="500px"
+    >
+  
+      <v-card tile>
+        <v-card-title class="justify-center">
+          <span class="text-h5" v-show="!added && !failed"> Editar nome da marca </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <span class="text-h5" v-show="added"> Nome da marca alterado com sucesso! </span>
+              <span class="text-h5" v-show="failed"> Ocorreu um erro a alterar o nome da marca </span>
+              <span class="text-h7 mt-5" v-show="!added && !failed">Nome atual da marca: {{this.currentItem.name}}</span>
+              <v-col
+                cols="8"
+              >
+                <v-text-field
+                  label="Novo nome da marca"
+                  required
+                  v-model="brandName"
+                  v-show="!added && !failed"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog2 = false; brandName = null; added = false"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            v-show="!added && !failed && !toDelete && !toDelete2"
+            @click="editBrand()"
+          >
+            Alterar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
             </v-row>
             <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 62px;">
@@ -180,8 +230,9 @@ export default {
 data () {
       return {
         dialog1: false,
+        dialog2: false,
         store,
-        currentItem: null,
+        currentItem: "",
         myImage2: require('@/assets/logologo1.png'),
         desserts: [
           {
@@ -267,6 +318,27 @@ data () {
         this.toDelete = false
         this.toDelete2 = true
       } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+    editBrand: async function () {
+      try {
+        var id = null
+        this.allBrands.forEach(element => {
+          if(element.name == this.currentItem.name){
+            id = element.id
+          }
+        });
+        await Backend.updateBrand(id, this.brandName)
+        this.allBrands = await Backend.getBrands()
+        this.desserts2 = []
+        this.allBrands.forEach(element => {
+          this.desserts2.push({ name: element.name })
+        });
+        this.added = true
+      } catch (error) {
+        this.failed = true
         // TODO: Show something
         console.error(error)
       }

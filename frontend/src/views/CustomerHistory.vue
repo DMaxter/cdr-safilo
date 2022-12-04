@@ -371,15 +371,6 @@ data () {
         var date = element.created
         date = date.slice(0, 10)
         element.created = date
-          var brands = null
-          if(element.type.type == "OneFace"){
-            brands = [element.type.cover.brand.name]
-          } else if(element.type.type == "TwoFaces"){
-            brands = [element.type.cover.brand.name, element.type.back.brand.name]
-          } else if(element.type.type == "RightShowcase" || element.type.type == "LeftShowcase"){
-            brands = [element.type.top.brand.name, element.type.bottom.brand.name, element.type.left.brand.name, element.type.right.brand.name, element.type.side.brand.name]
-          }
-          element.brands = brands
       });
       console.log(this.requests)
     },
@@ -422,7 +413,7 @@ data () {
           },
           { text: "", value: "actions", sortable: false, class: 'my-header-style'},
           { text: "", value: "modelo", align: ' d-none', sortable: false },
-          { text: "", value: "brands", align: ' d-none', sortable: false, filter: this.marcasFilter},
+          { text: "", value: "brand.name", align: ' d-none', sortable: false, filter: this.marcasFilter},
           { text: "", value: "material", align: ' d-none', sortable: false },
           { text: "", value: "dimensões", align: ' d-none', sortable: false },
         ]
@@ -444,7 +435,7 @@ data () {
         store.pedidoAtual = {
             cod: item.id,
             data: item.created,
-            marca: [item.type.cover.brand.name],
+            marca: item.brand.name,
             modelo: item.type.type,
             material: [item.type.cover.material.name],
             dimensoes: [item.type.cover.measurements],
@@ -459,7 +450,7 @@ data () {
           store.pedidoAtual = {
             cod: item.id,
             data: item.created,
-            marca: [item.type.cover.brand.name, item.type.back.brand.name],
+            marca: item.brand.name,
             modelo: item.type.type,
             material: [item.type.cover.material.name, item.type.back.material.name],
             dimensoes: [item.type.cover.measurements, item.type.back.measurements],
@@ -479,7 +470,7 @@ data () {
           store.pedidoAtual = {
             cod: item.id,
             data: item.created,
-            marca: [item.type.top.brand.name, item.type.bottom.brand.name, item.type.left.brand.name, item.type.right.brand.name, item.type.side.brand.name],
+            marca: item.brand.name,
             modelo: item.type.type,
             material: [item.type.top.material.name, item.type.bottom.material.name, item.type.left.material.name, item.type.right.material.name, item.type.side.material.name],
             dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements, item.type.side.measurements],

@@ -60,20 +60,7 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-0">
-            <v-col cols="auto" >
-          <v-select style="width: 257px; border-radius: 0px"
-          :items="brands"
-          v-model="brand"
-          label="Marca"
-          dense
-          outlined
-          hide-details
-          v-on:change="loadImages"
-          ></v-select>
-          </v-col>
-          </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-5 mb-3">
+          <v-row justify="center" align="center" class="d-flex flex-column mt-12 mb-3">
                 Medidas (cm)
            </v-row>
            <v-row no-gutters justify="center" align="center" class="mt-4">
@@ -189,7 +176,7 @@
       </v-card>
     </v-dialog>
             <v-col cols="auto">
-            <v-img :src="myImage" contain height="80px" width="80px" @click.stop="dialog = true"></v-img>
+            <v-img :src="myImage" contain height="80px" width="80px" @click.stop="loadImages(); dialog = true"></v-img>
             </v-col>
             <v-col cols=3> 
               <v-row justify="center" align="start" class="d-flex flex-column">
@@ -204,7 +191,7 @@
             <v-col cols="2">
             </v-col>
            </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 79px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click = "$router.push('orderClient')"
@@ -334,6 +321,7 @@ export default {
       }
     },
     loadImages() {
+      this.brand = store.currentBrand
       this.allBrands.forEach(element => {
           if(this.brand == element.name){
             this.images = element.images

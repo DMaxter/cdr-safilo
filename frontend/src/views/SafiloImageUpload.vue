@@ -342,7 +342,7 @@ methods: {
               } else { 
                 link = String(this.image)
               }
-              await Backend.addImage(element.id, [link])
+              await Backend.addImage(element.id, link)
               this.getBrands()
             }
           });

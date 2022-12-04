@@ -267,12 +267,12 @@ export default {
         amount: store.quantity,
         observations: this.observacoes,
         application: store.application,
+        brand: {
+              id: store.currentBrandId[0],
+            },
         type: {
           type: "OneFace",
           cover: {
-            brand: {
-              id: store.currentBrandId[0],
-            },
             image: { 
               id: store.images[0]
             },
@@ -292,12 +292,12 @@ export default {
         amount: store.quantity,
         observations: this.observacoes,
         application: store.application,
+        brand: {
+              id: store.currentBrandId[0],
+            },
         type: {
           type: "TwoFaces",
           cover: {
-            brand: {
-              id: store.currentBrandId[0],
-            },
             image: { 
               id: store.images[0]
             },
@@ -310,9 +310,6 @@ export default {
             }
           },
           back: {
-            brand: {
-              id: store.currentBrandId[1],
-            },
             image: { 
               id: store.images[1]
             },

@@ -168,7 +168,7 @@
             <v-col cols="auto" >
           <v-text-field style="width: 257px; pointer-events: none; border-radius: 0px;"
           label="Marca"
-          :value="store.pedidoAtual.marca[n]"
+          :value="store.pedidoAtual.marca"
           dense
           outlined
           hide-details

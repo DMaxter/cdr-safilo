@@ -218,7 +218,7 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="added1 = false; failed1 = false"> Adicionar preço por medida </v-btn>
+      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getMaterials(); added1 = false; failed1 = false"> Adicionar preço por medida </v-btn>
       </template>
       <v-card tile>
         <v-card-title class="justify-center">
@@ -234,7 +234,7 @@
               <span class="text-h5"> Ocorreu um erro a adicionar o preço </span> 
               </v-col>
               <v-col
-                cols="4"
+                cols="6"
                 v-show="!added1 && !failed1"
               >
                 <v-text-field
@@ -244,7 +244,7 @@
                 ></v-text-field>
               </v-col>
               <v-col
-                cols="4"
+                cols="6"
                 v-show="!added1 && !failed1"
               >
                 <v-text-field
@@ -254,7 +254,18 @@
                 ></v-text-field>
               </v-col>
               <v-col
-                cols="8"
+                cols="6"
+                v-show="!added1 && !failed1"
+              >
+                <v-autocomplete
+                  label="Material"
+                  :items=available
+                  required
+                  v-model="materialToAdd"
+                ></v-autocomplete>
+              </v-col>
+              <v-col
+                cols="6"
                 v-show="!added1 && !failed1"
               >
                 <v-text-field
@@ -263,6 +274,7 @@
                   v-model="price"
                 ></v-text-field>
               </v-col>
+
             </v-row>
           </v-container>
         </v-card-text>
@@ -270,7 +282,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog3 = false; height = null; width = null; price = null"
+            @click="dialog3 = false; height = null; width = null; price = null, materialToAdd = null"
           >
             Voltar
           </v-btn>
@@ -293,7 +305,7 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getPrices(); added2 = false, failed2 = false"> Alterar preço de medida </v-btn>
+      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getPrices(); getMaterials(); added2 = false, failed2 = false"> Alterar preço de medida </v-btn>
       </template>
       <v-card tile>
         <v-card-title class="justify-center">
@@ -326,10 +338,11 @@
                 ></v-select>
               </v-col>
               <v-col
-                cols="8"
+                cols="12"
                 v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
               >
               Preço atual da medida: {{currPrice}}
+              Material: {{currMat}}
             </v-col>
               <v-col
                 cols="8"
@@ -426,6 +439,7 @@ data () {
         dialog4: false,
         store,
         materialName: null,
+        materialToAdd: null,
         newMaterialName: null,
         allMaterials: null,
         available: [],
@@ -446,6 +460,7 @@ data () {
         pricesList: [],
         allPrices: null,
         currPrice: 0,
+        currMat: ""
       }
     },
 
@@ -465,16 +480,27 @@ methods: {
 
     getPriceForSpecific(){
       var measures = this.picked.split(' x ')
+      var id = null;
       this.allPrices.forEach(element => {
         if(element.height == measures[0] && element.width == measures[1]){
           this.currPrice = element.cost
+          id = element.material
         }
+      })
+      this.allMaterials.forEach(element => {
+        if(element.id == id)
+          this.currMat = element.name
       })
     },
 
     addPrice: async function () {
       try {
-        var costToAdd = {width: this.width, height: this.height, cost: this.price}
+        var matId = null;
+        this.allMaterials.forEach(material => {
+          if(this.materialToAdd == material.name)
+            matId = material.id
+        })
+        var costToAdd = {width: this.width, height: this.height, material: matId, cost: this.price}
         console.log(costToAdd)
         await Backend.addPrice(costToAdd)
         this.added1 = true
@@ -549,15 +575,17 @@ methods: {
       try {
         this.allPrices.forEach(async element => {
         if(element.height == measures[0] && element.width == measures[1]){
-          costToChange = {width: element.width, height: element.height, cost: this.newPrice}
+          costToChange = {width: element.width, height: element.height, material: element.material, cost: this.newPrice}
         }
       })
       console.log(costToChange)
           await Backend.updatePrice(costToChange);
           this.getPrices();
+        this.added2 = true;
       } catch (error) {
         // TODO: Show something
         console.error(error)
+        this.failed2 = true
       }
     },
 

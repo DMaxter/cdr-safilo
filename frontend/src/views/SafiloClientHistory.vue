@@ -233,7 +233,7 @@
             {text: "Terminado", value: "DONE"},
             {text: "Cancelado", value: "CANCELLED"},
           ],
-          marcasList: [],
+          marcasList: [{text: "Qualquer", value: null}],
           // Filter models.
           marcasFilterValue: null,
           estadosFilterValue: null,
@@ -362,15 +362,6 @@
           var date = element.created
           date = date.slice(0, 10)
           element.created = date
-            var brands = null
-            if(element.type.type == "OneFace"){
-              brands = [element.type.cover.brand.name]
-            } else if(element.type.type == "TwoFaces"){
-              brands = [element.type.cover.brand.name, element.type.back.brand.name]
-            } else if(element.type.type == "RightShowcase" || element.type.type == "LeftShowcase"){
-              brands = [element.type.top.brand.name, element.type.bottom.brand.name, element.type.left.brand.name, element.type.right.brand.name, element.type.side.brand.name]
-            }
-            element.brands = brands
         });
         this.dessertFilterValue = store.currentClient.name
       },

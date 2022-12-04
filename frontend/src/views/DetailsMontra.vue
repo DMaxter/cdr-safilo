@@ -380,7 +380,7 @@
             <v-col cols="5" >
           <v-text-field style="pointer-events: none; border-radius: 0px;"
           label="Marca"
-          :value = store.pedidoAtual.marca[n-1]
+          :value = store.pedidoAtual.marca
           dense
           hide-details
           outlined

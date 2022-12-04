@@ -403,12 +403,13 @@ export default {
         amount: store.quantity,
         observations: store.observations,
         application: store.application,
+        brand: {
+              id: store.currentBrandId[0],
+            },
         type: {
           type: "RightShowcase",
           top: {
-            brand: {
-              id: store.currentBrandId[0],
-            },
+            
             image: { 
               id: store.images[0]
             },
@@ -421,9 +422,7 @@ export default {
             }
           },
           bottom: {
-            brand: {
-              id: store.currentBrandId[1],
-            },
+           
             image: { 
               id: store.images[1]
             },
@@ -436,9 +435,7 @@ export default {
             }
           },
           left: {
-            brand: {
-              id: store.currentBrandId[2],
-            },
+            
             image: { 
               id: store.images[2]
             },
@@ -451,9 +448,7 @@ export default {
             }
           },
           right: {
-            brand: {
-              id: store.currentBrandId[3],
-            },
+            
             image: { 
               id: store.images[3]
             },
@@ -466,9 +461,7 @@ export default {
             }
           },
           side: {
-            brand: {
-              id: store.currentBrandId[4],
-            },
+            
             image: { 
               id: store.images[4]
             },
@@ -488,12 +481,13 @@ export default {
         amount: store.quantity,
         observations: store.observations,
         application: store.application,
+        brand: {
+              id: store.currentBrandId[0],
+            },
         type: {
           type: "LeftShowcase",
           top: {
-            brand: {
-              id: store.currentBrandId[0],
-            },
+           
             image: { 
               id: store.images[0]
             },
@@ -506,9 +500,7 @@ export default {
             }
           },
           bottom: {
-            brand: {
-              id: store.currentBrandId[1],
-            },
+           
             image: { 
               id: store.images[1]
             },
@@ -521,9 +513,7 @@ export default {
             }
           },
           left: {
-            brand: {
-              id: store.currentBrandId[2],
-            },
+            
             image: { 
               id: store.images[2]
             },
@@ -536,9 +526,7 @@ export default {
             }
           },
           right: {
-            brand: {
-              id: store.currentBrandId[3],
-            },
+           
             image: { 
               id: store.images[3]
             },
@@ -551,9 +539,7 @@ export default {
             }
           },
           side: {
-            brand: {
-              id: store.currentBrandId[4],
-            },
+           
             image: { 
               id: store.images[4]
             },

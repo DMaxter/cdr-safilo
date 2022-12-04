@@ -169,29 +169,7 @@
             <v-card elevation="12" color="#FAFAFA" height="400" width="400" tile>
               <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0">
               <v-col cols="auto" class="ml-4"> Data:  {{store.pedidoAtual.data}}</v-col>
-              <v-col cols="auto" class="ml-4"> Marca: </v-col>
-              <v-slide-group
-                multiple
-                show-arrows
-                :class="{'ml-4': theme}"
-              >
-                <v-slide-item
-                  v-for="n in store.pedidoAtual.marca.length"
-                  :key="n"
-                  v-slot="{ active, toggle }"
-                >
-                  <v-btn
-                    :input-value="active"
-                    active-class="purple white--text"
-                    class="ml-5 mr-5"
-                    depressed
-                    dense
-                    @click="toggle"
-                  >
-                    {{store.pedidoAtual.marca[n-1]}}
-                  </v-btn>
-                </v-slide-item>
-              </v-slide-group>
+              <v-col cols="auto" class="ml-4"> Marca: {{store.pedidoAtual.marca}} </v-col>
               <v-col cols="auto" class="ml-4"> Modelo: {{store.pedidoAtual.modelo}} </v-col>
               <v-col cols="auto" class="ml-4"> Material:</v-col>
               <v-slide-group
@@ -346,7 +324,7 @@
           <h3 class="mb-6"> Face {{store.pedidoAtual.marca.length}}</h3>
           <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[0]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[0]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[0].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[0].width}} cm </v-col>
@@ -402,7 +380,7 @@
           <h3 class="mb-6"> Face 1</h3>
           <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[0]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[0]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[0].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[0].width}} cm </v-col>
@@ -444,7 +422,7 @@
           <h3 class="mb-6"> Face 2 </h3>
           <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[1]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[1]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[1].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[1].width}} cm </v-col>
@@ -500,7 +478,7 @@
           <h3 class="mb-6"> Face A</h3>
             <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[0]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[0]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[0].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[0].width}} cm </v-col>
@@ -542,7 +520,7 @@
           <h3 class="mb-6"> Face B </h3>
             <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[1]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[1]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[1].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[1].width}} cm </v-col>
@@ -577,7 +555,7 @@
           <h3 class="mb-6"> Face C </h3>
           <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[2]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[2]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[2].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[2].width}} cm </v-col>
@@ -612,7 +590,7 @@
           <h3 class="mb-6"> Face D </h3>
           <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[3]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[3]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[3].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[3].width}} cm </v-col>
@@ -647,7 +625,7 @@
           <h3 class="mb-6"> Face E </h3>
           <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
-              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca[4]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[4]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[4].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[4].width}} cm </v-col>
@@ -738,6 +716,8 @@ data () {
     },
 async created(){
   console.log(store.pedidoAtual)
+  console.log(store.address)
+  console.log(store.postalCode)
   if(store.pedidoAtual.modelo == "OneFace"){
     this.req1 = true;
   } else if(store.pedidoAtual.modelo == "TwoFaces"){

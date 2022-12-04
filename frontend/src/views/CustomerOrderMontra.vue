@@ -237,7 +237,20 @@
           <v-row
             align="center"
             justify="center"
+            class="d-flex flex-column"
           >
+          <v-col cols="4" class="pa-0 pb-2" >
+          <v-select
+          style="border-radius: 0px;"
+          :items="brands"
+          label="Marca"
+          dense
+          hide-details
+          outlined
+          v-model="brand"
+          v-on:change="loadImages()"
+        ></v-select>
+        </v-col>
           <v-card
             flat
             tile
@@ -258,7 +271,7 @@
             justify="center"
           >
         <v-card
-          height="400"
+          height="350"
           width="500"
           outlined
           style="background-color: rgba(235,235,238, 0.4);"
@@ -268,9 +281,9 @@
               <h2> Face {{faces[n-1]}} </h2>
             </v-col>
           <v-row justify="center" align="center" class="d-flex">
-            <v-col cols="5" >
+            <v-col cols="11" >
           <v-select
-          style="border-radius: 0px;"
+          style="border-radius: 0px; width: 200px"
           :items="materials"
           label="Material"
           dense
@@ -279,18 +292,7 @@
           v-model="material[`material`+n]"
         ></v-select>
         </v-col>
-          <v-col cols="5" >
-          <v-select
-          style="border-radius: 0px;"
-          :items="brands"
-          label="Marca"
-          dense
-          hide-details
-          outlined
-          v-model="brand[`brand`+n]"
-          v-on:change="loadImages()"
-        ></v-select>
-        </v-col>
+        
           </v-row>
             <v-row justify="center" align="center" class="d-flex">
                  <v-dialog
@@ -369,30 +371,34 @@
               </v-row>
             </v-col>
             </v-row>
-            <v-col cols="4" class="mt-0">
+            <v-col cols="12" class="mt-0">
               <v-row justify="center" align="start" class="d-flex flex-column">
                 <v-col>
               Medidas (cm)
               </v-col>
-              <v-col class="pa-0">
-            <v-text-field style="width: 200px; border-radius: 0px;"
+            </v-row>
+              <v-row justify="center" class="d-flex flex-row">
+              <v-col class="pa-0" cols="4">
+            <v-text-field style="border-radius: 0px;"
             label="Largura"
+            class="mr-4"
             dense
             outlined
             hide-details
             v-model = "widths[`width`+n]"
           ></v-text-field>
               </v-col>
-            <v-col class="pa-0 mt-3">
-            <v-text-field style="width: 200px; border-radius: 0px;"
+            <v-col class="pa-0" cols="4">
+            <v-text-field style="border-radius: 0px;"
             label="Altura"
+            class="ml-4"
             outlined
             dense
             hide-details
             v-model="heights[`height`+n]"
           ></v-text-field>
               </v-col>
-              </v-row>
+            </v-row>
             </v-col>
           </v-row>
         </v-card>
@@ -504,7 +510,7 @@ export default {
     materials: [],
     material: { material1: null, material2: null, material3: null, material4: null, material5: null, },
     brands: [],
-    brand: { brand1: null, brand2: null, brand3: null, brand4: null, brand5: null, },
+    brand: null,
     widths: { width1: null, width2: null, width3: null, width4: null, width5: null},
     heights: { height1: null, height2: null, height3: null, height4: null, height5: null},
   }),
@@ -512,17 +518,15 @@ export default {
     nextScreen () {
       var uniqueBrands = []
       var costPerBrand = new Map()
-        for (let n = 1; n < 6; n++) {
           this.allBrands.forEach(element => {
-          if(element.name == this.brand[`brand`+n]){
+          if(element.name == this.brand){
             store.currentBrandId.push(element.id)
-            if(!uniqueBrands.includes(this.brand[`brand`+n])){
-            uniqueBrands.push(this.brand[`brand`+n])
-            costPerBrand.set(this.brand[`brand`+n], 0)
+            if(!uniqueBrands.includes(this.brand)){
+            uniqueBrands.push(this.brand)
+            costPerBrand.set(this.brand, 0)
           }
           }
         });
-        }
 
       var cost = 0;
       
@@ -535,7 +539,7 @@ export default {
             store.dimensions.push({width: this.widths[`width`+n], height: this.heights[`height`+n]})
             var currCost = costPerBrand.get(this.brand[`brand`+n])
             currCost += (((this.widths[`width`+n]/100) * (this.heights[`height`+n]/100)) * price)
-            costPerBrand.set(this.brand[`brand`+n], currCost)
+            costPerBrand.set(this.brand, currCost)
           }
         });
         }
@@ -550,13 +554,11 @@ export default {
         this.onboarding = this.onboarding + 1 === this.length
           ? 0
           : this.onboarding + 1
-        this.images = []
       },
       prev () {
         this.onboarding = this.onboarding - 1 < 0
           ? this.length - 1
           : this.onboarding - 1
-          this.images = []
       },
       getRefs () {
         store.facesDefault.forEach(element => {
@@ -594,9 +596,9 @@ export default {
       }
     },
     loadImages() { 
-      var n = this.onboarding + 1
+      this.images = []
       this.allBrands.forEach(element => {
-          if(this.brand[`brand`+n] == element.name){
+          if(this.brand == element.name){
             this.images = element.images
             var filteredImages = []
               this.images.forEach(image => {

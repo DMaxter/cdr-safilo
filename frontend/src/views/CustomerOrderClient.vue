@@ -54,12 +54,12 @@
                 </v-btn-toggle>
               </v-menu>
             </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mb-11 mt-5">
+            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
               Confirmar a morada de entrega
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
               <v-data-table :headers="headers" :items="desserts2" fixed-header disable-pagination
-                :search="dessertFilterValue" tile item-key="name" hide-default-footer height="370" style="width: 750px;"
+                :search="dessertFilterValue" tile item-key="name" hide-default-footer height="340" style="width: 750px;"
                 class="elevation-1 my-header-style">
                 <template v-slot:top>
                   <v-container fluid>
@@ -140,6 +140,7 @@ export default {
       myImage: require('@/assets/logologo1.png'),
       items: [],
       selectedAdress: null,
+      dessertFilterValue: "",
       allClients: null,
       desserts2: [],
       clientName: null,

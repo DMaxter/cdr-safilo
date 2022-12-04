@@ -117,6 +117,15 @@ export default class Backend {
     })
   }
 
+  static async updateBrand(id, brand) {
+    return httpClient.put(`/brand/${id}/${brand}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async deleteBrand(id) {
     return httpClient.delete(`/brand/${id}`).then(response => {
       return response.data
