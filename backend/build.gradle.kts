@@ -31,6 +31,9 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy-reactive")
     implementation("org.apache.camel.quarkus:camel-quarkus-csv")
+    implementation("io.quarkus:quarkus-flyway")
+    implementation("org.flywaydb:flyway-mysql")
+    implementation("io.quarkus:quarkus-jdbc-mysql") // Only to use with flyway
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 }
