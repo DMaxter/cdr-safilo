@@ -123,21 +123,6 @@ CREATE TABLE User_roles
     roles      VARCHAR(255) NULL
 );
 
-CREATE TABLE flyway_schema_history
-(
-    installed_rank INT                     NOT NULL,
-    version        VARCHAR(50) NULL,
-    `description`  VARCHAR(200)            NOT NULL,
-    type           VARCHAR(20)             NOT NULL,
-    script         VARCHAR(1000)           NOT NULL,
-    checksum       INT NULL,
-    installed_by   VARCHAR(100)            NOT NULL,
-    installed_on   timestamp DEFAULT NOW() NOT NULL,
-    execution_time INT                     NOT NULL,
-    success        BIT(1)                  NOT NULL,
-    CONSTRAINT PK_FLYWAY_SCHEMA_HISTORY PRIMARY KEY (installed_rank)
-);
-
 ALTER TABLE Plafond
     ADD PRIMARY KEY (brand_id, user_email);
 
@@ -174,8 +159,6 @@ CREATE INDEX FKkthxhlugti4vdjg5uq4ietydk ON RequestType (back_id);
 CREATE INDEX FKlnocx4laar56a4p71ggdagcd8 ON RequestType (cover_id);
 
 CREATE INDEX FKt6mphkrxvfdkfdct8aa30wkc0 ON Request (client_id);
-
-CREATE INDEX flyway_schema_history_s_idx ON flyway_schema_history (success);
 
 ALTER TABLE RequestType
     ADD CONSTRAINT FK1ixbm33u6v5g9fo32oowww5s0 FOREIGN KEY (left_id) REFERENCES RequestSlot (id) ON UPDATE RESTRICT ON DELETE RESTRICT;
