@@ -213,7 +213,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.push('orderClient')"
+              @click = "$router.push('order')"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -364,6 +364,58 @@ export default {
     created: async function () {
       this.getMaterials()
       this.getBrands()
+      store.selectedMaterial = []
+      store.currentBrandId = []
+      store.dimensions = []
+      store.images = []
+      store.isActive1 = false
+      store.isActive2 = false
+      store.isActive3 = false
+      store.face1 = null
+      store.face2 = null
+      store.address = null
+      store.uniqueBrands = null
+      store.quantity = null
+      store.observations = null
+      store.currentCost = null
+      store.application = false
+      store.costPerBrand = null
+      store.pedidoAtual = {
+        cod: null,
+        data: null,
+        marca: null,
+        modelo: null,
+        material: null,
+        dimensoes: null,
+        estado: null,
+        images: null,
+        quantity: null,
+        observations: null,
+        cost: null,
+        application: null
+      },
+        store.facesDefault = [
+          {
+            face: "A",
+            link: require('@/assets/A.png'),
+          },
+          {
+            face: "B",
+            link: require('@/assets/B.png'),
+          },
+          {
+            face: "C",
+            link: require('@/assets/C.png'),
+          },
+          {
+            face: "D",
+            link: require('@/assets/D.png'),
+          },
+          {
+            face: "E",
+            link: require('@/assets/E.png'),
+          },
+        ]
     }
 };
 

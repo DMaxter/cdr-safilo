@@ -259,9 +259,7 @@ export default {
   }),
 
   created: async function() {
-    if(store.currentUser == null){
-        store.currentUser = await Backend.getProfile()
-      }
+      store.currentUser = await Backend.getProfile()
       if(store.currentUser.roles[0] == 'COMMERCIAL' || store.currentUser.roles[0] == 'ADMIN'){ 
         this.role = true
       }

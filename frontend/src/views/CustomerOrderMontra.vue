@@ -444,7 +444,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.push('orderClient')"
+              @click = "$router.push('order')"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -612,6 +612,28 @@ export default {
     },
      created: async function () {
       store.images = []
+      store.facesDefault = [
+          {
+            face: "A",
+            link: require('@/assets/A.png'),
+          },
+          {
+            face: "B",
+            link: require('@/assets/B.png'),
+          },
+          {
+            face: "C",
+            link: require('@/assets/C.png'),
+          },
+          {
+            face: "D",
+            link: require('@/assets/D.png'),
+          },
+          {
+            face: "E",
+            link: require('@/assets/E.png'),
+          },
+        ]
       this.getMaterials()
       this.getBrands()
     }

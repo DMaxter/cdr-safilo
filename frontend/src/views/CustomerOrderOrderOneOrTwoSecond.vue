@@ -194,7 +194,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 79px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.push('orderClient')"
+              @click = "$router.push('order2')"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -273,7 +273,6 @@ export default {
         var cost2 = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
         store.currentCost = store.currentCost + (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
         store.dimensions.push({width: this.width, height: this.height})
-        store.currentBrand = [store.currentBrand,this.brand]
         this.allBrands.forEach(element => {
           if(element.name == this.brand){
             store.currentBrandId.push(element.id)
@@ -322,6 +321,7 @@ export default {
     },
     loadImages() {
       this.brand = store.currentBrand
+      console.log(this.brand)
       this.allBrands.forEach(element => {
           if(this.brand == element.name){
             this.images = element.images
@@ -338,6 +338,9 @@ export default {
     created: async function () {
       this.getMaterials()
       this.getBrands()
+      store.images = [store.images[0]]
+      store.dimensions = [store.dimensions[0]]
+      store.selectedMaterial = [store.selectedMaterial[0]]
     }
 };
 

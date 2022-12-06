@@ -353,6 +353,9 @@
               <h3> Data: </h3>
               {{store.pedidoAtual.data}}
 
+              <h3> Custo: </h3>
+              {{store.pedidoAtual.cost}}
+
             </v-col>
         </v-row>
           </v-card>         
@@ -450,6 +453,9 @@
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Data: </h3>
               {{store.pedidoAtual.data}}
+
+              <h3> Custo: </h3>
+              {{store.pedidoAtual.cost}}
 
             </v-col>
         </v-row>
@@ -653,6 +659,9 @@
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Data: </h3>
               {{store.pedidoAtual.data}}
+
+              <h3> Custo: </h3>
+              {{store.pedidoAtual.cost}}
 
             </v-col>
         </v-row>

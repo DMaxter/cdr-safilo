@@ -54,12 +54,12 @@
                 </v-btn-toggle>
               </v-menu>
             </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mb-8 mt-5">
+            <v-row justify="center" align="center" class="d-flex flex-column mb-2 mt-2">
 
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-              <v-data-table :headers="headers" :items="allClients" fixed-header disable-pagination
-                tile item-key="name" hide-default-footer height="260" style="width: 600px;"
+              <v-data-table :headers="headers" :items="allClients" fixed-header
+                tile item-key="id" height="260" style="width: 600px;"
                 class="elevation-1 my-header-style">
                 <template v-slot:top>
 
@@ -221,7 +221,7 @@
                 </template>
               </v-row>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 80px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 60px;">
               <v-col cols="auto" class="pl-4">
                 <v-btn @click="$router.push('profile')" class="d-flex flex-column customGradient" small dark tile>
                   <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>

@@ -305,7 +305,7 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getPrices(); getMaterials(); added2 = false, failed2 = false"> Alterar preço de medida </v-btn>
+      <v-btn height="60" width="500" tile class="mb-3 customGradient" dark v-bind="attrs" v-on="on" @click="getPrices(), getMaterials(), added2 = false, failed2 = false"> Alterar preço de medida </v-btn>
       </template>
       <v-card tile>
         <v-card-title class="justify-center">
@@ -480,16 +480,14 @@ methods: {
 
     getPriceForSpecific(){
       var measures = this.picked.split(' x ')
-      var id = null;
+      var aux = measures[1].split(' : ')
+      console.log(measures)
+      console.log(aux)
       this.allPrices.forEach(element => {
-        if(element.height == measures[0] && element.width == measures[1]){
+        if(element.height == measures[0] && element.width == aux[0] && element.material == this.allMaterials.find(x => x.name == aux[1]).id){
           this.currPrice = element.cost
-          id = element.material
+          this.currMat = aux[1]
         }
-      })
-      this.allMaterials.forEach(element => {
-        if(element.id == id)
-          this.currMat = element.name
       })
     },
 
@@ -529,7 +527,7 @@ methods: {
         this.allPrices = await Backend.getPrices()
         this.pricesList = []
         this.allPrices.forEach(element => {
-          this.pricesList.push(element.height + " x " + element.width)
+          this.pricesList.push(element.height + " x " + element.width + " : " + this.allMaterials.find(x => x.id === element.material).name)
         });
       } catch (error) {
         // TODO: Show something
@@ -554,10 +552,11 @@ methods: {
 
     deletePrice: async function () {
       var measures = this.picked.split(' x ')
+      var aux = measures[1].split(' : ')
       try {
         this.allPrices.forEach(async element => {
-        if(element.height == measures[0] && element.width == measures[1]){
-          var costToRemove = {width: element.width, height: element.height, cost: element.cost}
+        if(element.height == measures[0] && element.width == aux[0] && element.material == this.allMaterials.find(x => x.name == aux[1]).id){
+          var costToRemove = {width: element.width, height: element.height, material: element.material, cost: element.cost}
           console.log(costToRemove)
           await Backend.deletePrice(costToRemove);
           this.getPrices();
@@ -571,10 +570,11 @@ methods: {
 
     updatePrice: async function () {
       var measures = this.picked.split(' x ')
+      var aux = measures[1].split(' : ')
       var costToChange = null
       try {
         this.allPrices.forEach(async element => {
-        if(element.height == measures[0] && element.width == measures[1]){
+          if(element.height == measures[0] && element.width == aux[0] && element.material == this.allMaterials.find(x => x.name == aux[1]).id){
           costToChange = {width: element.width, height: element.height, material: element.material, cost: this.newPrice}
         }
       })
@@ -606,7 +606,11 @@ methods: {
       }
     }
 
-}
+},
+created: async function () {
+  this.getMaterials();
+  this.getPrices();
+},
   }
 </script>
 

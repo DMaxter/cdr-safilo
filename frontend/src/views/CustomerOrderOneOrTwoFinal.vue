@@ -109,7 +109,7 @@
           <v-card elevation="2" outlined color="#FAFAFA" height="80" width="200" tile class="mt-5" style="width: 400px;">
             <v-row justify="center" align="center" class="d-flex flex-column">
             <v-col class="pa-0 pt-4">
-            Créditos a debitar: {{store.currentCost}} <v-icon>mdi-currency-eur</v-icon>
+            Créditos a debitar:
             </v-col>
              <v-col cols="auto" class="pa-0 pt-1">
               <v-slide-group
@@ -173,7 +173,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 62px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('orderClient')"
+              @click="$router.go(-1)"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -237,9 +237,15 @@ export default {
   failed: false,
   brandsWithPlafonds: [],
   brandCost: [],
+  allPrices: null,
+  allMaterials: null,
+  allBrands: null,
   }),
 
   async created () {
+    this.allPrices = await Backend.getPrices()
+    this.allMaterials = await Backend.getMaterials()
+    this.allBrands = await Backend.getBrands()
     if (store.face2 == null){
       this.facetas = [store.face1]
     } else {
@@ -251,11 +257,21 @@ export default {
         this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
       }
     });
-    var brandCosts = []
-    store.costPerBrand.forEach(function(value, key) {
-      brandCosts.push(key + ": " + value)
-      })
-      this.brandCost = brandCosts
+    if(store.dimensions.length == 1){
+      this.brandCost = [this.allBrands.find(x => x.id == store.currentBrandId[0]).name + ": " + this.allPrices.find(y => 
+      y.height = store.dimensions[0].height && y.width == store.dimensions[0].width && y.material == store.selectedMaterial[0]).cost]
+      var price3 = this.allPrices.find(y => 
+      y.height = store.dimensions[0].height && y.width == store.dimensions[0].width && y.material == store.selectedMaterial[0]).cost
+      store.currentCost = price3
+    } else { 
+      var price1 = this.allPrices.find(y => 
+      y.height = store.dimensions[0].height && y.width == store.dimensions[0].width && y.material == store.selectedMaterial[0]).cost
+      var price2 = this.allPrices.find(y => 
+      y.height = store.dimensions[1].height && y.width == store.dimensions[1].width && y.material == store.selectedMaterial[1]).cost
+      var sumPrices = Number(price1) + Number(price2)
+      this.brandCost = [this.allBrands.find(x => x.id == store.currentBrandId[0]).name + ": " + sumPrices]
+      store.currentCost = sumPrices
+    }
   },
 
   methods: {

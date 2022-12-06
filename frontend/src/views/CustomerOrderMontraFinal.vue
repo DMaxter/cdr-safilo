@@ -320,7 +320,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 137px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.push('orderClient')"
+              @click="$router.push('ABCfinal')"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -371,10 +371,16 @@ export default {
     brandCost: [],
     dialog: false,
     added: false,
-    failed: false
+    failed: false,
+    allPrices: null,
+  allMaterials: null,
+  allBrands: null,
   }),
   
   async created () {
+    this.allPrices = await Backend.getPrices()
+    this.allMaterials = await Backend.getMaterials()
+    this.allBrands = await Backend.getBrands()
     var currentUser = await Backend.getProfile()
     console.log(currentUser.credits)
     console.log(store.uniqueBrands)
@@ -383,14 +389,17 @@ export default {
         this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
       }
     });
-    console.log(this.brandsWithPlafonds)
-    var brandCosts = []
-    store.costPerBrand.forEach(function(value, key) {
-      console.log(key,value)  
-      brandCosts.push(key + ": " + value)
-      })
-      console.log(brandCosts)
-      this.brandCost = brandCosts
+    var actBrand = this.allBrands.find(x => x.id == store.currentBrandId[store.currentBrandId.length-1]).name
+    var costAcc = 0
+    for(var i = 0; i < 5; i ++){
+      var currValue = this.allPrices.find(y => 
+      y.height = store.dimensions[i].height && y.width == store.dimensions[i].width && y.material == store.selectedMaterial[i]).cost
+      costAcc +=  currValue
+    }
+    console.log(costAcc, actBrand)
+    this.brandCost = [ actBrand + ": " + costAcc]
+      store.currentCost = costAcc
+
   },
 
   methods: {
@@ -404,7 +413,7 @@ export default {
         observations: store.observations,
         application: store.application,
         brand: {
-              id: store.currentBrandId[0],
+              id: store.currentBrandId[store.currentBrandId.length-1],
             },
         type: {
           type: "RightShowcase",
@@ -482,7 +491,7 @@ export default {
         observations: store.observations,
         application: store.application,
         brand: {
-              id: store.currentBrandId[0],
+              id: store.currentBrandId[store.currentBrandId.length-1],
             },
         type: {
           type: "LeftShowcase",

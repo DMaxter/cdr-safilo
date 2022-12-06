@@ -170,7 +170,7 @@ export default {
     try {
       this.allClients = await Backend.getClients()
       this.allClients.forEach(element => {
-        this.desserts2.push({ name: element.name, fat: element.id })
+        this.desserts2.push({ name: element.name, fat: element.id, address: element.address, postalCode: element.postalCode})
       });
       store.selectedMaterial = []
       store.currentBrandId = []
@@ -245,6 +245,18 @@ export default {
         {
           text: 'Nome',
           value: 'name',
+          align: "center",
+          class: 'my-header-style'
+        },
+        {
+          text: 'Morada',
+          value: 'address',
+          align: "center",
+          class: 'my-header-style'
+        },
+        {
+          text: 'Cód. Postal',
+          value: 'postalCode',
           align: "center",
           class: 'my-header-style'
         },
