@@ -59,7 +59,7 @@
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
               <v-data-table :headers="headers" :items="desserts2" fixed-header disable-pagination
-                :search="dessertFilterValue" tile item-key="name" hide-default-footer height="340" style="width: 750px;"
+                :search="dessertFilterValue" tile item-key="id" hide-default-footer height="340" style="width: 750px;"
                 class="elevation-1 my-header-style">
                 <template v-slot:top>
                   <v-container fluid>
@@ -168,7 +168,7 @@ export default {
   },
   async created() {
     try {
-      this.allClients = await Backend.getClients()
+      this.allClients = await Backend.getClients();
       this.allClients.forEach(element => {
         this.desserts2.push({ name: element.name, fat: element.id, address: element.address, postalCode: element.postalCode})
       });

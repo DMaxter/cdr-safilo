@@ -231,7 +231,7 @@ export default {
         this.allUsers = await Backend.getUsers()
         this.allBrands = await Backend.getBrands()
         this.allUsers.forEach(element => {
-          this.userNames.push(element.name)
+          this.userNames.push(element.email)
         });
         this.allBrands.forEach(element => {
           this.brandNames.push(element.name)
@@ -267,7 +267,7 @@ export default {
       var currentUser = null
       var existingUser = false;
       this.allUsers.forEach(element => {
-        if(element.name == this.user){
+        if(element.email == this.user){
           existingUser = true;
           currentUser = element;
         }

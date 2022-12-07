@@ -78,7 +78,7 @@
         <v-card-text>
           <v-container>
             <v-row justify="center">
-              <v-data-table :headers="headers" :items="desserts2" fixed-header tile item-key="name" :search="heh" hide-default-footer height="260" style="width: 600px;">
+              <v-data-table :headers="headers" :items="desserts2" fixed-header tile item-key="fat" :search="heh" hide-default-footer height="260" style="width: 600px;">
           <template v-slot:top>
   
               <!-- v-container, v-col and v-row are just for decoration purposes. -->

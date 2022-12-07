@@ -544,6 +544,12 @@
               class: 'my-header-style'
   
             },
+            {
+            text: 'Custo',
+            value: 'cost',
+            class: 'my-header-style'
+
+          },
             { text: "", value: "actions", sortable: false, class: 'my-header-style'},
             { text: "", value: "modelo", align: ' d-none', sortable: false },
             { text: "", value: "brand.name", align: ' d-none', sortable: false, filter: this.marcasFilter},

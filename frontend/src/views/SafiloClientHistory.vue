@@ -402,8 +402,15 @@
               class: 'my-header-style'
   
             },
+            {
+            text: 'Custo',
+            value: 'cost',
+            class: 'my-header-style'
+
+          },
             { text: "", value: "actions", sortable: false, class: 'my-header-style'},
             { text: "", value: "modelo", align: ' d-none', sortable: false },
+            { text: "", value: "brand.name", align: ' d-none', sortable: false, filter: this.marcasFilter},
             { text: "", value: "material", align: ' d-none', sortable: false },
             { text: "", value: "dimensões", align: ' d-none', sortable: false },
           ]
@@ -418,27 +425,29 @@
           }
         },
         getRequest(item) {
-          console.log(item)
-          if(item.type.type == "OneFace"){
-          store.pedidoAtual = {
-              cod: item.id,
-              data: item.created,
-              marca: [item.type.cover.brand.name],
-              modelo: item.type.type,
-              material: [item.type.cover.material.name],
-              dimensoes: [item.type.cover.measurements],
-              estado: item.status,
-              images: [item.type.cover.image.link],
-              quantity: item.quantidade,
-              observations: item.observations,
-              cost: item.cost,
-              application: item.application
-            }
-          } else if(item.type.type == "TwoFaces"){
-            store.pedidoAtual = {
+        console.log(item)
+        store.address = item.client.address
+        store.postalCode = item.client.postalCode
+        if(item.type.type == "OneFace"){
+        store.pedidoAtual = {
             cod: item.id,
             data: item.created,
-            marca: [item.type.cover.brand.name, item.type.back.brand.name],
+            marca: item.brand.name,
+            modelo: item.type.type,
+            material: [item.type.cover.material.name],
+            dimensoes: [item.type.cover.measurements],
+            estado: item.status,
+            images: [item.type.cover.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application
+          }
+        } else if(item.type.type == "TwoFaces"){
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: item.brand.name,
             modelo: item.type.type,
             material: [item.type.cover.material.name, item.type.back.material.name],
             dimensoes: [item.type.cover.measurements, item.type.back.measurements],
@@ -449,29 +458,29 @@
             cost: item.cost,
             application: item.application
           }
-          } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
-              if(item.type.type == "RightShowcase"){
-                store.isActive2 = true
-              } else if(item.type.type == "LeftShowcase"){
-                store.isActive3 = true
-              }
-            store.pedidoAtual = {
-              cod: item.id,
-              data: item.created,
-              marca: [item.type.top.brand.name, item.type.bottom.brand.name, item.type.left.brand.name, item.type.right.brand.name, item.type.side.brand.name],
-              modelo: item.type.type,
-              material: [item.type.top.material.name, item.type.bottom.material.name, item.type.left.material.name, item.type.right.material.name, item.type.side.material.name],
-              dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements, item.type.side.measurements],
-              estado: item.status,
-              images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link, item.type.side.image.link],
-              quantity: item.quantidade,
-              observations: item.observations,
-              cost: item.cost,
-              application: item.application
+        } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
+            if(item.type.type == "RightShowcase"){
+              store.isActive2 = true
+            } else if(item.type.type == "LeftShowcase"){
+              store.isActive3 = true
             }
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: item.brand.name,
+            modelo: item.type.type,
+            material: [item.type.top.material.name, item.type.bottom.material.name, item.type.left.material.name, item.type.right.material.name, item.type.side.material.name],
+            dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements, item.type.side.measurements],
+            estado: item.status,
+            images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link, item.type.side.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application
           }
-          this.$router.push({name: 'details'});
-        },
+        }
+        this.$router.push({name: 'details'});
+      },
         /**
          * Filter for dessert names column.
          * @param value Value to be tested.

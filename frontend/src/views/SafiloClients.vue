@@ -58,8 +58,8 @@
 
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-              <v-data-table :headers="headers" :items="allClients" fixed-header
-                tile item-key="id" height="260" style="width: 600px;"
+              <v-data-table :headers="headers" :items="allClients" fixed-header hide-default-footer
+                tile :search="dessertFilterValue" disable-pagination item-key="id" height="318" style="width: 600px;"
                 class="elevation-1 my-header-style">
                 <template v-slot:top>
 
@@ -69,13 +69,7 @@
                       <v-col cols="6">
                         <v-row class="pa-2">
                           <v-text-field style="width: 150px; border-radius: 0px;" v-model="dessertFilterValue"
-                            label="Procurar nome" hide-details outlined dense></v-text-field>
-                        </v-row>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-row class="pa-2">
-                          <v-text-field style="width: 150px; border-radius: 0px;" v-model="dessertFilterValue2"
-                            label="Procurar id" hide-details outlined dense></v-text-field>
+                            label="Procurar" hide-details outlined dense></v-text-field>
                         </v-row>
                       </v-col>
                     </v-row>
@@ -277,7 +271,6 @@ export default {
       added: false,
       failed: false,
       dessertFilterValue: '',
-      dessertFilterValue2: '',
       file: null,
       store,
       estadosList: [
@@ -301,7 +294,7 @@ export default {
   },
   async created() {
     try {
-      this.allClients = await Backend.getClients()
+        this.allClients = await Backend.getClients();
       console.log(this.allClients)
       this.allClients.forEach(element => {
         if (!this.banners.includes(element.banner)) {
@@ -322,14 +315,12 @@ export default {
           sortable: false,
           value: 'id',
           class: 'my-header-style',
-          filter: this.idFilter
         },
         {
           text: 'Nome',
           value: 'name',
           align: "center",
           class: 'my-header-style',
-          filter: this.nameFilter
         },
         { text: "", value: "actions", align: "right", sortable: false, class: 'my-header-style' },
       ]
@@ -368,24 +359,7 @@ export default {
         console.error(error)
       }
     },
-    nameFilter(value) {
-        // If this filter has no value we just skip the entire filter.
-        if (this.dessertFilterValue == '') {
-          return true;
-        }
-        // Check if the current loop value (The dessert name)
-        // partially contains the searched word.
-          return (value + '').includes(this.dessertFilterValue);
-      },
-      idFilter(value) {
-        // If this filter has no value we just skip the entire filter.
-        if (this.dessertFilterValue2 == '') {
-          return true;
-        }
-        // Check if the current loop value (The dessert name)
-        // partially contains the searched word.
-          return (value + '').includes(this.dessertFilterValue2);
-      },
+  
     getSpecificClient(item) {
       this.allClients.forEach(element => {
         if (item.name == element.name) {
