@@ -242,7 +242,7 @@ export default class Backend {
   }
 
   static async deletePrice(price) {
-    return httpClient.delete("/price", price).then(response => {
+    return httpClient.delete("/price", { data: price }).then(response => {
       return response.data
     })
       .catch(async error => {
