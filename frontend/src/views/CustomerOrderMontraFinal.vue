@@ -375,10 +375,12 @@ export default {
     allPrices: null,
   allMaterials: null,
   allBrands: null,
+  totalPrice: null,
   }),
   
   async created () {
-    this.allPrices = await Backend.getPrices()
+    await this.getRequestPrice()
+    console.log(this.totalPrice)
     this.allMaterials = await Backend.getMaterials()
     this.allBrands = await Backend.getBrands()
     var currentUser = await Backend.getProfile()
@@ -390,15 +392,8 @@ export default {
       }
     });
     var actBrand = this.allBrands.find(x => x.id == store.currentBrandId[store.currentBrandId.length-1]).name
-    var costAcc = 0
-    for(var i = 0; i < 5; i ++){
-      var currValue = this.allPrices.find(y => 
-      y.height = store.dimensions[i].height && y.width == store.dimensions[i].width && y.material == store.selectedMaterial[i]).cost
-      costAcc +=  currValue
-    }
-    console.log(costAcc, actBrand)
-    this.brandCost = [ actBrand + ": " + costAcc]
-      store.currentCost = costAcc
+    this.brandCost = [ actBrand + ": " + this.totalPrice]
+      store.currentCost = this.totalPrice
 
   },
 
@@ -570,6 +565,173 @@ export default {
       } catch (error) {
         setTimeout(() => this.$router.push({name: 'profile'}), 3000);
         this.failed = true
+      }
+    },
+    async getRequestPrice() {
+      try{
+      var request = null
+      if(store.isActive2){
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        observations: store.observations,
+        application: store.application,
+        brand: {
+              id: store.currentBrandId[store.currentBrandId.length-1],
+            },
+        type: {
+          type: "RightShowcase",
+          top: {
+            
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          },
+          bottom: {
+           
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            }
+          },
+          left: {
+            
+            image: { 
+              id: store.images[2]
+            },
+            measurements: {
+              width: store.dimensions[2].width,
+              height: store.dimensions[2].height
+            },
+            material: { 
+              id: store.selectedMaterial[2]
+            }
+          },
+          right: {
+            
+            image: { 
+              id: store.images[3]
+            },
+            measurements: {
+              width: store.dimensions[3].width,
+              height: store.dimensions[3].height
+            },
+            material: { 
+              id: store.selectedMaterial[3]
+            }
+          },
+          side: {
+            
+            image: { 
+              id: store.images[4]
+            },
+            measurements: {
+              width: store.dimensions[4].width,
+              height: store.dimensions[4].height
+            },
+            material: { 
+              id: store.selectedMaterial[4]
+            }
+          }
+        },
+      }
+    } else if(store.isActive3) { 
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        observations: store.observations,
+        application: store.application,
+        brand: {
+              id: store.currentBrandId[store.currentBrandId.length-1],
+            },
+        type: {
+          type: "LeftShowcase",
+          top: {
+           
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          },
+          bottom: {
+           
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            }
+          },
+          left: {
+            
+            image: { 
+              id: store.images[2]
+            },
+            measurements: {
+              width: store.dimensions[2].width,
+              height: store.dimensions[2].height
+            },
+            material: { 
+              id: store.selectedMaterial[2]
+            }
+          },
+          right: {
+           
+            image: { 
+              id: store.images[3]
+            },
+            measurements: {
+              width: store.dimensions[3].width,
+              height: store.dimensions[3].height
+            },
+            material: { 
+              id: store.selectedMaterial[3]
+            }
+          },
+          side: {
+           
+            image: { 
+              id: store.images[4]
+            },
+            measurements: {
+              width: store.dimensions[4].width,
+              height: store.dimensions[4].height
+            },
+            material: { 
+              id: store.selectedMaterial[4]
+            }
+          }
+        },
+      }
+    }
+      console.log(request)
+        this.totalPrice = await Backend.getRequestPrice(request)
+
+      } catch (error) {
+        console.log(error)
       }
     },
   }

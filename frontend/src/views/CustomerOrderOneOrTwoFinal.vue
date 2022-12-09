@@ -237,13 +237,14 @@ export default {
   failed: false,
   brandsWithPlafonds: [],
   brandCost: [],
-  allPrices: null,
+  totalPrice: null,
   allMaterials: null,
   allBrands: null,
   }),
 
   async created () {
-    this.allPrices = await Backend.getPrices()
+    await this.getRequestPrice()
+    console.log(this.totalPrice)
     this.allMaterials = await Backend.getMaterials()
     this.allBrands = await Backend.getBrands()
     if (store.face2 == null){
@@ -257,21 +258,8 @@ export default {
         this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
       }
     });
-    if(store.dimensions.length == 1){
-      this.brandCost = [this.allBrands.find(x => x.id == store.currentBrandId[0]).name + ": " + this.allPrices.find(y => 
-      y.height = store.dimensions[0].height && y.width == store.dimensions[0].width && y.material == store.selectedMaterial[0]).cost]
-      var price3 = this.allPrices.find(y => 
-      y.height = store.dimensions[0].height && y.width == store.dimensions[0].width && y.material == store.selectedMaterial[0]).cost
-      store.currentCost = price3
-    } else { 
-      var price1 = this.allPrices.find(y => 
-      y.height = store.dimensions[0].height && y.width == store.dimensions[0].width && y.material == store.selectedMaterial[0]).cost
-      var price2 = this.allPrices.find(y => 
-      y.height = store.dimensions[1].height && y.width == store.dimensions[1].width && y.material == store.selectedMaterial[1]).cost
-      var sumPrices = Number(price1) + Number(price2)
-      this.brandCost = [this.allBrands.find(x => x.id == store.currentBrandId[0]).name + ": " + sumPrices]
-      store.currentCost = sumPrices
-    }
+    this.brandCost = [store.uniqueBrands[0] +" : "+ this.totalPrice]
+    store.currentCost = this.totalPrice
   },
 
   methods: {
@@ -348,6 +336,78 @@ export default {
       } catch (error) {
         setTimeout(() => this.$router.push({name: 'profile'}), 3000);
         this.failed = true
+      }
+    },
+    async getRequestPrice() {
+      var request = null
+      if(store.face2 == null){
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        observations: this.observacoes,
+        application: store.application,
+        brand: {
+              id: store.currentBrandId[0],
+            },
+        type: {
+          type: "OneFace",
+          cover: {
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          }
+        },
+      }
+    } else { 
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        observations: this.observacoes,
+        application: store.application,
+        brand: {
+              id: store.currentBrandId[0],
+            },
+        type: {
+          type: "TwoFaces",
+          cover: {
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            }
+          },
+          back: {
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            }
+          }
+        },
+      }
+    }
+      console.log(request)
+      try{
+        this.totalPrice = await Backend.getRequestPrice(request)
+      } catch (error) {
+        console.log(error)
       }
     },
   }

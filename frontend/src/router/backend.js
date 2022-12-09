@@ -232,6 +232,15 @@ export default class Backend {
     })
   }
 
+  static async getRequestPrice(request) {
+    return httpClient.post("request/price", request).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async deletePrice(price) {
     return httpClient.delete("/price", price).then(response => {
       return response.data
