@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOMAIN_NAME: ${{ secrets.HOST }}
-      CDR_EMAIL: ${{ secrets.CDR_MAIL }}
+      CDR_EMAILS: ${{ secrets.CDR_MAILS }}
 
       QUARKUS_HTTP_SSL_CERTIFICATE_FILE: ${{ secrets.SSL_CERT }}
       QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE: ${{ secrets.SSL_KEY }}

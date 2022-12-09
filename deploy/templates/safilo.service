@@ -12,7 +12,7 @@ Restart=always
 RestartSec=30
 
 Environment=DOMAIN_NAME={{ lookup("env", "DOMAIN_NAME") }}
-Environment=CDR_EMAIL={{ lookup("env", "CDR_EMAIL") }}
+Environment=CDR_EMAILS={{ lookup("env", "CDR_EMAILS") }}
 
 # HTTP Config
 Environment=QUARKUS_HTTP_PORT=8081
