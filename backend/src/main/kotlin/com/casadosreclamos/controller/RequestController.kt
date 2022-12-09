@@ -6,6 +6,7 @@ import com.casadosreclamos.model.*
 import com.casadosreclamos.service.RequestService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
+import io.smallrye.common.annotation.Blocking
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -49,6 +50,24 @@ class RequestController {
             return@transformToUni requestService.add(request, id.principal.name).onItem().transform { RequestDto(it) }
         }
     }
+
+    @POST
+    @Path("/price")
+    @RolesAllowed(COMMERCIAL_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Obtain price for a request")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun checkPrice(request: NewRequestDto): Uni<Double> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is checking the price of a request for client \"${request.clientId}\"")
+
+            return@transformToUni requestService.getPrice(request)
+        }
+    }
+
 
     @PUT
     @Path("/production/{id}")

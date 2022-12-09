@@ -74,19 +74,7 @@ class RequestService {
 
     @Throws(InvalidIdException::class, InvalidMeasurementsException::class, InvalidRequestTypeException::class)
     fun add(requestDto: NewRequestDto, email: String): Uni<Request> {
-        if (requestDto.clientId == null || requestDto.clientId!! <= 0) {
-            throw InvalidIdException("client")
-        } else if (requestDto.amount == null || requestDto.amount!! <= 0) {
-            throw InvalidAmountException()
-        } else if (requestDto.type == null) {
-            throw InvalidRequestTypeException()
-        } else if (requestDto.application == null) {
-            requestDto.application = false
-        } else if (requestDto.brand == null || requestDto.brand!!.id!! <= 0) {
-            throw InvalidIdException("brand")
-        }
-
-        validateType(requestDto.type!!)
+        validateRequestDto(requestDto)
 
         val request = Request()
         request.status = RequestStatus.ORDERED
@@ -107,15 +95,9 @@ class RequestService {
 
         return Panache.withTransaction {
             Uni.combine().all().unis(clientUni, userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
-                // Obtain client and user
-                val client = tuple.item1
+                val client = tuple.item1 ?: throw InvalidIdException("client")
                 user = tuple.item2 ?: throw InvalidUserException()
                 brand = tuple.item3 ?: throw InvalidIdException("brand")
-
-
-                if (client == null) {
-                    throw InvalidIdException("client")
-                }
 
                 clientName = client.name
 
@@ -173,6 +155,25 @@ class RequestService {
             )
         }.onItem().transform {
             request
+        }
+    }
+
+    fun getPrice(request: NewRequestDto): Uni<Double> {
+        validateRequestDto(request)
+
+        val clientUni = clientRepository.findById(request.clientId!!)
+        val brandUni = brandRepository.findByIdWithImages(request.brand!!.id!!)
+
+        return Panache.withTransaction {
+            Uni.combine().all().unis(clientUni, brandUni).asTuple().onItem().transformToUni { tuple ->
+                tuple.item1 ?: throw InvalidIdException("client")
+                val brand = tuple.item2 ?: throw InvalidIdException("brand")
+
+                // Create RequestType instance
+                toRequestType(request.type!!, brand.images)
+            }.onItem().transform { requestType ->
+                requestType.cost
+            }
         }
     }
 
@@ -242,7 +243,6 @@ class RequestService {
         val bannerRequests = requestRepository.streamByBanner(banner)
 
         writer.printRecord("Banner", "Nr. Cliente", "Cliente", "Tipo de Pedido", "Custo")
-        println(file)
 
         return bannerRequests.onItem().transform { request ->
             writer.printRecord(
@@ -450,5 +450,21 @@ class RequestService {
         if (measurements == null || measurements.height <= 0 || measurements.width <= 0) {
             throw InvalidMeasurementsException()
         }
+    }
+
+    private fun validateRequestDto(request: NewRequestDto) {
+        if (request.clientId == null || request.clientId!! <= 0) {
+            throw InvalidIdException("client")
+        } else if (request.amount == null || request.amount!! <= 0) {
+            throw InvalidAmountException()
+        } else if (request.type == null) {
+            throw InvalidRequestTypeException()
+        } else if (request.application == null) {
+            request.application = false
+        } else if (request.brand == null || request.brand!!.id!! <= 0) {
+            throw InvalidIdException("brand")
+        }
+
+        validateType(request.type!!)
     }
 }
