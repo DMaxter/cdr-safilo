@@ -71,10 +71,10 @@
           <v-container>
             <v-row justify="center">
               <v-col v-show="added1">
-              <span class="text-h5"> O Material foi adicionado com sucesso! </span> 
+              <span class="text-h5"> O Material foi adicionado com sucesso! </span>
               </v-col>
               <v-col v-show="failed1">
-              <span class="text-h5"> Ocorreu um erro a adicionar o material </span> 
+              <span class="text-h5"> Ocorreu um erro a adicionar o material </span>
               </v-col>
               <v-col
                 cols="8"
@@ -127,16 +127,16 @@
           <v-container>
             <v-row justify="center">
               <v-col cols="auto" v-show="added2">
-              <span class="text-h5"> O Material foi alterado com sucesso! </span> 
+              <span class="text-h5"> O Material foi alterado com sucesso! </span>
               </v-col>
               <v-col cols="auto" v-show="failed2">
-              <span class="text-h5"> Ocorreu um erro a alterar o material </span> 
+              <span class="text-h5"> Ocorreu um erro a alterar o material </span>
               </v-col>
               <v-col cols="auto" v-show="toDelete">
-              <span class="text-h6"> Tem a certeza que pretende eliminar o material da base de dados? (pressione o botão novamente para apagar) </span> 
+              <span class="text-h6"> Tem a certeza que pretende eliminar o material da base de dados? (pressione o botão novamente para apagar) </span>
               </v-col>
               <v-col cols="auto" v-show="toDelete2">
-              <span class="text-h5"> O Material foi eliminado com sucesso! </span> 
+              <span class="text-h5"> O Material foi eliminado com sucesso! </span>
               </v-col>
               <v-col
                 cols="8"
@@ -228,10 +228,10 @@
           <v-container>
             <v-row justify="center">
               <v-col v-show="added1">
-              <span class="text-h5"> O preço foi adicionado com sucesso! </span> 
+              <span class="text-h5"> O preço foi adicionado com sucesso! </span>
               </v-col>
               <v-col v-show="failed1">
-              <span class="text-h5"> Ocorreu um erro a adicionar o preço </span> 
+              <span class="text-h5"> Ocorreu um erro a adicionar o preço </span>
               </v-col>
               <v-col
                 cols="6"
@@ -315,16 +315,16 @@
           <v-container>
             <v-row justify="center">
               <v-col cols="auto" v-show="added2">
-              <span class="text-h5"> O preço foi alterado com sucesso! </span> 
+              <span class="text-h5"> O preço foi alterado com sucesso! </span>
               </v-col>
               <v-col cols="auto" v-show="failed2">
-              <span class="text-h5"> Ocorreu um erro a alterar o preço </span> 
+              <span class="text-h5"> Ocorreu um erro a alterar o preço </span>
               </v-col>
               <v-col cols="auto" v-show="toDelete">
-              <span class="text-h6"> Tem a certeza que pretende eliminar o preço para a medida da base de dados? (pressione o botão novamente para apagar) </span> 
+              <span class="text-h6"> Tem a certeza que pretende eliminar o preço para a medida da base de dados? (pressione o botão novamente para apagar) </span>
               </v-col>
               <v-col cols="auto" v-show="toDelete2">
-              <span class="text-h5"> O preço foi eliminado com sucesso! </span> 
+              <span class="text-h5"> O preço foi eliminado com sucesso! </span>
               </v-col>
               <v-col
                 cols="8"
@@ -406,13 +406,13 @@
     </v-dialog>
 </template>
           </v-row>
-          </v-card>         
+          </v-card>
         </v-col>
     </v-row>
-    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
+    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex">
       <v-img :src="myImage" contain height="180" width="180"></v-img>
     </v-row>
-    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
+    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column">
         <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
@@ -465,7 +465,7 @@ data () {
     },
 
 methods: {
-  
+
   addMaterial: async function () {
       try {
         console.log(this.materialName)
@@ -508,7 +508,7 @@ methods: {
         console.error(error)
       }
     },
-  
+
   getMaterials: async function () {
       try {
         this.allMaterials = await Backend.getMaterials()
@@ -600,7 +600,7 @@ methods: {
         await Backend.updateMaterial(id, this.newMaterialName)
         this.added2 = true
       } catch (error) {
-        this.failed2 = true 
+        this.failed2 = true
         // TODO: Show something
         console.error(error)
       }
