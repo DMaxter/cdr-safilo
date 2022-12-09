@@ -65,8 +65,8 @@ class RequestService {
     lateinit var mailer: ReactiveMailer
 
     @Inject
-    @ConfigProperty(name = "cdr.email")
-    lateinit var cdrMail: String
+    @ConfigProperty(name = "cdr.emails")
+    lateinit var cdrMails: List<String>
 
     fun getAll(): Multi<Request> {
         return requestRepository.streamAll()
@@ -155,8 +155,9 @@ class RequestService {
             // Send email
             mailer.send(
                 Mail.withText(
-                    cdrMail, "Novo pedido efetuado por comercial da Safilo", """
-                    Foi efetuado um novo pedido à Casa dos Reclamos pelo utilizador.
+                    "", "Novo pedido efetuado por comercial da Safilo", """
+                    Foi efetuado um novo pedido à Casa dos Reclamos por um utilizador.
+
                     Resumo do pedido:
                     
                     Comercial: ${user.name}
@@ -168,7 +169,7 @@ class RequestService {
                     
                     Este email é automático, por favor não responda 
                     """.trimIndent()
-                )
+                ).setTo(cdrMails)
             )
         }.onItem().transform {
             request
