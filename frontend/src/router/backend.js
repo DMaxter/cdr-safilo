@@ -70,7 +70,7 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
-  
+
 
   static async getMaterials() {
     return httpClient.get("/material").then(response => {
@@ -242,7 +242,7 @@ export default class Backend {
   }
 
   static async deletePrice(price) {
-    return httpClient.delete("/price", price).then(response => {
+    return httpClient.delete("/price", { data: price }).then(response => {
       return response.data
     })
       .catch(async error => {
@@ -258,7 +258,7 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
-  
+
   static async getPrices() {
     return httpClient.get("/price").then(response => {
       return response.data
@@ -303,7 +303,7 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
-  
+
     static async obsoleteImage(id) {
     return httpClient.put(`/image/obsolete/${id}`).then(response => {
       return response.data
