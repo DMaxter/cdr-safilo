@@ -88,7 +88,7 @@ class ClientService {
     }
 
     fun importClients(file: File): Multi<Uni<Client>> {
-        val contents = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.EXCEL.withDelimiter(';'))
+        val contents = CSVParser.parse(file, Charset.forName("UTF-8"), CSVFormat.EXCEL.withDelimiter(';'))
 
         val multi: Multi<Uni<Client>> = Multi.createFrom().emitter { em ->
             // Remove column names
