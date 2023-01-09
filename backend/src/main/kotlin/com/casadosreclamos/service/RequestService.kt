@@ -2,7 +2,7 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.*
 import com.casadosreclamos.exception.*
-import com.casadosreclamos.model.Plafond
+import com.casadosreclamos.getEmailNewStandardRequest
 import com.casadosreclamos.model.Request
 import com.casadosreclamos.model.Role
 import com.casadosreclamos.model.User
@@ -137,20 +137,7 @@ class RequestService {
             // Send email
             mailer.send(
                 Mail.withText(
-                    "", "Novo pedido efetuado por comercial da Safilo", """
-                    Foi efetuado um novo pedido à Casa dos Reclamos por um utilizador.
-
-                    Resumo do pedido:
-                    
-                    Comercial: ${user.name}
-                    Cliente: $clientName
-                    Tipo de pedido: ${getType(requestDto.type!!)}
-                    
-                    Para ver todos os detalhes aceda à plataforma
-                    
-                    
-                    Este email é automático, por favor não responda 
-                    """.trimIndent()
+                    "", "Novo pedido efetuado por comercial da Safilo", getEmailNewStandardRequest(user.name, clientName, getType(requestDto.type!!), brand.name)
                 ).setTo(cdrMails)
             )
         }.onItem().transform {

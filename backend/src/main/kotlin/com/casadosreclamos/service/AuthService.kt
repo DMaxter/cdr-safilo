@@ -5,6 +5,8 @@ import com.casadosreclamos.dto.AuthDto
 import com.casadosreclamos.dto.RegisterDto
 import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.exception.*
+import com.casadosreclamos.getEmailPasswordRecovery
+import com.casadosreclamos.getEmailRegisteredCommercial
 import com.casadosreclamos.model.PasswordToken
 import com.casadosreclamos.model.PasswordTokenId
 import com.casadosreclamos.model.Role
@@ -178,7 +180,9 @@ class AuthService {
 
         logger.info("Initializing Authentication Service")
         val file =
-            if (ProfileManager.getActiveProfile() == "dev" || ProfileManager.getActiveProfile() == "test") AuthService::class.java.getResourceAsStream(keyPath) else File(
+            if (ProfileManager.getActiveProfile() == "dev" || ProfileManager.getActiveProfile() == "test") AuthService::class.java.getResourceAsStream(
+                keyPath
+            ) else File(
                 keyPath
             ).inputStream()
 
@@ -227,15 +231,7 @@ class AuthService {
         }.onItem().ifNotNull().transformToUni { _ ->
             mailer.send(
                 Mail.withText(
-                    user.email, "Registo na plataforma Safilo/CDR", """
-                        Foi efetuado um registo para o seu email na plataforma de pedidos para a Casa dos Reclamos com os seguintes dados
-                        
-                        Username: ${credentials.email}
-                        Password: ${credentials.password}
-                        
-                        Aconselha-se a mudança de password na plataforma.
-                        
-                        Este é um email automático, por favor não responda"""
+                    user.email, "Registo na plataforma Safilo/CDR", getEmailRegisteredCommercial(credentials)
                 )
             )
         }.onItem().transform { user }
@@ -302,19 +298,12 @@ class AuthService {
 
                 token.expiry = calendar.time
 
-                logger.warn(userToken)
-
                 tokenRepository.persist(token).onItem().transformToUni { _ ->
                     mailer.send(
                         Mail.withText(
-                            username, "Pedido de substituição de password para a plataforma Safilo/CDR", """
-                Foi efetuado um pedido de substituição de password para a conta associada a este email
-                
-                Para proceder à alteração da password aceda a https://${domain}/forget?email=$user&token=${userToken}
-                
-                
-                Este é um email automático, por favor não responda
-                """.trimIndent()
+                            username,
+                            "Pedido de substituição de password para a plataforma Safilo/CDR",
+                            getEmailPasswordRecovery(domain, user.name, userToken)
                         )
                     )
                 }
