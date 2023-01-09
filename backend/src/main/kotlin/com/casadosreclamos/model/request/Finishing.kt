@@ -4,7 +4,7 @@ import org.hibernate.Hibernate
 import javax.persistence.*
 
 @Entity
-open class Material {
+open class Finishing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long = 0
@@ -12,19 +12,20 @@ open class Material {
     @Column(unique = true)
     open lateinit var name: String
 
+    open var cost: Double = 0.0
 
     @ManyToMany
     @JoinTable(
-        name = "Material_finishings",
-        joinColumns = [JoinColumn(name = "material_id")],
-        inverseJoinColumns = [JoinColumn(name = "finishings_id")]
+        name = "Finishing_exclusiveMaterials",
+        joinColumns = [JoinColumn(name = "finishing_id")],
+        inverseJoinColumns = [JoinColumn(name = "exclusiveMaterials_id")]
     )
-    open var finishings: MutableSet<Finishing> = mutableSetOf()
+    open lateinit var exclusiveMaterials: MutableSet<Material>
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as Material
+        other as Finishing
 
         return id == other.id
     }

@@ -59,6 +59,9 @@ class RequestService {
     lateinit var priceService: PriceService
 
     @Inject
+    lateinit var finishingService: FinishingService
+
+    @Inject
     lateinit var plafondRepository: PlafondRepository
 
     @Inject
@@ -346,13 +349,17 @@ class RequestService {
     private fun doSlot(slotDto: RequestSlotDto, images: List<Image>): Uni<RequestSlot> {
         val materialUni = materialRepository.findById(slotDto.material!!.id!!)
         val priceUni = priceService.get(slotDto.measurements!!, slotDto.material!!.id!!)
+        val finishingUni = finishingService.get(slotDto.finishing!!.id!!)
 
-        return Uni.combine().all().unis(materialUni, priceUni).asTuple().onItem().transformToUni { tuple ->
+        return Uni.combine().all().unis(materialUni, priceUni, finishingUni).asTuple().onItem().transformToUni { tuple ->
             val material = tuple.item1
             val price = tuple.item2
+            val finishing = tuple.item3
 
             if (material == null) {
                 throw InvalidIdException("material")
+            } else if (finishing == null) {
+                throw InvalidIdException("finishing")
             }
 
             val image = images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
@@ -419,6 +426,7 @@ class RequestService {
         validateImage(slot?.image)
         validateMaterial(slot?.material)
         validateMeasurements(slot?.measurements)
+        validateFinishing(slot?.finishing)
     }
 
     private fun validateImage(image: ImageDto?) {
@@ -436,6 +444,12 @@ class RequestService {
     private fun validateMeasurements(measurements: Measurements?) {
         if (measurements == null || measurements.height <= 0 || measurements.width <= 0) {
             throw InvalidMeasurementsException()
+        }
+    }
+
+    private fun validateFinishing(finishing: FinishingDto?) {
+        if (finishing?.id == null || finishing.id!! <= 0) {
+            throw InvalidIdException("finishing")
         }
     }
 

@@ -120,7 +120,7 @@ class RequestServiceTest {
         measurements.width = PRICE_WIDTH
 
         val requestType = OneFace()
-        requestType.cover = RequestSlotDto(ImageDto(image1), measurements, MaterialDto(material))
+        requestType.cover = RequestSlotDto(ImageDto(image1), measurements, MaterialDto(material), null)
 
         val request = requestService.add(
             NewRequestDto(

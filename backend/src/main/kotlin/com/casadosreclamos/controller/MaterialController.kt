@@ -58,7 +58,7 @@ class MaterialController {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
             logger.debug("User ${id.principal.name} is requesting all materials")
 
-            return@transformToMulti materialService.getAll()
+            return@transformToMulti materialService.getAll().onItem().transform { MaterialDto(it) }
         }
     }
 

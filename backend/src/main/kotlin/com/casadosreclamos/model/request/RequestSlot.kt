@@ -19,6 +19,9 @@ open class RequestSlot {
     @ManyToOne
     open lateinit var material: Material
 
+    @ManyToOne
+    open var finishing: Finishing? = null
+
     open lateinit var measurements: Measurements
 
     open var cost: Double? = null

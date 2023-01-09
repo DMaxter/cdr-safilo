@@ -11,6 +11,7 @@ import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.jboss.logging.Logger
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
@@ -23,8 +24,15 @@ class MaterialService {
     @Inject
     lateinit var materialRepository: MaterialRepository
 
-    fun getAll(): Multi<MaterialDto> {
-        return materialRepository.streamAll().map { MaterialDto(it) }
+    @Inject
+    lateinit var finishingService: FinishingService
+
+    fun getAll(): Multi<Material> {
+        return materialRepository.streamAllWithFinishings()
+    }
+
+    fun getMaterials(materials: List<MaterialDto>?): Multi<Material> {
+        return materialRepository.find(materials)
     }
 
     @Throws(InvalidNameException::class)
@@ -41,7 +49,11 @@ class MaterialService {
                 return@transformToUni if (value) {
                     throw AlreadyExistsException("Material")
                 } else {
-                    materialRepository.persist(material)
+                    finishingService.getNonExclusive().collect().with(Collectors.toSet()).onItem().transformToUni { finishings ->
+                        material.finishings = finishings
+
+                        materialRepository.persist(material)
+                    }
                 }
             }
         }
