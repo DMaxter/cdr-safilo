@@ -186,7 +186,7 @@
             <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="requests" fixed-header item-key="name" hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style mt-5">
+        <v-data-table :headers="headers" :items="requests" fixed-header item-key="id" disable-pagination hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style mt-5">
         
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="getRequest(item)">mdi-plus</v-icon>

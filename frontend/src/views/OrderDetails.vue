@@ -321,7 +321,7 @@
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
-          <h3 class="mb-6"> Face {{store.pedidoAtual.marca.length}}</h3>
+          <h3 class="mb-6"> Face 1</h3>
           <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>

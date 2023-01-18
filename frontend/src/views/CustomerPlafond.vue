@@ -75,6 +75,7 @@
                   :headers="headers"
                   :items="desserts"
                   hide-default-footer
+                  disable-pagination
                   class="elevation-1 my-header-style"
                 ></v-data-table>
             </v-row>
