@@ -1,18 +1,19 @@
 package com.casadosreclamos.service
 
+import com.casadosreclamos.dto.FinishingDto
 import com.casadosreclamos.dto.PriceDto
 import com.casadosreclamos.exception.InvalidCostException
 import com.casadosreclamos.exception.InvalidIdException
-import com.casadosreclamos.exception.InvalidMeasurementsException
+import com.casadosreclamos.exception.MissingPriceException
 import com.casadosreclamos.exception.PriceNotFoundException
-import com.casadosreclamos.model.request.Measurements
+import com.casadosreclamos.model.request.Finishing
 import com.casadosreclamos.model.request.Price
-import com.casadosreclamos.model.request.PriceId
 import com.casadosreclamos.repo.PriceRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.jboss.logging.Logger
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -27,98 +28,132 @@ class PriceService {
     @Inject
     lateinit var materialService: MaterialService
 
+    @Inject
+    lateinit var finishingService: FinishingService
+
     fun getAll(): Multi<Price> {
         return priceRepository.streamAll()
     }
 
-    fun get(measurements: Measurements, material: Long): Uni<Price> {
-        if (measurements.height <= 0 || measurements.width <= 0) {
-            throw InvalidMeasurementsException()
-        } else if (material <= 0) {
-            throw InvalidIdException("material")
-        }
+    fun get(material: Long, finishings: Set<FinishingDto>): Uni<Price> {
+        val ids = finishings.stream().map { it.id!! }.collect(Collectors.toSet())
 
-        val id = PriceId()
-        id.measurements = measurements
-        id.materialId = material
+        val validPrices = priceRepository.stream(material).select().`when` { price ->
+            Uni.createFrom().item(price.finishings.stream().map { it.id }.collect(Collectors.toSet()).containsAll(ids))
+        }.collect().asList()
 
-        return Panache.withTransaction {
-            priceRepository.findById(id)
+        return validPrices.onItem().transform { items ->
+            if (items.isEmpty()) {
+                throw MissingPriceException()
+            } else if (items.size == 1) {
+                return@transform items[0]
+            } else {
+                var tmpItems = items.stream().filter { it.finishings.size == ids.size }.collect(Collectors.toList())
+
+                if (tmpItems.size == 1) {
+                    return@transform tmpItems[0]
+                } else if (tmpItems.isEmpty()) {
+                    tmpItems = items
+                }
+
+                return@transform tmpItems.sortedBy { it.fixedCost }[0]
+            }
         }
     }
 
     fun add(priceDto: PriceDto): Uni<Price> {
-        if (priceDto.width == null || priceDto.width!! <= 0 || priceDto.height == null || priceDto.height!! <= 0) {
-            throw InvalidMeasurementsException()
-        } else if (priceDto.cost == null || priceDto.cost!! <= 0) {
+        if (priceDto.costPerSquareMeter == null || priceDto.costPerSquareMeter!! <= 0) {
+            throw InvalidCostException()
+        } else if (priceDto.fixedCost != null && priceDto.fixedCost!! < 0) {
             throw InvalidCostException()
         } else if (priceDto.material == null || priceDto.material!! <= 0) {
             throw InvalidIdException("material")
+        } else if (priceDto.finishings == null || priceDto.finishings!!.stream()
+                .filter { it?.id == null || it.id!! <= 0 }.count() > 0
+        ) {
+            throw InvalidIdException("finishing")
         }
 
-        return materialService.find(priceDto.material!!).onItem().transformToUni { material ->
-            if (material == null) {
-                throw InvalidIdException("material")
-            }
+        val materialUni = materialService.find(priceDto.material!!)
+        val finishingUni = if (priceDto.finishings!!.isNotEmpty()) {
+            finishingService.find(priceDto.finishings!!).collect().with(Collectors.toSet())
+        } else {
+            Uni.createFrom().item(setOf())
+        }
 
-            val priceId = PriceId()
-            priceId.measurements = Measurements()
-            priceId.measurements.height = priceDto.height!!
-            priceId.measurements.width = priceDto.width!!
-            priceId.materialId = material.id
+        return Panache.withTransaction {
+            Uni.combine().all().unis(materialUni, finishingUni).asTuple().onItem().transformToUni { tuple ->
+                val material = tuple.item1
+                val finishings = tuple.item2
 
-            val price = Price()
-            price.id = priceId
-            price.cost = priceDto.cost!!
-            price.material = material
+                if (material == null) {
+                    throw InvalidIdException("material")
+                } else if ((finishings == null && priceDto.finishings!!.isNotEmpty()) || (finishings.size < priceDto.finishings!!.size)) {
+                    throw InvalidIdException("finishing")
+                }
 
-            Panache.withTransaction {
+                val price = Price()
+                price.costPerSquareMeter = priceDto.costPerSquareMeter!!
+                price.fixedCost = priceDto.fixedCost!!
+                price.finishings = finishings
+                price.material = material
+
                 priceRepository.persist(price)
             }
         }
     }
 
     fun edit(priceDto: PriceDto): Uni<Price> {
-        if (priceDto.width == null || priceDto.width!! <= 0 || priceDto.height == null || priceDto.height!! <= 0) {
-            throw InvalidMeasurementsException()
-        } else if (priceDto.cost == null || priceDto.cost!! <= 0) {
+        if (priceDto.id == null || priceDto.id!! <= 0) {
+            throw InvalidIdException("price")
+        } else if (priceDto.costPerSquareMeter == null || priceDto.costPerSquareMeter!! <= 0) {
+            throw InvalidCostException()
+        } else if (priceDto.fixedCost == null || priceDto.fixedCost!! <= 0) {
             throw InvalidCostException()
         } else if (priceDto.material == null || priceDto.material!! <= 0) {
             throw InvalidIdException("material")
+        } else if (priceDto.finishings == null || priceDto.finishings!!.stream()
+                .filter { it?.id == null || it.id!! <= 0 }.count() > 0
+        ) {
+            throw InvalidIdException("finishing")
         }
 
-        val id = PriceId()
-        id.measurements = Measurements()
-        id.measurements.height = priceDto.height!!
-        id.measurements.width = priceDto.width!!
-        id.materialId = priceDto.material!!
-
         return Panache.withTransaction {
-            priceRepository.findById(id).onItem().transform { price ->
+            priceRepository.findById(priceDto.id!!).onItem().transformToUni { price ->
                 if (price == null) {
                     throw PriceNotFoundException()
                 }
 
-                price.cost = priceDto.cost!!
+                val materialUni = materialService.find(priceDto.material!!)
+                val finishingUni = if (priceDto.finishings!!.isNotEmpty()) {
+                    finishingService.find(priceDto.finishings!!).collect().with(Collectors.toSet())
+                } else {
+                    Uni.createFrom().item(setOf())
+                }
 
-                return@transform price
+                return@transformToUni Uni.combine().all().unis(materialUni, finishingUni).asTuple().onItem()
+                    .transform { tuple ->
+                        val material = tuple.item1
+                        val finishings = tuple.item2
+
+                        if (material == null) {
+                            throw InvalidIdException("material")
+                        } else if ((finishings == null && priceDto.finishings!!.isNotEmpty()) || (finishings.size < priceDto.finishings!!.size)) {
+                            throw InvalidIdException("finishing")
+                        }
+
+                        price.costPerSquareMeter = priceDto.costPerSquareMeter!!
+                        price.fixedCost = priceDto.fixedCost!!
+                        price.finishings = finishings
+                        price.material = material
+
+                        return@transform price
+                    }
             }
         }
     }
 
-    fun delete(priceDto: PriceDto): Uni<Void> {
-        if (priceDto.width == null || priceDto.width!! <= 0 || priceDto.height == null || priceDto.height!! <= 0) {
-            throw InvalidMeasurementsException()
-        } else if (priceDto.material == null || priceDto.material!! <= 0) {
-            throw InvalidIdException("material")
-        }
-
-        val id = PriceId()
-        id.measurements = Measurements()
-        id.measurements.height = priceDto.height!!
-        id.measurements.width = priceDto.width!!
-        id.materialId = priceDto.material!!
-
+    fun delete(id: Long): Uni<Void> {
         return Panache.withTransaction {
             priceRepository.deleteById(id).onItem().transformToUni { deleted ->
                 if (!deleted) {

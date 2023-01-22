@@ -20,6 +20,7 @@ import org.jboss.logging.Logger
 import java.io.File
 import java.io.FileWriter
 import java.util.*
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
@@ -111,28 +112,29 @@ class RequestService {
                 // Create RequestType instance
                 toRequestType(requestDto.type!!, request.brand.images)
             }.onItem().transformToUni { type ->
+                // Assign requestType to request and search for user plafond
                 requestType = type
 
                 plafondRepository.findById(user, brand)
             }.onItem().transformToUni { plafond ->
+                // Check if user has enough plafond and debit the amount for current request
+                // Save the request
                 if (plafond == null) {
                     throw NotEnoughCreditsException()
                 }
 
-                if (requestType.cost != null) {
-                    if (plafond.amount < requestType.cost!!) {
-                        throw NotEnoughCreditsException()
-                    } else {
-                        plafond.amount -= requestType.cost!!
-                    }
+                if (plafond.amount < requestType.cost) {
+                    throw NotEnoughCreditsException()
+                } else {
+                    plafond.amount -= requestType.cost
                 }
 
                 requestRepository.persistAndFlush(request)
             }.onItem().transformToUni { _ ->
-                // Create request
+                // Update the requestType and assign the cost to the request
                 requestType.request = request
                 request.type = requestType
-                request.cost = requestType.cost
+                request.cost = requestType.cost * request.amount
 
                 requestTypeRepository.persist(requestType)
             }
@@ -140,7 +142,9 @@ class RequestService {
             // Send email
             mailer.send(
                 Mail.withText(
-                    "", "Novo pedido efetuado por comercial da Safilo", getEmailNewStandardRequest(user.name, clientName, getType(requestDto.type!!), brand.name)
+                    "",
+                    "Novo pedido efetuado por comercial da Safilo",
+                    getEmailNewStandardRequest(user.name, clientName, getType(requestDto.type!!), brand.name)
                 ).setTo(cdrMails)
             )
         }.onItem().transform {
@@ -162,7 +166,7 @@ class RequestService {
                 // Create RequestType instance
                 toRequestType(request.type!!, brand.images)
             }.onItem().transform { requestType ->
-                requestType.cost
+                requestType.cost * request.amount!!
             }
         }
     }
@@ -286,12 +290,7 @@ class RequestService {
             val type = TwoFaces()
             type.cover = cover
             type.back = back
-
-            if (cover.cost == null || back.cost == null) {
-                type.cost = null
-            } else {
-                type.cost = cover.cost!! + back.cost!!
-            }
+            type.cost = cover.cost + back.cost
 
             type
         }
@@ -315,11 +314,7 @@ class RequestService {
                 output.right = right
                 output.side = side
 
-                if (top.cost == null || bottom.cost == null || left.cost == null || right.cost == null || side.cost == null) {
-                    output.cost = null
-                } else {
-                    output.cost = top.cost!! + bottom.cost!! + left.cost!! + right.cost!! + side.cost!!
-                }
+                output.cost = top.cost + bottom.cost + left.cost + right.cost + side.cost
 
                 output
             }
@@ -348,31 +343,39 @@ class RequestService {
      */
     private fun doSlot(slotDto: RequestSlotDto, images: List<Image>): Uni<RequestSlot> {
         val materialUni = materialRepository.findById(slotDto.material!!.id!!)
-        val priceUni = priceService.get(slotDto.measurements!!, slotDto.material!!.id!!)
-        val finishingUni = finishingService.get(slotDto.finishing!!.id!!)
-
-        return Uni.combine().all().unis(materialUni, priceUni, finishingUni).asTuple().onItem().transformToUni { tuple ->
-            val material = tuple.item1
-            val price = tuple.item2
-            val finishing = tuple.item3
-
-            if (material == null) {
-                throw InvalidIdException("material")
-            } else if (finishing == null) {
-                throw InvalidIdException("finishing")
-            }
-
-            val image = images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
-                ?: throw InvalidIdException("image")
-
-            val slot = RequestSlot()
-            slot.image = image
-            slot.material = material
-            slot.measurements = slotDto.measurements!!
-            slot.cost = price?.cost
-
-            requestSlotRepository.persist(slot)
+        val priceUni = priceService.get(slotDto.material!!.id!!, slotDto.finishings!!)
+        val finishingUni = if (slotDto.finishings.isNullOrEmpty()) {
+            Uni.createFrom().item(setOf())
+        } else {
+            finishingService.find(slotDto.finishings!!).collect().with(Collectors.toSet())
         }
+
+        return Uni.combine().all().unis(materialUni, priceUni, finishingUni).asTuple().onItem()
+            .transformToUni { tuple ->
+                val material = tuple.item1
+                val price = tuple.item2
+                val finishing = tuple.item3
+
+                if (material == null) {
+                    throw InvalidIdException("material")
+                } else if (finishing == null || price == null) {
+                    throw InvalidIdException("finishing")
+                }
+
+                val image = images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
+                    ?: throw InvalidIdException("image")
+
+                val slot = RequestSlot()
+                slot.image = image
+                slot.material = material
+                slot.measurements = slotDto.measurements!!
+
+                // Price per square-meter X Height X Width X Conversion from square-centimeter to square-meter + Finishing
+                //slot.cost =
+                //price.costPerSquareMeter * slot.measurements.height * slot.measurements.width * 0.0001 + price.fixedCost
+
+                requestSlotRepository.persist(slot)
+            }
     }
 
     /**
@@ -426,7 +429,7 @@ class RequestService {
         validateImage(slot?.image)
         validateMaterial(slot?.material)
         validateMeasurements(slot?.measurements)
-        validateFinishing(slot?.finishing)
+        validateFinishings(slot?.finishings)
     }
 
     private fun validateImage(image: ImageDto?) {
@@ -447,8 +450,8 @@ class RequestService {
         }
     }
 
-    private fun validateFinishing(finishing: FinishingDto?) {
-        if (finishing?.id == null || finishing.id!! <= 0) {
+    private fun validateFinishings(finishings: Set<FinishingDto>?) {
+        if (finishings != null && finishings.stream().filter { it?.id == null || it.id!! <= 0 }.count() > 0) {
             throw InvalidIdException("finishing")
         }
     }

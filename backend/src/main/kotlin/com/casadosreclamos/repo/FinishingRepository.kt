@@ -9,8 +9,8 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class FinishingRepository : PanacheRepository<Finishing> {
-    fun streamNonExclusive(): Multi<Finishing> {
-        return stream("SELECT DISTINCT f FROM Finishing f LEFT JOIN FETCH f.exclusiveMaterials WHERE f.exclusiveMaterials IS EMPTY")
+    fun stream(finishings: Set<Long>): Multi<Finishing> {
+        return stream("FROM Finishing f WHERE f.id IN (:ids)", Parameters.with("ids", finishings).map())
     }
 
     fun exists(name: String): Uni<Boolean> {

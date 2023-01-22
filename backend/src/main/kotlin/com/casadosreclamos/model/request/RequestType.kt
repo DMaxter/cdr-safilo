@@ -17,7 +17,7 @@ abstract class RequestType {
     open lateinit var request: Request
 
     @Transient
-    open var cost: Double? = null
+    open var cost: Double = 0.0
 }
 
 @MappedSuperclass

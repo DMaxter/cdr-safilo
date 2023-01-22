@@ -10,7 +10,7 @@ import com.casadosreclamos.repo.FinishingRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
-import org.jboss.logging.Logger
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.naming.InvalidNameException
@@ -29,12 +29,12 @@ class FinishingService {
         return finishingRepository.streamAll()
     }
 
-    fun get(id: Long): Uni<Finishing> {
-        return finishingRepository.findById(id)
+    fun find(finishings: List<FinishingDto>): Multi<Finishing> {
+        return finishingRepository.stream(finishings.stream().map { it.id!! }.collect(Collectors.toSet()))
     }
 
-    fun getNonExclusive(): Multi<Finishing> {
-        return finishingRepository.streamNonExclusive()
+    fun find(finishings: Set<FinishingDto>): Multi<Finishing> {
+        return finishingRepository.stream(finishings.stream().map { it.id!! }.collect(Collectors.toSet()))
     }
 
     @Throws(InvalidNameException::class, InvalidCostException::class, AlreadyExistsException::class)
@@ -47,8 +47,6 @@ class FinishingService {
 
         val finishing = Finishing()
         finishing.name = finishingDto.name!!
-        finishing.cost = finishingDto.cost!!
-        finishing.exclusiveMaterials = mutableSetOf()
 
         return Panache.withTransaction {
             finishingRepository.exists(finishing.name).onItem().transformToUni { value ->
@@ -59,7 +57,7 @@ class FinishingService {
                 }
             }.onItem().transformToUni { _ ->
                 materialService.getMaterials(finishingDto.materials).onItem().transform { material ->
-                    material.finishings.add(finishing)
+                    material.additionalFinishings.add(finishing)
 
                     material
                 }.toUni().onItem().transform { _ ->
@@ -80,8 +78,6 @@ class FinishingService {
             throw InvalidIdException("finishing")
         } else if (finishingDto.name == null || finishingDto.name!!.isEmpty()) {
             throw InvalidNameException()
-        } else if (finishingDto.cost == null || finishingDto.cost!! < 0) {
-            throw InvalidCostException()
         }
 
         return Panache.withTransaction {
@@ -96,7 +92,6 @@ class FinishingService {
                     }
 
                     finishing.name = finishingDto.name!!
-                    finishing.cost = finishingDto.cost!!
 
                     finishing
                 }

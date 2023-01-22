@@ -49,11 +49,7 @@ class MaterialService {
                 return@transformToUni if (value) {
                     throw AlreadyExistsException("Material")
                 } else {
-                    finishingService.getNonExclusive().collect().with(Collectors.toSet()).onItem().transformToUni { finishings ->
-                        material.finishings = finishings
-
-                        materialRepository.persist(material)
-                    }
+                    materialRepository.persist(material)
                 }
             }
         }

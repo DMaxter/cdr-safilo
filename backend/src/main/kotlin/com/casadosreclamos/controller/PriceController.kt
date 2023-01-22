@@ -1,5 +1,6 @@
 package com.casadosreclamos.controller
 
+import com.casadosreclamos.dto.FinishingDto
 import com.casadosreclamos.dto.PriceDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.CDR_ROLE
@@ -79,6 +80,7 @@ class PriceController {
     }
 
     @DELETE
+    @Path("/{id}")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
     @Operation(summary = "Delete price for given measurement")
     @APIResponses(
@@ -86,11 +88,17 @@ class PriceController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "Insufficient privileges")
     )
-    fun deletePrice(price: PriceDto): Uni<Void> {
+    fun deletePrice(@PathParam("id") priceId: Long): Uni<Void> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} is deleting a price")
+            logger.info("User ${id.principal.name} is deleting price with id ${id}")
 
-            return@transformToUni priceService.delete(price)
+            return@transformToUni priceService.delete(priceId)
         }
+    }
+
+    @POST
+    @Path("/test/{id}")
+    fun get(@PathParam("id") material: Long, finishings: Set<FinishingDto>): Uni<PriceDto> {
+        return priceService.get(material, finishings).onItem().transform { PriceDto(it) }
     }
 }

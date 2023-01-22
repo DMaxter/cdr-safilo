@@ -2,8 +2,18 @@ package com.casadosreclamos.dto
 
 import com.casadosreclamos.model.request.Price
 
-data class PriceDto(var width: Double?, var height: Double?, var material: Long?, var cost: Double?) {
+data class PriceDto(
+    var id: Long?,
+    var material: Long?,
+    var finishings: List<FinishingDto>?,
+    var costPerSquareMeter: Double?,
+    var fixedCost: Double?
+) {
     constructor(price: Price) : this(
-        price.id.measurements.width, price.id.measurements.height, price.id.materialId, price.cost
+        price.id,
+        price.material.id,
+        price.finishings.stream().map { FinishingDto(it) }.toList(),
+        price.costPerSquareMeter,
+        price.fixedCost
     )
 }
