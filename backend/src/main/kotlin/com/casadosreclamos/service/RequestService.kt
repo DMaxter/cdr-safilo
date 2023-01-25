@@ -354,25 +354,47 @@ class RequestService {
             .transformToUni { tuple ->
                 val material = tuple.item1
                 val price = tuple.item2
-                val finishing = tuple.item3
+                val finishings = tuple.item3
 
                 if (material == null) {
                     throw InvalidIdException("material")
-                } else if (finishing == null || price == null) {
+                } else if (finishings.isNullOrEmpty() || price == null) {
                     throw InvalidIdException("finishing")
                 }
 
+                // Check if image exists
                 val image = images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
                     ?: throw InvalidIdException("image")
 
+                // Check if mandatory finishings are fullfilled
+                val tmpFinishings = finishings.toMutableSet()
+
+                for (group in material.mandatoryFinishings) {
+                    var changed = false
+
+                    for (mandatory in group.finishings) {
+                        if (mandatory in tmpFinishings) {
+                            changed = true
+                            tmpFinishings.remove(mandatory)
+                            break
+                        }
+                    }
+
+                    if (!changed) {
+                        throw MandatoryFinishingMissingException()
+                    }
+                }
+
+                // Create the request
                 val slot = RequestSlot()
                 slot.image = image
                 slot.material = material
                 slot.measurements = slotDto.measurements!!
+                slot.finishings = finishings
 
                 // Price per square-meter X Height X Width X Conversion from square-centimeter to square-meter + Finishing
-                //slot.cost =
-                //price.costPerSquareMeter * slot.measurements.height * slot.measurements.width * 0.0001 + price.fixedCost
+                slot.cost =
+                    price.costPerSquareMeter * slot.measurements.height * slot.measurements.width * 0.0001 + price.fixedCost
 
                 requestSlotRepository.persist(slot)
             }
