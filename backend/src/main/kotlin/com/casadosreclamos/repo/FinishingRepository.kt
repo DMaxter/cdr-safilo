@@ -17,4 +17,12 @@ class FinishingRepository : PanacheRepository<Finishing> {
         return count("FROM Finishing f WHERE f.name = :name", Parameters.with("name", name).map()).onItem()
             .transform { it != 0L }
     }
+
+    fun exists(name: String, id: Long): Uni<Boolean> {
+        return count(
+            "FROM Finishing f WHERE f.name = :name AND id <> :id",
+            Parameters.with("name", name).and("id", id).map()
+        ).onItem()
+            .transform { it != 0L }
+    }
 }
