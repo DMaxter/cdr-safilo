@@ -24,7 +24,7 @@ class MaterialRepository : PanacheRepository<Material> {
             streamAllWithFinishings()
         } else {
             stream(
-                "SELECT DISTINCT m FROM Material m LEFT JOIN FETCH m.finishings WHERE m.id IN (:ids)",
+                "SELECT DISTINCT m FROM Material m LEFT JOIN FETCH m.additionalFinishings WHERE m.id IN (:ids)",
                 Parameters.with("ids", materials.map { it.id }).map()
             )
         }
