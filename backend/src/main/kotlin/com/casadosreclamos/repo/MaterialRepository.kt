@@ -11,7 +11,7 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class MaterialRepository : PanacheRepository<Material> {
     fun streamAllWithFinishings(): Multi<Material> {
-        return stream("SELECT DISTINCT m FROM Material m LEFT JOIN FETCH m.finishings")
+        return stream("SELECT DISTINCT m FROM Material m LEFT JOIN FETCH m.additionalFinishings LEFT JOIN FETCH m.mandatoryFinishings")
     }
 
     fun exists(name: String): Uni<Boolean> {
