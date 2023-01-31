@@ -9,6 +9,10 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class PriceRepository : PanacheRepository<Price> {
+    override fun streamAll(): Multi<Price> {
+        return stream("FROM Price p LEFT JOIN FETCH p.finishings")
+    }
+
     fun stream(material: Long): Multi<Price> {
         return stream(
             "FROM Price p LEFT JOIN FETCH p.finishings WHERE p.material.id = :material",

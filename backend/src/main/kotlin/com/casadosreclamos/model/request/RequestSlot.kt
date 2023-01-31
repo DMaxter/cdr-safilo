@@ -14,7 +14,7 @@ open class RequestSlot {
     @ManyToOne
     open lateinit var material: Material
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     open var finishings: MutableSet<Finishing> = mutableSetOf()
 
     open lateinit var measurements: Measurements

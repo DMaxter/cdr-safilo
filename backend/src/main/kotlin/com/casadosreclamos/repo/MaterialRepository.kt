@@ -29,4 +29,11 @@ class MaterialRepository : PanacheRepository<Material> {
             )
         }
     }
+
+    override fun findById(id: Long?): Uni<Material> {
+        return find(
+            "FROM Material m LEFT JOIN FETCH m.additionalFinishings LEFT JOIN FETCH m.mandatoryFinishings WHERE m.id = :id",
+            Parameters.with("id", id).map()
+        ).firstResult()
+    }
 }
