@@ -5,6 +5,7 @@ import com.casadosreclamos.exception.AlreadyExistsException
 import com.casadosreclamos.exception.InvalidCostException
 import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.InvalidNameException
+import com.casadosreclamos.model.request.FinishingGroup
 import com.casadosreclamos.model.request.Material
 import com.casadosreclamos.repo.MaterialRepository
 import io.quarkus.hibernate.reactive.panache.Panache
@@ -36,36 +37,95 @@ class MaterialService {
     }
 
     @Throws(InvalidNameException::class)
-    fun add(name: String): Uni<Material> {
-        if (name.isEmpty()) {
+    fun add(materialDto: MaterialDto): Uni<Material> {
+        if (materialDto.name.isNullOrBlank()) {
             throw InvalidNameException()
         }
 
         val material = Material()
-        material.name = name
+        material.name = materialDto.name!!
+
+        val materialExistsUni = materialRepository.exists(material.name)
+        val finishingGroupUni = if (materialDto.mandatoryFinishings.isNullOrEmpty()) {
+            Uni.createFrom().item(setOf())
+        } else {
+            finishingService.findGroups(materialDto.mandatoryFinishings!!).collect().with(Collectors.toSet())
+        }
+        val finishingsUni = if (materialDto.additionalFinishings.isNullOrEmpty()) {
+            Uni.createFrom().item(setOf())
+        } else {
+            finishingService.find(materialDto.additionalFinishings!!).collect().with(Collectors.toSet())
+        }
 
         return Panache.withTransaction {
-            materialRepository.exists(name).onItem().transformToUni { value ->
-                return@transformToUni if (value) {
-                    throw AlreadyExistsException("Material")
-                } else {
+            Uni.combine().all().unis(materialExistsUni, finishingGroupUni, finishingsUni).asTuple().onItem()
+                .transformToUni { tuple ->
+                    val exists = tuple.item1
+                    val groups = tuple.item2
+                    val finishings = tuple.item3
+
+                    if (exists) {
+                        throw AlreadyExistsException("Material")
+                    } else if (materialDto.mandatoryFinishings != null && groups.size < materialDto.mandatoryFinishings!!.size) {
+                        throw InvalidIdException("finishing group")
+                    } else if (materialDto.additionalFinishings != null && finishings.size < materialDto.additionalFinishings!!.size) {
+                        throw InvalidIdException("finishing")
+                    }
+
+                    material.mandatoryFinishings = groups
+                    material.additionalFinishings = finishings
+
                     materialRepository.persist(material)
                 }
-            }
         }
     }
 
     @Throws(InvalidNameException::class)
-    fun update(id: Long, name: String): Uni<Response> {
-        if (name.isEmpty()) {
+    fun update(materialDto: MaterialDto): Uni<Material> {
+        if (materialDto.id == null || materialDto.id!! <= 0) {
+            throw InvalidIdException("material")
+        } else if (materialDto.name.isNullOrBlank()) {
             throw InvalidNameException()
         }
 
-        return Panache.withTransaction {
-            materialRepository.findById(id).onItem().transform { material ->
-                material.name = name
+        val materialUni = materialRepository.findById(materialDto.id!!)
+        val finishingGroupUni = if (materialDto.mandatoryFinishings.isNullOrEmpty()) {
+            Uni.createFrom().item(setOf())
+        } else {
+            finishingService.findGroups(materialDto.mandatoryFinishings!!).collect().with(Collectors.toSet())
+        }
+        val finishingsUni = if (materialDto.additionalFinishings.isNullOrEmpty()) {
+            Uni.createFrom().item(setOf())
+        } else {
+            finishingService.find(materialDto.additionalFinishings!!).collect().with(Collectors.toSet())
+        }
 
-                Response.ok().build()
+        return Panache.withTransaction {
+            materialRepository.exists(materialDto.name!!, materialDto.id!!).onItem().transformToUni { exists ->
+                if (exists) {
+                    throw AlreadyExistsException("Material")
+                }
+
+                Uni.combine().all().unis(materialUni, finishingGroupUni, finishingsUni).asTuple().onItem()
+                    .transform { tuple ->
+                        val material = tuple.item1
+                        val groups = tuple.item2
+                        val finishings = tuple.item3
+
+                        if (material == null) {
+                            throw InvalidIdException("material")
+                        } else if (materialDto.mandatoryFinishings != null && groups.size < materialDto.mandatoryFinishings!!.size) {
+                            throw InvalidIdException("finishing group")
+                        } else if (materialDto.additionalFinishings != null && finishings.size < materialDto.additionalFinishings!!.size) {
+                            throw InvalidIdException("finishing")
+                        }
+
+                        material.name = materialDto.name!!
+                        material.mandatoryFinishings = groups
+                        material.additionalFinishings = finishings
+
+                        material
+                    }
             }
         }
     }

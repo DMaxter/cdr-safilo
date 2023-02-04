@@ -19,6 +19,12 @@ class MaterialRepository : PanacheRepository<Material> {
             .transform { it != 0L }
     }
 
+    fun exists(name: String, id: Long): Uni<Boolean> {
+        return count(
+            "FROM Material m WHERE m.name = :name AND id <> :id", Parameters.with("name", name).and("id", id).map()
+        ).onItem().transform { it != 0L }
+    }
+
     fun find(materials: List<MaterialDto>?): Multi<Material> {
         return if (materials.isNullOrEmpty()) {
             streamAllWithFinishings()

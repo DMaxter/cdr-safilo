@@ -3,6 +3,7 @@ package com.casadosreclamos.controller
 import com.casadosreclamos.dto.MaterialDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.CDR_ROLE
+import com.casadosreclamos.model.request.Material
 import com.casadosreclamos.service.MaterialService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
@@ -31,7 +32,6 @@ class MaterialController {
     lateinit var materialService: MaterialService
 
     @POST
-    @Path("/{material}")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
     @Operation(summary = "Register a material")
     @APIResponses(
@@ -39,11 +39,11 @@ class MaterialController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
     )
-    fun addMaterial(@PathParam("material") name: String): Uni<MaterialDto> {
+    fun addMaterial(material: MaterialDto): Uni<MaterialDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} is adding material \"$name\"")
+            logger.info("User ${id.principal.name} is adding material")
 
-            return@transformToUni materialService.add(name).onItem().transform { MaterialDto(it) }
+            return@transformToUni materialService.add(material).onItem().transform { MaterialDto(it) }
         }
     }
 
@@ -63,7 +63,6 @@ class MaterialController {
     }
 
     @PUT
-    @Path("/{id}/{name}")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
     @Operation(summary = "Updates a material")
     @APIResponses(
@@ -71,11 +70,11 @@ class MaterialController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "User doesn't have authorization to register a material")
     )
-    fun updateMaterial(@PathParam("id") materialId: Long, @PathParam("name") name: String): Uni<Response> {
+    fun updateMaterial(material: MaterialDto): Uni<MaterialDto> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} is updating material with id $materialId")
+            logger.info("User ${id.principal.name} is updating a material")
 
-            return@transformToUni materialService.update(materialId, name)
+            return@transformToUni materialService.update(material).onItem().transform { MaterialDto(it) }
         }
     }
 

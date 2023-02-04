@@ -11,6 +11,6 @@ open class FinishingGroup {
     @Column(unique = true)
     open lateinit var name: String
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     open var finishings: MutableSet<Finishing> = mutableSetOf()
 }

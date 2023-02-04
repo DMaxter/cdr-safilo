@@ -35,10 +35,6 @@ class FinishingService {
         return finishingRepository.streamAll()
     }
 
-    fun find(finishings: List<FinishingDto>): Multi<Finishing> {
-        return finishingRepository.stream(finishings.stream().map { it.id!! }.collect(Collectors.toSet()))
-    }
-
     fun find(finishings: Set<FinishingDto>): Multi<Finishing> {
         return finishingRepository.stream(finishings.stream().map { it.id!! }.collect(Collectors.toSet()))
     }
@@ -115,6 +111,10 @@ class FinishingService {
 
     fun getGroups(): Multi<FinishingGroup> {
         return finishingGroupRepository.streamAll()
+    }
+
+    fun findGroups(groups: Set<FinishingGroupDto>): Multi<FinishingGroup> {
+        return finishingGroupRepository.stream(groups.stream().map { it.id!! }.collect(Collectors.toSet()))
     }
 
     @Throws(AlreadyExistsException::class, InvalidIdException::class, InvalidNameException::class)
