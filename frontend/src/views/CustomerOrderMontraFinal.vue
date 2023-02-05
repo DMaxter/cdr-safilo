@@ -316,6 +316,56 @@
           </v-card>
         </template>
       </v-dialog>
+      <v-dialog
+        v-model="dialog2"
+        transition="dialog-bottom-transition"
+        max-width="600"
+        id="dialogo"
+      >
+        <template>
+          <v-card>
+            <v-card-text>
+              <div class="text-h6 pt-12"> Resumo do pedido: </div>
+              <div class="text-h6"> Face 1: </div>
+              <div> Material: {{ materiales[0] }} </div>
+              <div>Altura: {{ store.dimensions[0].height }}</div>
+              <div>Largura: {{ store.dimensions[0].width }}</div>
+              <div>Marca: {{ currBrand }} </div>
+              <div>Acabamentos: {{ currFinishes[0] }}</div>
+              <div class="text-h6"> Face 2: </div>
+              <div> Material:  {{ materiales[1] }}  </div>
+              <div>Altura:{{ store.dimensions[1].height }}</div>
+              <div>Largura: {{ store.dimensions[1].width }}</div>
+              <div>Marca: {{ currBrand }}</div>
+              <div>Acabamentos: {{ currFinishes[1] }}</div>
+              <div class="text-h6"> Face 3: </div>
+              <div> Material:  {{ materiales[2] }}  </div>
+              <div>Altura:{{ store.dimensions[2].height }}</div>
+              <div>Largura: {{ store.dimensions[2].width }}</div>
+              <div>Marca: {{ currBrand }}</div>
+              <div>Acabamentos: {{ currFinishes[2] }} </div>
+              <div class="text-h6"> Face 4: </div>
+              <div> Material:  {{ materiales[3] }}  </div>
+              <div>Altura:{{ store.dimensions[3].height }}</div>
+              <div>Largura: {{ store.dimensions[3].width }}</div>
+              <div>Marca: {{ currBrand }}</div>
+              <div>Acabamentos: {{ currFinishes[3] }}</div>
+              <div class="text-h6"> Face 5: </div>
+              <div> Material:  {{ materiales[4] }}   </div>
+              <div>Altura:{{ store.dimensions[4].height }}</div>
+              <div>Largura: {{ store.dimensions[4].width }} </div>
+              <div>Marca: {{ currBrand }}</div>
+              <div>Acabamentos: {{ currFinishes[4] }}</div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                @click="dialog2 = false"
+              >Voltar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
           </v-row>
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 137px;">
            <v-col cols="auto" class="pl-4">
@@ -327,6 +377,17 @@
               tile
             > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
             Voltar
+            </v-btn>
+           </v-col>
+           <v-col cols="auto">
+            <v-btn
+              @click="dialog2 = true"
+              class="d-flex flex-column customGradient"
+              small
+              dark
+              tile
+            > <v-icon style="transform: rotate(180deg);">mdi-rewind</v-icon>
+            Rever Pedido
             </v-btn>
            </v-col>
             <v-col cols="auto">
@@ -376,13 +437,54 @@ export default {
   allMaterials: null,
   allBrands: null,
   totalPrice: null,
+  dialog2: false,
+  materiales: [],
+  allFinishes: null,
+  currBrand: null,
+  currFinishes: []
   }),
   
   async created () {
     await this.getRequestPrice()
+    console.log(this.store)
     console.log(this.totalPrice)
     this.allMaterials = await Backend.getMaterials()
+    this.allMaterials.forEach(mat => {
+      store.selectedMaterial.forEach(m => {
+        if(m == mat.id)
+          this.materiales.push(mat.name)
+      })
+    })
+    console.log(this.materiales)
+    this.allFinishes = await Backend.getFinishes()
+    this.currFinishes = []
+    console.log(store.finishes)
+    for(var i = 0; i < store.finishes.length; i++){
+    var auxstr = ""
+    this.allFinishes.forEach(fin => {
+        if(store.finishes[i].length == 1){
+          if(fin.id == store.finishes[i][0]){
+            auxstr = auxstr.concat(fin.name + "; ")
+          }
+        } else if(store.finishes[i].length >= 1){
+          for(var k = 0; k < store.finishes[i].length; k++){
+            console.log(store.finishes[i][k])
+            if(fin.id == store.finishes[i][k].id){
+            auxstr = auxstr.concat(fin.name + "; ")
+          }
+          }
+
+        }
+      })
+      this.currFinishes.push(auxstr)
+    }
+  console.log(this.currFinishes)
     this.allBrands = await Backend.getBrands()
+    this.allBrands.forEach(brand => {
+      if(brand.id == store.currentBrandId[store.currentBrandId.length-1]){
+        this.currBrand = brand.name
+      }
+    })
     var currentUser = await Backend.getProfile()
     console.log(currentUser.credits)
     console.log(store.uniqueBrands)

@@ -169,6 +169,40 @@
           </v-card>
         </template>
       </v-dialog>
+      <v-dialog
+        v-model="dialog2"
+        transition="dialog-bottom-transition"
+        max-width="600"
+        id="dialogo"
+      >
+        <template>
+          <v-card>
+            <v-card-text>
+              <div class="text-h6 pt-12"> Resumo do pedido: </div>
+              <div class="text-h6"> Face 1: </div>
+              <div> Material: {{ materiales[0] }} </div>
+              <div>Altura: {{ request.type.cover.measurements.height }}</div>
+              <div>Largura: {{ request.type.cover.measurements.width }}</div>
+              <div>Marca: {{ currBrand }}</div>
+              <div>Acabamentos: {{ currFinishes[0] }}</div>
+              <template v-if=!oneFace>
+                <div class="text-h6"> Face 2: </div>
+              <div> Material: {{ materiales[1] }} </div>
+              <div>Altura: {{ request.type.back.measurements.height }}</div>
+              <div>Largura: {{ request.type.back.measurements.width }}</div>
+              <div>Marca: {{ currBrand }}</div>
+              <div>Acabamentos: {{ currFinishes[1] }}</div>
+              </template>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                @click="dialog2 = false"
+              >Voltar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
           </v-row>
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 62px;">
            <v-col cols="auto" class="pl-4">
@@ -180,6 +214,17 @@
               tile
             > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
             Voltar
+            </v-btn>
+</v-col>
+<v-col cols="auto">
+            <v-btn
+              @click="dialog2 = true"
+              class="d-flex flex-column customGradient"
+              small
+              dark
+              tile
+            > <v-icon style="transform: rotate(180deg);">mdi-rewind</v-icon>
+            Rever Pedido
             </v-btn>
            </v-col>
             <v-col cols="auto">
@@ -218,6 +263,7 @@ export default {
   },
 
   data: () => ({
+    dialog2: false,
     collapseOnScroll: true,
     myImage2: require('@/assets/logologo1.png'),
     items: ['Novo','Em Produção'],
@@ -240,19 +286,73 @@ export default {
   totalPrice: null,
   allMaterials: null,
   allBrands: null,
+  request: null,
+  materiales: [],
+  currBrand: null,
+  allFinishes: null,
+  currFinishes: [],
+  oneFace: false
+
   }),
 
   async created () {
     await this.getRequestPrice()
-    console.log(this.totalPrice)
-    console.log(store.finishes)
-    this.allMaterials = await Backend.getMaterials()
-    this.allBrands = await Backend.getBrands()
     if (store.face2 == null){
       this.facetas = [store.face1]
+      this.oneFace = true
     } else {
       this.facetas = [store.face1, store.face2]
+      this.oneFace = false
     }
+    console.log(this.totalPrice)
+    this.allMaterials = await Backend.getMaterials()
+    this.allMaterials.forEach(material => {
+      console.log(this.request)
+      if(material.id == this.request.type.cover.material.id){
+        this.materiales.push(material.name)
+      }
+      if(!this.oneFace){
+        if(material.id == this.request.type.back.material.id){
+          this.materiales.push(material.name)
+        } 
+      }
+    })
+    console.log(this.materiales)
+    this.allBrands = await Backend.getBrands()
+    this.currBrand = this.allBrands.find(x => x.id == store.currentBrandId[0]).name
+    this.allFinishes = await Backend.getFinishes()
+    console.log(this.allFinishes[0])
+    console.log(store.finishes[0])
+    this.currFinishes = ""
+    this.allFinishes.forEach(fin => {
+      if(this.oneFace){
+        store.finishes[0].forEach(f => {
+        console.log(f)
+        console.log(fin)
+        if(fin.id == f.id){
+        this.currFinishes = this.currFinishes.concat(fin.name + "; ")
+      }
+      })
+      } else {
+        this.currFinishes = []
+        for(var i = 0; i < store.finishes.length; i++){
+        var auxstr = ""
+        store.finishes[i].forEach(f => {
+        console.log(f)
+        console.log(fin)
+        if(fin.id == f.id){
+        auxstr = auxstr.concat(fin.name + "; ")
+      }
+      })
+      this.currFinishes.push(auxstr)
+    }
+      }
+    })
+    if(this.oneFace){
+      this.currFinishes = [this.currFinishes]
+    }
+    console.log(this.currFinishes)
+
     var currentUser = await Backend.getProfile()
     currentUser.credits.forEach(element => {
       if(store.uniqueBrands.includes(element.brand)){
@@ -265,9 +365,9 @@ export default {
 
   methods: {
     async placeRequest() {
-      var request = null
+      this.request = null
       if(store.face2 == null){
-      request = {
+      this.request = {
         clientId: store.currentClient,
         amount: store.quantity,
         observations: this.observacoes,
@@ -293,7 +393,7 @@ export default {
         },
       }
     } else { 
-      request = {
+      this.request = {
         clientId: store.currentClient,
         amount: store.quantity,
         observations: this.observacoes,
@@ -332,9 +432,9 @@ export default {
         },
       }
     }
-      console.log(request)
+      console.log(this.request)
       try{
-        await Backend.placeRequest(request)
+        await Backend.placeRequest(this.request)
         this.added = true
         setTimeout(() => this.$router.push({name: 'profile'}), 3000);
       } catch (error) {
@@ -343,9 +443,9 @@ export default {
       }
     },
     async getRequestPrice() {
-      var request = null
+      this.request = null
       if(store.face2 == null){
-      request = {
+      this.request = {
         clientId: store.currentClient,
         amount: store.quantity,
         observations: this.observacoes,
@@ -371,7 +471,7 @@ export default {
         },
       }
     } else { 
-      request = {
+      this.request = {
         clientId: store.currentClient,
         amount: store.quantity,
         observations: this.observacoes,
@@ -410,9 +510,9 @@ export default {
         },
       }
     }
-      console.log(request)
+      console.log(this.request)
       try{
-        this.totalPrice = await Backend.getRequestPrice(request)
+        this.totalPrice = await Backend.getRequestPrice(this.request)
       } catch (error) {
         console.log(error)
       }
