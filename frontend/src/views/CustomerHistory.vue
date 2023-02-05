@@ -450,7 +450,8 @@ data () {
             quantity: item.quantidade,
             observations: item.observations,
             cost: item.cost,
-            application: item.application
+            application: item.application,
+            finishings: item.type.cover.finishings
           }
         } else if(item.type.type == "TwoFaces"){
           store.pedidoAtual = {
@@ -465,7 +466,8 @@ data () {
             quantity: item.quantidade,
             observations: item.observations,
             cost: item.cost,
-            application: item.application
+            application: item.application,
+            finishings: [item.type.cover.finishings, item.type.back.finishings]
           }
         } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
             if(item.type.type == "RightShowcase"){
@@ -485,7 +487,9 @@ data () {
             quantity: item.quantidade,
             observations: item.observations,
             cost: item.cost,
-            application: item.application
+            application: item.application,
+            finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings, item.type.side.finishings],
+
           }
         }
         this.$router.push({name: 'details'});

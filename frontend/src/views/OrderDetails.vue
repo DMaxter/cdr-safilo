@@ -164,9 +164,9 @@
           </v-menu>
         </template>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 470px">
-          <h3 class="mb-2"> PEDIDO {{store.pedidoAtual.cod}}</h3>
-            <v-card elevation="12" color="#FAFAFA" height="400" width="400" tile>
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 480px">
+          <h3> PEDIDO {{store.pedidoAtual.cod}}</h3>
+            <v-card elevation="12" color="#FAFAFA" height="450" width="400" tile>
               <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0">
               <v-col cols="auto" class="ml-4"> Data:  {{store.pedidoAtual.data}}</v-col>
               <v-col cols="auto" class="ml-4"> Marca: {{store.pedidoAtual.marca}} </v-col>
@@ -191,6 +191,29 @@
                     @click="toggle"
                   >
                     {{store.pedidoAtual.material[n-1]}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
+              <v-col cols="auto" class="ml-4"> Acabamentos:</v-col>
+              <v-slide-group
+                multiple
+                show-arrows
+                :class="{'ml-4': theme}"
+              >
+                <v-slide-item
+                  v-for="n in store.finishes.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    active-class="purple white--text"
+                    depressed
+                    class="ml-5 mr-5"
+                    dense
+                    @click="toggle"
+                  >
+                    {{store.finishes[n-1]}}
                   </v-btn>
                 </v-slide-item>
               </v-slide-group>
@@ -322,13 +345,16 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face 1</h3>
-          <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[0]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[0].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[0].width}} cm </v-col>
               </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat}} </v-col>
+                </v-row>
             </v-card>
           </v-row>
           <v-row justify="center" class="mt-8"> 
@@ -381,12 +407,15 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face 1</h3>
-          <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[0]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[0].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[0].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[0]}} </v-col>
               </v-row>
             </v-card>
           </v-row>
@@ -423,12 +452,15 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face 2 </h3>
-          <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[1]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[1].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[1].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[1]}} </v-col>
               </v-row>
             </v-card>
           </v-row>
@@ -482,12 +514,15 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face A</h3>
-            <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+            <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[0]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[0].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[0].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[0]}} </v-col>
               </v-row>
             </v-card>
           </v-row>
@@ -524,12 +559,15 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face B </h3>
-            <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+            <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[1]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[1].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[1].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[1]}} </v-col>
               </v-row>
             </v-card>
           </v-row>
@@ -559,12 +597,15 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face C </h3>
-          <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[2]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[2].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[2].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[2]}} </v-col>
               </v-row>
             </v-card>
           </v-row>
@@ -594,12 +635,15 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face D </h3>
-          <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[3]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[3].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[3].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[3]}} </v-col>
               </v-row>
             </v-card>
           </v-row>
@@ -629,12 +673,15 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
           <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
           <h3 class="mb-6"> Face E </h3>
-          <v-card color="#FAFAFA" height="70" width="700" class="mt-3" tile>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
               <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
               <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[4]}}</v-col>
               <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[4].height}} cm </v-col>
               <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[4].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[4]}} </v-col>
               </v-row>
             </v-card>
           </v-row>
@@ -715,6 +762,7 @@ data () {
         req2: false,
         req3: false,
         req4: false,
+        finiat: null,
         theme: (store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"),
         available: [
           "IN_PRODUCTION",
@@ -725,17 +773,112 @@ data () {
     },
 async created(){
   console.log(store.pedidoAtual)
+  store.finishes = []
+  var finAux = []
   console.log(store.address)
   console.log(store.postalCode)
   if(store.pedidoAtual.modelo == "OneFace"){
+    store.pedidoAtual.finishings.forEach(fin => {
+      if(!finAux.includes(fin.name)){
+        finAux.push(fin.name)
+      }
+    })
+    store.finishes = finAux
+    this.finiat = ""
+    finAux.forEach(fin => {
+      this.finiat = this.finiat.concat(fin + "; ")
+    })
     this.req1 = true;
   } else if(store.pedidoAtual.modelo == "TwoFaces"){
+    console.log(store.pedidoAtual.finishings)
+    var no = []
+    var str = ""
+    store.pedidoAtual.finishings.forEach(fin => {
+      console.log(fin)
+      if(fin.length > 1){
+        fin.forEach(f =>{
+          str = str.concat(f.name + "; ")
+
+          if(!finAux.includes(f.name)){
+            finAux.push(f.name)
+          }
+        })
+      } else if(fin.length == 1){
+        str = str.concat(fin[0].name + "; ")
+        if(!finAux.includes(fin[0].name)){
+        finAux.push(fin[0].name)
+        }
+        
+
+      }
+      console.log(str)
+      no.push(str)
+    })
+    this.finiat = no
+    console.log(finAux)
+    store.finishes = finAux
     this.req2 = true;
   } else if(store.pedidoAtual.modelo == "RightShowcase"){
+    var no1 = []
+    store.pedidoAtual.finishings.forEach(fin => {
+      var str1 = ""
+
+      if(fin.length > 1){
+        fin.forEach(f =>{
+          str1 = str1.concat(f.name + "; ")
+
+          if(!finAux.includes(f.name)){
+            finAux.push(f.name)
+          }
+        })
+      } else if(fin.length == 1){
+        str1 = str1.concat(fin[0].name + "; ")
+
+        if(!finAux.includes(fin[0].name)){
+        finAux.push(fin[0].name)
+        }
+      }
+      no1.push(str1)
+
+    })
+    this.finiat = no1
+
+    console.log(finAux)
+    store.finishes = finAux
     this.req3 = true;
   } else if(store.pedidoAtual.modelo == "LeftShowcase"){ 
+    var no2= []
+    store.pedidoAtual.finishings.forEach(fin => {
+      var str2 = ""
+      console.log(fin)
+      console.log(fin.length)
+      if(fin.length > 1){
+        fin.forEach(f =>{
+          str2 = str2.concat(f.name + "; ")
+          if(!finAux.includes(f.name)){
+            console.log(f.name)
+            finAux.push(f.name)
+          }
+        })
+      } else if(fin.length == 1){
+        str2 = str2.concat(fin[0].name + "; ")
+        console.log(fin.name)
+        if(!finAux.includes(fin[0].name)){
+        finAux.push(fin[0].name)
+        
+
+        }
+      }
+      console.log(finAux)
+      no2.push(str2)
+    })
+    this.finiat = no2
+    console.log(this.finiat)
+    console.log(finAux)
+    store.finishes = finAux
     this.req4 = true;
   }
+  console.log(store.finishes)
   this.profile = await Backend.getProfile()
   if(this.profile.roles[0] == 'CDR'){
     this.menu2 = true

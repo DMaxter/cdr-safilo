@@ -210,8 +210,16 @@
           hide-details
           outlined
           ></v-text-field>
+          <v-text-field
+          class="mt-4"
+            style="width: 300px; pointer-events: none; border-radius: 0px;"
+            :value="getFinishes()"
+            hide-details
+            dense
+            outlined
+          ></v-text-field>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-8">
+          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
             <v-col cols="auto">
           <v-text-field
             style="width: 257px; pointer-events: none; border-radius: 0px;"
@@ -227,7 +235,7 @@
             ></v-checkbox>
           </v-col>
           </v-row>
-           <v-row justify="center" align="center" class="d-flex mt-8">
+           <v-row justify="center" align="center" class="d-flex ">
             <v-col cols="auto">
             <v-img :src=store.pedidoAtual.images[n] contain height="80px" width="80px" @click.stop="dialog = true"></v-img>
             </v-col>
@@ -244,7 +252,7 @@
             <v-col cols="2">
             </v-col>
            </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 40px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click = "$router.go(-1)"
@@ -330,6 +338,21 @@ export default {
     }
   },
     methods: {
+      getFinishes() {
+        var finitos = "Acabamentos: "
+        console.log(store.pedidoAtual.finishings)
+        if(store.pedidoAtual.modelo == "OneFace"){
+        store.pedidoAtual.finishings.forEach(fin => {
+        finitos = finitos.concat(fin.name + "; ")
+        })
+        return finitos
+      } else if(store.pedidoAtual.modelo == "TwoFaces"){
+        store.pedidoAtual.finishings[this.n].forEach(fin => {
+        finitos = finitos.concat(fin.name + "; ")
+        })
+        return finitos
+      }
+      },
       getHeight() {
         if(store.pedidoAtual.modelo == "OneFace"){
           return store.pedidoAtual.dimensoes[0].height;

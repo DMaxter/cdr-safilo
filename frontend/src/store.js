@@ -41,7 +41,8 @@ export const store = reactive({
       quantity: null,
       observations: null,
       cost: null,
-      application: null
+      application: null,
+      finishings: null
     },
   currentClient: null,
   currentAddress: null,
@@ -63,4 +64,5 @@ export const store = reactive({
   materialSearch: null,
   address: null,
   postalCode: null,
+  finishes: []
 })

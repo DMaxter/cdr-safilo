@@ -85,32 +85,48 @@
             </v-row>
            </v-col>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-          <v-select style="width: 257px; border-radius: 0px"
+          <v-row justify="center" align="center" class="d-flex mt-2">
+            <v-col cols="3">
+          <v-select style="border-radius: 0px"
           :items="materials"
           v-model="material"
           label="Material"
           dense
           outlined
           hide-details
+          @change="getFinishes()"
           ></v-select>
-          </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-8">
-            <v-col cols="auto">
+        </v-col>
+        <v-col cols="3">
+
           <v-text-field
-            style="width: 257px; border-radius: 0px"
+            style="border-radius: 0px"
             v-model="quantity"
             label="Quantidade"
             hide-details
             dense
             outlined
           ></v-text-field>
+        </v-col>
+
+          </v-row>
+          
+          <v-row justify="center" align="center" class="d-flex flex-column mt-8">
+            <v-select style="border-radius: 0px"
+          :items="finishes"
+          v-model="finish"
+          label="Acabamentos"
+          dense
+          multiple
+          outlined
+          hide-details
+          ></v-select>
           <v-checkbox
             v-model="checkbox"
             hide-details
+            dense
             :label="`Aplicação?`"
           ></v-checkbox>
-          </v-col>
           </v-row>
            <v-row justify="center" align="center" class="d-flex mt-8">
 <v-dialog
@@ -259,6 +275,10 @@ export default {
     picked: null,
     images: [
     ],
+    finishes: [],
+    allFinishes: [],
+    allFinishGroup: [],
+    finish: null
 
   }),
     methods: {
@@ -273,6 +293,19 @@ export default {
         var cost2 = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
         store.currentCost = store.currentCost + (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
         store.dimensions.push({width: this.width, height: this.height})
+        var fafa = []
+        var finAux = []
+        if(this.finish != null){
+        this.finish.forEach(fin => {
+          finAux.push(fin.split("*")[0])
+        })
+        this.allFinishes.forEach(element => {
+          if(finAux.includes(element.name))
+          fafa.push({id: element.id})
+        });
+      }
+        store.finishes.push(fafa)
+        console.log(store.finishes)
         this.allBrands.forEach(element => {
           if(element.name == this.brand){
             store.currentBrandId.push(element.id)
@@ -293,7 +326,33 @@ export default {
         store.images.push(this.images[this.picked].id)
       },
 
-        
+      getFinishes: async function () {
+      try {
+        var selectedMat = null;
+        console.log(store.selectedMaterial)
+        this.allMaterials.forEach(element => {
+          if(element.name == this.material)
+          selectedMat = element
+        });
+        this.allFinishes = await Backend.getFinishes()
+        this.allFinishes.forEach(element => {
+          if(selectedMat.additionalFinishings.find(x => x.id == element.id))
+          this.finishes.push(element.name)
+        });
+        this.allFinishGroups = await Backend.getFinishGroups()
+        this.allFinishGroups.forEach(element => {
+          if(selectedMat.mandatoryFinishings.find(x => x.id == element.id)){
+            element.finishings.forEach(element2 => {
+              this.finishes.push(element2.name + "*")
+            })
+          }
+        });
+        console.log(this.finishes)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
   getMaterials: async function () {
       try {
         this.allMaterials = await Backend.getMaterials()
@@ -341,6 +400,7 @@ export default {
       store.images = [store.images[0]]
       store.dimensions = [store.dimensions[0]]
       store.selectedMaterial = [store.selectedMaterial[0]]
+      store.finishes = [store.finishes[0]]
     }
 };
 

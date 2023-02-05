@@ -245,6 +245,7 @@ export default {
   async created () {
     await this.getRequestPrice()
     console.log(this.totalPrice)
+    console.log(store.finishes)
     this.allMaterials = await Backend.getMaterials()
     this.allBrands = await Backend.getBrands()
     if (store.face2 == null){
@@ -286,7 +287,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           }
         },
       }
@@ -311,7 +313,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           },
           back: {
             image: { 
@@ -323,7 +326,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[1]
-            }
+            },
+            finishings: store.finishes[1]
           }
         },
       }
@@ -361,7 +365,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           }
         },
       }
@@ -386,7 +391,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           },
           back: {
             image: { 
@@ -398,7 +404,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[1]
-            }
+            },
+            finishings: store.finishes[1]
           }
         },
       }

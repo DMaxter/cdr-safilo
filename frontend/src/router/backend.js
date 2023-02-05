@@ -63,7 +63,16 @@ export default class Backend {
   }
 
   static async addMaterial(material) {
-    return httpClient.post(`/material/${material}`).then(response => {
+    return httpClient.post(`/material/`, material).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+  
+  static async addFinish(finish) {
+    return httpClient.post(`/finishing`, finish).then(response => {
       return response.data
     })
       .catch(async error => {
@@ -90,14 +99,33 @@ export default class Backend {
     })
   }
 
-  static async updateMaterial(id, name) {
-    return httpClient.put(`/material/${id}/${name}`).then(response => {
+  static async updateMaterial(material) {
+    return httpClient.put(`/material/`, material).then(response => {
       return response.data
     })
       .catch(async error => {
       throw Error(await this.errorMessage(error.reponse))
     })
   }
+
+  static async getFinishes() {
+    return httpClient.get("/finishing").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async getFinishGroups() {
+    return httpClient.get("/finishing/group").then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
 
   static async getBrands() {
     return httpClient.get("/brand").then(response => {
@@ -128,6 +156,24 @@ export default class Backend {
 
   static async deleteBrand(id) {
     return httpClient.delete(`/brand/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async deleteFinish(id) {
+    return httpClient.delete(`/finishing/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.reponse))
+    })
+  }
+
+  static async deleteFinishGroup(id) {
+    return httpClient.delete(`/finishing/group/${id}`).then(response => {
       return response.data
     })
       .catch(async error => {
@@ -195,6 +241,24 @@ export default class Backend {
     })
   }
 
+  static async updateFinish(finish) {
+    return httpClient.put(`/finishing`, finish).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async updateFinishGroup(finish) {
+    return httpClient.put(`/finishing/group`, finish).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async logout() {
     return httpClient.delete('/auth/logout')
       .then(response => {
@@ -207,6 +271,15 @@ export default class Backend {
 
   static async addComercial(client) {
     return httpClient.post("/auth/register", client).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async addFinishGroup(name, group) {
+    return httpClient.post(`/finishing/group/${name}`, group).then(response => {
       return response.data
     })
       .catch(async error => {
@@ -242,7 +315,7 @@ export default class Backend {
   }
 
   static async deletePrice(price) {
-    return httpClient.delete("/price", { data: price }).then(response => {
+    return httpClient.delete(`/price/${price}`).then(response => {
       return response.data
     })
       .catch(async error => {

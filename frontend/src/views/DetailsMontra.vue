@@ -370,7 +370,7 @@
             <v-row justify="center" align="center" class="d-flex">
           <v-col cols="5" >
           <v-text-field style="pointer-events: none; border-radius: 0px;"
-          label = "material"
+          label = "Material"
           :value = store.pedidoAtual.material[n-1]
           dense
           hide-details
@@ -381,6 +381,15 @@
           <v-text-field style="pointer-events: none; border-radius: 0px;"
           label="Marca"
           :value = store.pedidoAtual.marca
+          dense
+          hide-details
+          outlined
+        ></v-text-field>
+      </v-col>
+      <v-col cols="8" >
+          <v-text-field style="pointer-events: none; border-radius: 0px;"
+          label="Acabamentos"
+          :value = getFinishes(n-1)
           dense
           hide-details
           outlined
@@ -401,13 +410,13 @@
               </v-row>
             </v-col>
             </v-row>
-            <v-col cols="4" class="mt-0 pa-0">
-              <v-row justify="center" align="start" class="d-flex flex-column">
-                <v-col class="pt-0">
+            <v-col cols="8" class="mt-0 pa-0">
+              <v-row justify="center" align="center" class="d-flex">
+                <v-col cols="12" class="pt-0">
               Medidas (cm)
               </v-col>
-              <v-col class="pa-0">
-            <v-text-field style="width: 200px; pointer-events: none; border-radius: 0px;"
+              <v-col cols="5" class="pa-0 mr-1">
+            <v-text-field style="pointer-events: none; border-radius: 0px;"
             label= "Altura"
             :value="getHeight(n-1)"
             outlined
@@ -415,8 +424,8 @@
             hide-details
           ></v-text-field>
               </v-col>
-            <v-col class="pa-0 mt-3">
-            <v-text-field style="width: 200px; pointer-events: none; border-radius: 0px;"
+            <v-col cols="5" class="pa-0 ml-1">
+            <v-text-field style="pointer-events: none; border-radius: 0px;"
             label="Largura"
             :value="getWidth(n-1)"
             outlined
@@ -558,6 +567,13 @@ export default {
     }
   },
   methods: {
+    getFinishes(n) {
+        var finitos = "Acabamentos: "
+        store.pedidoAtual.finishings[n].forEach(fin => {
+        finitos = finitos.concat(fin.name + "; ")
+        })
+        return finitos
+      },
       getHeight(n) {
         return store.pedidoAtual.dimensoes[n].height
       },

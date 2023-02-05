@@ -281,15 +281,29 @@
               <h2> Face {{faces[n-1]}} </h2>
             </v-col>
           <v-row justify="center" align="center" class="d-flex">
-            <v-col cols="11" >
+            <v-col cols="6" >
           <v-select
-          style="border-radius: 0px; width: 200px"
+          style="border-radius: 0px; width: 160px"
           :items="materials"
           label="Material"
           dense
           hide-details
           outlined
           v-model="material[`material`+n]"
+          @change="getFinishes()"
+        ></v-select>
+        </v-col>
+
+        <v-col cols="6" >
+          <v-select
+          style="border-radius: 0px; width: 160px"
+          :items="finishes"
+          label="Acabamentos"
+          dense
+          multiple
+          hide-details
+          outlined
+          v-model="finish[`finish`+n]"
         ></v-select>
         </v-col>
         
@@ -513,8 +527,40 @@ export default {
     brand: null,
     widths: { width1: null, width2: null, width3: null, width4: null, width5: null},
     heights: { height1: null, height2: null, height3: null, height4: null, height5: null},
+    finish: { finish1: [], finish2: [], finish3: [], finish4: [], finish5: []},
+    allFinishes: null,
+    allFinishGroups: null,
+    finishes: []
   }),
   methods: {
+    getFinishes: async function () {
+      try {
+        this.finishes = []
+        var selectedMat = null;
+        console.log(this.material[`material`+(this.onboarding+1)])
+        this.allMaterials.forEach(element => {
+          if(element.name == this.material[`material`+(this.onboarding+1)])
+          selectedMat = element
+        });
+        this.allFinishes = await Backend.getFinishes()
+        this.allFinishes.forEach(element => {
+          if(selectedMat.additionalFinishings.find(x => x.id == element.id))
+          this.finishes.push(element.name)
+        });
+        this.allFinishGroups = await Backend.getFinishGroups()
+        this.allFinishGroups.forEach(element => {
+          if(selectedMat.mandatoryFinishings.find(x => x.id == element.id)){
+            element.finishings.forEach(element2 => {
+              this.finishes.push(element2.name + "*")
+            })
+          }
+        });
+        console.log(this.finishes)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
     nextScreen () {
       var uniqueBrands = []
       var costPerBrand = new Map()
@@ -529,7 +575,6 @@ export default {
         });
 
       var cost = 0;
-      
         for (let n = 1; n < 6; n++) {
           this.allMaterials.forEach(element => {
           if(element.name == this.material[`material`+n]){
@@ -540,6 +585,22 @@ export default {
             var currCost = costPerBrand.get(this.brand[`brand`+n])
             currCost += (((this.widths[`width`+n]/100) * (this.heights[`height`+n]/100)) * price)
             costPerBrand.set(this.brand, currCost)
+            var finToUse = this.finish[`finish`+n]
+            var finAux = []
+            finToUse.forEach(fin => {
+              finAux.push(fin.split("*")[0])
+            })
+            console.log(finAux)
+            var finishesForScreen = []
+            this.allFinishes.forEach(finishe => {
+              finAux.forEach(fin => {
+                if(fin == finishe.name){
+                  finishesForScreen.push({id: finishe.id})
+                }
+                console.log(finishesForScreen)
+                })
+              })
+          store.finishes.push(finishesForScreen)
           }
         });
         }
@@ -582,6 +643,7 @@ export default {
         console.error(error)
       }
     },
+    
     getBrands: async function () {
       try {
         this.allBrands = await Backend.getBrands()
@@ -612,6 +674,7 @@ export default {
     },
      created: async function () {
       store.images = []
+      store.finishes = []
       store.facesDefault = [
           {
             face: "A",

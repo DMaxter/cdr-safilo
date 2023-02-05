@@ -423,7 +423,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           },
           bottom: {
            
@@ -436,7 +437,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[1]
-            }
+            },
+            finishings: store.finishes[1]
           },
           left: {
             
@@ -449,7 +451,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[2]
-            }
+            },
+            finishings: store.finishes[2]
           },
           right: {
             
@@ -462,7 +465,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[3]
-            }
+            },
+            finishings: store.finishes[3]
           },
           side: {
             
@@ -475,7 +479,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[4]
-            }
+            },
+            finishings: store.finishes[4]
           }
         },
       }
@@ -501,7 +506,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           },
           bottom: {
            
@@ -514,7 +520,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[1]
-            }
+            },
+            finishings: store.finishes[1]
           },
           left: {
             
@@ -527,7 +534,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[2]
-            }
+            },
+            finishings: store.finishes[2]
           },
           right: {
            
@@ -540,7 +548,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[3]
-            }
+            },
+            finishings: store.finishes[3]
           },
           side: {
            
@@ -553,7 +562,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[4]
-            }
+            } ,
+            finishings: store.finishes[4]
           }
         },
       }
@@ -569,7 +579,7 @@ export default {
     },
     async getRequestPrice() {
       try{
-      var request = null
+        var request = null
       if(store.isActive2){
       request = {
         clientId: store.currentClient,
@@ -592,7 +602,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           },
           bottom: {
            
@@ -605,7 +616,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[1]
-            }
+            },
+            finishings: store.finishes[1]
           },
           left: {
             
@@ -618,7 +630,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[2]
-            }
+            },
+            finishings: store.finishes[2]
           },
           right: {
             
@@ -631,7 +644,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[3]
-            }
+            },
+            finishings: store.finishes[3]
           },
           side: {
             
@@ -644,7 +658,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[4]
-            }
+            },
+            finishings: store.finishes[4]
           }
         },
       }
@@ -670,7 +685,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[0]
-            }
+            },
+            finishings: store.finishes[0]
           },
           bottom: {
            
@@ -683,7 +699,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[1]
-            }
+            },
+            finishings: store.finishes[1]
           },
           left: {
             
@@ -696,7 +713,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[2]
-            }
+            },
+            finishings: store.finishes[2]
           },
           right: {
            
@@ -709,7 +727,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[3]
-            }
+            },
+            finishings: store.finishes[3]
           },
           side: {
            
@@ -722,7 +741,8 @@ export default {
             },
             material: { 
               id: store.selectedMaterial[4]
-            }
+            } ,
+            finishings: store.finishes[4]
           }
         },
       }

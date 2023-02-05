@@ -98,32 +98,48 @@
             </v-row>
            </v-col>
           </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-          <v-select style="width: 257px; border-radius: 0px"
+          <v-row justify="center" align="center" class="d-flex mt-2">
+            <v-col cols="3">
+          <v-select style="border-radius: 0px"
           :items="materials"
           v-model="material"
           label="Material"
           dense
           outlined
           hide-details
+          @change="getFinishes()"
           ></v-select>
-          </v-row>
-          <v-row justify="center" align="center" class="d-flex flex-column mt-8">
-            <v-col cols="auto">
+        </v-col>
+        <v-col cols="3">
+
           <v-text-field
-            style="width: 257px; border-radius: 0px"
+            style="border-radius: 0px"
             v-model="quantity"
             label="Quantidade"
             hide-details
             dense
             outlined
           ></v-text-field>
+        </v-col>
+
+          </v-row>
+          
+          <v-row justify="center" align="center" class="d-flex flex-column mt-8">
+            <v-select style="border-radius: 0px"
+          :items="finishes"
+          v-model="finish"
+          label="Acabamentos"
+          dense
+          multiple
+          outlined
+          hide-details
+          ></v-select>
           <v-checkbox
             v-model="checkbox"
             hide-details
+            dense
             :label="`Aplicação?`"
           ></v-checkbox>
-          </v-col>
           </v-row>
            <v-row justify="center" align="center" class="d-flex mt-8">
 <v-dialog
@@ -210,7 +226,7 @@
             ></v-checkbox>
             </v-col>
            </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 65px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click = "$router.push('order')"
@@ -278,6 +294,10 @@ export default {
     picked: null,
     images: [
     ],
+    allFinishes: null,
+    allFinishGroups: null,
+    finishes: [],
+    finish: null
 
   }),
     methods: {
@@ -308,6 +328,19 @@ export default {
         store.application = this.checkbox
         store.uniqueBrands = uniqueBrands
         store.costPerBrand = costPerBrand
+        var fafa = []
+        var finAux = []
+        if(this.finish != null){
+        this.finish.forEach(fin => {
+          finAux.push(fin.split("*")[0])
+        })
+        this.allFinishes.forEach(element => {
+          if(finAux.includes(element.name))
+          fafa.push({id: element.id})
+        });
+        }
+        store.finishes.push(fafa)
+        console.log(store.finishes)
         if(this.ex4){
           this.$router.push({name: 'order22'});
         } else {
@@ -329,6 +362,32 @@ export default {
           this.materials.push(element.name)
         });
         console.log(this.materials)
+      } catch (error) {
+        // TODO: Show something
+        console.error(error)
+      }
+    },
+    getFinishes: async function () {
+      try {
+        var selectedMat = null;
+        this.allMaterials.forEach(element => {
+          if(element.name == this.material)
+          selectedMat = element
+        });
+        this.allFinishes = await Backend.getFinishes()
+        this.allFinishes.forEach(element => {
+          if(selectedMat.additionalFinishings.find(x => x.id == element.id))
+          this.finishes.push(element.name)
+        });
+        this.allFinishGroups = await Backend.getFinishGroups()
+        this.allFinishGroups.forEach(element => {
+          if(selectedMat.mandatoryFinishings.find(x => x.id == element.id)){
+            element.finishings.forEach(element2 => {
+              this.finishes.push(element2.name + "*")
+            })
+          }
+        });
+        console.log(this.finishes)
       } catch (error) {
         // TODO: Show something
         console.error(error)
@@ -380,6 +439,7 @@ export default {
       store.currentCost = null
       store.application = false
       store.costPerBrand = null
+      store.finishes = []
       store.pedidoAtual = {
         cod: null,
         data: null,
