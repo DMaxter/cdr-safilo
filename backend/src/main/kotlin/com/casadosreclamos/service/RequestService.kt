@@ -358,7 +358,7 @@ class RequestService {
 
                 if (material == null) {
                     throw InvalidIdException("material")
-                } else if ((slotDto.finishings != null && finishings.isNullOrEmpty()) || price == null) {
+                } else if ((slotDto.finishings != null && slotDto.finishings!!.isNotEmpty() && finishings.isNullOrEmpty()) || price == null) {
                     throw InvalidIdException("finishing")
                 }
 
