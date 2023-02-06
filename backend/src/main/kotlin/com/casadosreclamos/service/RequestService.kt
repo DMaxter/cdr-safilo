@@ -30,6 +30,8 @@ import com.casadosreclamos.dto.OneFace as OneDto
 import com.casadosreclamos.dto.RightShowcase as RightDto
 import com.casadosreclamos.dto.TwoFaces as TwoDto
 
+private const val SEND_COST = 16.75
+
 @ApplicationScoped
 class RequestService {
     @Inject
@@ -118,10 +120,11 @@ class RequestService {
                 plafondRepository.findById(user, brand)
             }.onItem().transformToUni { plafond ->
                 // Check if user has enough plafond and debit the amount for current request
-                // Save the request
                 if (plafond == null) {
                     throw NotEnoughCreditsException()
                 }
+
+                requestType.cost *= request.amount + SEND_COST
 
                 if (plafond.amount < requestType.cost) {
                     throw NotEnoughCreditsException()
@@ -134,7 +137,7 @@ class RequestService {
                 // Update the requestType and assign the cost to the request
                 requestType.request = request
                 request.type = requestType
-                request.cost = requestType.cost * request.amount
+                request.cost = requestType.cost
 
                 requestTypeRepository.persist(requestType)
             }
