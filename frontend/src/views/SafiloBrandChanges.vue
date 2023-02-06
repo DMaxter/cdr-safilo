@@ -60,14 +60,26 @@
             </v-btn-toggle>
           </v-menu>
           </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mb-4 mt-5">
+            <v-row justify="center" align="center" class="d-flex flex-column">
             </v-row>
-            <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-        <v-data-table :headers="headers" :items="desserts2" fixed-header item-key="name" hide-default-footer height="330" style="width: 600px;" class="elevation-1 my-header-style mt-3">
+            <v-row justify="center" align="center" class="d-flex flex-column">
+        <v-data-table :headers="headers" :items="desserts2" :search="procura" fixed-header disable-pagination item-key="name" hide-default-footer height="330" style="width: 600px;" class="elevation-1 my-header-style mt-3">
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="currentItem = item; toDelete = true, dialog1 = true">mdi-delete</v-icon>
             <v-icon @click="currentItem = item; dialog2 = true">mdi-pen</v-icon>
           </template>
+          <template v-slot:top>
+                  <v-container fluid>
+                    <v-row>
+                      <v-col cols="5">
+                        <v-row class="pa-2">
+                          <v-text-field style="width: 150px; border-radius: 0px;" v-model="procura" label="Procurar" hide-details outlined
+                            dense></v-text-field>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </template>
     </v-data-table>
             </v-row>
             <v-row justify="center">
@@ -187,7 +199,7 @@
     </v-dialog>
 </template>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 62px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 32px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click="$router.push('configure')"
@@ -252,6 +264,7 @@ data () {
         failed: false,
         toDelete: false,
         toDelete2: false,
+        procura: ""
       }
     },
     async created() { 
