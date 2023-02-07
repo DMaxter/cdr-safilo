@@ -72,13 +72,13 @@ class UserService {
         val userUni = userRepository.findByEmailWithCredits(userId)
         val brandUni = brandRepository.findById(brandId)
 
-        return Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
-            user = tuple.item1 ?: throw InvalidUserException()
-            brand = tuple.item2 ?: throw InvalidIdException("brand")
+        return Panache.withTransaction {
+            Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
+                user = tuple.item1 ?: throw InvalidUserException()
+                brand = tuple.item2 ?: throw InvalidIdException("brand")
 
-            plafondRepository.findById(user!!, brand!!)
-        }.onItem().transformToUni { plafond ->
-            Panache.withTransaction {
+                plafondRepository.findById(user!!, brand!!)
+            }.onItem().transformToUni { plafond ->
                 if (plafond != null) {
                     plafond.amount = credits
 
@@ -96,10 +96,10 @@ class UserService {
 
                     plafondRepository.persist(newPlafond)
                 }
+            }.onItem().transform { plafond ->
+                user!!.credits.add(plafond)
+                user
             }
-        }.onItem().transform { plafond ->
-            user!!.credits.add(plafond)
-            user
         }
     }
 }
