@@ -124,7 +124,7 @@ class RequestService {
                     throw NotEnoughCreditsException()
                 }
 
-                requestType.cost *= request.amount + SEND_COST
+                requestType.cost = requestType.cost * request.amount + SEND_COST
 
                 if (plafond.amount < requestType.cost) {
                     throw NotEnoughCreditsException()
@@ -169,7 +169,7 @@ class RequestService {
                 // Create RequestType instance
                 toRequestType(request.type!!, brand.images)
             }.onItem().transform { requestType ->
-                requestType.cost * request.amount!!
+                requestType.cost * request.amount!! + SEND_COST
             }
         }
     }
