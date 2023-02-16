@@ -4,7 +4,9 @@
   <v-container fill-height>
     <v-row justify="center" align="center" class="d-print-none">
         <v-col cols="auto" >
-          <v-card elevation="12" height="600" width="800" tile style="background-color: #E0E0E0">
+          <v-card elevation="12" :height="$vuetify.breakpoint.height > 620
+                ? '600px' 
+                : '480px'" width="800" tile style="background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
             <template v-if="this.menu1">
             <v-menu
@@ -164,9 +166,17 @@
           </v-menu>
         </template>
           </v-row>
-          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 480px">
-          <h3> PEDIDO {{store.pedidoAtual.cod}}</h3>
-            <v-card elevation="12" color="#FAFAFA" height="450" width="400" tile>
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" :style="$vuetify.breakpoint.height > 620
+                ? 'height: 480px' 
+                : 'height: 350px'">
+          <h3> PEDIDO {{store.pedidoAtual.cod}} </h3>
+            <v-card elevation="12" color="#FAFAFA" :height="$vuetify.breakpoint.height > 620
+                ? '450px' 
+                : '320px'" :width="$vuetify.breakpoint.height > 620
+                ? '400px' 
+                : '600px'" tile>
+          <template v-if="$vuetify.breakpoint.height > 620">
+          
               <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0">
               <v-col cols="auto" class="ml-4"> Data:  {{store.pedidoAtual.data}}</v-col>
               <v-col cols="auto" class="ml-4"> Marca: {{store.pedidoAtual.marca}} </v-col>
@@ -298,9 +308,147 @@
 </template>
               </v-col>
               </v-row>
+            </template>
+            <template v-else>
+              <v-row justify="space-between" align="start" class="d-flex flex-column mt-0">
+              <v-row justify="center" align="center" class="d-flex">
+              <v-col cols="auto" class="ml-7"> Data:  {{store.pedidoAtual.data}}</v-col>
+              <v-col cols="auto" class="ml-7"> Marca: {{store.pedidoAtual.marca}} </v-col>
+              <v-col cols="auto" class="ml-7"> Modelo: {{store.pedidoAtual.modelo}} </v-col>
+              </v-row>
+              <v-col cols="auto" class="ml-4"> Material:</v-col>
+              <v-slide-group
+                multiple
+                show-arrows
+                :class="{'ml-4': theme}"
+              >
+                <v-slide-item
+                  v-for="n in store.pedidoAtual.material.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    active-class="purple white--text"
+                    depressed
+                    class="ml-5 mr-5"
+                    dense
+                    @click="toggle"
+                  >
+                    {{store.pedidoAtual.material[n-1]}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
+              <v-col cols="auto" class="ml-4"> Acabamentos:</v-col>
+              <v-slide-group
+                multiple
+                show-arrows
+                :class="{'ml-4': theme}"
+              >
+                <v-slide-item
+                  v-for="n in store.finishes.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    active-class="purple white--text"
+                    depressed
+                    class="ml-5 mr-5"
+                    dense
+                    @click="toggle"
+                  >
+                    {{store.finishes[n-1]}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
+              <v-col cols="auto" class="ml-4"> Dimensões (altura x largura, em cm):</v-col>
+              <v-slide-group
+                multiple
+                show-arrows
+                :class="{'ml-4': theme}"
+              >
+                <v-slide-item
+                  v-for="n in store.pedidoAtual.dimensoes.length"
+                  :key="n"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-btn
+                    :input-value="active"
+                    active-class="purple white--text"
+                    depressed
+                    class="ml-5 mr-5"
+                    dense
+                    @click="toggle"
+                  >
+                    {{store.pedidoAtual.dimensoes[n-1].height}}, {{store.pedidoAtual.dimensoes[n-1].width}}
+                  </v-btn>
+                </v-slide-item>
+              </v-slide-group>
+              <v-col cols="auto" class="d-flex ml-4"> Estado: {{store.pedidoAtual.estado}}
+                <template>
+    <v-dialog
+      v-if="this.show"
+      v-model="dialog1"
+      persistent
+      max-width="500px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn class="d-flex ml-5 customGradient" small dark tile v-bind="attrs" v-on="on"> Alterar 
+              <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
+        </v-btn>  
+      </template>
+      <v-card>
+        <v-card-title class="justify-center">
+          <span class="text-h5"> Alterar estado do pedido </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <v-col
+                cols="8"
+              >
+                <v-select
+                  :items=available
+                  required
+                  v-model = picked
+                ></v-select>
+              </v-col>
+              <v-col
+                cols="12"
+              >
+              Estado atual: {{store.pedidoAtual.estado}}
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog1 = false;"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="updateStatus(); dialog1 = false;"
+          >
+            Alterar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+</template>
+              </v-col>
+              </v-row>
+            </template>
             </v-card>
           </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex mt-4" style="height: 28px">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex mt-4" :style="$vuetify.breakpoint.height > 620
+                ? 'height: 28px' 
+                : 'height: 38px'">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click="$router.go(-1)"
