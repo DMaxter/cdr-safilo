@@ -369,7 +369,7 @@ class RequestService {
                 val image = images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
                     ?: throw InvalidIdException("image")
 
-                // Check if mandatory finishings are fullfilled
+                // Check if mandatory finishings are fulfilled
                 val tmpFinishings = finishings.toMutableSet()
 
                 for (group in material.mandatoryFinishings) {
