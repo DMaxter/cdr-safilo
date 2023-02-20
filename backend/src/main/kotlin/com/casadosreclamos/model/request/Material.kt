@@ -11,9 +11,9 @@ open class Material {
     @Column(unique = true)
     open lateinit var name: String
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     open var additionalFinishings: MutableSet<Finishing> = mutableSetOf()
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     open var mandatoryFinishings: MutableSet<FinishingGroup> = mutableSetOf()
 }

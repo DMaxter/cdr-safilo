@@ -11,7 +11,7 @@ open class RequestSlot {
     @ManyToOne
     open lateinit var image: Image
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     open lateinit var material: Material
 
     @ManyToMany(fetch = FetchType.EAGER)
