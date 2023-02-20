@@ -29,7 +29,7 @@ class MaterialService {
     lateinit var finishingService: FinishingService
 
     fun getAll(): Multi<Material> {
-        return materialRepository.streamAllWithFinishings()
+        return materialRepository.streamAll()
     }
 
     fun getMaterials(materials: List<MaterialDto>?): Multi<Material> {
