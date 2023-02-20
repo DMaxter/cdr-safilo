@@ -58,7 +58,7 @@
               Confirmar a morada de entrega
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-              <v-data-table :headers="headers" :items="desserts2" fixed-header disable-pagination
+              <v-data-table :headers="headers" :items="allClients" fixed-header disable-pagination
                 :search="dessertFilterValue" tile item-key="id" hide-default-footer height="340" style="width: 750px;"
                 class="elevation-1 my-header-style">
                 <template v-slot:top>
@@ -67,7 +67,7 @@
                       <v-col cols="5">
                         <v-row class="pa-2">
                           <v-text-field style="width: 150px;
-                    border-radius: 0px;" v-model="dessertFilterValue" label="Procurar" hide-details outlined
+                   border-radius: 0px;" v-model="dessertFilterValue" label="Procurar" hide-details outlined
                             dense></v-text-field>
                         </v-row>
                       </v-col>
@@ -141,8 +141,7 @@ export default {
       items: [],
       selectedAdress: null,
       dessertFilterValue: "",
-      allClients: null,
-      desserts2: [],
+      allClients: [],
       clientName: null,
       clientEmail: null,
       clientCode: null,
@@ -169,9 +168,6 @@ export default {
   async created() {
     try {
       this.allClients = await Backend.getClients();
-      this.allClients.forEach(element => {
-        this.desserts2.push({ name: element.name, fat: element.id, address: element.address, postalCode: element.postalCode})
-      });
       store.selectedMaterial = []
       store.currentBrandId = []
       store.dimensions = []
@@ -239,7 +235,7 @@ export default {
           text: 'Código',
           align: 'left',
           sortable: false,
-          value: 'fat',
+          value: 'id',
           class: 'my-header-style'
         },
         {
@@ -267,11 +263,7 @@ export default {
   },
   methods: {
     getSpecificClient(item) {
-      this.allClients.forEach(element => {
-        if (element.name == item.name) {
-          this.selectedClient = element
-        }
-      });
+      this.selectedClient = item
       this.dialog1 = true
     },
 

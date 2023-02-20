@@ -4,9 +4,9 @@
   <v-container fill-height>
     <v-row justify="center" align="center">
         <v-col cols="auto" >
-          <v-card elevation="12" tile color="#FAFAFA" :height="$vuetify.breakpoint.lg
+          <v-card elevation="12" tile color="#FAFAFA" :height="$vuetify.breakpoint.height > 670
                 ? '650px' 
-                : '900px'" width="800" style="border-radius: 15px; background-color: #E0E0E0">
+                : '500px'" width="800" style="border-radius: 15px; background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
             <v-menu
             :offset-x="true"
@@ -61,9 +61,9 @@
 
             </v-btn-toggle>
           </v-menu>
-          <v-row :class="$vuetify.breakpoint.lg
-                ? 'mt-1 mb-2 mr-10' 
-                : 'mt-10 mb-5 mr-10'" justify="center">
+          <v-row :class="store.isActive2
+                ? 'mt-1 mb-2 mr-16 pr-4' 
+                : 'mt-1 mb-2 mr-16 pr-16'" justify="center">
             <template v-if="store.isActive2">
             <v-col cols = "4">
               <v-row class="d-flex flex-column">
@@ -149,7 +149,7 @@
           </v-col>
           </template>
           <template v-else>
-          <v-col cols="2">
+          <v-col cols="3" align="center">
             <v-row class="ml-1">
             <v-col class="pa-0">
               <v-tooltip
@@ -255,7 +255,9 @@
             flat
             tile
             outlined
-            width="500"
+            :width="$vuetify.breakpoint.height > 670
+                ? '500px' 
+                : '650px'"
             style="background-color: rgba(235,235,238, 0.3);"
           >
     <v-window
@@ -271,11 +273,16 @@
             justify="center"
           >
         <v-card
-          height="350"
-          width="500"
+        :height="$vuetify.breakpoint.height > 670
+                ? '350px' 
+                : '200px'"
+          :width="$vuetify.breakpoint.height > 670
+                ? '500px' 
+                : '650px'"
           outlined
           style="background-color: rgba(235,235,238, 0.4);"
         >
+        <template v-if="$vuetify.breakpoint.height > 670">
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
             <v-col cols="auto" >
               <h2> Face {{faces[n-1]}} </h2>
@@ -313,14 +320,15 @@
       v-model="dialog"
       persistent
       max-width="800"
+      scrollable
     >
       <v-card>
         <v-card-title class="text-h5">
           Selecionar uma imagem
         </v-card-title>
 
-        <v-card-text>
-          <v-item-group active-class="selected" v-model="picked">
+        <v-card-text style="height: 400px">
+          <v-item-group active-class="selectedOne" v-model="picked">
     <v-container>
       <v-row>
         <v-col
@@ -334,14 +342,11 @@
               height="150"
               @click="toggle"
             >
-                <v-scroll-y-transition>
                 <div
                   v-if="active"
-                  class="text-h3 flex-grow-1 text-center selected"
+                  class="selectedOne"
                 >
-                  <span style="opacity: 0">Ahahahahahaha</span>
                 </div>
-              </v-scroll-y-transition>
             </v-img>
           </v-item>
         </v-col>
@@ -379,7 +384,7 @@
                 <v-col cols="auto">
                   Imagem Zona {{faces[n-1]}}
                 </v-col>
-                <v-col cols="auto" class="text-decoration-underline">
+                <v-col cols="auto" class="text-decoration-underline" @click="dialog=true">
                   Escolher Imagem
                 </v-col>
               </v-row>
@@ -415,10 +420,132 @@
             </v-row>
             </v-col>
           </v-row>
+        </template>
+        <template v-else>
+          <v-row justify="center" align="center" class="d-flex flex-column mt-2">
+            <v-col cols="auto" >
+              <h3> Face {{faces[n-1]}} </h3>
+            </v-col>
+          <v-row justify="center" align="center" class="d-flex">
+            <v-col cols="3" >
+          <v-select
+          style="border-radius: 0px;"
+          :items="materials"
+          label="Material"
+          dense
+          hide-details
+          outlined
+          v-model="material[`material`+n]"
+          @change="getFinishes()"
+        ></v-select>
+        </v-col>
+
+        <v-col cols="3" >
+          <v-select
+          style="border-radius: 0px;"
+          :items="finishes"
+          label="Acabamentos"
+          dense
+          multiple
+          hide-details
+          outlined
+          v-model="finish[`finish`+n]"
+        ></v-select>
+        </v-col>
+        <v-col cols="2">
+            <v-text-field style="border-radius: 0px;"
+            label="Largura"
+            dense
+            outlined
+            hide-details
+            v-model = "widths[`width`+n]"
+          ></v-text-field>
+              </v-col>
+            <v-col cols="2">
+            <v-text-field style="border-radius: 0px;"
+            label="Altura"
+            outlined
+            dense
+            hide-details
+            v-model="heights[`height`+n]"
+          ></v-text-field>
+              </v-col>
+          </v-row>
+            <v-row justify="center" align="center" class="d-flex">
+                 <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="800"
+      scrollable
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Selecionar uma imagem
+        </v-card-title>
+
+        <v-card-text style="height: 400px">
+          <v-item-group active-class="selectedOne" v-model="picked">
+    <v-container>
+      <v-row>
+        <v-col
+          v-for="(image, i) in images"
+          :key="i"
+          cols="3"
+        >
+          <v-item v-slot="{ active, toggle }">
+            <v-img
+              :src= image.link
+              height="150"
+              @click="toggle"
+            >
+                <div
+                  v-if="active"
+                  class="selectedOne"
+                >
+                </div>
+            </v-img>
+          </v-item>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-item-group>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false; picked = []"
+          >
+            Voltar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false; getRefs()"
+          >
+            Confirmar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+            <v-col cols=3>
+            <v-img :src="myImage" contain height="50px" width="50px" @click.stop="dialog = true"></v-img>
+            </v-col>
+                <v-col cols="9" class="text-decoration-underline" @click="dialog=true">
+                  Escolher Imagem Zona {{faces[n-1]}}
+                </v-col>
+            </v-row>
+          </v-row>
+        </template>
         </v-card>
         </v-row>
       </v-window-item>
     </v-window>
+  
 
     <v-card-actions class="justify-space-between" style="background-color: rgba(235,235,238, 0.7);">
       <v-btn
@@ -562,6 +689,10 @@ export default {
       }
     },
     nextScreen () {
+      store.widths = this.widths
+      store.heights = this.heights
+      store.finitos = this.finish
+      store.materioscas = this.material
       var uniqueBrands = []
       var costPerBrand = new Map()
           this.allBrands.forEach(element => {
@@ -673,6 +804,20 @@ export default {
     }
     },
      created: async function () {
+      this.getMaterials()
+      this.getBrands()
+      if(store.backtracking){
+      this.widths =  store.widths 
+      this.heights = store.heights
+      this.material = store.materioscas
+      this.allBrands = await Backend.getBrands()
+        this.allBrands.forEach(element => {
+          if(element.id == store.currentBrandId[0]){
+            this.brand = element.name
+          }
+        });
+        store.backtracking = false
+      }
       store.images = []
       store.finishes = []
       store.facesDefault = [
@@ -697,8 +842,6 @@ export default {
             link: require('@/assets/E.png'),
           },
         ]
-      this.getMaterials()
-      this.getBrands()
     }
 };
 
@@ -713,8 +856,11 @@ export default {
   background-size: cover;
 }
 
-.selected {
-    background-image: linear-gradient(to top, #F0E68C 0%, transparent 72px);
+.selectedOne {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(to right, #fc44b4, #fc44b4) border-box;
+  border-radius: 50em;
+  border: 3px solid transparent;
   }
 
   .customGradient {

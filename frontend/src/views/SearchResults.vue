@@ -222,6 +222,7 @@
                                 transition="scale-transition"
                                 offset-y
                                 min-width="auto"
+                                @click="menu=true"
                               >
                                 <template v-slot:activator="{ on, attrs }">
                                   <v-combobox
@@ -231,7 +232,6 @@
                                     small-chips
                                     label="Data"
                                     prepend-icon="mdi-calendar"
-                                    readonly
                                     v-bind="attrs"
                                     v-on="on"
                                   ></v-combobox>

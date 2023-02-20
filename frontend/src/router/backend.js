@@ -70,7 +70,7 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
-
+  
   static async addFinish(finish) {
     return httpClient.post(`/finishing`, finish).then(response => {
       return response.data
@@ -79,7 +79,7 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
-
+  
 
   static async getMaterials() {
     return httpClient.get("/material").then(response => {
@@ -215,19 +215,11 @@ export default class Backend {
   }
 
   static async getRequestsByBanner(banner) {
-    return httpClient.get(`/request/export/banner/${banner}`, { responseType: 'blob', timeout: 30000}).then(response => {
-      const url = window.URL.createObjectURL(response.data);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `${banner}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
+    return httpClient.get(`/request/export/banner/${banner}`).then(response => {
+      return response.data
     })
       .catch(async error => {
-        console.log(error)
-      throw Error(await this.errorMessage(error.response))
+      throw Error(await this.errorMessage(error.reponse))
     })
   }
 
@@ -339,7 +331,7 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
-
+  
   static async getPrices() {
     return httpClient.get("/price").then(response => {
       return response.data
@@ -384,7 +376,7 @@ export default class Backend {
       throw Error(await this.errorMessage(error.response))
     })
   }
-
+  
     static async obsoleteImage(id) {
     return httpClient.put(`/image/obsolete/${id}`).then(response => {
       return response.data

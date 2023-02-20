@@ -64,5 +64,13 @@ export const store = reactive({
   materialSearch: null,
   address: null,
   postalCode: null,
-  finishes: []
+  finishes: [],
+  finishesAux: [],
+  pickado: null,
+  pickado2: null,
+  widths: null,
+  heights: null,
+  finitos: null,
+  materioscas: null,
+  backtracking: false
 })

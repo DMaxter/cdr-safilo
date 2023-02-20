@@ -107,7 +107,7 @@
           dense
           outlined
           hide-details
-          @change="getFinishes()"
+          @change="finish = null; getFinishes();"
           ></v-select>
         </v-col>
         <v-col cols="3">
@@ -146,14 +146,15 @@
       v-model="dialog"
       persistent
       max-width="800"
+      scrollable
     >
       <v-card>
         <v-card-title class="text-h5">
           Selecionar uma imagem
         </v-card-title>
 
-        <v-card-text>
-          <v-item-group active-class="selected" v-model="picked">
+        <v-card-text style="height: 400px;">
+          <v-item-group active-class="selectedOne" v-model="picked">
     <v-container>
       <v-row>
         <v-col
@@ -167,14 +168,11 @@
               height="150"
               @click="toggle"
             >
-                <v-scroll-y-transition>
                 <div
                   v-if="active"
-                  class="text-h2 flex-grow-1 text-center selected"
+                  class="selectedOne"
                 >
-                  <span style="opacity: 0">Ahahahahahaha</span>
                 </div>
-              </v-scroll-y-transition>
             </v-img>
           </v-item>
         </v-col>
@@ -212,7 +210,7 @@
                 <v-col cols="auto">
                   Imagem Face 1
                 </v-col>
-                <v-col cols="auto" class="text-decoration-underline">
+                <v-col cols="auto" class="text-decoration-underline" @click="dialog=true">
                   Escolher Imagem
                 </v-col>
               </v-row>
@@ -330,7 +328,9 @@ export default {
         store.costPerBrand = costPerBrand
         var fafa = []
         var finAux = []
-        if(this.finish != null){
+        console.log(this.finish)
+        if(this.finish !== null){
+          store.finishesAux.push(this.finish)
         this.finish.forEach(fin => {
           finAux.push(fin.split("*")[0])
         })
@@ -338,8 +338,11 @@ export default {
           if(finAux.includes(element.name))
           fafa.push({id: element.id})
         });
+        } else {
+          store.finishesAux.push([])
         }
         store.finishes.push(fafa)
+        store.pickado = this.picked
         console.log(store.finishes)
         if(this.ex4){
           this.$router.push({name: 'order22'});
@@ -369,6 +372,7 @@ export default {
     },
     getFinishes: async function () {
       try {
+        this.finishes = []
         var selectedMat = null;
         this.allMaterials.forEach(element => {
           if(element.name == this.material)
@@ -423,14 +427,42 @@ export default {
     created: async function () {
       this.getMaterials()
       this.getBrands()
+      if(store.backtracking){
+        this.brand = store.uniqueBrands[0]
+        this.width = store.dimensions[0].width
+        this.height = store.dimensions[0].height
+        this.allMaterials = await Backend.getMaterials()
+        var mataux = null
+        this.allMaterials.forEach(element => {
+          if(element.id == store.selectedMaterial[0]){
+            this.material = element.name
+            mataux = element
+          }
+        });
+        console.log(mataux)
+        this.quantity = store.quantity
+        this.getFinishes()
+        this.allFinishes = await Backend.getFinishes();
+        console.log(store.finishesAux)
+        this.finish = store.finishesAux[0]
+        this.picked = store.pickado
+        this.loadImages()
+        console.log(this.picked)
+        console.log(this.images)
+        store.images = []
+        this.getFace()
+        store.backtracking = false
+      } else {
+        store.images = []
+        store.face1 = null
+      }
+      store.finishesAux = []
       store.selectedMaterial = []
       store.currentBrandId = []
       store.dimensions = []
-      store.images = []
       store.isActive1 = false
       store.isActive2 = false
       store.isActive3 = false
-      store.face1 = null
       store.face2 = null
       store.address = null
       store.uniqueBrands = null
@@ -488,8 +520,11 @@ export default {
   background-size: cover;
 }
 
-.selected {
-    background-image: linear-gradient(to top, #F0E68C 0%, transparent 72px);
+.selectedOne {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(to right, #fc44b4, #fc44b4) border-box;
+  border-radius: 50em;
+  border: 3px solid transparent;
   }
 
   .customGradient {

@@ -1236,6 +1236,7 @@ methods: {
           finishGroupToUse.push({id: finish.id})
         })
         var matToAdd = {id: id, name: this.newMaterialName, mandatoryFinishings: finishGroupToUse, additionalFinishings: finishToUse}
+        console.log(matToAdd)
         await Backend.updateMaterial(matToAdd)
         this.added2 = true
       } catch (error) {

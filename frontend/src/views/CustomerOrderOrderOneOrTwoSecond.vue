@@ -94,7 +94,7 @@
           dense
           outlined
           hide-details
-          @change="getFinishes()"
+          @change="getFinishes(); finish = null"
           ></v-select>
         </v-col>
         <v-col cols="3">
@@ -139,8 +139,8 @@
           Selecionar uma imagem
         </v-card-title>
 
-        <v-card-text>
-          <v-item-group active-class="selected" v-model="picked">
+        <v-card-text style="height: 400px;">
+          <v-item-group active-class="selectedOne" v-model="picked">
     <v-container>
       <v-row>
         <v-col
@@ -154,14 +154,11 @@
               height="150"
               @click="toggle"
             >
-                <v-scroll-y-transition>
-                <div
+            <div
                   v-if="active"
-                  class="text-h2 flex-grow-1 text-center selected"
+                  class="selectedOne"
                 >
-                  <span style="opacity: 0">Ahahahahahaha</span>
                 </div>
-              </v-scroll-y-transition>
             </v-img>
           </v-item>
         </v-col>
@@ -210,7 +207,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 79px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.push('order2')"
+              @click = "store.backtracking = true; $router.push('order2')"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -295,7 +292,10 @@ export default {
         store.dimensions.push({width: this.width, height: this.height})
         var fafa = []
         var finAux = []
-        if(this.finish != null){
+        console.log(store.finishesAux)
+        store.finishesAux.push(this.finish)
+        console.log(this.finish)
+        if(this.finish !== null){
         this.finish.forEach(fin => {
           finAux.push(fin.split("*")[0])
         })
@@ -303,9 +303,12 @@ export default {
           if(finAux.includes(element.name))
           fafa.push({id: element.id})
         });
-      }
+      } else {
+          store.finishesAux.push([])
+        }
         store.finishes.push(fafa)
         console.log(store.finishes)
+        store.pickado2 = this.picked
         this.allBrands.forEach(element => {
           if(element.name == this.brand){
             store.currentBrandId.push(element.id)
@@ -397,10 +400,32 @@ export default {
     created: async function () {
       this.getMaterials()
       this.getBrands()
-      store.images = [store.images[0]]
+      if(store.backtracking){
+        store.images.pop()
+        this.width = store.dimensions[1].width
+        this.height = store.dimensions[1].height
+        this.quantity = store.quantity
+        this.allMaterials = await Backend.getMaterials()
+        this.allMaterials.forEach(element => {
+          if(element.id == store.selectedMaterial[1]){
+            this.material = element.name
+          }
+        });
+        this.getFinishes()
+        this.allFinishes = await Backend.getFinishes();
+        this.finish = store.finishesAux[1]
+        this.picked = store.pickado2
+        store.images = [store.images[0]]
+        this.loadImages()
+        this.getFace()
+        store.backtracking = false
+      }
       store.dimensions = [store.dimensions[0]]
       store.selectedMaterial = [store.selectedMaterial[0]]
       store.finishes = [store.finishes[0]]
+      store.finishesAux = [store.finishesAux[0]]
+      console.log(store.finishesAux)
+
     }
 };
 
@@ -419,5 +444,12 @@ export default {
   .customGradient {
   background-image: linear-gradient(#616161, grey);
 }
+.selectedOne {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(to right, #fc44b4, #fc44b4) border-box;
+  border-radius: 50em;
+  border: 3px solid transparent;
+  }
+
 
 </style>

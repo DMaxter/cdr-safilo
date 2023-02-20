@@ -181,17 +181,17 @@
               <div class="text-h6 pt-12"> Resumo do pedido: </div>
               <div class="text-h6"> Face 1: </div>
               <div> Material: {{ materiales[0] }} </div>
-              <div>Altura: {{ request.type.cover.measurements.height }}</div>
-              <div>Largura: {{ request.type.cover.measurements.width }}</div>
+              <div>Altura: {{ request.type.cover.measurements.width }}</div>
+              <div>Largura: {{ request.type.cover.measurements.height }}</div>
               <div>Marca: {{ currBrand }}</div>
-              <div>Acabamentos: {{ currFinishes[0] }}</div>
+              <div>Acabamentos: {{ store.finishesAux[0] }}</div>
               <template v-if=!oneFace>
                 <div class="text-h6"> Face 2: </div>
               <div> Material: {{ materiales[1] }} </div>
-              <div>Altura: {{ request.type.back.measurements.height }}</div>
-              <div>Largura: {{ request.type.back.measurements.width }}</div>
+              <div>Altura: {{ request.type.back.measurements.width }}</div>
+              <div>Largura: {{ request.type.back.measurements.height }}</div>
               <div>Marca: {{ currBrand }}</div>
-              <div>Acabamentos: {{ currFinishes[1] }}</div>
+              <div>Acabamentos: {{ store.finishesAux[1] }}</div>
               </template>
             </v-card-text>
             <v-card-actions class="justify-end">
@@ -207,7 +207,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4 mb-6" style="height: 62px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.go(-1)"
+              @click="store.backtracking = true; $router.go(-1)"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -321,8 +321,7 @@ export default {
     this.allBrands = await Backend.getBrands()
     this.currBrand = this.allBrands.find(x => x.id == store.currentBrandId[0]).name
     this.allFinishes = await Backend.getFinishes()
-    console.log(this.allFinishes[0])
-    console.log(store.finishes[0])
+    console.log(store.finishesAux)
     this.currFinishes = ""
     this.allFinishes.forEach(fin => {
       if(this.oneFace){
