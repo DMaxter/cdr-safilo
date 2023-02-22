@@ -49,7 +49,7 @@ Environment=QUARKUS_MAILER_PASSWORD={{ lookup("env", "QUARKUS_MAILER_PASSWORD") 
 Environment=QUARKUS_MAILER_FROM={{ lookup("env", "QUARKUS_MAILER_FROM") }}
 
 # Logging
-Environment=QUARKUS_LOG_CONSOLE_FORMAT="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%X{requestID}] (%c{3.}) %s%e%n"
+Environment=QUARKUS_LOG_CONSOLE_FORMAT='%%d{yyyy-MM-dd HH:mm:ss,SSS} %%-5p [%%X{requestID}] (%%c{3.}) %%s%%e%%n'
 
 [Install]
 WantedBy=multi-user.target
