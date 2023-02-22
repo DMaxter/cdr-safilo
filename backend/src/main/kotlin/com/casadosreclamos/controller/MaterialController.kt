@@ -54,7 +54,7 @@ class MaterialController {
         APIResponse(responseCode = "200", description = "Materials obtained"),
         APIResponse(responseCode = "401", description = "User is not logged in")
     )
-    fun getAllMaterial(): Multi<MaterialDto> {
+    fun getAllMaterials(): Multi<MaterialDto> {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
             logger.debug("User ${id.principal.name} is requesting all materials")
 

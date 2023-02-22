@@ -18,4 +18,8 @@ open class Price {
     open var costPerSquareMeter: Double = 0.0
 
     open var fixedCost: Double = 0.0
+
+    override fun toString(): String {
+        return "ID: $id, MATERIAL: $material, COSTM2: $costPerSquareMeter, COSTFIX: $fixedCost, finishings: ($finishings)"
+    }
 }

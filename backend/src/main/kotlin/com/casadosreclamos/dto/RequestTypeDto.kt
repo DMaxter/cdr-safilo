@@ -54,6 +54,10 @@ abstract class ShowcaseDto: RequestTypeDto() {
         this.right = RequestSlotDto(request.right)
         this.side = RequestSlotDto(request.side)
     }
+
+    override fun toString(): String {
+        return "TOP: ($top), BOTTOM: ($bottom), LEFT: ($left), RIGHT: ($right), SIDE: ($side)"
+    }
 }
 
 class OneFace() : RequestTypeDto() {
@@ -61,6 +65,10 @@ class OneFace() : RequestTypeDto() {
 
     constructor(request: OneFaceRequest) : this() {
         this.cover = RequestSlotDto(request.cover)
+    }
+
+    override fun toString(): String {
+        return "FACE: $cover"
     }
 }
 
@@ -73,6 +81,10 @@ class TwoFaces() : RequestTypeDto() {
     constructor(request: TwoFacesRequest) : this() {
         this.cover = RequestSlotDto(request.cover)
         this.back = RequestSlotDto(request.back)
+    }
+
+    override fun toString(): String {
+        return "FRONT: $cover, BACK: $back"
     }
 }
 

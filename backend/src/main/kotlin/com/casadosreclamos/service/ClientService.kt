@@ -49,23 +49,41 @@ class ClientService {
         InvalidPostalCodeException::class
     )
     fun add(clientDto: ClientDto): Uni<Client> {
+        logger.info("Registering client $clientDto")
+
         val client = Client()
 
         if (clientDto.id == null || clientDto.id!! <= 0) {
+            logger.error("Client ID is invalid")
+
             throw InvalidIdException("client")
         } else if (clientDto.banner == null || clientDto.banner!!.isEmpty()) {
+            logger.error("Client Banner is null or empty")
+
             throw InvalidBannerException()
         } else if (clientDto.email == null || clientDto.email!!.isEmpty() || !EMAIL_REGEX.matches(clientDto.email!!)) {
+            logger.error("Client email is null, empty or has incorrect format")
+
             throw InvalidEmailException()
         } else if (clientDto.name == null || clientDto.name!!.isEmpty()) {
+            logger.error("Client name is null or empty")
+
             throw InvalidNameException()
         } else if (clientDto.fiscalNumber == null) {
+            logger.error("Client fiscal number is null")
+
             throw InvalidFiscalNumberException()
         } else if (clientDto.phone == null || clientDto.phone!!.isEmpty() || !PHONE_REGEX.matches(clientDto.phone!!)) {
+            logger.error("Client phone number is null, empty or has incorrect format")
+
             throw InvalidPhoneException()
         } else if (clientDto.address == null || clientDto.address!!.isEmpty()) {
+            logger.error("Client address is null or empty")
+
             throw InvalidAddressException()
         } else if (clientDto.postalCode == null || clientDto.postalCode!!.isEmpty()) {
+            logger.error("Client postal code is null or empty")
+
             throw InvalidPostalCodeException()
         }
 
@@ -82,13 +100,16 @@ class ClientService {
             client.banner = banner
 
             Panache.withTransaction {
-                clientRepository.persist(client)
+                clientRepository.persist(client).onItem().invoke { _ -> logger.info("Successfully registered client") }
+                    .onFailure().invoke { e -> logger.error("Couldn't create client: $e") }
             }
         }
     }
 
     fun importClients(file: File): Multi<Uni<Client>> {
         val contents = CSVParser.parse(file, Charset.forName("UTF-8"), CSVFormat.EXCEL.withDelimiter(';'))
+
+        logger.info("Importing ${contents.records.size - 1} clients")
 
         val multi: Multi<Uni<Client>> = Multi.createFrom().emitter { em ->
             // Remove column names
@@ -122,11 +143,14 @@ class ClientService {
     private fun createBannerIfNotExists(id: String): Uni<Banner> {
         return Panache.withTransaction {
             bannerRepository.findById(id).onItem().ifNull().switchTo {
+                logger.info("Banner $id doesn't exist")
+
                 val banner = Banner()
                 banner.name = id
                 banner.clients = mutableListOf()
 
-                bannerRepository.persist(banner)
+                bannerRepository.persist(banner).invoke { _ -> logger.info("Successfully created banner") }.onFailure()
+                    .invoke { e -> logger.error("Couldn't create banner: $e") }
             }
         }
     }

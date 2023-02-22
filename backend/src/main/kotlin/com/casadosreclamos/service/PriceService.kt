@@ -44,33 +44,49 @@ class PriceService {
 
         return validPrices.onItem().transform { items ->
             if (items.isEmpty()) {
+                logger.error("Couldn't find a suitable price for material ${material} and finishings ${finishings}")
+
                 throw MissingPriceException()
             } else if (items.size == 1) {
                 return@transform items[0]
             } else {
+                // Check for prices that have the same number of finishings
                 var tmpItems = items.stream().filter { it.finishings.size == ids.size }.collect(Collectors.toList())
 
                 if (tmpItems.size == 1) {
                     return@transform tmpItems[0]
                 } else if (tmpItems.isEmpty()) {
+                    // If no price with same number found, then reset and choose the cheapest one
                     tmpItems = items
                 }
 
-                return@transform tmpItems.sortedBy { it.fixedCost }[0]
+                logger.info("Found multiple prices: $tmpItems")
+
+                return@transform tmpItems.sortedBy { it.costPerSquareMeter }[0]
             }
         }
     }
 
     fun add(priceDto: PriceDto): Uni<Price> {
+        logger.info("Registering price $priceDto")
+
         if (priceDto.costPerSquareMeter == null || priceDto.costPerSquareMeter!! <= 0) {
+            logger.error("Price cost per square meter is invalid")
+
             throw InvalidCostException()
         } else if (priceDto.fixedCost != null && priceDto.fixedCost!! < 0) {
+            logger.error("Price fixed cost is invalid")
+
             throw InvalidCostException()
         } else if (priceDto.material == null || priceDto.material!! <= 0) {
+            logger.error("Price material ID is invalid")
+
             throw InvalidIdException("material")
         } else if (priceDto.finishings == null || priceDto.finishings!!.stream()
                 .filter { it?.id == null || it.id!! <= 0 }.count() > 0
         ) {
+            logger.error("At least one price finishing has invalid ID")
+
             throw InvalidIdException("finishing")
         }
 
@@ -87,8 +103,12 @@ class PriceService {
                 val finishings = tuple.item2
 
                 if (material == null) {
+                    logger.error("Material with ID ${priceDto.material} is not registered")
+
                     throw InvalidIdException("material")
                 } else if ((finishings == null && priceDto.finishings!!.isNotEmpty()) || (finishings.size < priceDto.finishings!!.size)) {
+                    logger.error("Invalid or repeated finishings detected. Fetched: $finishings")
+
                     throw InvalidIdException("finishing")
                 }
 
@@ -98,23 +118,36 @@ class PriceService {
                 price.finishings = finishings
                 price.material = material
 
-                priceRepository.persist(price)
+                priceRepository.persist(price).onItem().invoke { _ -> logger.info("Successfully created price") }
+                    .onFailure().invoke { e -> logger.error("Couldn't register price: $e") }
             }
         }
     }
 
     fun edit(priceDto: PriceDto): Uni<Price> {
+        logger.info("Updating price $priceDto")
+
         if (priceDto.id == null || priceDto.id!! <= 0) {
+            logger.error("Price ID is invalid")
+
             throw InvalidIdException("price")
         } else if (priceDto.costPerSquareMeter == null || priceDto.costPerSquareMeter!! <= 0) {
+            logger.error("Price cost per square meter is invalid")
+
             throw InvalidCostException()
         } else if (priceDto.fixedCost == null || priceDto.fixedCost!! <= 0) {
+            logger.error("Price fixed cost is invalid")
+
             throw InvalidCostException()
         } else if (priceDto.material == null || priceDto.material!! <= 0) {
+            logger.error("Price material ID is invalid")
+
             throw InvalidIdException("material")
         } else if (priceDto.finishings == null || priceDto.finishings!!.stream()
                 .filter { it?.id == null || it.id!! <= 0 }.count() > 0
         ) {
+            logger.error("At least one price finishing has invalid ID")
+
             throw InvalidIdException("finishing")
         }
 
@@ -137,8 +170,12 @@ class PriceService {
                         val finishings = tuple.item2
 
                         if (material == null) {
+                            logger.error("Material with ID ${priceDto.material} is not registered")
+
                             throw InvalidIdException("material")
                         } else if ((finishings == null && priceDto.finishings!!.isNotEmpty()) || (finishings.size < priceDto.finishings!!.size)) {
+                            logger.error("Invalid or repeated finishings detected. Fetched: $finishings")
+
                             throw InvalidIdException("finishing")
                         }
 
@@ -157,11 +194,15 @@ class PriceService {
         return Panache.withTransaction {
             priceRepository.deleteById(id).onItem().transformToUni { deleted ->
                 if (!deleted) {
+                    logger.error("Price with ID $id is not registered")
+
                     throw PriceNotFoundException()
                 }
 
+                logger.info("Successfully deleted price")
+
                 return@transformToUni Uni.createFrom().voidItem()
-            }
+            }.onFailure().invoke { e -> logger.error("Couldn't delete price: $e") }
         }
     }
 }

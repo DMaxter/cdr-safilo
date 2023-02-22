@@ -14,13 +14,19 @@ class BrandRepository : PanacheRepository<Brand> {
     }
 
     fun exists(name: String): Uni<Boolean> {
-        return count("FROM Brand b WHERE b.name = :name", Parameters.with("name", name).map()).onItem().transform { it != 0L }
+        return count("FROM Brand b WHERE b.name = :name", Parameters.with("name", name).map()).onItem()
+            .transform { it != 0L }
+    }
+
+    fun exists(name: String, id: Long): Uni<Boolean> {
+        return count(
+            "FROM Brand b WHERE b.name = :name AND id <> :id", Parameters.with("name", name).and("id", id).map()
+        ).onItem().transform { it != 0L }
     }
 
     fun findByIdWithImages(id: Long): Uni<Brand> {
         return find(
-            "FROM Brand b LEFT JOIN FETCH b.images WHERE b.id = :id",
-            Parameters.with("id", id).map()
+            "FROM Brand b LEFT JOIN FETCH b.images WHERE b.id = :id", Parameters.with("id", id).map()
         ).firstResult()
     }
 }

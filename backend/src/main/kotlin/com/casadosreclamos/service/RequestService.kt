@@ -80,6 +80,8 @@ class RequestService {
 
     @Throws(InvalidIdException::class, InvalidMeasurementsException::class, InvalidRequestTypeException::class)
     fun add(requestDto: NewRequestDto, email: String): Uni<Request> {
+        logger.info("Creating request $requestDto")
+
         validateRequestDto(requestDto)
 
         val request = Request()
@@ -91,8 +93,8 @@ class RequestService {
         request.amount = requestDto.amount!!
 
         lateinit var clientName: String
-        lateinit var user: User
-        lateinit var brand: Brand
+        var user: User? = null
+        var brand: Brand? = null
         lateinit var requestType: RequestType
 
         val clientUni = clientRepository.findById(requestDto.clientId!!)
@@ -101,15 +103,29 @@ class RequestService {
 
         return Panache.withTransaction {
             Uni.combine().all().unis(clientUni, userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
-                val client = tuple.item1 ?: throw InvalidIdException("client")
-                user = tuple.item2 ?: throw InvalidUserException()
-                brand = tuple.item3 ?: throw InvalidIdException("brand")
+                val client = tuple.item1
+                user = tuple.item2
+                brand = tuple.item3
+
+                if (client == null) {
+                    logger.error("Client with ID ${requestDto.clientId} is not registered")
+
+                    throw InvalidIdException("client")
+                } else if (user == null) {
+                    logger.error("User with ID ${email} is not registered")
+
+                    throw InvalidUserException()
+                } else if (brand == null) {
+                    logger.error("Brand with ID ${requestDto.brand!!.id!!} is not registered")
+
+                    throw InvalidIdException("brand")
+                }
 
                 clientName = client.name
 
-                request.requester = user
+                request.requester = user!!
                 request.client = client
-                request.brand = brand
+                request.brand = brand!!
 
                 // Create RequestType instance
                 toRequestType(requestDto.type!!, request.brand.images)
@@ -117,29 +133,39 @@ class RequestService {
                 // Assign requestType to request and search for user plafond
                 requestType = type
 
-                plafondRepository.findById(user, brand)
+                plafondRepository.findById(user!!, brand!!)
             }.onItem().transformToUni { plafond ->
                 // Check if user has enough plafond and debit the amount for current request
                 if (plafond == null) {
+                    logger.error("User doesn't have credits")
+
                     throw NotEnoughCreditsException()
                 }
 
                 requestType.cost = requestType.cost * request.amount + SEND_COST
 
                 if (plafond.amount < requestType.cost) {
+                    logger.error("User doesn't have enough credits: ${plafond.amount} for request of ${requestType.cost}")
+
                     throw NotEnoughCreditsException()
                 } else {
                     plafond.amount -= requestType.cost
                 }
 
-                requestRepository.persistAndFlush(request)
+                logger.info("Successfully debited credits from user")
+
+                requestRepository.persistAndFlush(request).onItem()
+                    .invoke { _ -> logger.info("Successfully created request") }.onFailure()
+                    .invoke { e -> logger.error("Couldn't register request: $e") }
             }.onItem().transformToUni { _ ->
                 // Update the requestType and assign the cost to the request
                 requestType.request = request
                 request.type = requestType
                 request.cost = requestType.cost
 
-                requestTypeRepository.persist(requestType)
+                requestTypeRepository.persist(requestType).onItem()
+                    .invoke { _ -> logger.info("Successfully created requestType") }.onFailure()
+                    .invoke { e -> logger.error("Couldn't register requestType: $e") }
             }
         }.onItem().transformToUni { _ ->
             // Send email
@@ -147,15 +173,20 @@ class RequestService {
                 Mail.withText(
                     "",
                     "Novo pedido efetuado por comercial da Safilo",
-                    getEmailNewStandardRequest(user.name, clientName, getType(requestDto.type!!), brand.name)
+                    getEmailNewStandardRequest(user!!.name, clientName, getType(requestDto.type!!), brand!!.name)
                 ).setTo(cdrMails)
-            )
+            ).onItem().invoke { _ -> logger.info("Sent email with request") }.onFailure()
+                .invoke { e -> logger.error("Couldn't send email with request: $e") }
         }.onItem().transform {
+            logger.info("Successfully operation")
+
             request
         }
     }
 
     fun getPrice(request: NewRequestDto): Uni<Double> {
+        logger.info("Creating request $request")
+
         validateRequestDto(request)
 
         val clientUni = clientRepository.findById(request.clientId!!)
@@ -163,13 +194,27 @@ class RequestService {
 
         return Panache.withTransaction {
             Uni.combine().all().unis(clientUni, brandUni).asTuple().onItem().transformToUni { tuple ->
-                tuple.item1 ?: throw InvalidIdException("client")
-                val brand = tuple.item2 ?: throw InvalidIdException("brand")
+                val client = tuple.item1
+                val brand = tuple.item2
+
+                if (client == null) {
+                    logger.error("Client with ID ${request.clientId} is not registered")
+
+                    throw InvalidIdException("client")
+                } else if (brand == null) {
+                    logger.error("Brand with ID ${request.brand!!.id!!} is not registered")
+
+                    throw InvalidIdException("brand")
+                }
 
                 // Create RequestType instance
                 toRequestType(request.type!!, brand.images)
             }.onItem().transform { requestType ->
-                requestType.cost * request.amount!! + SEND_COST
+                val cost = requestType.cost * request.amount!! + SEND_COST
+
+                logger.info("The request cost is $cost")
+
+                cost
             }
         }
     }
@@ -180,9 +225,12 @@ class RequestService {
                 request.status = RequestStatus.IN_PRODUCTION
                 request.lastUpdate = Date()
 
+                logger.info("Successful change to production")
+
                 Response.ok().build()
             }.onItem().ifNull().continueWith {
-                logger.error("Request not found")
+                logger.error("Request with ID ${requestId} is not registered")
+
                 Response.status(Status.NOT_FOUND).build()
             }
         }
@@ -190,15 +238,20 @@ class RequestService {
 
     fun finishRequest(requestId: Long, code: String?): Uni<Response> {
         return Panache.withTransaction {
-            requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
+            requestRepository.findById(requestId).onItem().transform { request ->
+                if (request == null) {
+                    logger.error("Request with ID ${requestId} is not registered")
+
+                    throw InvalidIdException("request")
+                }
+
                 request.status = RequestStatus.DONE
                 request.lastUpdate = Date()
                 request.trackingCode = code
 
+                logger.info("Successful change to finished")
+
                 Response.ok().build()
-            }.onItem().ifNull().continueWith {
-                logger.error("Request not found")
-                Response.status(Status.NOT_FOUND).build()
             }
         }
     }
@@ -214,20 +267,27 @@ class RequestService {
 
                 requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
                     // Prevent other commercials from cancelling arbitrary requests
+                    if (request == null) {
+                        logger.error("Request with ID ${requestId} is not registered")
+
+                        throw InvalidIdException("request")
+                    }
+
                     if (roles.contains(Role.ADMIN) || roles.contains(Role.CDR) || roles.contains(Role.MANAGER) || (roles.contains(
                             Role.COMMERCIAL
                         ) && request.requester.name == email)
                     ) {
                         request.status = RequestStatus.CANCELLED
                         request.lastUpdate = Date()
+
+                        logger.info("Successful cancellation of request")
                     } else {
+                        logger.error("Commercial doesn't have permission to delete request")
+
                         throw OperationNotPerformedException()
                     }
 
                     Response.ok().build()
-                }.onItem().ifNull().continueWith {
-                    logger.error("Request not found")
-                    Response.status(Status.NOT_FOUND).build()
                 }
             }
         }
@@ -237,7 +297,8 @@ class RequestService {
         val file = kotlin.io.path.createTempFile().toFile()
         val writer = CSVPrinter(FileWriter(file), CSVFormat.EXCEL)
 
-        val bannerRequests = requestRepository.streamByBanner(banner)
+        val bannerRequests =
+            requestRepository.streamByBanner(banner).onCompletion().invoke { -> logger.info("Fetched all requests") }
 
         writer.printRecord("Banner", "Nr. Cliente", "Cliente", "Tipo de Pedido", "Custo")
 
@@ -246,14 +307,14 @@ class RequestService {
                 request.client.banner.name, request.client.id, request.client.name, getType(request.type), request.cost
             )
             request
-        }.collect().asList().onItemOrFailure().transform { _, e ->
+        }.collect().asList().onItem().transform { _ ->
             writer.close(true)
 
-            if (e != null) {
-                throw e
-            }
+            logger.info("Successfully exported banner requests")
 
             return@transform file
+        }.onFailure().invoke { e ->
+            logger.error("Couldn't export banner requests: $e")
         }
     }
 
@@ -266,7 +327,11 @@ class RequestService {
             is TwoDto -> toTwoFaces(request, images)
             is LeftDto -> toLeftShowcase(request, images)
             is RightDto -> toRightShowcase(request, images)
-            else -> throw InvalidRequestTypeException()
+            else -> {
+                logger.error("Invalid request type")
+
+                throw InvalidRequestTypeException()
+            }
         }
     }
 
@@ -360,14 +425,23 @@ class RequestService {
                 val finishings = tuple.item3
 
                 if (material == null) {
+                    logger.error("Material with ID ${slotDto.material!!.id!!} is not registered")
+
                     throw InvalidIdException("material")
                 } else if ((slotDto.finishings != null && slotDto.finishings!!.isNotEmpty() && finishings.isNullOrEmpty()) || price == null) {
+                    logger.error("Invalid or repeated finishings detected. Fetched: $finishings")
+
                     throw InvalidIdException("finishing")
                 }
 
                 // Check if image exists
                 val image = images.stream().filter { it.id == slotDto.image!!.id }.findFirst().orElse(null)
-                    ?: throw InvalidIdException("image")
+
+                if (image == null) {
+                    logger.error("Image with ID ${slotDto.image!!.id} is not registered")
+
+                    throw InvalidIdException("image")
+                }
 
                 // Check if mandatory finishings are fulfilled
                 val tmpFinishings = finishings.toMutableSet()
@@ -384,6 +458,8 @@ class RequestService {
                     }
 
                     if (!changed) {
+                        logger.error("Not all mandatory finishings were fullfilled")
+
                         throw MandatoryFinishingMissingException()
                     }
                 }
@@ -399,7 +475,8 @@ class RequestService {
                 slot.cost =
                     price.costPerSquareMeter * slot.measurements.height * slot.measurements.width * 0.0001 + price.fixedCost
 
-                requestSlotRepository.persist(slot)
+                requestSlotRepository.persist(slot).onItem().invoke { _ -> logger.info("Successfully created slot") }
+                    .onFailure().invoke { e -> logger.error("Couldn't register slot: $e") }
             }
     }
 
@@ -446,7 +523,11 @@ class RequestService {
                 validateSlot(request.side)
             }
 
-            else -> throw InvalidRequestTypeException()
+            else -> {
+                logger.error("Request has unknown type $request")
+
+                throw InvalidRequestTypeException()
+            }
         }
     }
 
@@ -459,38 +540,56 @@ class RequestService {
 
     private fun validateImage(image: ImageDto?) {
         if (image?.id == null || image.id!! <= 0) {
+            logger.error("Slot image ID is invalid")
+
             throw InvalidIdException("image")
         }
     }
 
     private fun validateMaterial(material: MaterialDto?) {
         if (material?.id == null || material.id!! <= 0) {
+            logger.error("Slot material ID is invalid")
+
             throw InvalidIdException("material")
         }
     }
 
     private fun validateMeasurements(measurements: Measurements?) {
         if (measurements == null || measurements.height <= 0 || measurements.width <= 0) {
+            logger.error("Slot measurements are invalid")
+
             throw InvalidMeasurementsException()
         }
     }
 
     private fun validateFinishings(finishings: Set<FinishingDto>?) {
         if (finishings != null && finishings.stream().filter { it?.id == null || it.id!! <= 0 }.count() > 0) {
+            logger.error("At least one slot finishing has invalid ID")
+
             throw InvalidIdException("finishing")
         }
     }
 
     private fun validateRequestDto(request: NewRequestDto) {
         if (request.clientId == null || request.clientId!! <= 0) {
+            logger.error("Request Client ID is invalid")
+
             throw InvalidIdException("client")
         } else if (request.amount == null || request.amount!! <= 0) {
+            logger.error("Request amount is invalid")
+
             throw InvalidAmountException()
         } else if (request.type == null) {
+            logger.error("Request type is invalid")
+
             throw InvalidRequestTypeException()
         } else if (request.application == null) {
+            logger.error("Request application is null")
+
             request.application = false
         } else if (request.brand == null || request.brand!!.id!! <= 0) {
+            logger.error("Request Brand ID is invalid")
+
             throw InvalidIdException("brand")
         }
 

@@ -38,7 +38,11 @@ class MaterialService {
 
     @Throws(InvalidNameException::class)
     fun add(materialDto: MaterialDto): Uni<Material> {
+        logger.info("Registering material $materialDto")
+
         if (materialDto.name.isNullOrBlank()) {
+            logger.error("Material name is null or empty")
+
             throw InvalidNameException()
         }
 
@@ -51,6 +55,7 @@ class MaterialService {
         } else {
             finishingService.findGroups(materialDto.mandatoryFinishings!!).collect().with(Collectors.toSet())
         }
+
         val finishingsUni = if (materialDto.additionalFinishings.isNullOrEmpty()) {
             Uni.createFrom().item(setOf())
         } else {
@@ -65,26 +70,40 @@ class MaterialService {
                     val finishings = tuple.item3
 
                     if (exists) {
+                        logger.error("A material with name ${materialDto.name} is already registered")
+
                         throw AlreadyExistsException("Material")
                     } else if (materialDto.mandatoryFinishings != null && groups.size < materialDto.mandatoryFinishings!!.size) {
+                        logger.error("Invalid or repeated finishing groups detected. Fetched: $groups")
+
                         throw InvalidIdException("finishing group")
                     } else if (materialDto.additionalFinishings != null && finishings.size < materialDto.additionalFinishings!!.size) {
+                        logger.error("Invalid or repeated additional finishings detected. Fetched: $finishings")
+
                         throw InvalidIdException("finishing")
                     }
 
                     material.mandatoryFinishings = groups
                     material.additionalFinishings = finishings
 
-                    materialRepository.persist(material)
+                    materialRepository.persist(material).onItem()
+                        .invoke { _ -> logger.info("Successfully created material") }.onFailure()
+                        .invoke { e -> logger.error("Couldn't register material: $e") }
                 }
         }
     }
 
     @Throws(InvalidNameException::class)
     fun update(materialDto: MaterialDto): Uni<Material> {
+        logger.info("Updating material $materialDto")
+
         if (materialDto.id == null || materialDto.id!! <= 0) {
+            logger.error("Material ID is invalid")
+
             throw InvalidIdException("material")
         } else if (materialDto.name.isNullOrBlank()) {
+            logger.error("Material name is null or empty")
+
             throw InvalidNameException()
         }
 
@@ -94,6 +113,7 @@ class MaterialService {
         } else {
             finishingService.findGroups(materialDto.mandatoryFinishings!!).collect().with(Collectors.toSet())
         }
+
         val finishingsUni = if (materialDto.additionalFinishings.isNullOrEmpty()) {
             Uni.createFrom().item(setOf())
         } else {
@@ -103,6 +123,8 @@ class MaterialService {
         return Panache.withTransaction {
             materialRepository.exists(materialDto.name!!, materialDto.id!!).onItem().transformToUni { exists ->
                 if (exists) {
+                    logger.error("A material with name ${materialDto.name} is already registered")
+
                     throw AlreadyExistsException("Material")
                 }
 
@@ -113,16 +135,24 @@ class MaterialService {
                         val finishings = tuple.item3
 
                         if (material == null) {
+                            logger.error("Material with ID ${materialDto.id} is not registered")
+
                             throw InvalidIdException("material")
                         } else if (materialDto.mandatoryFinishings != null && groups.size < materialDto.mandatoryFinishings!!.size) {
+                            logger.error("Invalid or repeated finishing groups detected. Fetched: $groups")
+
                             throw InvalidIdException("finishing group")
                         } else if (materialDto.additionalFinishings != null && finishings.size < materialDto.additionalFinishings!!.size) {
+                            logger.error("Invalid or repeated additional finishings detected. Fetched: $finishings")
+
                             throw InvalidIdException("finishing")
                         }
 
                         material.name = materialDto.name!!
                         material.mandatoryFinishings = groups
                         material.additionalFinishings = finishings
+
+                        logger.info("Successfully updated material")
 
                         material
                     }
@@ -132,8 +162,15 @@ class MaterialService {
 
     @Throws(InvalidIdException::class)
     fun delete(id: Long): Uni<Response> {
-        return Panache.withTransaction { materialRepository.deleteById(id) }.onItem()
-            .transform { Response.ok().build() }.onFailure().transform { InvalidIdException("material") }
+        return Panache.withTransaction { materialRepository.deleteById(id) }.onItem().transform { _ ->
+                logger.info("Successfully deleted material")
+
+                Response.ok().build()
+            }.onFailure().transform { e ->
+                logger.info("Couldn't delete material: $e")
+
+                InvalidIdException("material")
+            }
     }
 
     fun find(id: Long): Uni<Material> {

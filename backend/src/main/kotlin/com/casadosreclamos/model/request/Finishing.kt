@@ -11,4 +11,8 @@ open class Finishing {
 
     @Column(unique = true)
     open lateinit var name: String
+
+    override fun toString(): String {
+       return "ID: $id, NAME: $name"
+    }
 }

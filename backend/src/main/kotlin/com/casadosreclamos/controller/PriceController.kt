@@ -95,10 +95,4 @@ class PriceController {
             return@transformToUni priceService.delete(priceId)
         }
     }
-
-    @POST
-    @Path("/test/{id}")
-    fun get(@PathParam("id") material: Long, finishings: Set<FinishingDto>): Uni<PriceDto> {
-        return priceService.get(material, finishings).onItem().transform { PriceDto(it) }
-    }
 }

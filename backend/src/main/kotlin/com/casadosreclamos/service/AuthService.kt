@@ -204,13 +204,18 @@ class AuthService {
 
     @Throws(InvalidCredentialsException::class)
     fun register(credentials: RegisterDto): Uni<User> {
+        logger.info("Registering user $credentials")
+
         val user = User()
 
         if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
+            logger.error("Email or password are null or empty")
             throw InvalidCredentialsException()
         } else if (!EMAIL_REGEX.matches(credentials.email!!)) {
+            logger.error("Email not in valid format")
             throw InvalidEmailException()
         } else if (credentials.name == null || credentials.name!!.isEmpty()) {
+            logger.error("Name is null or empty")
             throw InvalidNameException()
         }
 
@@ -223,9 +228,11 @@ class AuthService {
         return Panache.withTransaction {
             userRepository.exists(user.email).onItem().transformToUni { value ->
                 return@transformToUni if (value) {
+                    logger.error("The user with email ${user.email} is already registered")
                     throw AlreadyExistsException("User")
                 } else {
-                    userRepository.persist(user)
+                    userRepository.persist(user).onItem().invoke { _ -> logger.info("User ${user.name} created") }
+                        .onFailure().invoke { e -> logger.error("Couldn't persist user ${user.email}: $e") }
                 }
             }
         }.onItem().ifNotNull().transformToUni { _ ->
@@ -233,8 +240,16 @@ class AuthService {
                 Mail.withText(
                     user.email, "Registo na plataforma Safilo/CDR", getEmailRegisteredCommercial(credentials)
                 )
-            )
-        }.onItem().transform { user }
+            ).onItem().invoke { _ ->
+                logger.info("Mail with credentials sent to ${user.email}")
+            }.onFailure().invoke { e ->
+                logger.error("Couldn't send email with credentials: $e")
+            }
+        }.onItem().transform { _ ->
+            logger.info("Successfully registered user")
+
+            user
+        }
     }
 
     fun getAll(): Multi<UserDto> {
@@ -243,19 +258,29 @@ class AuthService {
 
     @Throws(InvalidCredentialsException::class)
     fun login(credentials: AuthDto): Uni<Response> {
+        logger.info("Logging in with ${credentials}")
 
         if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
+            logger.error("Email or password are null or empty")
             throw InvalidCredentialsException()
         }
 
-        return Panache.withTransaction { userRepository.findByEmail(credentials.email!!) }.onItem().ifNull()
-            .failWith { InvalidCredentialsException() }.onItem().ifNotNull().transformToUni { user ->
-                if (!BcryptUtil.matches(credentials.password!!, user.password)) {
+        return Panache.withTransaction { userRepository.findByEmail(credentials.email!!) }.onItem()
+            .transformToUni { user ->
+                if (user == null) {
+                    logger.error("User ${credentials.email} is not registered")
+
+                    throw InvalidCredentialsException()
+                } else if (!BcryptUtil.matches(credentials.password!!, user.password)) {
+                    logger.error("Password doesn't match for user ${credentials.email}")
+
                     Uni.createFrom().failure(InvalidCredentialsException())
                 } else {
                     Uni.createFrom().item(user)
                 }
             }.onItem().transform { user: User ->
+                logger.info("Successfully logged in")
+
                 Response.ok().cookie(
                     NewCookie(
                         cookie, generateJwt(user), "/", domain, "", Duration.ofHours(TIME).seconds.toInt(), true, true
@@ -266,6 +291,8 @@ class AuthService {
 
     fun logout(): Uni<Response> {
         // Unset cookie by setting Max-Age to 0
+        logger.info("Successfully logged out")
+
         return Uni.createFrom()
             .item(Response.ok().cookie(NewCookie(cookie, "", "/", domain, "", 0, true, true)).build())
     }
@@ -273,6 +300,7 @@ class AuthService {
     @Throws(InvalidUserException::class)
     fun forgot(username: String): Uni<Response> {
         if (username.isEmpty()) {
+            logger.error("Empty username")
             throw InvalidUserException()
         }
 
@@ -282,46 +310,63 @@ class AuthService {
         ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
 
         return Panache.withTransaction {
-            userRepository.findByEmail(username).onItem().ifNotNull().transformToUni { user ->
-                val token = PasswordToken()
-                token.id = PasswordTokenId()
-                token.id.user = user.email
+            userRepository.findByEmail(username).onItem().transformToUni { user ->
+                if (user != null) {
+                    val token = PasswordToken()
+                    token.id = PasswordTokenId()
+                    token.id.user = user.email
 
-                // Store only hash of token
-                token.id.token = sha512(userToken.toByteArray())
+                    // Store only hash of token
+                    token.id.token = sha512(userToken.toByteArray())
 
-                // Set expiry to 2 days
-                val curDate = Date()
-                val calendar = Calendar.getInstance()
-                calendar.time = curDate
-                calendar.add(Calendar.DATE, 2)
+                    // Set expiry to 2 days
+                    val curDate = Date()
+                    val calendar = Calendar.getInstance()
+                    calendar.time = curDate
+                    calendar.add(Calendar.DATE, 2)
 
-                token.expiry = calendar.time
+                    token.expiry = calendar.time
 
-                tokenRepository.persist(token).onItem().transformToUni { _ ->
-                    mailer.send(
-                        Mail.withText(
-                            username,
-                            "Pedido de substituição de password para a plataforma Safilo/CDR",
-                            getEmailPasswordRecovery(domain, user.name, userToken)
-                        )
-                    )
+                    logger.info("Generated token $userToken")
+
+                    tokenRepository.persist(token).onItem().transformToUni { _ ->
+                        logger.info("Token for $user created successfully")
+
+                        mailer.send(
+                            Mail.withText(
+                                username,
+                                "Pedido de substituição de password para a plataforma Safilo/CDR",
+                                getEmailPasswordRecovery(domain, user.name, userToken)
+                            )
+                        ).onItem().invoke { _ -> logger.info("Sent email to $username with token") }.onFailure()
+                            .invoke { e -> logger.error("Couldn't send email with token: $e") }
+                    }.onFailure().invoke { e -> logger.error("Couldn't persist token: $e") }
+                } else {
+                    logger.error("User $user is not registered")
+
+                    Uni.createFrom().nullItem()
                 }
             }
-        }.onItemOrFailure().transform { _: Void?, e: Throwable? ->
-            if (e != null) {
-                logger.error(e)
-            }
-
+        }.onItem().transform { _ ->
             Response.ok().build()
         }
     }
 
     @Throws(InvalidTokenException::class, InvalidPasswordException::class)
     fun changePassword(username: String, password: String, tryToken: String): Uni<Response> {
+        logger.info("Using token $tryToken")
+
         if (password.isEmpty()) {
+            logger.error("Password is empty")
+
             throw InvalidPasswordException()
-        } else if (username.isEmpty() || tryToken.isEmpty()) {
+        } else if (username.isEmpty()) {
+            logger.error("Username is empty")
+
+            throw InvalidNameException()
+        } else if (tryToken.isEmpty()) {
+            logger.error("Token is empty")
+
             throw InvalidTokenException()
         }
 
@@ -335,15 +380,26 @@ class AuthService {
                 val user = tuple.item1
                 val token = tuple.item2
 
+                logger.info("Fetched user ${user}")
+                logger.info("Fetched token ${token}")
+
                 if (user == null || token == null) {
+                    logger.error("Username or token doesn't exist")
+
                     throw InvalidTokenException()
                 }
 
                 user.password = BcryptUtil.bcryptHash(password)
 
+                logger.info("Changed password")
+
                 // Delete token
                 tokenRepository.delete(token)
-            }.onItem().transform { Response.ok().build() }
+            }.onItem().transform {
+                logger.info("Deleted token")
+
+                Response.ok().build()
+            }.onFailure().invoke { e -> logger.error("Couldn't delete token: $e") }
         }
     }
 

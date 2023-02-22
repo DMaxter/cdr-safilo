@@ -43,7 +43,7 @@ class ClientController {
     )
     fun getAllClients(): Multi<ClientDto> {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
-            logger.info("User ${id.principal.name} is requesting all clients")
+            logger.debug("User ${id.principal.name} is requesting all clients")
 
             return@transformToMulti clientService.getAll().onItem().transform {
                 ClientDto(it)
@@ -83,10 +83,14 @@ class ClientController {
         return identity.deferredIdentity.onItem().transform { id ->
             logger.info("User ${id.principal.name} is importing clients from Excel file")
 
-            clientService.importClients(file.uploadedFile().toFile()).collect().asList().await().indefinitely()
+            clientService.importClients(file.uploadedFile().toFile()).onCompletion()
+                .invoke { -> logger.info("Successfully uploaded all clients") }.collect().asList().await()
+                .indefinitely()
 
             // Delete uploaded file
             file.uploadedFile().toFile().delete()
+
+            logger.info("Temporary file with clients deleted successfully")
 
             Response.ok().build()
         }
@@ -103,7 +107,7 @@ class ClientController {
     )
     fun getBannerClients(@PathParam("banner") banner: String): Multi<ClientDto> {
         return identity.deferredIdentity.onItem().transformToMulti { id ->
-            logger.info("User ${id.principal.name} is obtaining clients for banner $banner")
+            logger.info("User ${id.principal.name} is getting clients of banner $banner")
 
             return@transformToMulti clientService.getByBanner(banner).onItem().transform {
                 ClientDto(it)

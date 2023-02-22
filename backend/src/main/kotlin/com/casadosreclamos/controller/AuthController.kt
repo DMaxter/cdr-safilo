@@ -10,6 +10,7 @@ import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
 import io.quarkus.security.runtime.QuarkusSecurityIdentity
 import io.smallrye.mutiny.Uni
+import io.vertx.ext.web.RoutingContext
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
@@ -33,6 +34,9 @@ class AuthController {
     @Inject
     lateinit var authService: AuthService
 
+    @Inject
+    lateinit var context: RoutingContext
+
     @POST
     @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
     @Path("/register")
@@ -52,7 +56,7 @@ class AuthController {
     @Operation(summary = "Authenticate a user")
     @APIResponses(APIResponse(responseCode = "200", description = "Successful login"))
     fun login(credentials: AuthDto): Uni<Response> {
-        logger.info("User ${credentials.email} is trying to login")
+        logger.info("User ${credentials.email} is trying to login from ${context.request().remoteAddress()}")
 
         return authService.login(credentials)
     }
@@ -67,7 +71,7 @@ class AuthController {
     )
     fun logout(): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} logging out")
+            logger.info("User ${id.principal.name} is logging out")
 
             return@transformToUni authService.logout()
         }
@@ -81,7 +85,7 @@ class AuthController {
     // because we don't want to expose our users
     @APIResponses(APIResponse(responseCode = "200", description = "A request has been made"))
     fun forgot(@PathParam("username") user: String): Uni<Response> {
-        logger.info("Password recovery token requested for user \"$user\"")
+        logger.info("User \"$user\"@${context.request().remoteAddress()} is requesting a password change through token")
 
         return authService.forgot(user)
     }
@@ -94,7 +98,7 @@ class AuthController {
     fun changePassword(
         @PathParam("username") user: String, @PathParam("password") password: String, @PathParam("token") token: String
     ): Uni<Response> {
-        logger.info("Changing password for user \"$user\" through recovery token")
+        logger.info("Changing password for user \"$user\"@${context.request().remoteAddress()} through recovery token")
 
         return authService.changePassword(user, password, token)
     }
@@ -106,7 +110,7 @@ class AuthController {
     @APIResponses(APIResponse(responseCode = "200", description = "Could check if user was logged in or not"))
     fun isLogged(): Uni<Response> {
         return identity.deferredIdentity.onItem().transform { id ->
-            logger.debug("User ${id.principal.name} is checking if logged in")
+            logger.debug("User ${id.principal.name} is checking if is logged in")
 
             Response.ok(id is QuarkusSecurityIdentity).build()
         }

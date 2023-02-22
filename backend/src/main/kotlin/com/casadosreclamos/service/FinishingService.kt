@@ -13,6 +13,7 @@ import com.casadosreclamos.repo.FinishingRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
+import org.jboss.logging.Logger
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -22,6 +23,9 @@ import kotlin.jvm.Throws
 
 @ApplicationScoped
 class FinishingService {
+    @Inject
+    lateinit var logger: Logger
+
     @Inject
     lateinit var materialService: MaterialService
 
@@ -41,9 +45,15 @@ class FinishingService {
 
     @Throws(InvalidNameException::class, InvalidCostException::class, AlreadyExistsException::class)
     fun add(finishingDto: NewFinishingDto): Uni<Finishing> {
+        logger.info("Registering finishing $finishingDto")
+
         if (finishingDto.name == null || finishingDto.name!!.isEmpty()) {
+            logger.error("Finishing name is null or empty")
+
             throw InvalidNameException()
         } else if (finishingDto.cost == null || finishingDto.cost!! < 0) {
+            logger.error("Finishing cost is invalid")
+
             throw InvalidCostException()
         }
 
@@ -53,12 +63,18 @@ class FinishingService {
         return Panache.withTransaction {
             finishingRepository.exists(finishing.name).onItem().transformToUni { value ->
                 return@transformToUni if (value) {
+                    logger.error("A finishing with name ${finishing.name} is already registered")
+
                     throw AlreadyExistsException("Finishing")
                 } else {
-                    finishingRepository.persist(finishing)
+                    finishingRepository.persist(finishing).onItem()
+                        .invoke { _ -> logger.info("Successfully registered finishing") }.onFailure()
+                        .invoke { e -> logger.error("Couldn't register finishing: $e") }
                 }
             }.onItem().transformToUni { _ ->
                 materialService.getMaterials(finishingDto.materials).onItem().transform { material ->
+                    logger.info("Adding as additional to material ${material.name}")
+
                     material.additionalFinishings.add(finishing)
 
                     material
@@ -76,24 +92,36 @@ class FinishingService {
         AlreadyExistsException::class
     )
     fun update(finishingDto: FinishingDto): Uni<Finishing> {
+        logger.info("Updating finishing $finishingDto")
+
         if (finishingDto.id == null || finishingDto.id!! <= 0) {
+            logger.error("Finishing ID is invalid")
+
             throw InvalidIdException("finishing")
         } else if (finishingDto.name == null || finishingDto.name!!.isEmpty()) {
+            logger.error("Finishing name is null or empty")
+
             throw InvalidNameException()
         }
 
         return Panache.withTransaction {
             finishingRepository.exists(finishingDto.name!!, finishingDto.id!!).onItem().transformToUni { value ->
                 if (value) {
+                    logger.error("A finishing with name ${finishingDto.name} is already registered")
+
                     throw AlreadyExistsException("Finishing")
                 }
 
                 finishingRepository.findById(finishingDto.id!!).onItem().transform { finishing ->
                     if (finishing == null) {
+                        logger.error("Finishing with ID ${finishingDto.id} is not registered")
+
                         throw InvalidIdException("finishing")
                     }
 
                     finishing.name = finishingDto.name!!
+
+                    logger.info("Successfully updated finishing")
 
                     finishing
                 }
@@ -104,8 +132,15 @@ class FinishingService {
     @Throws(InvalidIdException::class)
     fun delete(id: Long): Uni<Response> {
         return Panache.withTransaction {
-            finishingRepository.deleteById(id).onItem().transform { Response.ok().build() }.onFailure()
-                .transform { InvalidIdException("finishing") }
+            finishingRepository.deleteById(id).onItem().transform { _ ->
+                logger.info("Successfully deleted finishing")
+
+                Response.ok().build()
+            }.onFailure().transform { e ->
+                logger.error("Couldn't delete finishing: $e")
+
+                InvalidIdException("finishing")
+            }
         }
     }
 
@@ -119,7 +154,11 @@ class FinishingService {
 
     @Throws(AlreadyExistsException::class, InvalidIdException::class, InvalidNameException::class)
     fun createGroup(name: String, finishings: Set<FinishingDto>): Uni<FinishingGroup> {
+        logger.info("Creating group $name with finishings $finishings")
+
         if (name.isEmpty()) {
+            logger.error("Finishing Group name is empty")
+
             throw InvalidNameException()
         }
 
@@ -141,22 +180,34 @@ class FinishingService {
                 val finishingsFetched = tuple.item2
 
                 if (exists) {
+                    logger.error("A finishing group with name $name is already registered")
+
                     throw AlreadyExistsException("FinishingGroup")
                 } else if (finishingsFetched.size < finishings.size) {
+                    logger.error("Invalid or repeated finishings detected. Fetched: ${finishingsFetched}")
+
                     throw InvalidIdException("finishing")
                 }
 
                 group.finishings = finishingsFetched
 
-                finishingGroupRepository.persist(group)
+                finishingGroupRepository.persist(group).onItem()
+                    .invoke { _ -> logger.info("Successfully created finishing group") }.onFailure()
+                    .invoke { e -> logger.error("Couldn't register finishing group: $e") }
             }
         }
     }
 
     fun editGroup(group: FinishingGroupDto): Uni<FinishingGroup> {
+        logger.info("Updating finishing group $group")
+
         if (group.id == null || group.id!! <= 0) {
+            logger.error("Finishing Group ID is invalid")
+
             throw InvalidIdException("finishing group")
         } else if (group.name.isNullOrEmpty()) {
+            logger.error("Finishing Group name is null or empty")
+
             throw InvalidNameException()
         } else if (group.finishings == null) {
             group.finishings = setOf()
@@ -180,14 +231,24 @@ class FinishingService {
                     val finishingGroup = tuple.item3
 
                     if (exists) {
+                        logger.error("A finishing group with name ${group.name!!} is already registered")
+
                         throw AlreadyExistsException("FinishingGroup")
-                    } else if (finishings.size < group.finishings!!.size || finishingGroup == null) {
+                    } else if (finishingGroup == null) {
+                        logger.error("Finishing group with ID ${group.id} is not registered")
+
+                        throw InvalidIdException("finishing group")
+                    } else if (finishings.size < group.finishings!!.size) {
+                        logger.error("Invalid or repeated finishings detected. Fetched: ${finishings}")
+
                         throw InvalidIdException("finishing")
                     }
 
 
                     finishingGroup.name = group.name!!
                     finishingGroup.finishings = finishings
+
+                    logger.info("Successfully updated finishing group")
 
                     finishingGroup
                 }
@@ -196,12 +257,21 @@ class FinishingService {
 
     fun deleteGroup(id: Long): Uni<Response> {
         if (id <= 0) {
+            logger.error("Finishing Group ID is invalid")
+
             throw InvalidIdException("finishing group")
         }
 
         return Panache.withTransaction {
-            finishingGroupRepository.deleteById(id).onItem().transform { Response.ok().build() }.onFailure()
-                .transform { InvalidIdException("finishing group") }
+            finishingGroupRepository.deleteById(id).onItem().transform { _ ->
+                logger.info("Successfully deleted finishing group")
+
+                Response.ok().build()
+            }.onFailure().transform { e ->
+                logger.error("Couldn't delete finishing group: $e")
+
+                InvalidIdException("finishing group")
+            }
         }
     }
 }
