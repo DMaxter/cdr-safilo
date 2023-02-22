@@ -359,7 +359,7 @@ export default {
         console.error(error)
       }
     },
-  
+
     getSpecificClient(item) {
       this.allClients.forEach(element => {
         if (item.name == element.name) {
@@ -372,9 +372,7 @@ export default {
 
     addClients: async function () {
       try {
-        console.log("A")
         console.log(this.selectedFile)
-        console.log("B")
         await Backend.addClients(this.selectedFile)
         this.allClients = await Backend.getClients()
         this.added = true
@@ -386,9 +384,8 @@ export default {
     },
     getRequests: async function () {
       try {
-        console.log("A")
+
         await Backend.getRequestsByBanner(this.selectedBanner)
-        console.log("B")
         this.added = true
       } catch (error) {
         this.failed = true
