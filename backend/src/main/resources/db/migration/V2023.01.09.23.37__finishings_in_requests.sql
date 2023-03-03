@@ -1,5 +1,0 @@
-ALTER TABLE RequestSlot
-    ADD finishing_id BIGINT NULL;
-
-ALTER TABLE RequestSlot
-    ADD CONSTRAINT FK_REQUESTSLOT_ON_FINISHING FOREIGN KEY (finishing_id) REFERENCES Finishing (id);

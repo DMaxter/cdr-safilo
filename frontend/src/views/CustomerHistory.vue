@@ -371,6 +371,7 @@ data () {
         var date = element.created
         date = date.slice(0, 10)
         element.created = date
+        element.cost = element.cost.toFixed(2)
       });
       console.log(this.requests)
     },

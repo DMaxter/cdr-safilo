@@ -284,13 +284,14 @@
         >
         <template v-if="$vuetify.breakpoint.height > 670">
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
-            <v-col cols="auto" >
+            <v-col cols="auto" class="pa-0 pb-3">
               <h2> Face {{faces[n-1]}} </h2>
+              <h6> (selecionar pelo menos um acabamento obrigatório quando aplicável) </h6>
             </v-col>
           <v-row justify="center" align="center" class="d-flex">
-            <v-col cols="6" >
+            <v-col cols="3" >
           <v-select
-          style="border-radius: 0px; width: 160px"
+          style="border-radius: 0px;"
           :items="materials"
           label="Material"
           dense
@@ -301,9 +302,10 @@
         ></v-select>
         </v-col>
 
-        <v-col cols="6" >
+        <v-col cols="7" >
           <v-select
-          style="border-radius: 0px; width: 160px"
+          height="30"
+          style="border-radius: 0px; width:280px"
           :items="finishes"
           label="Acabamentos"
           dense
@@ -311,7 +313,17 @@
           hide-details
           outlined
           v-model="finish[`finish`+n]"
-        ></v-select>
+        >
+        <template v-slot:selection="{ item, index }">
+          <span v-if="index === 0">{{ item }}</span>
+        <span
+          v-if="index === 1"
+          class="ml-2 mt-1 grey--text text-caption"
+        >
+          (+{{ finish[`finish`+n].length - 1 }} outros)
+        </span>
+      </template>
+      </v-select>
         </v-col>
         
           </v-row>
@@ -423,8 +435,9 @@
         </template>
         <template v-else>
           <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-            <v-col cols="auto" >
+            <v-col cols="auto" class="pa-0 pb-2 pt-2">
               <h3> Face {{faces[n-1]}} </h3>
+              <h6> (selecionar pelo menos um acabamento obrigatório quando aplicável) </h6>
             </v-col>
           <v-row justify="center" align="center" class="d-flex">
             <v-col cols="3" >
@@ -678,7 +691,7 @@ export default {
         this.allFinishGroups.forEach(element => {
           if(selectedMat.mandatoryFinishings.find(x => x.id == element.id)){
             element.finishings.forEach(element2 => {
-              this.finishes.push(element2.name + "*")
+              this.finishes.push(element2.name + " (Obrigatório)")
             })
           }
         });
@@ -719,14 +732,14 @@ export default {
             var finToUse = this.finish[`finish`+n]
             var finAux = []
             finToUse.forEach(fin => {
-              finAux.push(fin.split("*")[0])
+              finAux.push(fin.split(" (Obrigatório)")[0])
             })
             console.log(finAux)
             var finishesForScreen = []
             this.allFinishes.forEach(finishe => {
               finAux.forEach(fin => {
                 if(fin == finishe.name){
-                  finishesForScreen.push({id: finishe.id})
+                  finishesForScreen.push({id: finishe.id, name: finishe.name})
                 }
                 console.log(finishesForScreen)
                 })
