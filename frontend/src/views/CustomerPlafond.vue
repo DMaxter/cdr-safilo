@@ -137,7 +137,7 @@ data () {
       }
       this.profile = store.currentUser.name
     store.currentUser.credits.forEach(element => {
-      this.desserts.push({ marca: element.brand, plafond: element.amount.toFixed(2)})
+      this.desserts.push({ marca: element.brand, plafond: element.amount})
     });
   }
   }

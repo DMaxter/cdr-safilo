@@ -337,7 +337,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog3 = false; height = null; width = null; price = null, materialToAdd = null, pickedFinish = null"
+            @click="dialog3 = false; height = null; width = null; price = null, materialToAdd = null"
           >
             Voltar
           </v-btn>

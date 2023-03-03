@@ -940,8 +940,8 @@ async created(){
   } else if(store.pedidoAtual.modelo == "TwoFaces"){
     console.log(store.pedidoAtual.finishings)
     var no = []
+    var str = ""
     store.pedidoAtual.finishings.forEach(fin => {
-      var str = ""
       console.log(fin)
       if(fin.length > 1){
         fin.forEach(f =>{

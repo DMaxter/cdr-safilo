@@ -305,7 +305,7 @@
           <v-card>
             <v-card-text>
               <div class="text-h6 pt-12" v-show="added"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
-              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
+              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil  </div>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn
@@ -441,7 +441,6 @@ export default {
   materiales: [],
   allFinishes: null,
   currBrand: null,
-  errorMsg: "",
   currFinishes: []
   }),
   
@@ -450,28 +449,35 @@ export default {
     console.log(this.store)
     console.log(this.totalPrice)
     this.allMaterials = await Backend.getMaterials()
-    for (var j = 0; j < 5; j++){
-      var a = this.allMaterials.filter(y => y.id == store.selectedMaterial[j])[0].name
-        this.materiales.push(a)
-    }
+    this.allMaterials.forEach(mat => {
+      store.selectedMaterial.forEach(m => {
+        if(m == mat.id)
+          this.materiales.push(mat.name)
+      })
+    })
     console.log(this.materiales)
     this.allFinishes = await Backend.getFinishes()
-    this.currFinishes = Array.apply(null, Array(5)).map(function () {})
-    var n = 0
-    store.finishes.forEach(fin => {
-      var strToUse = ""
-      if (fin.length > 1){
-        fin.forEach(finit => {
-          strToUse = strToUse.concat(finit.name + "; ")
-        })
-      } else if (fin.length == 1){
-        strToUse = fin[0].name + ";"
-      } else (
-        strToUse = "Nenhum"
-      )
-      this.currFinishes[n] = strToUse
-      n = n+1
-    })
+    this.currFinishes = []
+    console.log(store.finishes)
+    for(var i = 0; i < store.finishes.length; i++){
+    var auxstr = ""
+    this.allFinishes.forEach(fin => {
+        if(store.finishes[i].length == 1){
+          if(fin.id == store.finishes[i][0]){
+            auxstr = auxstr.concat(fin.name + "; ")
+          }
+        } else if(store.finishes[i].length >= 1){
+          for(var k = 0; k < store.finishes[i].length; k++){
+            console.log(store.finishes[i][k])
+            if(fin.id == store.finishes[i][k].id){
+            auxstr = auxstr.concat(fin.name + "; ")
+          }
+          }
+
+        }
+      })
+      this.currFinishes.push(auxstr)
+    }
   console.log(this.currFinishes)
     this.allBrands = await Backend.getBrands()
     this.allBrands.forEach(brand => {
@@ -669,7 +675,6 @@ export default {
         this.added = true
         setTimeout(() => this.$router.push({name: 'profile'}), 3000);
       } catch (error) {
-        this.errorMsg = error
         setTimeout(() => this.$router.push({name: 'profile'}), 3000);
         this.failed = true
       }
@@ -846,7 +851,6 @@ export default {
     }
       console.log(request)
         this.totalPrice = await Backend.getRequestPrice(request)
-        this.totalPrice = this.totalPrice.toFixed(2)
 
       } catch (error) {
         console.log(error)

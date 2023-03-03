@@ -328,7 +328,7 @@ data () {
                 total += elem.amount
               })
               if (this.desserts2.filter(e => e.fat === element.email).length == 0) {
-                this.desserts2.push({ name: element.name, fat: element.email, yo: total.toFixed(2) })             
+                this.desserts2.push({ name: element.name, fat: element.email, yo: total })             
               }
             }
           });
@@ -383,11 +383,6 @@ methods: {
               this.profile = element.name
             }
           });
-          var bbb = []
-          this.credits.forEach(element =>{
-            bbb.push({amount: element.amount.toFixed(2), brand: element.brand})
-          })
-          this.credits = bbb
           this.dialog4 = true;
         },
   getPedido() {
