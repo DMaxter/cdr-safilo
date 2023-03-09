@@ -295,7 +295,6 @@ export default {
   async created() {
     try {
         this.allClients = await Backend.getClients();
-      console.log(this.allClients)
       this.allClients.forEach(element => {
         if (!this.banners.includes(element.banner)) {
           this.banners.push(element.banner)
@@ -338,7 +337,6 @@ export default {
       this.selectedFile = null
       this.selectedFile = e.target.files[0];
       this.fileSelected = true
-      console.log(this.selectedFile)
     },
     addClient: async function () {
       try {
@@ -366,15 +364,11 @@ export default {
           store.currentClient = element
         }
       });
-      console.log(store.currentClient)
       this.$router.push({ name: 'clientInfo' });
     },
 
     addClients: async function () {
       try {
-        console.log("A")
-        console.log(this.selectedFile)
-        console.log("B")
         await Backend.addClients(this.selectedFile)
         this.allClients = await Backend.getClients()
         this.added = true
@@ -386,9 +380,7 @@ export default {
     },
     getRequests: async function () {
       try {
-        console.log("A")
         await Backend.getRequestsByBanner(this.selectedBanner)
-        console.log("B")
         this.added = true
       } catch (error) {
         this.failed = true
