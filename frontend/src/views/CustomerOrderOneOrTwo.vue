@@ -125,15 +125,28 @@
           </v-row>
           
           <v-row justify="center" align="center" class="d-flex flex-column mt-8">
-            <v-select style="border-radius: 0px"
-          :items="finishes"
+            <v-col cols="8" class="d-flex">
+              <v-select style="border-radius: 0px"
+              class="mr-3"
+          :items="mandatoryFinishes"
           v-model="finish"
-          label="Acabamentos"
+          label="Acabamentos obrigatórios"
           dense
           multiple
           outlined
           hide-details
           ></v-select>
+          <v-select style="border-radius: 0px"
+          class="ml-3"
+          :items="aditionalFinishes"
+          v-model="finish"
+          label="Acabamentos adicionais"
+          dense
+          multiple
+          outlined
+          hide-details
+          ></v-select>
+            </v-col>
           <v-checkbox
             v-model="checkbox"
             hide-details
@@ -224,7 +237,7 @@
             ></v-checkbox>
             </v-col>
            </v-row>
-          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 65px;">
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 40px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
               @click = "$router.push('order')"
@@ -294,7 +307,8 @@ export default {
     ],
     allFinishes: null,
     allFinishGroups: null,
-    finishes: [],
+    aditionalFinishes: [],
+    mandatoryFinishes: [],
     finish: null
 
   }),
@@ -372,7 +386,8 @@ export default {
     },
     getFinishes: async function () {
       try {
-        this.finishes = []
+        this.aditionalFinishes = []
+        this.mandatoryFinishes = []
         var selectedMat = null;
         this.allMaterials.forEach(element => {
           if(element.name == this.material)
@@ -381,17 +396,16 @@ export default {
         this.allFinishes = await Backend.getFinishes()
         this.allFinishes.forEach(element => {
           if(selectedMat.additionalFinishings.find(x => x.id == element.id))
-          this.finishes.push(element.name)
+          this.aditionalFinishes.push(element.name)
         });
         this.allFinishGroups = await Backend.getFinishGroups()
         this.allFinishGroups.forEach(element => {
           if(selectedMat.mandatoryFinishings.find(x => x.id == element.id)){
             element.finishings.forEach(element2 => {
-              this.finishes.push(element2.name + "*")
+              this.mandatoryFinishes.push(element2.name)
             })
           }
         });
-        console.log(this.finishes)
       } catch (error) {
         // TODO: Show something
         console.error(error)

@@ -480,6 +480,7 @@
           var date = element.created
           date = date.slice(0, 10)
           element.created = date
+          element.cost = element.cost.toFixed(2)
         });
         if(store.materialSearch != null){
         this.requests = this.requests.filter(function (element) {
@@ -584,7 +585,8 @@
             observations: item.observations,
             cost: item.cost,
             application: item.application,
-            finishings: item.type.cover.finishings
+            finishings: item.type.cover.finishings,
+            codClient: item.client.id
           }
         } else if(item.type.type == "TwoFaces"){
           store.pedidoAtual = {
@@ -600,7 +602,8 @@
             observations: item.observations,
             cost: item.cost,
             application: item.application,
-            finishings: [item.type.cover.finishings, item.type.back.finishings]
+            finishings: [item.type.cover.finishings, item.type.back.finishings],
+            codClient: item.client.id
           }
         } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
             if(item.type.type == "RightShowcase"){
@@ -622,7 +625,7 @@
             cost: item.cost,
             application: item.application,
             finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings, item.type.side.finishings],
-
+            codClient: item.client.id
           }
         }
         this.$router.push({name: 'details'});

@@ -274,6 +274,7 @@ export default {
       store.currentUser.credits.forEach(element => {
       this.credits += element.amount
     });
+      this.credits = this.credits.toFixed(2)
   },
 
   methods: {

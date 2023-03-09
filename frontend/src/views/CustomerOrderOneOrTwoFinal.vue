@@ -158,7 +158,7 @@
           <v-card>
             <v-card-text>
               <div class="text-h6 pt-12" v-show="added"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
-              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil </div>
+              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn
@@ -291,7 +291,8 @@ export default {
   currBrand: null,
   allFinishes: null,
   currFinishes: [],
-  oneFace: false
+  oneFace: false,
+  errorMsg: ""
 
   }),
 
@@ -355,10 +356,10 @@ export default {
     var currentUser = await Backend.getProfile()
     currentUser.credits.forEach(element => {
       if(store.uniqueBrands.includes(element.brand)){
-        this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
+        this.brandsWithPlafonds.push(element.brand + ": " + element.amount.toFixed(2))
       }
     });
-    this.brandCost = [store.uniqueBrands[0] +" : "+ this.totalPrice]
+    this.brandCost = [store.uniqueBrands[0] +" : "+ this.totalPrice.toFixed(2)]
     store.currentCost = this.totalPrice
   },
 
@@ -435,9 +436,10 @@ export default {
       try{
         await Backend.placeRequest(this.request)
         this.added = true
-        setTimeout(() => this.$router.push({name: 'profile'}), 3000);
+        setTimeout(() => this.$router.push({name: 'profile'}), 4000);
       } catch (error) {
-        setTimeout(() => this.$router.push({name: 'profile'}), 3000);
+        this.errorMsg = error
+        setTimeout(() => this.$router.push({name: 'profile'}), 4000);
         this.failed = true
       }
     },

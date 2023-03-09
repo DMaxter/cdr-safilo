@@ -491,7 +491,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face 1</h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -553,7 +553,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face 1</h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -598,7 +598,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face 2 </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -660,7 +660,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face A</h3>
             <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -705,7 +705,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face B </h3>
             <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -743,7 +743,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face C </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -781,7 +781,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face D </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -819,7 +819,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face E </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -940,8 +940,8 @@ async created(){
   } else if(store.pedidoAtual.modelo == "TwoFaces"){
     console.log(store.pedidoAtual.finishings)
     var no = []
-    var str = ""
     store.pedidoAtual.finishings.forEach(fin => {
+      var str = ""
       console.log(fin)
       if(fin.length > 1){
         fin.forEach(f =>{

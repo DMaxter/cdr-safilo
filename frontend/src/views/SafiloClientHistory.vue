@@ -441,7 +441,7 @@
             quantity: item.quantidade,
             observations: item.observations,
             cost: item.cost,
-            application: item.application
+            application: item.application,
           }
         } else if(item.type.type == "TwoFaces"){
           store.pedidoAtual = {
