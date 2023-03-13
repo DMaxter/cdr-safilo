@@ -1,6 +1,7 @@
 package com.casadosreclamos.dto
 
 import com.casadosreclamos.model.Client
+import java.util.stream.Collectors
 
 data class ClientDto(
     var id: Long?,
@@ -10,7 +11,8 @@ data class ClientDto(
     var email: String?,
     var phone: String?,
     var address: String?,
-    var postalCode: String?
+    var postalCode: String?,
+    var images: List<ImageDto>?
 ) {
     constructor(client: Client) : this(
         client.id,
@@ -20,6 +22,7 @@ data class ClientDto(
         client.email,
         client.phone,
         client.address,
-        client.postalCode
+        client.postalCode,
+        client.images.stream().map { ImageDto(it) }.collect(Collectors.toList())
     )
 }

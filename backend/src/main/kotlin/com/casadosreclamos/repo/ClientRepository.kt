@@ -16,4 +16,15 @@ class ClientRepository : PanacheRepository<Client> {
     fun streamByBanner(banner: String): Multi<Client> {
         return stream("banner.name = :banner", Parameters.with("banner", banner).map())
     }
+
+    override fun findById(id: Long?): Uni<Client> {
+        return find(
+            "FROM Client c LEFT JOIN FETCH c.images WHERE c.id = :id",
+            Parameters.with("id", id).map()
+        ).firstResult()
+    }
+
+    override fun streamAll(): Multi<Client> {
+        return stream("FROM Client c LEFT JOIN FETCH c.images")
+    }
 }
