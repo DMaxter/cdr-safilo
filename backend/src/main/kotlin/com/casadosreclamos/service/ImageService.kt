@@ -14,6 +14,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+import javax.naming.OperationNotSupportedException
+import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class ImageService {
@@ -87,6 +89,46 @@ class ImageService {
                 Uni.join().all(unis).andFailFast().onItem().invoke { -> logger.info("Image(s) added") }.onFailure()
                     .invoke { e -> logger.error("Couldn't add images:", e) }
             }
+        }
+    }
+
+    fun deleteImages(images: Set<Long>): Uni<Response> {
+        if (images.isEmpty()) {
+            logger.error("No images were provided")
+
+            throw OperationNotPerformedException()
+        } else if (images.stream().filter{ it <= 0}.count() > 0) {
+            logger.error("At least one image has invalid ID")
+
+            throw InvalidIdException("image")
+        }
+
+        return Panache.withTransaction {
+            imageRepository.findAll(images).collect().asList().onItem().transformToUni { found ->
+                if (found == null || found.size < images.size) {
+                    logger.error("Invalid or repeated images detected. Fetched: ${found}")
+
+                    throw InvalidIdException("image")
+                }
+
+                val unis: MutableList<Uni<Boolean>> = mutableListOf()
+
+                for (image in found) {
+                    if (image.client != null) {
+                        unis.add(clientService.get(image.client!!.id).onItem().transformToUni { client ->
+                            client.images.remove(image)
+
+                            imageRepository.deleteById(image.id)
+                        })
+                    } else {
+                        logger.error("Impossible to remove brand image")
+
+                        throw OperationNotSupportedException()
+                    }
+                }
+
+                Uni.join().all(unis).andFailFast().onItem().invoke { -> logger.info("Successfully removed client images") }.onFailure().invoke { e -> logger.error("Couldn't remove client images: ${e}") }
+            }.onItem().transform { Response.ok().build() }
         }
     }
 }
