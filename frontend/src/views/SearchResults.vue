@@ -506,6 +506,10 @@
     } else if(profile.roles[0] == 'MANAGER'){
       this.menu3 = true
     }
+    if(store.selectedItem != null){
+      document.getElementsByClassName("v-data-table__wrapper")[0].scrollTop = store.selectedItem
+      store.selectedItem = null
+    }
       },
       computed: {
         headers() {
@@ -569,6 +573,7 @@
         },
         getRequest(item) {
         console.log(item)
+        store.selectedItem = document.getElementsByClassName("v-data-table__wrapper")[0].scrollTop
         store.address = item.client.address
         store.postalCode = item.client.postalCode
         if(item.type.type == "OneFace"){

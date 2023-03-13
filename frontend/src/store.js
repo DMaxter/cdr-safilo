@@ -73,5 +73,6 @@ export const store = reactive({
   heights: null,
   finitos: null,
   materioscas: null,
-  backtracking: false
+  backtracking: false,
+  selectedItem: null,
 })
