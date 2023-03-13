@@ -89,4 +89,16 @@ class ImageController {
             }
         }
     }
+
+    @DELETE
+    @Path("/client")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Delete client images")
+    fun deleteClientImages(images: Set<Long>): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is deleting ${images.size} images")
+
+            imageService.deleteImages(images)
+        }
+    }
 }
