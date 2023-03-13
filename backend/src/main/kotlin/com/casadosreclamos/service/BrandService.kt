@@ -139,7 +139,7 @@ class BrandService {
                     throw InvalidIdException("image")
                 }
 
-                Uni.join().all(brandRepository.findByIdWithImages(image.brand.id).onItem().transform { brand ->
+                Uni.join().all(brandRepository.findByIdWithImages(image.brand!!.id).onItem().transform { brand ->
                     brand.images.remove(image)
                 }, imageRepository.deleteById(id)).andFailFast().onItem().transform {
                     logger.info("Successfully deleted image")

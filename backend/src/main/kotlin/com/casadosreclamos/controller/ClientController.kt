@@ -11,15 +11,19 @@ import io.smallrye.common.annotation.Blocking
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType
+import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.jboss.logging.Logger
+import org.jboss.resteasy.reactive.PartType
 import org.jboss.resteasy.reactive.RestForm
 import org.jboss.resteasy.reactive.multipart.FileUpload
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.*
+import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/client")
@@ -70,16 +74,21 @@ class ClientController {
     }
 
     @POST
-    @Path("/import")
     @Blocking
-    @Operation(summary = "Import clients from XLSX file")
+    @Path("/import")
     @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Operation(summary = "Import clients from XLSX file")
     @APIResponses(
         APIResponse(responseCode = "200", description = "Successful operation"),
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "Insufficient privileges")
     )
-    fun importClients(@RestForm file: FileUpload): Uni<Response> {
+    fun importClients(
+        @PartType(MediaType.APPLICATION_OCTET_STREAM) @Schema(
+            type = SchemaType.STRING, format = "binary"
+        ) @RestForm file: FileUpload
+    ): Uni<Response> {
         return identity.deferredIdentity.onItem().transform { id ->
             logger.info("User ${id.principal.name} is importing clients from Excel file")
 

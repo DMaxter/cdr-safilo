@@ -34,6 +34,10 @@ class ClientService {
         return clientRepository.streamAll()
     }
 
+    fun get(id: Long): Uni<Client> {
+        return clientRepository.findById(id)
+    }
+
     fun getByBanner(banner: String): Multi<Client> {
         return clientRepository.streamByBanner(banner)
     }
@@ -95,6 +99,7 @@ class ClientService {
         client.phone = clientDto.phone!!
         client.address = clientDto.address!!
         client.postalCode = clientDto.postalCode!!
+        client.images = mutableSetOf()
 
         return createBannerIfNotExists(clientDto.banner!!).onItem().transformToUni { banner ->
             client.banner = banner
@@ -123,7 +128,7 @@ class ClientService {
                 val address = record[3]
                 val postalCode = record[4]
 
-                val clientDto = ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode)
+                val clientDto = ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, mutableListOf())
 
 
                 em.emit(clientRepository.findById(id).onItem().ifNull().switchTo {

@@ -1,5 +1,6 @@
 package com.casadosreclamos.model.request
 
+import com.casadosreclamos.model.Client
 import javax.persistence.*
 
 @Entity
@@ -10,7 +11,10 @@ open class Image {
     open var id: Long = 0
 
     @ManyToOne
-    open lateinit var brand: Brand
+    open var brand: Brand? = null
+
+    @ManyToOne
+    open var client: Client? = null
 
     open var obsolete: Boolean = false
 
