@@ -334,25 +334,25 @@
               <div>Acabamentos: {{ currFinishes[0] }}</div>
               <div class="text-h6"> Face 2: </div>
               <div> Material:  {{ materiales[1] }}  </div>
-              <div>Altura:{{ store.dimensions[1].height }}</div>
+              <div>Altura: {{ store.dimensions[1].height }}</div>
               <div>Largura: {{ store.dimensions[1].width }}</div>
               <div>Marca: {{ currBrand }}</div>
               <div>Acabamentos: {{ currFinishes[1] }}</div>
               <div class="text-h6"> Face 3: </div>
               <div> Material:  {{ materiales[2] }}  </div>
-              <div>Altura:{{ store.dimensions[2].height }}</div>
+              <div>Altura: {{ store.dimensions[2].height }}</div>
               <div>Largura: {{ store.dimensions[2].width }}</div>
               <div>Marca: {{ currBrand }}</div>
               <div>Acabamentos: {{ currFinishes[2] }} </div>
               <div class="text-h6"> Face 4: </div>
               <div> Material:  {{ materiales[3] }}  </div>
-              <div>Altura:{{ store.dimensions[3].height }}</div>
+              <div>Altura: {{ store.dimensions[3].height }}</div>
               <div>Largura: {{ store.dimensions[3].width }}</div>
               <div>Marca: {{ currBrand }}</div>
               <div>Acabamentos: {{ currFinishes[3] }}</div>
               <div class="text-h6"> Face 5: </div>
               <div> Material:  {{ materiales[4] }}   </div>
-              <div>Altura:{{ store.dimensions[4].height }}</div>
+              <div>Altura: {{ store.dimensions[4].height }}</div>
               <div>Largura: {{ store.dimensions[4].width }} </div>
               <div>Marca: {{ currBrand }}</div>
               <div>Acabamentos: {{ currFinishes[4] }}</div>
@@ -484,7 +484,7 @@ export default {
     console.log(store.uniqueBrands)
     currentUser.credits.forEach(element => {
       if(store.uniqueBrands.includes(element.brand)){
-        this.brandsWithPlafonds.push(element.brand + ": " + element.amount)
+        this.brandsWithPlafonds.push(element.brand + ": " + element.amount.toFixed(2))
       }
     });
     var actBrand = this.allBrands.find(x => x.id == store.currentBrandId[store.currentBrandId.length-1]).name

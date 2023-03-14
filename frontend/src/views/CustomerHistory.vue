@@ -189,7 +189,8 @@
         <v-data-table :headers="headers" :items="requests" fixed-header item-key="id" disable-pagination hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style mt-5">
         
         <template v-slot:[`item.actions`]="{ item }">
-            <v-icon @click="getRequest(item)">mdi-plus</v-icon>
+            <v-icon @click="getRequest(item)" class="mr-1">mdi-plus</v-icon>
+            <v-icon @click="getRequestNewTab(item)" class="ml-1">mdi-open-in-new</v-icon>
           </template>
     </v-data-table>
             </v-row>
@@ -453,7 +454,8 @@ data () {
             cost: item.cost,
             application: item.application,
             finishings: item.type.cover.finishings,
-            codClient: item.client.id
+            codClient: item.client.id,
+            nameClient: item.client.name
           }
         } else if(item.type.type == "TwoFaces"){
           store.pedidoAtual = {
@@ -470,7 +472,8 @@ data () {
             cost: item.cost,
             application: item.application,
             finishings: [item.type.cover.finishings, item.type.back.finishings],
-            codClient: item.client.id
+            codClient: item.client.id,
+            nameClient: item.client.name
           }
         } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
             if(item.type.type == "RightShowcase"){
@@ -492,11 +495,16 @@ data () {
             cost: item.cost,
             application: item.application,
             finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings, item.type.side.finishings],
-            codClient: item.client.id
+            codClient: item.client.id,
+            nameClient: item.client.name
 
           }
         }
         this.$router.push({name: 'details'});
+      },
+      getRequestNewTab(item) {
+        let route = this.$router.resolve({name: 'details', query: {id: item.id}});
+        window.open(route.href, '_blank')
       },
       /**
        * Filter for dessert names column.
