@@ -43,7 +43,8 @@ export const store = reactive({
       cost: null,
       application: null,
       finishings: null,
-      codClient: null
+      codClient: null,
+      nameClient: null
     },
   currentClient: null,
   currentAddress: null,

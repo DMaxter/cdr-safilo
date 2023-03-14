@@ -451,7 +451,7 @@
                 : 'height: 38px'">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click="$router.go(-1)"
+              @click="goBack()"
               class="d-flex flex-column customGradient"
               small
               tile
@@ -491,7 +491,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face 1</h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -553,7 +553,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face 1</h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -598,7 +598,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face 2 </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -660,7 +660,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face A</h3>
             <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -705,7 +705,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face B </h3>
             <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -743,7 +743,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face C </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -781,7 +781,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face D </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -819,7 +819,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
-          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cód. Cliente: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
           <h3 class="mb-6"> Face E </h3>
           <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
               <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
@@ -899,6 +899,7 @@ data () {
       return {
         myImage2: require('@/assets/logologo1.png'),
         store,
+        requests: null,
         show: false,
         profile: new UserDto(),
         picked: null,
@@ -920,6 +921,81 @@ data () {
       }
     },
 async created(){
+  if(this.$route.query.id != null){
+        this.requests = await Backend.getRequests()
+        this.requests.forEach(element => {
+          var date = element.created
+          date = date.slice(0, 10)
+          element.created = date
+          element.cost = element.cost.toFixed(2)
+        });
+        var item = this.requests.filter(x => x.id == this.$route.query.id)[0]
+        store.address = item.client.address
+        store.postalCode = item.client.postalCode
+        if(item.type.type == "OneFace"){
+        store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: item.brand.name,
+            modelo: item.type.type,
+            material: [item.type.cover.material.name],
+            dimensoes: [item.type.cover.measurements],
+            estado: item.status,
+            images: [item.type.cover.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application,
+            finishings: item.type.cover.finishings,
+            codClient: item.client.id,
+            nameClient: item.client.name
+
+          }
+        } else if(item.type.type == "TwoFaces"){
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: item.brand.name,
+            modelo: item.type.type,
+            material: [item.type.cover.material.name, item.type.back.material.name],
+            dimensoes: [item.type.cover.measurements, item.type.back.measurements],
+            estado: item.status,
+            images: [item.type.cover.image.link, item.type.back.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application,
+            finishings: [item.type.cover.finishings, item.type.back.finishings],
+            codClient: item.client.id,
+            nameClient: item.client.name
+
+          }
+        } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
+            if(item.type.type == "RightShowcase"){
+              store.isActive2 = true
+            } else if(item.type.type == "LeftShowcase"){
+              store.isActive3 = true
+            }
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: item.brand.name,
+            modelo: item.type.type,
+            material: [item.type.top.material.name, item.type.bottom.material.name, item.type.left.material.name, item.type.right.material.name, item.type.side.material.name],
+            dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements, item.type.side.measurements],
+            estado: item.status,
+            images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link, item.type.side.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application,
+            finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings, item.type.side.finishings],
+            codClient: item.client.id,
+            nameClient: item.client.name
+
+          }
+        }
+  }
   console.log(store.pedidoAtual)
   store.finishes = []
   var finAux = []
@@ -1041,6 +1117,13 @@ async created(){
 methods: {
   print(){
     window.print();
+  },
+  goBack(){
+    if(this.$route.query.id != null){
+      this.$router.push({name: 'history'});
+    } else {
+      this.$router.go(-1)
+    }
   },
   getPedido() {
     if(store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"){

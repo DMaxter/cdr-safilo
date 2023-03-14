@@ -296,6 +296,8 @@
           
           <template v-slot:[`item.actions`]="{ item }">
               <v-icon @click="getRequest(item)">mdi-plus</v-icon>
+              <v-icon @click="getRequestNewTab(item)" class="ml-1">mdi-open-in-new</v-icon>
+
             </template>
       </v-data-table>
               </v-row>
@@ -565,6 +567,10 @@
         
       },
       methods: {
+        getRequestNewTab(item) {
+        let route = this.$router.resolve({name: 'details', query: {id: item.id}});
+        window.open(route.href, '_blank')
+      },
         limiter() {
           if(this.dates.length > 2) {
             this.dates = []
@@ -591,7 +597,9 @@
             cost: item.cost,
             application: item.application,
             finishings: item.type.cover.finishings,
-            codClient: item.client.id
+            codClient: item.client.id,
+            nameClient: item.client.name
+
           }
         } else if(item.type.type == "TwoFaces"){
           store.pedidoAtual = {
@@ -608,7 +616,9 @@
             cost: item.cost,
             application: item.application,
             finishings: [item.type.cover.finishings, item.type.back.finishings],
-            codClient: item.client.id
+            codClient: item.client.id,
+            nameClient: item.client.name
+
           }
         } else if(item.type.type == "RightShowcase" || item.type.type == "LeftShowcase"){
             if(item.type.type == "RightShowcase"){
@@ -630,7 +640,9 @@
             cost: item.cost,
             application: item.application,
             finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings, item.type.side.finishings],
-            codClient: item.client.id
+            codClient: item.client.id,
+            nameClient: item.client.name
+
           }
         }
         this.$router.push({name: 'details'});
