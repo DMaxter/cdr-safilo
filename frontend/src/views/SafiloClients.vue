@@ -347,7 +347,7 @@ export default {
     },
     getRequests: async function () {
       try {
-        await Backend.getAllRequests(this.selectedBanner)
+        await Backend.getAllRequests()
         this.added = true
       } catch (error) {
         this.failed = true
