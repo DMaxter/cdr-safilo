@@ -380,7 +380,7 @@ export default {
     },
     getRequests: async function () {
       try {
-        await Backend.getRequestsByBanner(this.selectedBanner)
+        await Backend.getAllRequests()
         this.added = true
       } catch (error) {
         this.failed = true

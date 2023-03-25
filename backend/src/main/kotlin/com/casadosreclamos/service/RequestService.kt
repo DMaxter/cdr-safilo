@@ -293,18 +293,36 @@ class RequestService {
         }
     }
 
-    fun exportBanner(banner: String): Uni<File> {
+    fun exportBanner(): Uni<File> {
         val file = kotlin.io.path.createTempFile().toFile()
         val writer = CSVPrinter(FileWriter(file), CSVFormat.EXCEL)
 
         val bannerRequests =
-            requestRepository.streamByBanner(banner).onCompletion().invoke { -> logger.info("Fetched all requests") }
+            requestRepository.streamAll().onCompletion().invoke { -> logger.info("Fetched all requests") }
 
-        writer.printRecord("Banner", "Nr. Cliente", "Cliente", "Tipo de Pedido", "Custo")
+        writer.printRecord(
+            "Banner",
+            "Nr. Cliente",
+            "Cliente",
+            "Comercial",
+            "Nr. Pedido",
+            "Tipo de Pedido",
+            "Materiais",
+            "Marca",
+            "Custo"
+        )
 
         return bannerRequests.onItem().transform { request ->
             writer.printRecord(
-                request.client.banner.name, request.client.id, request.client.name, getType(request.type), request.cost
+                request.client.banner.name,
+                request.client.id,
+                request.client.name,
+                request.requester.email,
+                request.id,
+                getType(request.type),
+                getMaterials(request.type),
+                request.brand.name,
+                request.cost
             )
             request
         }.collect().asList().onItem().transform { _ ->
@@ -497,6 +515,15 @@ class RequestService {
             is OneFace -> "Uma face"
             is TwoFaces -> "Duas faces"
             is Showcase -> "Montra"
+            else -> throw InvalidRequestTypeException()
+        }
+    }
+
+    private fun getMaterials(request: RequestType): String {
+        return when (request) {
+            is OneFace -> request.cover.material.name
+            is TwoFaces -> request.cover.material.name + " | " + request.back.material.name
+            is Showcase -> request.top.material.name + " | " + request.right.material.name + " | " + request.bottom.material.name + " | " + request.left.material.name + " | " + request.side.material.name
             else -> throw InvalidRequestTypeException()
         }
     }
