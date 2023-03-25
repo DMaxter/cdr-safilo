@@ -120,42 +120,9 @@
                   </v-dialog>
                 </template>
 
-                <template>
-                  <v-dialog v-model="dialog3" persistent content-class="rounded-0" max-width="500px">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn height="50" width="260" class="mt-11 ml-3 customGradient" dark tile v-bind="attrs"
-                        v-on="on" @click="added = false; failed = false"> <span style="font-size: 11px;">Descarregar
-                          pedidos por Banner</span> </v-btn>
-                    </template>
-                    <v-card tile>
-                      <v-card-title class="justify-center">
-                        <span v-show="!added && !failed">Descarregar pedidos por Banner</span>
-                      </v-card-title>
-                      <div align="center">
-                        <span class="text-h5" v-show="added"> Pedidos descarregados com sucesso! </span>
-                        <span class="text-h5" v-show="failed"> Ocorreu um erro a descarregar os pedidos </span>
-                        <span v-show="!added && !failed">
-                          Selecione uma banner
-                        </span>
-
-                        <v-autocomplete v-show="!added && !failed" :items="banners" style="width: 200px"
-                          v-model="selectedBanner">
-
-                        </v-autocomplete>
-                      </div>
-
-                      <v-card-actions class="justify-center">
-                        <v-btn color="blue darken-1" text
-                          @click="dialog3 = false; selectedBanner = null, added = false, failed = false">
-                          Voltar
-                        </v-btn>
-                        <v-btn color="blue darken-1" text v-show="!added && !failed" @click="getRequests()">
-                          Descarregar
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </template>
+              <v-btn height="50" width="180" class="mt-11 ml-3 customGradient" dark tile  @click="getRequests()"> 
+                <span style="font-size: 11px;">Descarregar pedidos</span> </v-btn>
+                    
 
                 <template>
                   <v-dialog v-model="dialog1" persistent content-class="rounded-0" max-width="500px">
@@ -380,7 +347,7 @@ export default {
     },
     getRequests: async function () {
       try {
-        await Backend.getAllRequests()
+        await Backend.getAllRequests(this.selectedBanner)
         this.added = true
       } catch (error) {
         this.failed = true
