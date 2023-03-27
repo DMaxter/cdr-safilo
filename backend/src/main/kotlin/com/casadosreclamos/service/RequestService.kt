@@ -306,6 +306,8 @@ class RequestService {
             "Cliente",
             "Comercial",
             "Nr. Pedido",
+            "Estado",
+            "Data",
             "Tipo de Pedido",
             "Materiais",
             "Marca",
@@ -319,6 +321,8 @@ class RequestService {
                 request.client.name,
                 request.requester.email,
                 request.id,
+                getStatus(request.status),
+                request.created.toString(),
                 getType(request.type),
                 getMaterials(request.type),
                 request.brand.name,
@@ -525,6 +529,15 @@ class RequestService {
             is TwoFaces -> request.cover.material.name + " | " + request.back.material.name
             is Showcase -> request.top.material.name + " | " + request.right.material.name + " | " + request.bottom.material.name + " | " + request.left.material.name + " | " + request.side.material.name
             else -> throw InvalidRequestTypeException()
+        }
+    }
+
+    private fun getStatus(status: RequestStatus): String {
+        return when (status) {
+            RequestStatus.ORDERED -> "Encomendado"
+            RequestStatus.CANCELLED -> "Cancelado"
+            RequestStatus.DONE -> "Terminado"
+            RequestStatus.IN_PRODUCTION -> "Em produção"
         }
     }
 
