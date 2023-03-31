@@ -134,8 +134,8 @@ class RequestController {
     }
 
     @GET
-    @Path("/export/banner/{banner}")
-    @Operation(summary = "Export clients of a banner")
+    @Path("/export")
+    @Operation(summary = "Export all requests")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
     @APIResponses(
@@ -143,11 +143,11 @@ class RequestController {
         APIResponse(responseCode = "401", description = "User is not logged in"),
         APIResponse(responseCode = "403", description = "Insufficient privileges")
     )
-    fun exportBannerRequests(@PathParam("banner") banner: String): Uni<File> {
+    fun exportBannerRequests(): Uni<File> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
-            logger.info("User ${id.principal.name} is exporting requests from banner $banner")
+            logger.info("User ${id.principal.name} is exporting all requests")
 
-            return@transformToUni requestService.exportBanner(banner)
+            return@transformToUni requestService.exportBanner()
         }
     }
 }

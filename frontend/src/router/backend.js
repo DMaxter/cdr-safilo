@@ -214,13 +214,13 @@ export default class Backend {
     })
   }
 
-  static async getRequestsByBanner(banner) {
-    return httpClient.get(`/request/export/banner/${banner}`, { responseType: 'blob', timeout: 30000}).then(response => {
+  static async getAllRequests() {
+    return httpClient.get(`/request/export`, { responseType: 'blob', timeout: 30000}).then(response => {
       const url = window.URL.createObjectURL(response.data);
       const a = document.createElement('a');
       a.style.display = 'none';
       a.href = url;
-      a.download = `${banner}.csv`;
+      a.download = `clients.csv`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
