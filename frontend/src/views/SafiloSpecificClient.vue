@@ -6,6 +6,7 @@
         <v-col cols="auto" >
           <v-card elevation="12" height="600" width="800" tile style="background-color: #E0E0E0">
           <v-row no-gutters justify="start" class="pt-2 pl-2">
+            <template v-if="!this.menu1">
             <v-menu
             :offset-x="true"
             tile
@@ -14,9 +15,9 @@
               <v-btn
                 height="64"
                 width="100"
-                tile
                 class="white--text customGradient"
-                color="#6e4e5d"
+                tile
+                color="#808080"
                 v-bind="attrs"
                 v-on="on"
               >
@@ -25,7 +26,7 @@
             </template>
 
               <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')" class="customGradient">
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="130" class="v-btn--active customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,15 +34,15 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160" class="v-btn--active customGradient">
-                <span class="white--text" style="font-size: 12px">Clientes</span>
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
-                  mdi-account-group
+                  mdi-clock
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="130" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,16 +50,74 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160" class="customGradient">
-                <span class="white--text" style="font-size: 12px">Configurar</span>
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Novo Pedido</span>
 
                 <v-icon right>
-                  mdi-cog
+                  mdi-playlist-plus
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#808080" value="right" @click="$router.push('clients')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Imagens</span>
+
+                <v-icon right>
+                  mdi-playlist-plus
                 </v-icon>
               </v-btn>
 
             </v-btn-toggle>
           </v-menu>
+        </template>
+        <template v-else>
+              <v-menu :offset-x="true" tile>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn height="64" width="100" tile class="white--text customGradient" color="#6e4e5d" v-bind="attrs"
+                    v-on="on">
+                    Menu
+                  </v-btn>
+                </template>
+
+                <v-btn-toggle v-model="icon" tile dark borderless>
+                  <v-btn color="#6e4e5d" value="left" height="64" width="160" @click="$router.push('profile')"
+                    class="customGradient">
+                    <span class="white--text" style="font-size: 12px">Perfil</span>
+
+                    <v-icon right>
+                      mdi-account-circle
+                    </v-icon>
+                  </v-btn>
+
+                  <v-btn color="#6e4e5d" value="center1" @click="$router.push('clients')" height="64" width="160"
+                    class="v-btn--active customGradient">
+                    <span class="white--text" style="font-size: 12px">Clientes</span>
+
+                    <v-icon right>
+                      mdi-account-group
+                    </v-icon>
+                  </v-btn>
+
+                  <v-btn color="#6e4e5d" value="center2" @click="$router.push('search')" height="64" width="160"
+                    class="customGradient">
+                    <span class="white--text" style="font-size: 12px">Procurar</span>
+
+                    <v-icon right>
+                      mdi-magnify
+                    </v-icon>
+                  </v-btn>
+
+                  <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160"
+                    class="customGradient">
+                    <span class="white--text" style="font-size: 12px">Configurar</span>
+
+                    <v-icon right>
+                      mdi-cog
+                    </v-icon>
+                  </v-btn>
+
+                </v-btn-toggle>
+              </v-menu>
+            </template>
           </v-row>
           <v-row justify="end" align="center" class="fill-height d-flex flex-column" style="height: 400px">
           <h4> Código - Nome - Banner</h4>

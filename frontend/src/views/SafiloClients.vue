@@ -6,6 +6,70 @@
         <v-col cols="auto">
           <v-card elevation="12" height="600" width="800" tile style="background-color: #E0E0E0">
             <v-row no-gutters justify="start" class="pt-2 pl-2">
+              <template v-if="!this.menu1">
+            <v-menu
+            :offset-x="true"
+            tile
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                height="64"
+                width="100"
+                class="white--text customGradient"
+                tile
+                color="#808080"
+                v-bind="attrs"
+                v-on="on"
+              >
+                Menu
+              </v-btn>
+            </template>
+
+              <v-btn-toggle v-model="icon" tile dark borderless>
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="130" class="v-btn--active customGradient">
+                  <span class="white--text" style="font-size: 12px">Perfil</span>
+
+                <v-icon right>
+                  mdi-account-circle
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Histórico</span>
+
+                <v-icon right>
+                  mdi-clock
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Procurar</span>
+
+                <v-icon right>
+                  mdi-magnify
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Novo Pedido</span>
+
+                <v-icon right>
+                  mdi-playlist-plus
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#808080" value="right" @click="$router.push('clients')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Imagens</span>
+
+                <v-icon right>
+                  mdi-playlist-plus
+                </v-icon>
+              </v-btn>
+
+            </v-btn-toggle>
+          </v-menu>
+        </template>
+        <template v-else>
               <v-menu :offset-x="true" tile>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn height="64" width="100" tile class="white--text customGradient" color="#6e4e5d" v-bind="attrs"
@@ -53,13 +117,14 @@
 
                 </v-btn-toggle>
               </v-menu>
+            </template>
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mb-2 mt-2">
 
             </v-row>
             <v-row justify="center" align="center" class="d-flex flex-column mt-2">
               <v-data-table :headers="headers" :items="allClients" fixed-header hide-default-footer
-                tile :search="dessertFilterValue" disable-pagination item-key="id" height="318" style="width: 600px;"
+                tile :search="dessertFilterValue" disable-pagination item-key="id" :height="menu1 == true ? '318' : '400'" style="width: 600px;"
                 class="elevation-1 my-header-style">
                 <template v-slot:top>
 
@@ -81,7 +146,7 @@
                 </template>
               </v-data-table>
               <v-row>
-                <template>
+                <template v-if="menu1">
                   <v-dialog v-model="dialog2" persistent content-class="rounded-0" max-width="500px">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn height="50" width="150" class="mt-11 customGradient" dark tile v-bind="attrs" v-on="on"
@@ -120,11 +185,11 @@
                   </v-dialog>
                 </template>
 
-              <v-btn height="50" width="180" class="mt-11 ml-3 customGradient" dark tile  @click="getRequests()"> 
+              <v-btn v-if="menu1" height="50" width="180" class="mt-11 ml-3 customGradient" dark tile  @click="getRequests()"> 
                 <span style="font-size: 11px;">Descarregar pedidos</span> </v-btn>
                     
 
-                <template>
+                <template v-if="menu1">
                   <v-dialog v-model="dialog1" persistent content-class="rounded-0" max-width="500px">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn height="50" width="145" class="mb-3 mt-11 ml-3 customGradient" dark tile v-bind="attrs"
@@ -182,7 +247,7 @@
                 </template>
               </v-row>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 60px;">
+            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" :style="menu1 == true ? 'height: 60px' : 'height: 80px'">
               <v-col cols="auto" class="pl-4">
                 <v-btn @click="$router.push('profile')" class="d-flex flex-column customGradient" small dark tile>
                   <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
@@ -193,6 +258,7 @@
 
               </v-col>
             </v-row>
+  
           </v-card>
         </v-col>
       </v-row>
@@ -257,6 +323,7 @@ export default {
       clientPostalCode: null,
       clientBanner: null,
       clientAddress: null,
+      menu1: true,
     }
   },
   async created() {
@@ -267,6 +334,13 @@ export default {
           this.banners.push(element.banner)
         }
       });
+
+      store.currentUser = await Backend.getProfile()
+      console.log(store.currentUser)
+      if(store.currentUser.roles[0] == 'COMMERCIAL' || store.currentUser.roles[0] == 'ADMIN'){ 
+        this.menu1 = false
+      } 
+
     } catch (error) {
       // TODO: Show something
       console.error(error)
@@ -347,7 +421,7 @@ export default {
     },
     getRequests: async function () {
       try {
-        await Backend.getAllRequests(this.selectedBanner)
+        await Backend.getAllRequests()
         this.added = true
       } catch (error) {
         this.failed = true

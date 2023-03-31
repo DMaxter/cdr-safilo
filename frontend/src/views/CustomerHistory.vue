@@ -24,8 +24,8 @@
               </v-btn>
             </template>
 
-              <v-btn-toggle v-model="icon" tile dark borderless>
-              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="160" class="customGradient">
+            <v-btn-toggle v-model="icon" tile dark borderless>
+              <v-btn color="#808080" value="left" @click="$router.push('profile')" height="64" width="130" class=" customGradient">
                   <span class="white--text" style="font-size: 12px">Perfil</span>
 
                 <v-icon right>
@@ -33,7 +33,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="160" class="v-btn--active customGradient">
+              <v-btn color="#808080" value="center1" @click="$router.push('history')" height="64" width="130" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Histórico</span>
 
                 <v-icon right>
@@ -41,7 +41,7 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="160" class="customGradient">
+              <v-btn color="#808080" value="center2" @click="$router.push('search')" height="64" width="130" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Procurar</span>
 
                 <v-icon right>
@@ -49,8 +49,16 @@
                 </v-icon>
               </v-btn>
 
-              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="160" class="customGradient">
+              <v-btn color="#808080" value="right" @click="$router.push('orderClient')" height="64" width="130" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Novo Pedido</span>
+
+                <v-icon right>
+                  mdi-playlist-plus
+                </v-icon>
+              </v-btn>
+
+              <v-btn color="#808080" value="right" @click="$router.push('clients')" height="64" width="130" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Imagens</span>
 
                 <v-icon right>
                   mdi-playlist-plus
