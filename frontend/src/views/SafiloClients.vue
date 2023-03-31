@@ -170,10 +170,10 @@
                         </v-container>
                       </v-card-text>
                       <v-card-actions class="justify-center">
-                        <v-btn color="blue darken-1" text @click="dialog1 = false;">
+                        <v-btn color="blue darken-1" text @click="dialog1 = false; clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null">
                           Voltar
                         </v-btn>
-                        <v-btn color="blue darken-1" text v-show="!added && !failed" @click="addClient();">
+                        <v-btn color="blue darken-1" text v-show="!added && !failed" @click="addClient();  clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null">
                           Adicionar
                         </v-btn>
                       </v-card-actions>
@@ -347,7 +347,7 @@ export default {
     },
     getRequests: async function () {
       try {
-        await Backend.getAllRequests()
+        await Backend.getAllRequests(this.selectedBanner)
         this.added = true
       } catch (error) {
         this.failed = true

@@ -376,6 +376,21 @@ export default class Backend {
     })
   }
 
+  static async addImageToClient(id, file) {
+    var formData = new FormData()
+    formData.append("images", file)
+    return httpClient.post(`/image/client/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    }).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async deleteImage(id) {
     return httpClient.delete(`/brand/image/${id}`).then(response => {
       return response.data
