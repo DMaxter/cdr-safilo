@@ -20,6 +20,7 @@ import org.jboss.resteasy.reactive.PartType
 import org.jboss.resteasy.reactive.RestForm
 import org.jboss.resteasy.reactive.multipart.FileUpload
 import java.io.File
+import java.nio.file.attribute.PosixFilePermission
 import java.util.stream.Collectors
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
@@ -28,6 +29,7 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 import kotlin.io.path.name
+import kotlin.io.path.setPosixFilePermissions
 
 @Path("/image")
 @ApplicationScoped
@@ -79,7 +81,13 @@ class ImageController {
             logger.info("User ${id.principal.name} is uploading ${images.size} images to client with ID $client")
 
             imageService.addImages(
-                client, images.stream().map { it.uploadedFile().name }.collect(
+                client, images.stream().map {
+                    val file = it.uploadedFile().toAbsolutePath()
+
+                    file.setPosixFilePermissions(setOf(PosixFilePermission.GROUP_READ, PosixFilePermission.OTHERS_READ))
+
+                    it.uploadedFile().name
+                }.collect(
                     Collectors.toSet()
                 )
             ).onItem().transform { list ->

@@ -19,12 +19,12 @@ class ClientRepository : PanacheRepository<Client> {
 
     override fun findById(id: Long?): Uni<Client> {
         return find(
-            "FROM Client c LEFT JOIN FETCH c.images WHERE c.id = :id",
+            "SELECT DISTINCT c FROM Client c LEFT JOIN FETCH c.images WHERE c.id = :id",
             Parameters.with("id", id).map()
         ).firstResult()
     }
 
     override fun streamAll(): Multi<Client> {
-        return stream("FROM Client c LEFT JOIN FETCH c.images")
+        return stream("SELECT DISTINCT c FROM Client c LEFT JOIN FETCH c.images")
     }
 }
