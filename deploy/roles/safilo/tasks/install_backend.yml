@@ -4,4 +4,5 @@
   copy:
     src: "{{ src_backend }}"
     dest: "{{ backend_path }}"
-  register: backend_files
+  notify:
+    - restart backend

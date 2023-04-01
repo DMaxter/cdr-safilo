@@ -51,7 +51,8 @@
   template:
     src: safilo.service
     dest: /etc/systemd/system/
-  notify: restart backend
+  notify:
+    - restart backend
 
 - name: Start backend service
   become: yes
