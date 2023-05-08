@@ -196,7 +196,8 @@ export default class Backend {
     return httpClient.post("/client/import", formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-        }
+        },
+        timeout: 300000
     }).then(response => {
       return response.data
     })
