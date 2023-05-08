@@ -16,6 +16,7 @@ import org.apache.commons.csv.CSVParser
 import org.jboss.logging.Logger
 import java.io.File
 import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -168,13 +169,14 @@ class ClientService {
     }
 
     fun importClients(file: File): Multi<Uni<Client>> {
-        val contents = CSVParser.parse(file, Charset.forName("UTF-8"), CSVFormat.EXCEL.withDelimiter(';'))
+        val contents = CSVParser.parse(file, StandardCharsets.UTF_8, CSVFormat.EXCEL.withDelimiter(';'))
+        val records = contents.records
 
-        logger.info("Importing ${contents.records.size - 1} clients")
+        logger.info("Importing ${records.size - 1} clients")
 
         val multi: Multi<Uni<Client>> = Multi.createFrom().emitter { em ->
             // Remove column names
-            for (record in contents.records.drop(1)) {
+            for (record in records.drop(1)) {
                 val id = record[0].toLong()
                 val banner = record[7]
                 val name = record[1]
@@ -184,11 +186,15 @@ class ClientService {
                 val address = record[3]
                 val postalCode = record[4]
 
-                val clientDto = ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, mutableListOf())
+                val clientDto =
+                    ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, mutableListOf())
 
-
-                em.emit(clientRepository.findById(id).onItem().ifNull().switchTo {
-                    return@switchTo add(clientDto)
+                em.emit(clientRepository.findById(id).onItem().transformToUni { client ->
+                    return@transformToUni if (client == null) {
+                        add(clientDto)
+                    } else {
+                        update(clientDto)
+                    }
                 })
             }
 
