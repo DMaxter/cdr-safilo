@@ -73,6 +73,25 @@ class ClientController {
         }
     }
 
+    @PUT
+    @Operation(summary = "Edit a client")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful client registration"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to edit a client")
+    )
+    fun editClient(client: ClientDto): Uni<ClientDto> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is editing client with name \"${client.name}\"")
+
+            return@transformToUni clientService.update(client).onItem().transform {
+                ClientDto(it)
+            }
+        }
+    }
+
+
     @POST
     @Blocking
     @Path("/import")

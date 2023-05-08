@@ -91,7 +91,6 @@ class ClientService {
             throw InvalidPostalCodeException()
         }
 
-
         client.id = clientDto.id!!
         client.email = clientDto.email!!
         client.name = clientDto.name!!
@@ -107,6 +106,63 @@ class ClientService {
             Panache.withTransaction {
                 clientRepository.persist(client).onItem().invoke { _ -> logger.info("Successfully registered client") }
                     .onFailure().invoke { e -> logger.error("Couldn't create client: $e") }
+            }
+        }
+    }
+
+    fun update(clientDto: ClientDto): Uni<Client> {
+        logger.info("Updating client $clientDto")
+
+        if (clientDto.id == null || clientDto.id!! <= 0) {
+            logger.error("Client ID is invalid")
+
+            throw InvalidIdException("client")
+        } else if (clientDto.banner == null || clientDto.banner!!.isEmpty()) {
+            logger.error("Client Banner is null or empty")
+
+            throw InvalidBannerException()
+        } else if (clientDto.email == null || clientDto.email!!.isEmpty() || !EMAIL_REGEX.matches(clientDto.email!!)) {
+            logger.error("Client email is null, empty or has incorrect format")
+
+            throw InvalidEmailException()
+        } else if (clientDto.name == null || clientDto.name!!.isEmpty()) {
+            logger.error("Client name is null or empty")
+
+            throw InvalidNameException()
+        } else if (clientDto.fiscalNumber == null) {
+            logger.error("Client fiscal number is null")
+
+            throw InvalidFiscalNumberException()
+        } else if (clientDto.phone == null || clientDto.phone!!.isEmpty() || !PHONE_REGEX.matches(clientDto.phone!!)) {
+            logger.error("Client phone number is null, empty or has incorrect format")
+
+            throw InvalidPhoneException()
+        } else if (clientDto.address == null || clientDto.address!!.isEmpty()) {
+            logger.error("Client address is null or empty")
+
+            throw InvalidAddressException()
+        } else if (clientDto.postalCode == null || clientDto.postalCode!!.isEmpty()) {
+            logger.error("Client postal code is null or empty")
+
+            throw InvalidPostalCodeException()
+        }
+
+        return Panache.withTransaction {
+            clientRepository.findById(clientDto.id).onItem().transform { client ->
+                if (client == null) {
+                    logger.error("Client with ID ${clientDto.id} is not registered")
+
+                    throw InvalidIdException("client")
+                }
+
+                client.email = clientDto.email!!
+                client.name = clientDto.name!!
+                client.fiscalNumber = clientDto.fiscalNumber!!
+                client.phone = clientDto.phone!!
+                client.address = clientDto.address!!
+                client.postalCode = clientDto.postalCode!!
+
+                client
             }
         }
     }
