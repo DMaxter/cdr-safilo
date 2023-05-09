@@ -169,7 +169,7 @@
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" :style="$vuetify.breakpoint.height > 620
                 ? 'height: 480px' 
                 : 'height: 350px'">
-          <h3> PEDIDO {{store.pedidoAtual.cod}} </h3>
+          <h3> PEDIDO {{store.pedidoAtual.cod}} - CÓD. CLIENTE {{ store.pedidoAtual.codClient }}</h3>
             <v-card elevation="12" color="#FAFAFA" :height="$vuetify.breakpoint.height > 620
                 ? '450px' 
                 : '320px'" :width="$vuetify.breakpoint.height > 620
