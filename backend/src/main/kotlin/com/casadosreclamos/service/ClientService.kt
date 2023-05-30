@@ -164,7 +164,31 @@ class ClientService {
                 client.postalCode = clientDto.postalCode!!
 
                 client
-            }
+            }.onItem().invoke { _ -> logger.info("Client updated successfully") }.onFailure()
+                .invoke { e -> logger.error("Couldn't update client: $e") }
+        }
+    }
+
+    fun editNote(clientId: Long, note: String): Uni<Client> {
+        if (clientId <= 0) {
+            logger.error("Client ID is invalid")
+
+            throw InvalidIdException("client")
+        }
+
+        return Panache.withTransaction {
+            clientRepository.findById(clientId).onItem().transform { client ->
+                if (client == null) {
+                    logger.error("Client with ID $clientId is not registered")
+
+                    throw InvalidIdException("client")
+                }
+
+                client.note = note
+
+                client
+            }.onItem().invoke { _ -> logger.info("Successfully edited note") }.onFailure()
+                .invoke { e -> logger.error("Couldn't edit note: $e") }
         }
     }
 
@@ -187,7 +211,7 @@ class ClientService {
                 val postalCode = record[4]
 
                 val clientDto =
-                    ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, mutableListOf())
+                    ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, "", mutableListOf())
 
                 em.emit(clientRepository.findById(id).onItem().transformToUni { client ->
                     return@transformToUni if (client == null) {

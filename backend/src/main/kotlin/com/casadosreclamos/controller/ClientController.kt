@@ -2,6 +2,7 @@ package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.model.ADMIN_ROLE
+import com.casadosreclamos.model.CDR_ROLE
 import com.casadosreclamos.model.COMMERCIAL_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.ClientService
@@ -91,6 +92,25 @@ class ClientController {
         }
     }
 
+    // Different endpoint as this is managed by CDR ONLY
+    @PUT
+    @Path("/{id}")
+    @Operation(summary = "Add a note")
+    @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful client registration"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "User doesn't have authorization to edit a client")
+    )
+    fun editClientNote(@PathParam("id") clientId: Long, note: String): Uni<ClientDto> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is editing note in client with ID $clientId")
+
+            return@transformToUni clientService.editNote(clientId, note).onItem().transform {
+                ClientDto(it)
+            }
+        }
+    }
 
     @POST
     @Blocking

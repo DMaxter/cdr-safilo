@@ -12,6 +12,7 @@ data class ClientDto(
     var phone: String?,
     var address: String?,
     var postalCode: String?,
+    var note: String?,
     var images: List<ImageDto>?
 ) {
     constructor(client: Client) : this(
@@ -23,6 +24,7 @@ data class ClientDto(
         client.phone,
         client.address,
         client.postalCode,
+        client.note,
         client.images.stream().map { ImageDto(it) }.collect(Collectors.toList())
     )
 }

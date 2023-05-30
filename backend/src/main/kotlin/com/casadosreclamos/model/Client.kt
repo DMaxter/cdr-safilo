@@ -23,6 +23,8 @@ open class Client {
 
     open lateinit var postalCode: String
 
+    open var note: String = ""
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "client", orphanRemoval = true)
     open lateinit var images: MutableSet<Image>
 }

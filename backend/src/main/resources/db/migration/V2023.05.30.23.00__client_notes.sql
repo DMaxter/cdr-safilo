@@ -1,0 +1,2 @@
+ALTER TABLE Client
+    ADD note VARCHAR(255) NULL;
