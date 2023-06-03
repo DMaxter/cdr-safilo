@@ -41,6 +41,14 @@
                 </v-icon>
               </v-btn>
 
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('notes')" height="64" width="160" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Notas</span>
+
+                <v-icon right>
+                  mdi-note-multiple-outline
+                </v-icon>
+              </v-btn>
+
               <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="v-btn--active customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
@@ -54,7 +62,6 @@
           </v-row>
           <v-row justify="center" align="center" class="fill-height d-flex flex-column mt-10" style="height: 400px">
           <v-row class="mt-15">
-
           <template>
     <v-dialog
       v-model="dialog"

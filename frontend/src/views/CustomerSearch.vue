@@ -106,6 +106,14 @@
                 </v-icon>
               </v-btn>
 
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('notes')" height="64" width="160" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Notas</span>
+
+                <v-icon right>
+                  mdi-note-multiple-outline
+                </v-icon>
+              </v-btn>
+
               <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 

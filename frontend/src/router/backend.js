@@ -377,6 +377,15 @@ export default class Backend {
     })
   }
 
+  static async addNote(id, note) {
+    return httpClient.put(`/client/${id}`, note).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async addImageToClient(id, file) {
     var formData = new FormData()
     formData.append("images", file)

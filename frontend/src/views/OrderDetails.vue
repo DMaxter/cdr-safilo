@@ -99,6 +99,14 @@
                 </v-icon>
               </v-btn>
 
+              <v-btn color="#6e4e5d" value="center2" @click="$router.push('notes')" height="64" width="160" class="customGradient">
+                <span class="white--text" style="font-size: 12px">Notas</span>
+
+                <v-icon right>
+                  mdi-note-multiple-outline
+                </v-icon>
+              </v-btn>
+
               <v-btn color="#6e4e5d" value="right" @click="$router.push('materiais')" height="64" width="160" class="customGradient">
                 <span class="white--text" style="font-size: 12px">Materiais</span>
 
@@ -166,9 +174,33 @@
           </v-menu>
         </template>
           </v-row>
+          
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" :style="$vuetify.breakpoint.height > 620
                 ? 'height: 480px' 
                 : 'height: 350px'">
+                <v-dialog
+              v-model="nota"
+              transition="dialog-bottom-transition"
+              max-width="800"
+              id="dialogo"
+            >
+              <template>
+                <v-card>
+                  <v-card-title class="justify-center"> <span v-show="!added && !failed"> {{ this.currClient.name }}; {{ this.currClient.address }}; {{ this.currClient.postalCode }} </span></v-card-title>
+                  <v-card-text>
+                    <div class="text-h6 mb-5" v-show="!added && !failed">Notas:</div>
+                    <v-textarea tile outlined style="pointer-events: none;" hide-details auto-grow v-model="noteToAdd"></v-textarea>
+                  </v-card-text>
+                  <v-card-actions class="justify-end">
+                    <v-btn
+                      text
+                      class="mr-2"
+                      @click="nota = false"
+                    >Voltar</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
           <h3> PEDIDO {{store.pedidoAtual.cod}} - CÓD. CLIENTE {{ store.pedidoAtual.codClient }}</h3>
             <v-card elevation="12" color="#FAFAFA" :height="$vuetify.breakpoint.height > 620
                 ? '450px' 
@@ -904,6 +936,9 @@ data () {
         profile: new UserDto(),
         picked: null,
         dialog1: false,
+        currClient: null,
+        noteToAdd: "",
+        nota: false,
         menu1: false,
         menu2: false,
         menu3: false,
@@ -912,6 +947,7 @@ data () {
         req3: false,
         req4: false,
         finiat: null,
+        allClients: null,
         theme: (store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"),
         available: [
           "IN_PRODUCTION",
@@ -1104,9 +1140,16 @@ async created(){
   }
   console.log(store.finishes)
   this.profile = await Backend.getProfile()
+  this.allClients = await Backend.getClients()
   if(this.profile.roles[0] == 'CDR'){
     this.menu2 = true
     this.show = true
+    var client = this.allClients.find(x => x.id == store.pedidoAtual.codClient)
+    this.currClient = client
+    if(client.note != ""){
+      this.nota = true
+      this.noteToAdd = client.note
+    }
   } else if(this.profile.roles[0] == 'COMMERCIAL' || this.profile.roles[0] == 'ADMIN'){ 
     this.menu1 = true
   } else if(this.profile.roles[0] == 'MANAGER'){
