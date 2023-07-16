@@ -1,12 +1,12 @@
 package com.casadosreclamos.service
 
-import com.casadosreclamos.EMAIL_REGEX
+import com.casadosreclamos.utils.EMAIL_REGEX
 import com.casadosreclamos.dto.AuthDto
 import com.casadosreclamos.dto.RegisterDto
 import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.exception.*
-import com.casadosreclamos.getEmailPasswordRecovery
-import com.casadosreclamos.getEmailRegisteredCommercial
+import com.casadosreclamos.utils.getEmailPasswordRecovery
+import com.casadosreclamos.utils.getEmailRegisteredCommercial
 import com.casadosreclamos.model.PasswordToken
 import com.casadosreclamos.model.PasswordTokenId
 import com.casadosreclamos.model.Role

@@ -25,7 +25,7 @@ open class Request {
     @Enumerated(EnumType.STRING)
     open lateinit var status: RequestStatus
 
-    open var trackingCode: String? =  null
+    open var trackingCode: Long? =  null
 
     @ManyToOne
     open lateinit var brand: Brand

@@ -1,10 +1,6 @@
-package com.casadosreclamos
+package com.casadosreclamos.utils
 
 import com.casadosreclamos.dto.RegisterDto
-
-val EMAIL_REGEX = Regex("^[\\w-.+]+@([\\w-]+\\.)+[\\w-]+$")
-val PHONE_REGEX = Regex("^[\\d- +)(]+$")
-
 
 fun getEmailRegisteredCommercial(credentials: RegisterDto): String {
     return """
@@ -85,4 +81,12 @@ fun getEmailCancelledRequest(user: String, client: String, type: String, brand: 
 
             Este email é automático, por favor não responda
            """.trimIndent()
+}
+
+fun getEmailDailyReportSuccess(): String {
+    return """
+        Fecho do dia efetuado na FEMA
+
+        Este email é automático, por favor não responda
+    """.trimIndent()
 }

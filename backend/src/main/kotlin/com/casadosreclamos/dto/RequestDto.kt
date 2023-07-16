@@ -12,7 +12,7 @@ data class RequestDto(
     var client: ClientDto?,
     var created: Date?,
     var lastUpdate: Date?,
-    var trackingCode: String?,
+    var trackingCode: Long?,
     var status: RequestStatus,
     var type: RequestTypeDto?,
     var cost: Double?,

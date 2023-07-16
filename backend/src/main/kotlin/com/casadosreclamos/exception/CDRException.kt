@@ -1,3 +1,3 @@
 package com.casadosreclamos.exception
 
-open class CDRException(val msg: String): Exception()
+open class CDRException(open val msg: String): Exception()

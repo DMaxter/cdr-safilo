@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Tracking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Cliente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Referencia" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TrackingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TrackingResult" type="tns:TrackingReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TrackingReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Estados" type="tns:ArrayOfTrackingState" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Return">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="State" type="tns:States" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="States">
+        <s:restriction base="s:string">
+          <s:enumeration value="Ok" />
+          <s:enumeration value="NOK" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfTrackingState">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TrackingState" nillable="true" type="tns:TrackingState" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TrackingState">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Estado" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Data" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Observacoes" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="TrackingAWB">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Cliente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AWB" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TrackingAWBResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TrackingAWBResult" type="tns:TrackingReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CartasPorteEstados">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:AtualizacoesRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AtualizacoesRequest">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Data" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="User">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DataHoraPDA" nillable="true" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CartasPorteEstadosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CartasPorteEstadosResult" type="tns:CartasPorteEstadosReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CartasPorteEstadosReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Estados" type="tns:ArrayOfCartaPorteEstado" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfCartaPorteEstado">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CartaPorteEstado" nillable="true" type="tns:CartaPorteEstado" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CartaPorteEstado">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="cartaporte" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="estado" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="observacoes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="data" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CartasPortePODs">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:AtualizacoesRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CartasPortePODsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CartasPortePODsResult" type="tns:CartasPortePODsReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CartasPortePODsReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="PODs" type="tns:ArrayOfCartaPortePOD" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfCartaPortePOD">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CartaPortePOD" nillable="true" type="tns:CartaPortePOD" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CartaPortePOD">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="cartaporte" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="url" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="data" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CartasPorteDACs">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:AtualizacoesRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CartasPorteDACsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CartasPorteDACsResult" type="tns:CartasPorteDACsReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CartasPorteDACsReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="DACs" type="tns:ArrayOfCartaPorteDAC" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfCartaPorteDAC">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CartaPorteDAC" nillable="true" type="tns:CartaPorteDAC" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CartaPorteDAC">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="cartaporte" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="url" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="data" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="TrackingReturn" nillable="true" type="tns:TrackingReturn" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="TrackingSoapIn">
+    <wsdl:part name="parameters" element="tns:Tracking" />
+  </wsdl:message>
+  <wsdl:message name="TrackingSoapOut">
+    <wsdl:part name="parameters" element="tns:TrackingResponse" />
+  </wsdl:message>
+  <wsdl:message name="TrackingAWBSoapIn">
+    <wsdl:part name="parameters" element="tns:TrackingAWB" />
+  </wsdl:message>
+  <wsdl:message name="TrackingAWBSoapOut">
+    <wsdl:part name="parameters" element="tns:TrackingAWBResponse" />
+  </wsdl:message>
+  <wsdl:message name="CartasPorteEstadosSoapIn">
+    <wsdl:part name="parameters" element="tns:CartasPorteEstados" />
+  </wsdl:message>
+  <wsdl:message name="CartasPorteEstadosSoapOut">
+    <wsdl:part name="parameters" element="tns:CartasPorteEstadosResponse" />
+  </wsdl:message>
+  <wsdl:message name="CartasPortePODsSoapIn">
+    <wsdl:part name="parameters" element="tns:CartasPortePODs" />
+  </wsdl:message>
+  <wsdl:message name="CartasPortePODsSoapOut">
+    <wsdl:part name="parameters" element="tns:CartasPortePODsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CartasPorteDACsSoapIn">
+    <wsdl:part name="parameters" element="tns:CartasPorteDACs" />
+  </wsdl:message>
+  <wsdl:message name="CartasPorteDACsSoapOut">
+    <wsdl:part name="parameters" element="tns:CartasPorteDACsResponse" />
+  </wsdl:message>
+  <wsdl:message name="TrackingHttpGetIn">
+    <wsdl:part name="Cliente" type="s:string" />
+    <wsdl:part name="Referencia" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="TrackingHttpGetOut">
+    <wsdl:part name="Body" element="tns:TrackingReturn" />
+  </wsdl:message>
+  <wsdl:message name="TrackingAWBHttpGetIn">
+    <wsdl:part name="Cliente" type="s:string" />
+    <wsdl:part name="AWB" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="TrackingAWBHttpGetOut">
+    <wsdl:part name="Body" element="tns:TrackingReturn" />
+  </wsdl:message>
+  <wsdl:portType name="trackingSoap">
+    <wsdl:operation name="Tracking">
+      <wsdl:input message="tns:TrackingSoapIn" />
+      <wsdl:output message="tns:TrackingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="TrackingAWB">
+      <wsdl:input message="tns:TrackingAWBSoapIn" />
+      <wsdl:output message="tns:TrackingAWBSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CartasPorteEstados">
+      <wsdl:input message="tns:CartasPorteEstadosSoapIn" />
+      <wsdl:output message="tns:CartasPorteEstadosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CartasPortePODs">
+      <wsdl:input message="tns:CartasPortePODsSoapIn" />
+      <wsdl:output message="tns:CartasPortePODsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CartasPorteDACs">
+      <wsdl:input message="tns:CartasPorteDACsSoapIn" />
+      <wsdl:output message="tns:CartasPorteDACsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="trackingHttpGet">
+    <wsdl:operation name="Tracking">
+      <wsdl:input message="tns:TrackingHttpGetIn" />
+      <wsdl:output message="tns:TrackingHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="TrackingAWB">
+      <wsdl:input message="tns:TrackingAWBHttpGetIn" />
+      <wsdl:output message="tns:TrackingAWBHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="trackingSoap" type="tns:trackingSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Tracking">
+      <soap:operation soapAction="http://tempuri.org/Tracking" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TrackingAWB">
+      <soap:operation soapAction="http://tempuri.org/TrackingAWB" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CartasPorteEstados">
+      <soap:operation soapAction="http://tempuri.org/CartasPorteEstados" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CartasPortePODs">
+      <soap:operation soapAction="http://tempuri.org/CartasPortePODs" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CartasPorteDACs">
+      <soap:operation soapAction="http://tempuri.org/CartasPorteDACs" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="trackingSoap12" type="tns:trackingSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Tracking">
+      <soap12:operation soapAction="http://tempuri.org/Tracking" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TrackingAWB">
+      <soap12:operation soapAction="http://tempuri.org/TrackingAWB" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CartasPorteEstados">
+      <soap12:operation soapAction="http://tempuri.org/CartasPorteEstados" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CartasPortePODs">
+      <soap12:operation soapAction="http://tempuri.org/CartasPortePODs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CartasPorteDACs">
+      <soap12:operation soapAction="http://tempuri.org/CartasPorteDACs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="trackingHttpGet" type="tns:trackingHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Tracking">
+      <http:operation location="/Tracking" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TrackingAWB">
+      <http:operation location="/TrackingAWB" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="tracking">
+    <wsdl:port name="trackingSoap" binding="tns:trackingSoap">
+      <soap:address location="https://services.fema.pt/tracking.asmx" />
+    </wsdl:port>
+    <wsdl:port name="trackingSoap12" binding="tns:trackingSoap12">
+      <soap12:address location="https://services.fema.pt/tracking.asmx" />
+    </wsdl:port>
+    <wsdl:port name="trackingHttpGet" binding="tns:trackingHttpGet">
+      <http:address location="https://services.fema.pt/tracking.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

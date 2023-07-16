@@ -1,6 +1,7 @@
 package com.casadosreclamos.config
 
 import com.casadosreclamos.exception.*
+import com.casadosreclamos.exception.fema.FEMAException
 import io.smallrye.mutiny.Uni
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper
 import org.slf4j.LoggerFactory
@@ -21,6 +22,13 @@ class ExceptionMapper {
 
     @ServerExceptionMapper
     fun map(e: CDRException): Uni<Response> {
+        logger.error(e.msg)
+        return Uni.createFrom()
+            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError(e.msg)).build())
+    }
+
+    @ServerExceptionMapper
+    fun map(e: FEMAException): Uni<Response> {
         logger.error(e.msg)
         return Uni.createFrom()
             .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError(e.msg)).build())

@@ -2,7 +2,7 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.*
 import com.casadosreclamos.exception.*
-import com.casadosreclamos.getEmailNewStandardRequest
+import com.casadosreclamos.utils.getEmailNewStandardRequest
 import com.casadosreclamos.model.Request
 import com.casadosreclamos.model.Role
 import com.casadosreclamos.model.User
@@ -74,6 +74,10 @@ class RequestService {
     @Inject
     @ConfigProperty(name = "cdr.emails")
     lateinit var cdrMails: List<String>
+
+    fun get(id: Long): Uni<Request> {
+        return requestRepository.findById(id)
+    }
 
     fun getAll(): Multi<Request> {
         return requestRepository.streamAll()
@@ -179,7 +183,7 @@ class RequestService {
             ).onItem().invoke { _ -> logger.info("Sent email with request") }.onFailure()
                 .invoke { e -> logger.error("Couldn't send email with request: $e") }
         }.onItem().transform {
-            logger.info("Successfully operation")
+            logger.info("Successful operation")
 
             request
         }
@@ -237,7 +241,7 @@ class RequestService {
         }
     }
 
-    fun finishRequest(requestId: Long, code: String?): Uni<Response> {
+    fun finishRequest(requestId: Long, code: Long?): Uni<Response> {
         return Panache.withTransaction {
             requestRepository.findById(requestId).onItem().transform { request ->
                 if (request == null) {

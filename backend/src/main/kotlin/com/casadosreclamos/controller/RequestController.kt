@@ -102,14 +102,14 @@ class RequestController {
     }
 
     @PUT
-    @Path("/finish/{id}")
+    @Path("/finish/{id}/{code}")
     @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
     @Operation(summary = "Mark request as finished")
     @APIResponses(
         APIResponse(responseCode = "200", description = "Request cancelled"),
         APIResponse(responseCode = "401", description = "User is not logged in"),
     )
-    fun finishRequest(@PathParam("id") request: Long, code: String?): Uni<Response> {
+    fun finishRequest(@PathParam("id") request: Long, @PathParam("code") code: Long?): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is finishing request with id $request")
 

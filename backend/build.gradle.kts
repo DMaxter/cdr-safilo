@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.allopen") version "1.6.21"
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.allopen") version "1.9.0"
     id("io.quarkus")
 }
 
@@ -12,6 +12,7 @@ repositories {
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
+// val quarkiverseCxfPlatformVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -25,7 +26,17 @@ dependencies {
     implementation("io.quarkus:quarkus-arc") // Context and Dependency Injection
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson") // REST API Reactive with Jackson serialization
     implementation("io.quarkus:quarkus-mailer") // SMTP support
+    implementation("io.quarkus:quarkus-scheduler") // Schedule tasks
     implementation("org.apache.camel.quarkus:camel-quarkus-csv") // CSV Parser
+
+    // External
+    implementation("io.quarkus:quarkus-rest-client-reactive")
+    implementation("jakarta.xml.ws:jakarta.xml.ws-api") // SOAP support
+    implementation("com.sun.xml.messaging.saaj:saaj-impl") // SOAP provider
+    // Not working, see issue: https://github.com/quarkiverse/quarkus-cxf/issues/916
+    // implementation(enforcedPlatform("io.quarkiverse.cxf:quarkus-cxf-bom:${quarkiverseCxfPlatformVersion}"))
+    // implementation("io.quarkiverse.cxf:quarkus-cxf") // SOAP API support
+    // implementation("jakarta.jws:jakarta.jws-api")
 
     // JWT
     implementation("io.quarkus:quarkus-smallrye-jwt") // Verify JWT tokens

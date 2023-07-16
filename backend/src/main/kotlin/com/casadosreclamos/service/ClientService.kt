@@ -1,7 +1,7 @@
 package com.casadosreclamos.service
 
-import com.casadosreclamos.EMAIL_REGEX
-import com.casadosreclamos.PHONE_REGEX
+import com.casadosreclamos.utils.EMAIL_REGEX
+import com.casadosreclamos.utils.PHONE_REGEX
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.exception.*
 import com.casadosreclamos.model.Banner
@@ -15,7 +15,6 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.jboss.logging.Logger
 import java.io.File
-import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject

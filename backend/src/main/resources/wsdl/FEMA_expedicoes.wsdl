@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="Criar">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:PedidoExpedicaoRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PedidoExpedicaoRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Expedicao" type="tns:PedidoExpedicao" />
+          <s:element minOccurs="0" maxOccurs="1" name="Etiqueta" type="tns:Label" />
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PedidoExpedicao">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CartaPorte" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Referencia" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Servico" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MoradaRemetente" type="tns:clsMorada" />
+          <s:element minOccurs="0" maxOccurs="1" name="MoradaDestinatario" type="tns:clsMorada" />
+          <s:element minOccurs="1" maxOccurs="1" name="COD" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DAC" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Observacoes" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TipoPacote" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DescricaoVolumes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NCaixas" type="s:short" />
+          <s:element minOccurs="1" maxOccurs="1" name="PesoTotal" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Comprimento" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Largura" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Altura" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="clsMorada">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Morada" nillable="true" type="s1:guid" />
+          <s:element minOccurs="0" maxOccurs="1" name="Nome" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Contacto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Telefone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Telemovel" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Morada1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Morada2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CodigoPostal" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Cidade" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Pais" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Estado" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Label">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Formato" type="tns:FormatoEtiqueta" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="FormatoEtiqueta">
+        <s:restriction base="s:string">
+          <s:enumeration value="A4" />
+          <s:enumeration value="A6" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="User">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DataHoraPDA" nillable="true" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CriarResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CriarResult" type="tns:PedidoExpedicaoReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PedidoExpedicaoReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ID" type="s1:guid" />
+              <s:element minOccurs="0" maxOccurs="1" name="Numero" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Etiqueta" type="tns:LabelReturn" />
+              <s:element minOccurs="0" maxOccurs="1" name="Etiquetas" type="tns:ArrayOfLabelReturn" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Return">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="State" type="tns:States" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="States">
+        <s:restriction base="s:string">
+          <s:enumeration value="Ok" />
+          <s:enumeration value="NOK" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="LabelReturn">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Formato" type="tns:FormatoEtiqueta" />
+          <s:element minOccurs="0" maxOccurs="1" name="base64Label" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLabelReturn">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LabelReturn" nillable="true" type="tns:LabelReturn" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Anular">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:PedidoAnulacaoRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PedidoAnulacaoRequest">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" nillable="true" type="s1:guid" />
+          <s:element minOccurs="0" maxOccurs="1" name="Numero" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AnularResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AnularResult" type="tns:Return" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Etiqueta">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Etiqueta" type="tns:EtiquetaExpedicaoRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="EtiquetaExpedicaoRequest">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" nillable="true" type="s1:guid" />
+          <s:element minOccurs="0" maxOccurs="1" name="Numero" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Etiqueta" type="tns:Label" />
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="EtiquetaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="EtiquetaResult" type="tns:PedidoExpedicaoReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MultiplasEtiquetas">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Etiqueta" type="tns:EtiquetaMultiplasExpedicaoRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="EtiquetaMultiplasExpedicaoRequest">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" nillable="true" type="s1:guid" />
+          <s:element minOccurs="0" maxOccurs="1" name="Numero" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Etiqueta" type="tns:Label" />
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="MultiplasEtiquetasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MultiplasEtiquetasResult" type="tns:MultiplasEtiquetasReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="MultiplasEtiquetasReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="pdf_base64" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="NumerosCartaPorteReferencias">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Referencias" type="tns:NumeroCartaPorteReferenciaRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NumeroCartaPorteReferenciaRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+          <s:element minOccurs="0" maxOccurs="1" name="Referencias" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="NumerosCartaPorteReferenciasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NumerosCartaPorteReferenciasResult" type="tns:NumeroCartaPorteReferenciaReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NumeroCartaPorteReferenciaReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Numeros" type="tns:ArrayOfCartaPorteReferencia" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfCartaPorteReferencia">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CartaPorteReferencia" nillable="true" type="tns:CartaPorteReferencia" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CartaPorteReferencia">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CartaPorte" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Referencia" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Servicos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:ServicosExpedicaoRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ServicosExpedicaoRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CodigoPostalOrigem" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PaisOrigem" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CodigoPostalDestino" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PaisDestino" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ServicosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ServicosResult" type="tns:ServicosExpedicaoReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ServicosExpedicaoReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Servicos" type="tns:ArrayOfServico" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfServico">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Servico" nillable="true" type="tns:Servico" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Servico">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="servico" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="nome" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FecharDia">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:FechoDiaRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FechoDiaRequest">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Dia" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FecharDiaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FecharDiaResult" type="tns:FechoDiaReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FechoDiaReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Report" type="tns:LabelReturn" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="FechoDiaReport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:FechoDiaRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FechoDiaReportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FechoDiaReportResult" type="tns:FechoDiaReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PontosDeEntrega">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pedido" type="tns:PontosDeEntregaRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PontosDeEntregaRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Utilizador" type="tns:User" />
+          <s:element minOccurs="0" maxOccurs="1" name="CodigoPostal" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Pais" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PontosDeEntregaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PontosDeEntregaResult" type="tns:PontosDeEntregaReturn" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PontosDeEntregaReturn">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Return">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="PontosEntrega" type="tns:ArrayOfDropLocation" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfDropLocation">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DropLocation" nillable="true" type="tns:DropLocation" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DropLocation">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="LocationID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IVR" type="tns:IVR" />
+          <s:element minOccurs="0" maxOccurs="1" name="Geocode" type="tns:Geocode" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressKeyFormat" type="tns:AddressKeyFormat" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocationAttribute" type="tns:LocationAttribute" />
+          <s:element minOccurs="0" maxOccurs="1" name="Distance" type="tns:Distance" />
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalChargeIndicator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StandardHoursOfOperation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OperatingHours" type="tns:OperatingHours" />
+          <s:element minOccurs="0" maxOccurs="1" name="SLIC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayPhoneNumberIndicator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccessPointInformation" type="tns:AccessPointInformation" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocationNewIndicator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="WillCallLocationIndicator" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="IVR">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="PhraseID" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Geocode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Latitude" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Longitude" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AddressKeyFormat">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneeName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressLine" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PoliticalDivision2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PoliticalDivision1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PostcodePrimaryLow" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PostcodeExtendedLow" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CountryCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LocationAttribute">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OptionType" type="tns:OptionType" />
+          <s:element minOccurs="0" maxOccurs="1" name="OptionCode" type="tns:OptionCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OptionType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OptionCode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Distance">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UnitOfMeasurement" type="tns:UnitOfMeasurement" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UnitOfMeasurement">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OperatingHours">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="StandardHours" type="tns:StandardHours" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="StandardHours">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="HoursType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DayOfWeek" type="tns:ArrayOfDayOfWeek" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfDayOfWeek">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DayOfWeek" nillable="true" type="tns:DayOfWeek" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DayOfWeek">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Day" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClosedIndicator" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AccessPointInformation">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="PublicAccessPointID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ImageURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessClassificationList" type="tns:BusinessClassificationList" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccessPointStatus" type="tns:AccessPointStatus" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BusinessClassificationList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessClassification" type="tns:BusinessClassification" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BusinessClassification">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AccessPointStatus">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
+      <s:simpleType name="guid">
+        <s:restriction base="s:string">
+          <s:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CriarSoapIn">
+    <wsdl:part name="parameters" element="tns:Criar" />
+  </wsdl:message>
+  <wsdl:message name="CriarSoapOut">
+    <wsdl:part name="parameters" element="tns:CriarResponse" />
+  </wsdl:message>
+  <wsdl:message name="AnularSoapIn">
+    <wsdl:part name="parameters" element="tns:Anular" />
+  </wsdl:message>
+  <wsdl:message name="AnularSoapOut">
+    <wsdl:part name="parameters" element="tns:AnularResponse" />
+  </wsdl:message>
+  <wsdl:message name="EtiquetaSoapIn">
+    <wsdl:part name="parameters" element="tns:Etiqueta" />
+  </wsdl:message>
+  <wsdl:message name="EtiquetaSoapOut">
+    <wsdl:part name="parameters" element="tns:EtiquetaResponse" />
+  </wsdl:message>
+  <wsdl:message name="MultiplasEtiquetasSoapIn">
+    <wsdl:part name="parameters" element="tns:MultiplasEtiquetas" />
+  </wsdl:message>
+  <wsdl:message name="MultiplasEtiquetasSoapOut">
+    <wsdl:part name="parameters" element="tns:MultiplasEtiquetasResponse" />
+  </wsdl:message>
+  <wsdl:message name="NumerosCartaPorteReferenciasSoapIn">
+    <wsdl:part name="parameters" element="tns:NumerosCartaPorteReferencias" />
+  </wsdl:message>
+  <wsdl:message name="NumerosCartaPorteReferenciasSoapOut">
+    <wsdl:part name="parameters" element="tns:NumerosCartaPorteReferenciasResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicosSoapIn">
+    <wsdl:part name="parameters" element="tns:Servicos" />
+  </wsdl:message>
+  <wsdl:message name="ServicosSoapOut">
+    <wsdl:part name="parameters" element="tns:ServicosResponse" />
+  </wsdl:message>
+  <wsdl:message name="FecharDiaSoapIn">
+    <wsdl:part name="parameters" element="tns:FecharDia" />
+  </wsdl:message>
+  <wsdl:message name="FecharDiaSoapOut">
+    <wsdl:part name="parameters" element="tns:FecharDiaResponse" />
+  </wsdl:message>
+  <wsdl:message name="FechoDiaReportSoapIn">
+    <wsdl:part name="parameters" element="tns:FechoDiaReport" />
+  </wsdl:message>
+  <wsdl:message name="FechoDiaReportSoapOut">
+    <wsdl:part name="parameters" element="tns:FechoDiaReportResponse" />
+  </wsdl:message>
+  <wsdl:message name="PontosDeEntregaSoapIn">
+    <wsdl:part name="parameters" element="tns:PontosDeEntrega" />
+  </wsdl:message>
+  <wsdl:message name="PontosDeEntregaSoapOut">
+    <wsdl:part name="parameters" element="tns:PontosDeEntregaResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ExpedicoesSoap">
+    <wsdl:operation name="Criar">
+      <wsdl:input message="tns:CriarSoapIn" />
+      <wsdl:output message="tns:CriarSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Anular">
+      <wsdl:input message="tns:AnularSoapIn" />
+      <wsdl:output message="tns:AnularSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Etiqueta">
+      <wsdl:input message="tns:EtiquetaSoapIn" />
+      <wsdl:output message="tns:EtiquetaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MultiplasEtiquetas">
+      <wsdl:input message="tns:MultiplasEtiquetasSoapIn" />
+      <wsdl:output message="tns:MultiplasEtiquetasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="NumerosCartaPorteReferencias">
+      <wsdl:input message="tns:NumerosCartaPorteReferenciasSoapIn" />
+      <wsdl:output message="tns:NumerosCartaPorteReferenciasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Servicos">
+      <wsdl:input message="tns:ServicosSoapIn" />
+      <wsdl:output message="tns:ServicosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FecharDia">
+      <wsdl:input message="tns:FecharDiaSoapIn" />
+      <wsdl:output message="tns:FecharDiaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FechoDiaReport">
+      <wsdl:input message="tns:FechoDiaReportSoapIn" />
+      <wsdl:output message="tns:FechoDiaReportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PontosDeEntrega">
+      <wsdl:input message="tns:PontosDeEntregaSoapIn" />
+      <wsdl:output message="tns:PontosDeEntregaSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ExpedicoesHttpGet" />
+  <wsdl:binding name="ExpedicoesSoap" type="tns:ExpedicoesSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Criar">
+      <soap:operation soapAction="http://tempuri.org/Criar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Anular">
+      <soap:operation soapAction="http://tempuri.org/Anular" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Etiqueta">
+      <soap:operation soapAction="http://tempuri.org/Etiqueta" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MultiplasEtiquetas">
+      <soap:operation soapAction="http://tempuri.org/MultiplasEtiquetas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NumerosCartaPorteReferencias">
+      <soap:operation soapAction="http://tempuri.org/NumerosCartaPorteReferencias" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Servicos">
+      <soap:operation soapAction="http://tempuri.org/Servicos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FecharDia">
+      <soap:operation soapAction="http://tempuri.org/FecharDia" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FechoDiaReport">
+      <soap:operation soapAction="http://tempuri.org/FechoDiaReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PontosDeEntrega">
+      <soap:operation soapAction="http://tempuri.org/PontosDeEntrega" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ExpedicoesSoap12" type="tns:ExpedicoesSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Criar">
+      <soap12:operation soapAction="http://tempuri.org/Criar" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Anular">
+      <soap12:operation soapAction="http://tempuri.org/Anular" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Etiqueta">
+      <soap12:operation soapAction="http://tempuri.org/Etiqueta" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MultiplasEtiquetas">
+      <soap12:operation soapAction="http://tempuri.org/MultiplasEtiquetas" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NumerosCartaPorteReferencias">
+      <soap12:operation soapAction="http://tempuri.org/NumerosCartaPorteReferencias" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Servicos">
+      <soap12:operation soapAction="http://tempuri.org/Servicos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FecharDia">
+      <soap12:operation soapAction="http://tempuri.org/FecharDia" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FechoDiaReport">
+      <soap12:operation soapAction="http://tempuri.org/FechoDiaReport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PontosDeEntrega">
+      <soap12:operation soapAction="http://tempuri.org/PontosDeEntrega" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ExpedicoesHttpGet" type="tns:ExpedicoesHttpGet">
+    <http:binding verb="GET" />
+  </wsdl:binding>
+  <wsdl:service name="Expedicoes">
+    <wsdl:port name="ExpedicoesSoap" binding="tns:ExpedicoesSoap">
+      <soap:address location="https://services.fema.pt/expedicoes.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ExpedicoesSoap12" binding="tns:ExpedicoesSoap12">
+      <soap12:address location="https://services.fema.pt/expedicoes.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ExpedicoesHttpGet" binding="tns:ExpedicoesHttpGet">
+      <http:address location="https://services.fema.pt/expedicoes.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
