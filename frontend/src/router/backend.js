@@ -419,6 +419,42 @@ export default class Backend {
     })
   }
 
+  static async getServices(id) {
+    return httpClient.get(`/waybill/services/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async getPackages() {
+    return httpClient.get(`/waybill/packages`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async getFormats() {
+    return httpClient.get(`/waybill/formats`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async createWaybill(waybill, id) {
+    return httpClient.post(`/waybill/${id}`, waybill).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async updateStatus(id, op) {
     if(op == 'IN_PRODUCTION'){
     return httpClient.put(`/request/production/${id}`).then(response => {

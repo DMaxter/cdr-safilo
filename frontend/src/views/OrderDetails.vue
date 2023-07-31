@@ -492,14 +492,23 @@
             Voltar
             </v-btn>
            </v-col>
-           <v-col cols="auto" class="ml-4">
+           <v-col cols="auto" class="ml-4 d-flex">
             <v-btn
-              class="d-flex flex-column customGradient"
+              class="mr-2 d-flex flex-column customGradient"
               small
               tile
               dark
               @click="print()"
             > <v-icon >mdi-printer</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="this.show"
+              class="ml-2 d-flex flex-column customGradient"
+              small
+              tile
+              dark
+              @click="added = false, failed = false, dialog2 = true;"
+            > <v-icon >mdi-truck-delivery</v-icon>
             </v-btn>
             </v-col>
             <v-col cols="auto" class="pr-4">
@@ -516,6 +525,61 @@
           </v-card>         
         </v-col>
     </v-row>
+
+<v-dialog v-if="this.show" v-model="dialog2" persistent content-class="rounded-0" max-width="600px">
+  <v-card tile>
+    <v-card-title class="justify-center">
+      <span class="text-h5" v-show="!added && !failed"> Criar carta de porte</span>
+    </v-card-title>
+    <v-card-text>
+      <v-container>
+        <v-row justify="center">
+          <span class="text-h5" v-show="added"> Carta de porte criada com sucesso! </span>
+          <span class="text-h5" v-show="failed"> Ocorreu um erro a criar a carta de porte </span>
+          <v-col cols="6" v-show="!added && !failed">
+            <v-select label="Serviço" :items="allServices" item-value="id" item-text="name" required v-model="pickedService"></v-select>
+          </v-col>
+          <v-col cols="6" v-show="!added && !failed">
+            <v-text-field type="number" label="Número de pacotes" required v-model="numberOfPackages"></v-text-field>
+          </v-col>
+          <v-col cols="6" v-show="!added && !failed">
+            <v-select label="Tipo de encomenda" :items="packageTypes" item-value="id" item-text="name" required v-model="pickedPackage"></v-select>
+          </v-col>
+          <v-col cols="6" v-show="!added && !failed">
+            <v-text-field type="number" label="Peso Total (Kg)" required v-model="totalWeight"></v-text-field>
+          </v-col>
+          <v-col cols="12" v-show="!added && !failed">
+            <v-text-field label="Descrição" required
+              v-model="description"></v-text-field>
+          </v-col>
+          <v-col cols="3" v-show="!added && !failed">
+            <v-select label="Formato" :items="allFormats" item-value="id" item-text="name" required v-model="pickedFormat"></v-select>
+          </v-col>
+          <v-col cols="3" v-show="!added && !failed">
+            <v-text-field type="number" label="Altura" required
+              v-model="packageHeight"></v-text-field>
+          </v-col>
+          <v-col cols="3" v-show="!added && !failed">
+            <v-text-field type="number" label="Largura" required
+              v-model="packageWidth"></v-text-field>
+          </v-col>
+          <v-col cols="3" v-show="!added && !failed">
+            <v-text-field type="number" label="Comprimento" required
+              v-model="packageLength"></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-actions class="justify-center">
+      <v-btn color="blue darken-1" text @click="dialog2 = false; description = '', pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
+        Voltar
+      </v-btn>
+      <v-btn color="blue darken-1" text v-show="!added && !failed" @click="waybill(); description = '', pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
+        Adicionar
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
     <!-- FOR PRINTING STUFF !!!!!!!!!!!!!!!!!-->
     
     <v-containter class="d-none" :class="req1 && 'd-print-block'">
@@ -1033,11 +1097,21 @@ data () {
       return {
         myImage2: require('@/assets/logologo1.png'),
         store,
+        packageHeight: null,
+        packageWidth: null,
+        packageLength: null,
+        numberOfPackages: null,
+        packageTypes: null,
+        allFormats: null,
+        pickedFormat: null,
         requests: null,
         show: false,
+        totalWeight: null,
+        description: "",
         profile: new UserDto(),
         picked: null,
         dialog1: false,
+        dialog2: false,
         currClient: null,
         noteToAdd: "",
         nota: false,
@@ -1051,6 +1125,11 @@ data () {
         req5: false,
         finiat: null,
         allClients: null,
+        allServices: null,
+        pickedService: null,
+        pickedPackage: null,
+        added: false,
+        failed: false,
         theme: (store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"),
         available: [
           "IN_PRODUCTION",
@@ -1292,7 +1371,11 @@ async created(){
   console.log(store.finishes)
   this.profile = await Backend.getProfile()
   this.allClients = await Backend.getClients()
+  console.log(this.profile.roles[0])
   if(this.profile.roles[0] == 'CDR'){
+    this.allServices = await Backend.getServices(store.pedidoAtual.cod);
+    this.packageTypes = await Backend.getPackages()
+    this.allFormats = await Backend.getFormats()
     this.menu2 = true
     this.show = true
     var client = this.allClients.find(x => x.id == store.pedidoAtual.codClient)
@@ -1324,6 +1407,22 @@ methods: {
       this.$router.push({name: 'detailsOneOrTwo'});
     } else {
       this.$router.push({name: 'detailsMontra'});
+    }
+  },
+  async waybill(){
+    try{
+      var aaa = {service: {id: this.pickedService},
+        items: Number(this.numberOfPackages),
+        packaging: {id: this.pickedPackage},
+        totalWeight: Number(this.totalWeight),
+        description: this.description,
+        labelFormat: this.pickedFormat,
+        dimensions: {height: Number(this.packageHeight), width: Number(this.packageWidth), length: Number(this.packageLength)}}
+      console.log(aaa)
+      await Backend.createWaybill(aaa, store.pedidoAtual.cod)
+      this.added = true
+    }catch(e){
+      this.failed = true
     }
   },
   async updateStatus() {
