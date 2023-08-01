@@ -3,7 +3,11 @@ name: Deploy application
 on:
   push:
     branches:
-      - "main"
+      - main
+    paths:
+      - backend/*
+      - frontend/*
+      - deploy/*
   workflow_dispatch:
 
 jobs:
@@ -87,7 +91,7 @@ jobs:
           name: frontend
           path: frontend/dist
 
-  deploy:
+  deploy_application:
     runs-on: ubuntu-latest
     env:
       DOMAIN_NAME: ${{ secrets.HOST }}

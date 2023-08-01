@@ -1,0 +1,10 @@
+site_name: Encomendas Safilo -> CDR
+site_url: https://dmaxter.gitlab.io/cdr-safilo/
+docs_dir: .
+nav:
+  - Início: index.md
+  - Safilo: safilo.md
+  - CDR: cdr.md
+  - Utilizadores: users.md
+  - Detalhes: technical.md
+theme: material
