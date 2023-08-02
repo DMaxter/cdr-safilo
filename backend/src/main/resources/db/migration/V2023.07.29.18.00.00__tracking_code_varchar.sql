@@ -1,2 +1,2 @@
 ALTER TABLE Request
-    MODIFY trackingCode VARCHAR (255);
+    MODIFY trackingCode BIGINT;
