@@ -297,4 +297,8 @@ export default {
 .customGradient {
   background-image: linear-gradient(#616161, grey);
 }
+
+.v-data-table .v-data-table__wrapper{
+    overflow-x: hidden;
+}
 </style>

@@ -447,7 +447,39 @@ export default class Backend {
   }
 
   static async createWaybill(waybill, id) {
-    return httpClient.post(`/waybill/${id}`, waybill).then(response => {
+    return httpClient.post(`/waybill/${id}`, waybill, {responseType: 'blob'}).then(response => {
+      const url = window.URL.createObjectURL(response.data);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `CartaDePorte.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async downloadWaybill(format, id) {
+    return httpClient.get(`/waybill/${id}/${format}`, {responseType: 'blob'}).then(response => {
+      const url = window.URL.createObjectURL(response.data);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `CartaDePorte.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async deleteWaybill(id) {
+    return httpClient.delete(`/waybill/${id}`).then(response => {
       return response.data
     })
       .catch(async error => {

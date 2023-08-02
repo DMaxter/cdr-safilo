@@ -217,7 +217,7 @@
               <v-slide-group
                 multiple
                 show-arrows
-                :class="{'ml-4': theme}"
+                :class="{'ml-2': theme}"
               >
                 <v-slide-item
                   v-for="n in store.pedidoAtual.material.length"
@@ -240,7 +240,7 @@
               <v-slide-group
                 multiple
                 show-arrows
-                :class="{'ml-4': theme}"
+                :class="{'ml-2': theme}"
               >
                 <v-slide-item
                   v-for="n in store.finishes.length"
@@ -263,7 +263,7 @@
               <v-slide-group
                 multiple
                 show-arrows
-                :class="{'ml-4': theme}"
+                :class="{'ml-2': theme}"
               >
                 <v-slide-item
                   v-for="n in store.pedidoAtual.dimensoes.length"
@@ -502,13 +502,31 @@
             > <v-icon >mdi-printer</v-icon>
             </v-btn>
             <v-btn
-              v-if="this.show"
+              v-if="!this.hasWaybill && this.show"
               class="ml-2 d-flex flex-column customGradient"
               small
               tile
               dark
               @click="added = false, failed = false, dialog2 = true;"
             > <v-icon >mdi-truck-delivery</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="this.hasWaybill && this.show"
+              class="mr-1 d-flex flex-column customGradient"
+              small
+              tile
+              dark
+              @click="added = false, failed = false, dialog3 = true;"
+            > <v-icon >mdi-download</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="this.hasWaybill && this.show"
+              class=" ml-1 d-flex flex-column customGradient"
+              small
+              tile
+              dark
+              @click="added = false, failed = false, dialog4 = true;"
+            > <v-icon >mdi-close</v-icon>
             </v-btn>
             </v-col>
             <v-col cols="auto" class="pr-4">
@@ -536,34 +554,35 @@
         <v-row justify="center">
           <span class="text-h5" v-show="added"> Carta de porte criada com sucesso! </span>
           <span class="text-h5" v-show="failed"> Ocorreu um erro a criar a carta de porte </span>
-          <v-col cols="6" v-show="!added && !failed">
+          <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
+          <v-col cols="6" v-show="!added && !failed && !displayLoad">
             <v-select label="Serviço" :items="allServices" item-value="id" item-text="name" required v-model="pickedService"></v-select>
           </v-col>
-          <v-col cols="6" v-show="!added && !failed">
+          <v-col cols="6" v-show="!added && !failed && !displayLoad">
             <v-text-field type="number" label="Número de pacotes" required v-model="numberOfPackages"></v-text-field>
           </v-col>
-          <v-col cols="6" v-show="!added && !failed">
+          <v-col cols="6" v-show="!added && !failed && !displayLoad">
             <v-select label="Tipo de encomenda" :items="packageTypes" item-value="id" item-text="name" required v-model="pickedPackage"></v-select>
           </v-col>
-          <v-col cols="6" v-show="!added && !failed">
+          <v-col cols="6" v-show="!added && !failed && !displayLoad">
             <v-text-field type="number" label="Peso Total (Kg)" required v-model="totalWeight"></v-text-field>
           </v-col>
-          <v-col cols="12" v-show="!added && !failed">
+          <v-col cols="12" v-show="!added && !failed && !displayLoad">
             <v-text-field label="Descrição" required
               v-model="description"></v-text-field>
           </v-col>
-          <v-col cols="3" v-show="!added && !failed">
+          <v-col cols="3" v-show="!added && !failed && !displayLoad">
             <v-select label="Formato" :items="allFormats" item-value="id" item-text="name" required v-model="pickedFormat"></v-select>
           </v-col>
-          <v-col cols="3" v-show="!added && !failed">
+          <v-col cols="3" v-show="!added && !failed && !displayLoad">
             <v-text-field type="number" label="Altura" required
               v-model="packageHeight"></v-text-field>
           </v-col>
-          <v-col cols="3" v-show="!added && !failed">
+          <v-col cols="3" v-show="!added && !failed && !displayLoad">
             <v-text-field type="number" label="Largura" required
               v-model="packageWidth"></v-text-field>
           </v-col>
-          <v-col cols="3" v-show="!added && !failed">
+          <v-col cols="3" v-show="!added && !failed && !displayLoad">
             <v-text-field type="number" label="Comprimento" required
               v-model="packageLength"></v-text-field>
           </v-col>
@@ -574,8 +593,64 @@
       <v-btn color="blue darken-1" text @click="dialog2 = false; description = '', pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
         Voltar
       </v-btn>
-      <v-btn color="blue darken-1" text v-show="!added && !failed" @click="waybill(); description = '', pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
-        Adicionar
+      <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" @click="waybill(); description = '', pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
+        Criar
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
+<v-dialog v-if="this.show" v-model="dialog3" persistent content-class="rounded-0" max-width="600px">
+  <v-card tile>
+    <v-card-title class="justify-center">
+      <span class="text-h5" v-show="!added && !failed"> Descarregar carta de porte</span>
+    </v-card-title>
+    <v-card-text>
+      <v-container>
+        <v-row justify="center">
+          <span class="text-h5" v-show="added"> Carta de porte descarregada com sucesso! </span>
+          <span class="text-h5" v-show="failed"> Ocorreu um erro a descarregar a carta de porte </span>
+          <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
+          <v-col cols="6" v-show="!added && !failed && !displayLoad">
+            <v-select hide-details label="Formato" :items="allFormats" item-value="id" item-text="name" required v-model="pickedFormat"></v-select>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-actions class="justify-center">
+      <v-btn color="blue darken-1" text @click="dialog3 = false; pickedFormat = null;">
+        Voltar
+      </v-btn>
+      <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" @click="downloadWaybill(); pickedFormat = null;">
+        Descarregar
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
+<v-dialog v-if="this.show" v-model="dialog4" persistent content-class="rounded-0" max-width="600px">
+  <v-card tile>
+    <v-card-title class="justify-center">
+      <span class="text-h5" v-show="!added && !failed"> Remover carta de porte</span>
+    </v-card-title>
+    <v-card-text>
+      <v-container>
+        <v-row justify="center">
+          <span class="text-h5" v-show="added"> Carta de porte removida com sucesso! </span>
+          <span class="text-h5" v-show="failed"> Ocorreu um erro ao remover a carta de porte </span>
+          <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
+          <v-col cols="12" v-show="!added && !failed && !displayLoad">
+            <span class="text-h6" hide-details> Pretende remover a carta de porte deste pedido? </span>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-actions class="justify-center">
+      <v-btn color="blue darken-1" text @click="dialog4 = false;">
+        Voltar
+      </v-btn>
+      <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" @click="deleteWaybill();">
+        Remover
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -1112,11 +1187,13 @@ data () {
         picked: null,
         dialog1: false,
         dialog2: false,
+        dialog3: false,
+        dialog4: false,
         currClient: null,
         noteToAdd: "",
         nota: false,
         menu1: false,
-        menu2: false,
+        menu2: true,
         menu3: false,
         req1: false,
         req2: false,
@@ -1130,6 +1207,8 @@ data () {
         pickedPackage: null,
         added: false,
         failed: false,
+        hasWaybill: false,
+        displayLoad: false,
         theme: (store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"),
         available: [
           "IN_PRODUCTION",
@@ -1148,6 +1227,7 @@ async created(){
           element.cost = element.cost.toFixed(2)
         });
         var item = this.requests.filter(x => x.id == this.$route.query.id)[0]
+        store.trackingCode = item.trackingCode
         store.address = item.client.address
         store.postalCode = item.client.postalCode
         if(item.type.type == "OneFace"){
@@ -1376,18 +1456,24 @@ async created(){
     this.allServices = await Backend.getServices(store.pedidoAtual.cod);
     this.packageTypes = await Backend.getPackages()
     this.allFormats = await Backend.getFormats()
+    console.log(store.trackingCode)
+    if(store.trackingCode != null){
+      this.hasWaybill = true
+    }
     this.menu2 = true
     this.show = true
     var client = this.allClients.find(x => x.id == store.pedidoAtual.codClient)
     this.currClient = client
-    if(client.note != ""){
+    if(client.note != null){
       this.nota = true
       this.noteToAdd = client.note
     }
   } else if(this.profile.roles[0] == 'COMMERCIAL' || this.profile.roles[0] == 'ADMIN'){ 
     this.menu1 = true
+    this.menu2 = false
   } else if(this.profile.roles[0] == 'MANAGER'){
     this.menu3 = true
+    this.menu2 = false
   }
   console.log(this.show)
 },
@@ -1397,7 +1483,7 @@ methods: {
   },
   goBack(){
     if(this.$route.query.id != null){
-      this.$router.push({name: 'history'});
+      this.$router.push({name: 'profile'});
     } else {
       this.$router.go(-1)
     }
@@ -1410,6 +1496,7 @@ methods: {
     }
   },
   async waybill(){
+    this.displayLoad = true;
     try{
       var aaa = {service: {id: this.pickedService},
         items: Number(this.numberOfPackages),
@@ -1420,11 +1507,39 @@ methods: {
         dimensions: {height: Number(this.packageHeight), width: Number(this.packageWidth), length: Number(this.packageLength)}}
       console.log(aaa)
       await Backend.createWaybill(aaa, store.pedidoAtual.cod)
+      this.hasWaybill = true
+      this.displayLoad = false
       this.added = true
     }catch(e){
       this.failed = true
+      this.displayLoad = false
     }
   },
+
+  async downloadWaybill(){
+    try{
+      this.displayLoad = true;
+      await Backend.downloadWaybill(this.pickedFormat, store.pedidoAtual.cod)
+      this.displayLoad = false;
+      this.added = true
+    }catch(e){
+      this.failed = true
+      this.displayLoad = false;
+    }
+  },
+
+  async deleteWaybill(){
+    try{
+      this.displayLoad = true;
+      await Backend.deleteWaybill(store.pedidoAtual.cod)
+      this.displayLoad = false;
+      this.added = true
+    }catch(e){
+      this.failed = true
+      this.displayLoad = false;
+    }
+  },
+
   async updateStatus() {
     await Backend.updateStatus(store.pedidoAtual.cod, this.picked)
     store.pedidoAtual.estado =  this.picked

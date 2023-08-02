@@ -77,4 +77,5 @@ export const store = reactive({
   materioscas: null,
   backtracking: false,
   selectedItem: null,
+  trackingCode: null,
 })

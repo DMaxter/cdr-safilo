@@ -94,7 +94,7 @@
               </template>
             </v-dialog>
             <v-data-table :headers="headers" :items="allClients" fixed-header hide-default-footer
-                tile :search="dessertFilterValue" disable-pagination item-key="id" height="350" style="width: 600px;"
+                tile :search="dessertFilterValue" disable-pagination item-key="id" height="350" style="width: 765px;"
                 class="elevation-1 my-header-style">
                 <template v-slot:top>
 
@@ -203,22 +203,22 @@ data () {
         {
           text: 'Nome',
           value: 'name',
-          align: "center",
+          align: "left",
           class: 'my-header-style',
         },
         {
           text: 'Morada',
           value: 'address',
-          align: "center",
+          align: "left",
           class: 'my-header-style',
         },
         {
           text: 'Cód. Postal',
           value: 'postalCode',
-          align: "center",
+          align: "left",
           class: 'my-header-style',
         },
-        { text: "", value: "actions", align: "right", sortable: false, class: 'my-header-style' },
+        { text: "", value: "actions", align: "left", sortable: false, class: 'my-header-style' },
       ]
     },
 
@@ -239,5 +239,9 @@ data () {
 .my-header-style {
   border-radius: 0px;
   background-color: rgb(243, 243, 243) !important;
+}
+
+.v-data-table .v-data-table__wrapper{
+    overflow-x: hidden;
 }
 </style>

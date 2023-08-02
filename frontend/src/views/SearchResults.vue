@@ -300,7 +300,8 @@
                 
               </v-row>
               <v-row justify="center" align="center" class="d-flex flex-column mt-9">
-          <v-data-table :headers="headers" :items="requests" fixed-header item-key="id" disable-pagination hide-default-footer height="380" style="width: 750px;" class="elevation-1 my-header-style">
+          <v-data-table :headers="headers" :items="requests" fixed-header item-key="id" disable-pagination hide-default-footer height="380" 
+          style="width: 750px;" class="elevation-1 my-header-style" :loading="hasLoaded" loading-text="A carregar...">
           
           <template v-slot:[`item.actions`]="{ item }">
               <v-icon @click="getRequest(item)">mdi-plus</v-icon>
@@ -364,6 +365,7 @@
           marcasFilterValue: null,
           estadosFilterValue: null,
           dessertFilterValue: null,
+          hasLoaded: true,
           nomeFilterValue: null,
           desserts: [
             {
@@ -520,6 +522,7 @@
       document.getElementsByClassName("v-data-table__wrapper")[0].scrollTop = store.selectedItem
       store.selectedItem = null
     }
+    this.hasLoaded = false
       },
       computed: {
         headers() {
@@ -590,6 +593,7 @@
         store.selectedItem = document.getElementsByClassName("v-data-table__wrapper")[0].scrollTop
         store.address = item.client.address
         store.postalCode = item.client.postalCode
+        store.trackingCode = item.trackingCode
         if(item.type.type == "OneFace"){
         store.pedidoAtual = {
             cod: item.id,
