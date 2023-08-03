@@ -9,5 +9,6 @@
 - name: restart frontend
   become: yes
   systemd:
-    name: nginx
+    name: caddy
     state: restarted
+  notify: restart backend

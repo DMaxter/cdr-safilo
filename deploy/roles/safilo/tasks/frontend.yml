@@ -5,3 +5,6 @@
 
 - name: Install frontend
   import_tasks: install_frontend.yml
+
+- name: Configure frontend
+  import_tasks: configure_frontend.yml

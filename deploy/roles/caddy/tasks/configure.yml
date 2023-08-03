@@ -5,6 +5,7 @@
   ansible.builtin.template:
     src: Caddyfile.j2
     dest: /etc/caddy/Caddyfile
+  notify: restart caddy
 
 - name: Copy Caddy service configuration
   become: true

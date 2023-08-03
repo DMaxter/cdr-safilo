@@ -52,5 +52,14 @@ Environment=QUARKUS_MAILER_FROM={{ lookup("env", "QUARKUS_MAILER_FROM") }}
 # Logging
 Environment=QUARKUS_LOG_CONSOLE_FORMAT='%%d{yyyy-MM-dd HH:mm:ss,SSS} %%-5p [%%X{requestID}] (%%c{3.}) %%s%%e%%n'
 
+# FEMA
+Environment=FEMA_USERNAME={{ lookup("env", "FEMA_USERNAME") }}
+Environment=FEMA_PASSWORD={{ lookup("env", "FEMA_PASSWORD") }}
+Environment=FEMA_REPORT_CRON={{ lookup("env", "FEMA_REPORT_CRON") }}
+Environment=QUARKUS_SCHEDULER_CRON_TYPE={{ lookup("env", "QUARKUS_SCHEDULER_CRON_TYPE") }}
+Environment=FEMA_REPORT_EMAILS={{ lookup("env", "FEMA_REPORT_EMAILS") }}
+Environment=QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL={{ lookup("env", "QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL") }}
+
+
 [Install]
 WantedBy=multi-user.target

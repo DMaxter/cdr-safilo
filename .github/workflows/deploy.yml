@@ -117,6 +117,13 @@ jobs:
       QUARKUS_MAILER_USERNAME: ${{ secrets.SMTP_USER }}
       QUARKUS_MAILER_PASSWORD: ${{ secrets.SMTP_PASS }}
       QUARKUS_MAILER_FROM: ${{ secrets.SMTP_MAIL }}
+
+      FEMA_USERNAME: ${{ secrets.FEMA_USERNAME }}
+      FEMA_PASSWORD: ${{ secrets.FEMA_PASSWORD }}
+      FEMA_REPORT_CRON: "00 19 * * 1-5"
+      QUARKUS_SCHEDULER_CRON_TYPE: unix
+      FEMA_REPORT_EMAILS: ${{ secrets.CDR_MAILS }}
+      QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL: ${{ secrets.FEMA_EXPEDITIONS_URL }}
     needs:
       - build_backend
       - build_frontend

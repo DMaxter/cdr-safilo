@@ -1,0 +1,20 @@
+---
+
+- name: Trigger pending handlers
+  meta: flush_handlers
+
+- name: Ensure access to SSL key
+  become: yes
+  file:
+    owner: caddy
+    group: frontend
+    mode: 0640
+    path: '{{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE") }}'
+
+- name: Ensure access to SSL certificate
+  become: yes
+  file:
+    owner: caddy
+    group: frontend
+    mode: 0640
+    path: '{{ lookup("env", "QUARKUS_HTTP_SSL_CERTIFICATE_FILE") }}'
