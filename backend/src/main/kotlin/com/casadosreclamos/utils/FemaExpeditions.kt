@@ -5,11 +5,13 @@ import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
+import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 private const val SOAP_ACTION_PREFIX = "http://tempuri.org"
 
 @Consumes(MediaType.TEXT_XML)
+@Produces(MediaType.WILDCARD)
 @RegisterRestClient(configKey = "fema-expeditions")
 interface FemaExpeditions {
     @POST

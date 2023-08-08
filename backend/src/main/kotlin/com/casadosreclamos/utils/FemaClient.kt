@@ -10,7 +10,6 @@ import org.jose4j.base64url.Base64
 import org.w3c.dom.Node
 import java.io.File
 import java.time.Instant
-import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.xml.soap.MessageFactory

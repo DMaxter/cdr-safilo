@@ -20,7 +20,7 @@ class RequestIdFilters {
         MDC.put(REQUEST_ID_MDC_KEY, requestId ?: UUID.randomUUID().toString())
     }
 
-    @Suppress("UNUSED PARAMETER")
+    @Suppress("UNUSED_PARAMETER")
     @ServerResponseFilter
     fun getResponseFilter(responseContext: ContainerResponseContext) {
         MDC.remove(REQUEST_ID_MDC_KEY)
