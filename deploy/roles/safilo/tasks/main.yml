@@ -3,5 +3,8 @@
 - name: Handle backend
   import_tasks: backend.yml
 
-- name: handle frontend
+- name: Handle proxy
+  import_tasks: proxy.yml
+
+- name: Handle frontend
   import_tasks: frontend.yml

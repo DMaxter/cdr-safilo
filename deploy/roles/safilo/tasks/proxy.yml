@@ -1,0 +1,21 @@
+---
+
+- name: Transfer proxy to the server
+  copy:
+    src: "{{ src_proxy }}"
+    dest: "{{ proxy_path }}"
+
+- name: Copy SystemD service
+  become: yes
+  copy:
+    src: fema-proxy.service
+    dest: /etc/systemd/system/
+  notify:
+    - restart proxy
+
+- name: Start proxy service
+  become: yes
+  systemd:
+    name: fema-proxy
+    state: started
+    enabled: yes

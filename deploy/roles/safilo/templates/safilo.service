@@ -55,10 +55,11 @@ Environment=QUARKUS_LOG_CONSOLE_FORMAT='%%d{yyyy-MM-dd HH:mm:ss,SSS} %%-5p [%%X{
 # FEMA
 Environment=FEMA_USERNAME={{ lookup("env", "FEMA_USERNAME") }}
 Environment=FEMA_PASSWORD={{ lookup("env", "FEMA_PASSWORD") }}
-Environment=FEMA_REPORT_CRON={{ lookup("env", "FEMA_REPORT_CRON") }}
+Environment=FEMA_REPORT_CRON="{{ lookup('env', 'FEMA_REPORT_CRON') }}"
 Environment=QUARKUS_SCHEDULER_CRON_TYPE={{ lookup("env", "QUARKUS_SCHEDULER_CRON_TYPE") }}
 Environment=FEMA_REPORT_EMAILS={{ lookup("env", "FEMA_REPORT_EMAILS") }}
-Environment=QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL={{ lookup("env", "QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL") }}
+Environment=QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL={{ lookup("env", "FEMA_EXPEDITIONS_URL") }}
+Environment=QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_PROXY_ADDRESS={{ lookup("env", "FEMA_EXPEDITIONS_PROXY") }}
 
 
 [Install]

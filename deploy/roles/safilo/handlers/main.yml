@@ -5,6 +5,7 @@
   systemd:
     name: safilo
     state: restarted
+    daemon-reload: true
 
 - name: restart frontend
   become: yes
@@ -12,3 +13,9 @@
     name: caddy
     state: restarted
   notify: restart backend
+
+- name: restart proxy
+  become: yes
+  systemd:
+    name: fema-proxy
+    state: restarted
