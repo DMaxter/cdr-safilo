@@ -559,13 +559,13 @@
             <v-select label="Serviço" :items="allServices" item-value="id" item-text="name" required v-model="pickedService"></v-select>
           </v-col>
           <v-col cols="6" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Número de pacotes" required v-model="numberOfPackages"></v-text-field>
+            <v-text-field type="number" label="Número de pacotes" min=0 required v-model="numberOfPackages"></v-text-field>
           </v-col>
           <v-col cols="6" v-show="!added && !failed && !displayLoad">
             <v-select label="Tipo de encomenda" :items="packageTypes" item-value="id" item-text="name" required v-model="pickedPackage"></v-select>
           </v-col>
           <v-col cols="6" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Peso Total (Kg)" required v-model="totalWeight"></v-text-field>
+            <v-text-field type="number" label="Peso Total (Kg)" min=0 step=0.01 required v-model="totalWeight"></v-text-field>
           </v-col>
           <v-col cols="12" v-show="!added && !failed && !displayLoad">
             <v-text-field label="Descrição" required
@@ -575,15 +575,15 @@
             <v-select label="Formato" :items="allFormats" item-value="id" item-text="name" required v-model="pickedFormat"></v-select>
           </v-col>
           <v-col cols="3" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Altura" required
+            <v-text-field type="number" label="Altura (m)" min=0 step=0.01 required
               v-model="packageHeight"></v-text-field>
           </v-col>
           <v-col cols="3" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Largura" required
+            <v-text-field type="number" label="Largura (m)" min=0 step=0.01 required
               v-model="packageWidth"></v-text-field>
           </v-col>
           <v-col cols="3" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Comprimento" required
+            <v-text-field type="number" label="Comprimento (m)" min=0 step=0.01 required
               v-model="packageLength"></v-text-field>
           </v-col>
         </v-row>
