@@ -706,6 +706,9 @@
           </v-card>         
         </v-col>
     </v-row>
+    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
+        <img :src="myImage2" style="object-fit:contain;" height="150" width="150">
+    </v-row>
     </v-containter>
 
     <v-containter v-if="req2" fill-height class="d-none" :class="req2 && 'd-print-block'">
@@ -740,6 +743,9 @@
           </v-row>
           </v-card>         
         </v-col>
+    </v-row>
+    <v-row style="position: fixed; bottom: 10px; right: 5px;" class="d-flex"> 
+        <img :src="myImage2" style="object-fit:contain;" height="150" width="150">
     </v-row>
 
     <br>
@@ -831,7 +837,9 @@
           </v-card>         
         </v-col>
     </v-row>
-
+    <v-row style="position: fixed; bottom: 10px; right: 5px;" class="d-flex"> 
+        <img :src="myImage2" style="object-fit:contain;" height="150" width="150">
+    </v-row>
     <br>
     <br>
     <br>
@@ -1148,9 +1156,6 @@
 
     <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex d-print-none"> 
         <v-img :src="myImage2" contain height="180" width="180"></v-img>
-    </v-row>
-    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column d-print-none"> 
-      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
     </v-container>
 

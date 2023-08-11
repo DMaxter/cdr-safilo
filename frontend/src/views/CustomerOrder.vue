@@ -167,9 +167,6 @@
     <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
       <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
-    <v-row style="position: absolute; bottom: 20px; right: 20px;" class="d-flex flex-column"> 
-      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
     </v-container>
 
   </v-app>
