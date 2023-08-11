@@ -63,7 +63,6 @@ class WaybillService {
 
             val source = Address(CDR_POSTAL, CDR_COUNTRY, CDR_CITY)
 
-            // FIXME: Ask to fill clients with country and city
             val destination = Address(request.client.postalCode, "PT", "Cidade Teste")
 
             logger.info("Retrieving available services from FEMA")
@@ -120,7 +119,6 @@ class WaybillService {
 
                 val source = Contact(CDR_NAME, Address(CDR_POSTAL, CDR_COUNTRY, CDR_CITY, CDR_ADDRESS), CDR_PHONE)
 
-                // FIXME: Ask to fill clients with country and city
                 val destination = Contact(
                     request.client.name,
                     Address(request.client.postalCode, "PT", "Cidade Teste", request.client.address),

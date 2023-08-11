@@ -72,34 +72,35 @@ class FemaClient {
 
 
         return expeditionsClient.getServices(body).onItem().transform { response ->
-        val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
+            val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
 
-        val soapBody = doc.soapBody.extractContentAsDocument()
+            val soapBody = doc.soapBody.extractContentAsDocument()
 
-        val state = getXMLElement(soapBody, "ServicosResponse/ServicosResult/State")?.textContent
-        val services = getXMLElement(soapBody, "ServicosResponse/ServicosResult/Servicos")?.childNodes
+            val state = getXMLElement(soapBody, "ServicosResponse/ServicosResult/State")?.textContent
+            val message = getXMLElement(soapBody, "ServicosResponse/ServicosResult/Message")?.textContent
+            val services = getXMLElement(soapBody, "ServicosResponse/ServicosResult/Servicos")?.childNodes
 
-        if (state != "Ok") {
-            logger.error("Received state $state from request: $response")
+            if (state != "Ok") {
+                logger.error("Couldn't get services: $message")
 
-            throw GetServicesException()
-        }
-
-        val serviceList: MutableList<Service> = mutableListOf()
-        for (i in 0..<services!!.length) {
-            val serviceNode = services.item(i)
-
-            val name = getXMLElement(serviceNode, "nome")?.textContent
-            val id = getXMLElement(serviceNode, "servico")?.textContent
-
-            if (name == null || id == null) {
-                throw GetServicesException()
+                throw GetServicesException(message!!)
             }
 
-            serviceList.add(Service(id, name))
-        }
+            val serviceList: MutableList<Service> = mutableListOf()
+            for (i in 0..<services!!.length) {
+                val serviceNode = services.item(i)
 
-        return@transform serviceList
+                val name = getXMLElement(serviceNode, "nome")?.textContent
+                val id = getXMLElement(serviceNode, "servico")?.textContent
+
+                if (name == null || id == null) {
+                    throw GetServicesException(message!!)
+                }
+
+                serviceList.add(Service(id, name))
+            }
+
+            return@transform serviceList
         }
     }
 
@@ -149,25 +150,26 @@ class FemaClient {
                 "</soap:Envelope>"
 
         return expeditionsClient.openWaybill(body).onItem().transform { response ->
-        val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
+            val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
 
-        val soapBody = doc.soapBody.extractContentAsDocument()
+            val soapBody = doc.soapBody.extractContentAsDocument()
 
-        val state = getXMLElement(soapBody, "CriarResponse/CriarResult/State")?.textContent
-        val id = getXMLElement(soapBody, "CriarResponse/CriarResult/Numero")?.textContent?.toLongOrNull()
-        val pdf = getXMLElement(soapBody, "CriarResponse/CriarResult/Etiqueta/base64Label")?.textContent
+            val state = getXMLElement(soapBody, "CriarResponse/CriarResult/State")?.textContent
+            val message = getXMLElement(soapBody, "CriarResponse/CriarResult/Message")?.textContent
+            val id = getXMLElement(soapBody, "CriarResponse/CriarResult/Numero")?.textContent?.toLongOrNull()
+            val pdf = getXMLElement(soapBody, "CriarResponse/CriarResult/Etiqueta/base64Label")?.textContent
 
-        if (state != "Ok") {
-            logger.error("Received state $state from request: $response")
+            if (state != "Ok") {
+                logger.error("Couldn't open waybill: $message")
 
-            throw OpenWaybillException()
-        }
+                throw OpenWaybillException(message!!)
+            }
 
-        logger.info("Saving PDF file")
-        val file = kotlin.io.path.createTempFile().toFile()
-        file.writeBytes(Base64.decode(pdf))
+            logger.info("Saving PDF file")
+            val file = kotlin.io.path.createTempFile().toFile()
+            file.writeBytes(Base64.decode(pdf))
 
-        return@transform Label(id, file)
+            return@transform Label(id, file)
         }
     }
 
@@ -188,21 +190,20 @@ class FemaClient {
                 "</soap:Envelope>"
 
         return expeditionsClient.cancelWaybill(body).onItem().transformToUni { response ->
-        val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
+            val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
 
-        val soapBody = doc.soapBody.extractContentAsDocument()
+            val soapBody = doc.soapBody.extractContentAsDocument()
 
-        val state = getXMLElement(soapBody, "AnularResponse/AnularResult/State")?.textContent
+            val state = getXMLElement(soapBody, "AnularResponse/AnularResult/State")?.textContent
+            val message = getXMLElement(soapBody, "AnularResponse/AnularResult/Message")?.textContent
 
-        val message = getXMLElement(soapBody, "AnularResponse/AnularResult/Message")?.textContent
+            if (state != "Ok") {
+                logger.error("Couldn't cancel waybill: $message")
 
-        if (state != "Ok") {
-            logger.error("Couldn't cancel waybill: $message")
+                throw CancelWaybillException(message!!)
+            }
 
-            throw CancelWaybillException(message!!)
-        }
-
-        return@transformToUni Uni.createFrom().voidItem()
+            return@transformToUni Uni.createFrom().voidItem()
         }
     }
 
@@ -226,25 +227,25 @@ class FemaClient {
                 "</soap:Envelope>"
 
         return expeditionsClient.getWaybill(body).onItem().transform { response ->
-        val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
+            val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
 
-        val soapBody = doc.soapBody.extractContentAsDocument()
+            val soapBody = doc.soapBody.extractContentAsDocument()
 
-        val state = getXMLElement(soapBody, "EtiquetaResponse/EtiquetaResult/State")?.textContent
+            val state = getXMLElement(soapBody, "EtiquetaResponse/EtiquetaResult/State")?.textContent
+            val message = getXMLElement(soapBody, "EtiquetaResponse/EtiquetaResult/Message")?.textContent
+            val pdf = getXMLElement(soapBody, "EtiquetaResponse/EtiquetaResult/Etiqueta/base64Label")?.textContent
 
-        val pdf = getXMLElement(soapBody, "EtiquetaResponse/EtiquetaResult/Etiqueta/base64Label")?.textContent
+            if (state != "Ok") {
+                logger.error("Couldn't get waybill")
 
-        if (state != "Ok") {
-            logger.error("Couldn't get waybill")
+                throw GetWaybillException(message!!)
+            }
 
-            throw GetWaybillException()
-        }
+            logger.info("Saving PDF file")
+            val file = kotlin.io.path.createTempFile().toFile()
+            file.writeBytes(Base64.decode(pdf))
 
-        logger.info("Saving PDF file")
-        val file = kotlin.io.path.createTempFile().toFile()
-        file.writeBytes(Base64.decode(pdf))
-
-        return@transform file
+            return@transform file
         }
     }
 
@@ -265,25 +266,25 @@ class FemaClient {
                 "</soap:Envelope>"
 
         return expeditionsClient.closeDay(body).onItem().transform { response ->
-        val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
+            val doc: SOAPMessage = xmlBuilder.createMessage(null, response.toByteArray().inputStream())
 
-        val soapBody = doc.soapBody.extractContentAsDocument()
+            val soapBody = doc.soapBody.extractContentAsDocument()
 
-        val state = getXMLElement(soapBody, "FecharDiaResponse/FecharDiaResult/State")?.textContent
+            val state = getXMLElement(soapBody, "FecharDiaResponse/FecharDiaResult/State")?.textContent
+            val message = getXMLElement(soapBody, "FecharDiaResponse/FecharDiaResult/Message")?.textContent
+            val pdf = getXMLElement(soapBody, "FecharDiaResponse/FecharDiaResult/Report/base64Label")?.textContent
 
-        val pdf = getXMLElement(soapBody, "FecharDiaResponse/FecharDiaResult/Report/base64Label")?.textContent
+            if (state != "Ok") {
+                logger.error("Couldn't close day: $message")
 
-        if (state != "Ok") {
-            logger.error("Couldn't close day")
+                throw CloseDayException()
+            }
 
-            throw CloseDayException()
-        }
+            logger.info("Saving PDF file")
+            val file = kotlin.io.path.createTempFile().toFile()
+            file.writeBytes(Base64.decode(pdf))
 
-        logger.info("Saving PDF file")
-        val file = kotlin.io.path.createTempFile().toFile()
-        file.writeBytes(Base64.decode(pdf))
-
-        return@transform file
+            return@transform file
         }
     }
 

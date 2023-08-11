@@ -458,7 +458,8 @@ export default class Backend {
       window.URL.revokeObjectURL(url);
     })
       .catch(async error => {
-      throw Error(await this.errorMessage(error.response))
+        error.response.blob = true
+        throw Error(await this.errorMessage(error.response))
     })
   }
 
@@ -474,7 +475,8 @@ export default class Backend {
       window.URL.revokeObjectURL(url);
     })
       .catch(async error => {
-      throw Error(await this.errorMessage(error.response))
+        error.response.blob = true
+        throw Error(await this.errorMessage(error.response))
     })
   }
 
@@ -483,7 +485,7 @@ export default class Backend {
       return response.data
     })
       .catch(async error => {
-      throw Error(await this.errorMessage(error.response))
+        throw Error(await this.errorMessage(error.response))
     })
   }
 
@@ -514,16 +516,31 @@ export default class Backend {
 
 
   static async errorMessage(error) {
-    if (error.status == 400) {
-      return error.data.msg
-    } else if (error.status == 403) {
-      return 'Not enough permissions'
-    } else if (error.status == 401) {
-      return 'Not logged in'
-    } else if (error.status == 500) {
-      return 'Internal Server Error'
+    if (error.blob === undefined) {
+      if (error.status == 400) {
+        return error.data
+      } else if (error.status == 403) {
+        return 'Not enough permissions'
+      } else if (error.status == 401) {
+        return 'Not logged in'
+      } else if (error.status == 500) {
+        return 'Internal Server Error'
+      } else {
+        return 'UNKNOWN ' + error
+      }
     } else {
-      return 'UNKNOWN ' + error
+      if (error.status == 400) {
+        let msg = await error.data.text()
+        return msg
+      } else if (error.status == 403) {
+        return 'Not enough permissions'
+      } else if (error.status == 401) {
+        return 'Not logged in'
+      } else if (error.status == 500) {
+        return 'Internal Server Error'
+      } else {
+        return 'UNKNOWN ' + error
+      }
     }
   }
 }

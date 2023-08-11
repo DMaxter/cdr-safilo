@@ -24,13 +24,13 @@ class ExceptionMapper {
     fun map(e: CDRException): Uni<Response> {
         logger.error(e.msg)
         return Uni.createFrom()
-            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError(e.msg)).build())
+            .item(Response.status(Response.Status.BAD_REQUEST).entity(e.msg).build())
     }
 
     @ServerExceptionMapper
     fun map(e: FEMAException): Uni<Response> {
-        logger.error(e.msg)
+        logger.error("[FEMA] ${e.msg}")
         return Uni.createFrom()
-            .item(Response.status(Response.Status.BAD_REQUEST).entity(ExceptionError(e.msg)).build())
+            .item(Response.status(Response.Status.BAD_REQUEST).entity(e.msg).build())
     }
 }

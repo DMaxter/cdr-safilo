@@ -553,7 +553,7 @@
       <v-container>
         <v-row justify="center">
           <span class="text-h5" v-show="added"> Carta de porte criada com sucesso! </span>
-          <span class="text-h5" v-show="failed"> Ocorreu um erro a criar a carta de porte </span>
+                <span class="text-h5" v-show="failed">Ocorreu um erro a criar a carta de porte:<br/>{{ this.errorMsg }} </span>
           <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
           <v-col cols="6" v-show="!added && !failed && !displayLoad">
             <v-select label="Serviço" :items="allServices" item-value="id" item-text="name" required v-model="pickedService"></v-select>
@@ -609,7 +609,7 @@
       <v-container>
         <v-row justify="center">
           <span class="text-h5" v-show="added"> Carta de porte descarregada com sucesso! </span>
-          <span class="text-h5" v-show="failed"> Ocorreu um erro a descarregar a carta de porte </span>
+                <span class="text-h5" v-show="failed">Ocorreu um erro a descarregar a carta de porte:<br/>{{ this.errorMsg }} </span>
           <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
           <v-col cols="6" v-show="!added && !failed && !displayLoad">
             <v-select hide-details label="Formato" :items="allFormats" item-value="id" item-text="name" required v-model="pickedFormat"></v-select>
@@ -637,7 +637,7 @@
       <v-container>
         <v-row justify="center">
           <span class="text-h5" v-show="added"> Carta de porte removida com sucesso! </span>
-          <span class="text-h5" v-show="failed"> Ocorreu um erro ao remover a carta de porte </span>
+                <span class="text-h5" v-show="failed">Ocorreu um erro ao remover a carta de porte:<br/>{{ this.errorMsg }}</span>
           <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
           <v-col cols="12" v-show="!added && !failed && !displayLoad">
             <span class="text-h6" hide-details> Pretende remover a carta de porte deste pedido? </span>
@@ -1170,6 +1170,7 @@ export default {
 
 data () {
       return {
+        errorMsg: "",
         myImage2: require('@/assets/logologo1.png'),
         store,
         packageHeight: null,
@@ -1511,6 +1512,7 @@ methods: {
       this.displayLoad = false
       this.added = true
     }catch(e){
+      this.errorMsg = e.message
       this.failed = true
       this.displayLoad = false
     }
@@ -1523,6 +1525,7 @@ methods: {
       this.displayLoad = false;
       this.added = true
     }catch(e){
+      this.errorMsg = e.message
       this.failed = true
       this.displayLoad = false;
     }
@@ -1535,6 +1538,7 @@ methods: {
       this.displayLoad = false;
       this.added = true
     }catch(e){
+      this.errorMsg = e.message
       this.failed = true
       this.displayLoad = false;
     }
