@@ -420,7 +420,7 @@ export default class Backend {
   }
 
   static async getServices(id) {
-    return httpClient.get(`/waybill/services/${id}`).then(response => {
+    return httpClient.get(`/waybill/services/${id}`, { timeout: 300000 }).then(response => {
       return response.data
     })
       .catch(async error => {
@@ -447,7 +447,7 @@ export default class Backend {
   }
 
   static async createWaybill(waybill, id) {
-    return httpClient.post(`/waybill/${id}`, waybill, {responseType: 'blob'}).then(response => {
+    return httpClient.post(`/waybill/${id}`, waybill, {responseType: 'blob', timeout: 300000}).then(response => {
       const url = window.URL.createObjectURL(response.data);
       const a = document.createElement('a');
       a.style.display = 'none';
@@ -463,7 +463,7 @@ export default class Backend {
   }
 
   static async downloadWaybill(format, id) {
-    return httpClient.get(`/waybill/${id}/${format}`, {responseType: 'blob'}).then(response => {
+    return httpClient.get(`/waybill/${id}/${format}`, {responseType: 'blob', timeout: 300000}).then(response => {
       const url = window.URL.createObjectURL(response.data);
       const a = document.createElement('a');
       a.style.display = 'none';
@@ -479,7 +479,7 @@ export default class Backend {
   }
 
   static async deleteWaybill(id) {
-    return httpClient.delete(`/waybill/${id}`).then(response => {
+    return httpClient.delete(`/waybill/${id}`, { timeout: 300000 }).then(response => {
       return response.data
     })
       .catch(async error => {
