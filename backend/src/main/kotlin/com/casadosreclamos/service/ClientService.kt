@@ -229,8 +229,8 @@ class ClientService {
                 val phone = record[5]
                 val address = record[3]
                 val postalCode = record[4]
-                val city = record[8]
-                val country = record[9]
+                val city = record[9]
+                val country = record[8]
 
                 val clientDto =
                     ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, city, country,"", mutableListOf())
