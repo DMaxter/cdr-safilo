@@ -184,7 +184,7 @@
               max-width="800"
               id="dialogo"
             >
-              <template>
+              <template v-if="show">
                 <v-card>
                   <v-card-title class="justify-center"> <span v-show="!added && !failed"> {{ this.currClient.name }}; {{ this.currClient.address }}; {{ this.currClient.postalCode }} </span></v-card-title>
                   <v-card-text>
