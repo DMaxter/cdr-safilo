@@ -12,6 +12,8 @@ data class ClientDto(
     var phone: String?,
     var address: String?,
     var postalCode: String?,
+    var city: String?,
+    var country: String?,
     var note: String?,
     var images: List<ImageDto>?
 ) {
@@ -24,6 +26,8 @@ data class ClientDto(
         client.phone,
         client.address,
         client.postalCode,
+        client.city,
+        client.country,
         client.note,
         client.images.stream().map { ImageDto(it) }.collect(Collectors.toList())
     )

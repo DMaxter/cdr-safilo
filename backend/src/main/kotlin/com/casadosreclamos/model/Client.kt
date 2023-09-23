@@ -23,6 +23,10 @@ open class Client {
 
     open lateinit var postalCode: String
 
+    open lateinit var city: String
+
+    open lateinit var country: String
+
     open var note: String = ""
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "client", orphanRemoval = true)

@@ -1,0 +1,5 @@
+ALTER TABLE Client
+    ADD city VARCHAR(255) DEFAULT "";
+
+ALTER TABLE Client
+    ADD country VARCHAR(255) DEFAULT "";

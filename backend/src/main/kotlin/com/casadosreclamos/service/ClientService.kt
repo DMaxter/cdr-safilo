@@ -90,6 +90,14 @@ class ClientService {
             logger.error("Client postal code is null or empty")
 
             throw InvalidPostalCodeException()
+        } else if (clientDto.city == null || clientDto.city!!.isEmpty()) {
+            logger.error("Client city is null or empty")
+
+            throw InvalidCityException()
+        } else if (clientDto.country == null || clientDto.country!!.isEmpty()) {
+            logger.error("Client country is null or empty")
+
+            throw InvalidCountryException()
         }
 
         client.id = clientDto.id!!
@@ -99,6 +107,8 @@ class ClientService {
         client.phone = clientDto.phone!!
         client.address = clientDto.address!!
         client.postalCode = clientDto.postalCode!!
+        client.city = clientDto.city!!
+        client.country = clientDto.country!!
         client.images = mutableSetOf()
 
         return createBannerIfNotExists(clientDto.banner!!).onItem().transformToUni { banner ->
@@ -146,6 +156,14 @@ class ClientService {
             logger.error("Client postal code is null or empty")
 
             throw InvalidPostalCodeException()
+        } else if (clientDto.city == null || clientDto.city!!.isEmpty()) {
+            logger.error("Client city is null or empty")
+
+            throw InvalidCityException()
+        } else if (clientDto.country == null || clientDto.country!!.isEmpty()) {
+            logger.error("Client country is null or empty")
+
+            throw InvalidCountryException()
         }
 
         return Panache.withTransaction {
@@ -162,6 +180,8 @@ class ClientService {
                 client.phone = clientDto.phone!!
                 client.address = clientDto.address!!
                 client.postalCode = clientDto.postalCode!!
+                client.city = clientDto.city!!
+                client.country = clientDto.country!!
 
                 client
             }.onItem().invoke { _ -> logger.info("Client updated successfully") }.onFailure()
@@ -209,9 +229,11 @@ class ClientService {
                 val phone = record[5]
                 val address = record[3]
                 val postalCode = record[4]
+                val city = record[8]
+                val country = record[9]
 
                 val clientDto =
-                    ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, "", mutableListOf())
+                    ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, city, country,"", mutableListOf())
 
                 em.emit(clientRepository.findById(id).onItem().transformToUni { client ->
                     return@transformToUni if (client == null) {
