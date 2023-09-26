@@ -5,7 +5,7 @@ nav:
   - Início: index.md
   - Safilo: safilo.md
   - CDR: cdr.md
-  - Utilizadores: users.md
+  #- Utilizadores: users.md
   - Detalhes Técnicos: technical.md
 theme:
   name: material
@@ -32,3 +32,5 @@ theme:
         name: Mudar para modo diurno
 markdown_extensions:
   - tables
+  - toc:
+      permalink: 🔗
