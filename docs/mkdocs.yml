@@ -1,5 +1,5 @@
 site_name: Plataforma Casa dos Reclamos
-site_url: https://dmaxter.gitlab.io/cdr-safilo/
+site_url: https://dmaxter.github.io/cdr-safilo/
 docs_dir: content/
 nav:
   - Início: index.md
