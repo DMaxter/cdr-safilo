@@ -7,6 +7,8 @@ export default class ClientDto {
   fiscalNumber = null // Long
   email = null // String
   phone = null // String
+  city = null; // String
+  country = null; // String
 
   constructor(obj) {
     if (obj) {
@@ -18,6 +20,8 @@ export default class ClientDto {
       this.phone = obj.phone
       this.address = obj.address
       this.postalCode = obj.postalCode
+      this.city = obj.city
+      this.country = obj.country
     }
   }
 }

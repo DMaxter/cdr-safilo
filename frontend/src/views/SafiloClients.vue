@@ -231,6 +231,14 @@
                             <v-col cols="6" v-show="!added && !failed">
                               <v-text-field label="Banner do cliente" required v-model="clientBanner"></v-text-field>
                             </v-col>
+                            <v-col cols="6" v-show="!added && !failed">
+                              <v-text-field label="Cidade do cliente" required
+                                v-model="clientCity"></v-text-field>
+                            </v-col>
+                            <v-col cols="6" v-show="!added && !failed">
+                              <v-text-field label="País do cliente" required
+                                v-model="clientCountry"></v-text-field>
+                            </v-col>
                           </v-row>
                         </v-container>
                       </v-card-text>
@@ -238,7 +246,7 @@
                         <v-btn color="blue darken-1" text @click="dialog1 = false; clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null">
                           Voltar
                         </v-btn>
-                        <v-btn color="blue darken-1" text v-show="!added && !failed" @click="addClient();  clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null">
+                        <v-btn color="blue darken-1" text v-show="!added && !failed" @click="addClient();  clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null; clientCity = null; clientCountry = null;">
                           Adicionar
                         </v-btn>
                       </v-card-actions>
@@ -295,6 +303,8 @@ export default {
       clientCode: null,
       clientPhone: null,
       clientNIF: null,
+      clientCity: null,
+      clientCountry: null,
       banners: [],
       dialog1: false,
       dialog2: false,
@@ -389,6 +399,8 @@ export default {
         this.client.banner = this.clientBanner
         this.client.address = this.clientAddress
         this.client.postalCode = this.clientPostalCode
+        this.client.city = this.clientCity
+        this.client.country = this.clientCountry
         await Backend.addClient(this.client)
         this.allClients = await Backend.getClients()
         this.added = true
