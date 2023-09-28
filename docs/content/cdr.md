@@ -64,3 +64,20 @@ Passos:
 4. Selecionar o grupo de acabamentos a alterar/remover
 5.  1. Para remover o grupo de acabamentos, clicar no ícone do caixote do lixo
     2. Para alterar o grupo de acabamentos, alterar os campos necessário e clicar em `ALTERAR`
+
+
+### Adicionar preço
+
+A CDR tem a capacidade de definir os preços para cada tipo de material e acabamento.
+Foi estabelecido que o preço do material é definido por metro quadrado e que o preço com acabamentos tem um valor estático.
+
+Por exemplo: sendo o valor do Backlight de 10€/m² e o preço com qualquer acabamento ter um custo adicional de 3€, se existir um pedido que tenha 2m² sem acabamentos, deverá ter um custo de 20€, no entanto se adicionarmos biadesivo na frente e uma barra de PVC de 3mm, o pedido deverá ter um custo de 23€.
+Se por outro lado queremos que com o Backlight e com o acabamento em tira de silicone o custo adicional seja de 5€, devemos introduzir um novo preço.
+
+Passos para introduzir um novo preço:
+
+1. Fazer login na plataforma utilizando as suas credenciais
+2. No menu, aceder a `MATERIAIS`
+3. Clicar em `ADICIONAR PREÇO`
+4. Preencher o preço por metro quadrado, o preço fixo (se não existir o campo deve ser colocado a 0), o material ao qual o preço se aplica e os acabamentos aos quais o valor fixo deve ser aplicado
+5. Clicar em `ADICIONAR`
