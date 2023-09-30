@@ -119,15 +119,22 @@ class WaybillService {
 
                 val source = Contact(CDR_NAME, Address(CDR_POSTAL, CDR_COUNTRY, CDR_CITY, CDR_ADDRESS), CDR_PHONE)
 
-                val destination = Contact(
-                    request.client.name,
-                    Address(request.client.postalCode, "PT", "Cidade Teste", request.client.address),
-                    request.client.phone
-                )
-
                 waybillDto.reference = requestId.toString()
                 waybillDto.source = source
-                waybillDto.destination = destination
+
+                if (waybillDto.destination == null) {
+                    val destination = Contact(
+                        request.client.name,
+                        Address(
+                            request.client.postalCode,
+                            request.client.country,
+                            request.client.city,
+                            request.client.address
+                        ),
+                        request.client.phone
+                    )
+                    waybillDto.destination = destination
+                }
 
                 if (waybillDto.description == null) {
                     waybillDto.description = ""
