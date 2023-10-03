@@ -52,6 +52,19 @@ open class TwoFaces: RequestType() {
 }
 
 @Entity
+@DiscriminatorValue("SimpleShowcase")
+open class SimpleShowcase: RequestType() {
+    @ManyToOne
+    open lateinit var top: RequestSlot
+    @ManyToOne
+    open lateinit var bottom: RequestSlot
+    @ManyToOne
+    open lateinit var left: RequestSlot
+    @ManyToOne
+    open lateinit var right: RequestSlot
+}
+
+@Entity
 @DiscriminatorValue("LeftShowcase")
 open class LeftShowcase: Showcase()
 

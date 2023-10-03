@@ -6,6 +6,7 @@ import com.casadosreclamos.model.request.OneFace as OneFaceRequest
 import com.casadosreclamos.model.request.TwoFaces as TwoFacesRequest
 import com.casadosreclamos.model.request.LeftShowcase as LeftRequest
 import com.casadosreclamos.model.request.RightShowcase as RightRequest
+import com.casadosreclamos.model.request.SimpleShowcase as SimpleRequest
 import com.casadosreclamos.model.request.Showcase
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -18,13 +19,14 @@ private const val PROPERTY = "type"
 @JsonSubTypes(
     JsonSubTypes.Type(OneFace::class, name = "OneFace"),
     JsonSubTypes.Type(TwoFaces::class, name = "TwoFaces"),
+    JsonSubTypes.Type(SimpleShowcase::class, name = "SimpleShowcase"),
     JsonSubTypes.Type(LeftShowcase::class, name = "LeftShowcase"),
     JsonSubTypes.Type(RightShowcase::class, name = "RightShowcase")
 )
 @Schema(
     type = SchemaType.OBJECT,
     discriminatorProperty = PROPERTY,
-    oneOf = [OneFace::class, TwoFaces::class, LeftShowcase::class, RightShowcase::class]
+    oneOf = [OneFace::class, TwoFaces::class, SimpleShowcase::class, LeftShowcase::class, RightShowcase::class]
 )
 abstract class RequestTypeDto {
     companion object {
@@ -32,6 +34,7 @@ abstract class RequestTypeDto {
             return when (request) {
                 is OneFaceRequest -> fromOneFace(request)
                 is TwoFacesRequest -> fromTwoFaces(request)
+                is SimpleRequest -> fromSimpleShowcase(request)
                 is LeftRequest -> fromLeftShowcase(request)
                 is RightRequest -> fromRightShowcase(request)
                 else -> throw InvalidRequestTypeException()
@@ -88,6 +91,20 @@ class TwoFaces() : RequestTypeDto() {
     }
 }
 
+class SimpleShowcase(): RequestTypeDto() {
+    lateinit var top: RequestSlotDto
+    lateinit var bottom: RequestSlotDto
+    lateinit var left: RequestSlotDto
+    lateinit var right: RequestSlotDto
+
+    constructor(request: SimpleRequest): this() {
+        this.top = RequestSlotDto(request.top)
+        this.bottom = RequestSlotDto(request.bottom)
+        this.left = RequestSlotDto(request.left)
+        this.right = RequestSlotDto(request.right)
+    }
+}
+
 class LeftShowcase() : ShowcaseDto() {
     constructor(request: LeftRequest) : this() {
         this.fromRequest(request)
@@ -105,6 +122,10 @@ private fun fromOneFace(request: OneFaceRequest): OneFace {
 
 private fun fromTwoFaces(request: TwoFacesRequest): TwoFaces {
     return TwoFaces(request)
+}
+
+private fun fromSimpleShowcase(request: SimpleRequest): SimpleShowcase {
+    return SimpleShowcase(request)
 }
 
 private fun fromLeftShowcase(request: LeftRequest): LeftShowcase {

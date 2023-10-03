@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response.Status
 import com.casadosreclamos.dto.LeftShowcase as LeftDto
 import com.casadosreclamos.dto.OneFace as OneDto
 import com.casadosreclamos.dto.RightShowcase as RightDto
+import com.casadosreclamos.dto.SimpleShowcase as SimpleDto
 import com.casadosreclamos.dto.TwoFaces as TwoDto
 
 private const val SEND_COST = 16.75
@@ -347,6 +348,7 @@ class RequestService {
         return when (request) {
             is OneDto -> toOneFace(request, images)
             is TwoDto -> toTwoFaces(request, images)
+            is SimpleDto -> toSimpleShowcase(request, images)
             is LeftDto -> toLeftShowcase(request, images)
             is RightDto -> toRightShowcase(request, images)
             else -> {
@@ -384,6 +386,27 @@ class RequestService {
 
             type
         }
+    }
+
+    private fun toSimpleShowcase(request: SimpleDto, images: List<Image>): Uni<SimpleShowcase> {
+        val topSlot = doSlot(request.top, images)
+        val bottomSlot = doSlot(request.bottom, images)
+        val leftSlot = doSlot(request.left, images)
+        val rightSlot = doSlot(request.right, images)
+
+        return Uni.join().all(topSlot, bottomSlot, leftSlot, rightSlot).andFailFast().onItem()
+            .transform { (top, bottom, left, right) ->
+                val type = SimpleShowcase()
+
+                type.top = top
+                type.bottom = bottom
+                type.left = left
+                type.right = right
+
+                type.cost = top.cost + bottom.cost + left.cost + right.cost
+
+                type
+            }
     }
 
     /**
@@ -553,6 +576,13 @@ class RequestService {
             is TwoDto -> {
                 validateSlot(request.cover)
                 validateSlot(request.back)
+            }
+
+            is SimpleDto -> {
+                validateSlot(request.top)
+                validateSlot(request.bottom)
+                validateSlot(request.left)
+                validateSlot(request.right)
             }
 
             is ShowcaseDto -> {
