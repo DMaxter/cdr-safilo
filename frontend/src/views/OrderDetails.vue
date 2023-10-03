@@ -546,10 +546,10 @@
 
 <v-dialog v-if="this.show" v-model="dialog2" persistent content-class="rounded-0" max-width="600px">
   <v-card tile>
-    <v-card-title class="justify-center">
+    <v-card-title class="justify-center pt-3 pb-0">
       <span class="text-h5" v-show="!added && !failed"> Criar carta de porte</span>
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="pb-0">
       <v-container>
         <v-row justify="center">
           <span class="text-h5" v-show="added"> Carta de porte criada com sucesso! </span>
@@ -586,14 +586,34 @@
             <v-text-field type="number" label="Comprimento (m)" min=0 step=0.01 required
               v-model="packageLength"></v-text-field>
           </v-col>
+          <v-col cols="4" v-show="!added && !failed && !displayLoad">
+            <v-text-field label="Nr. de Telefone" required
+              v-model="phoneNumber"></v-text-field>
+          </v-col>
+          <v-col cols="4" v-show="!added && !failed && !displayLoad">
+            <v-autocomplete label="País" required
+              v-model="country" :items="paises"></v-autocomplete>
+          </v-col>
+          <v-col cols="4" v-show="!added && !failed && !displayLoad">
+            <v-text-field label="Cidade" required
+              v-model="city"></v-text-field>
+          </v-col>
+          <v-col cols="6" v-show="!added && !failed && !displayLoad" class="pb-0">
+            <v-text-field label="Morada" required
+              v-model="address"></v-text-field>
+          </v-col>
+          <v-col cols="6" v-show="!added && !failed && !displayLoad" class="pb-0">
+            <v-text-field label="Cód. Postal" required
+              v-model="postalCode"></v-text-field>
+          </v-col>
         </v-row>
       </v-container>
     </v-card-text>
-    <v-card-actions class="justify-center">
-      <v-btn color="blue darken-1" text @click="dialog2 = false; description = '', pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
+    <v-card-actions class="justify-center pt-0 pb-1">
+      <v-btn color="blue darken-1" text @click="dialog2 = false; description = '', phoneNumber = null; country = null; city = null; address = null; postalCode = null; pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
         Voltar
       </v-btn>
-      <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" @click="waybill(); description = '', pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
+      <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" @click="waybill(); description = '', phoneNumber = null; country = null; city = null; address = null; postalCode = null; pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
         Criar
       </v-btn>
     </v-card-actions>
@@ -1176,6 +1196,12 @@ export default {
 data () {
       return {
         errorMsg: "",
+        phoneNumber: null,
+        address: null,
+        city: null,
+        country: null,
+        postalCode: null,
+        paises: ["PT", "ES"],
         myImage2: require('@/assets/logologo1.png'),
         store,
         packageHeight: null,
@@ -1510,7 +1536,9 @@ methods: {
         totalWeight: Number(this.totalWeight),
         description: this.description,
         labelFormat: this.pickedFormat,
-        dimensions: {height: Number(this.packageHeight), width: Number(this.packageWidth), length: Number(this.packageLength)}}
+        dimensions: {height: Number(this.packageHeight), width: Number(this.packageWidth), length: Number(this.packageLength)},
+        destination: {name: this.currClient.name, address: {postalCode: this.postalCode, country: this.country, city: this.city, address: this.address}, phone: this.phoneNumber}
+      }
       console.log(aaa)
       await Backend.createWaybill(aaa, store.pedidoAtual.cod)
       this.hasWaybill = true

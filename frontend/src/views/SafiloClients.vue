@@ -197,45 +197,45 @@
                           Cliente </span></v-btn>
                     </template>
                     <v-card tile>
-                      <v-card-title class="justify-center">
-                        <span class="text-h5" v-show="!added && !failed"> Adicionar Cliente </span>
+                      <v-card-title class="justify-center pt-2 pb-1">
+                        <span class="text-h5 pt-1 pb-1" v-show="!added && !failed" > Adicionar Cliente </span>
                       </v-card-title>
-                      <v-card-text>
+                      <v-card-text class="pb-0">
                         <v-container>
                           <v-row justify="center">
                             <span class="text-h5" v-show="added"> Cliente adicionada com sucesso! </span>
                             <span class="text-h5" v-show="failed"> Ocorreu um erro a adicionar o Cliente </span>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Código do cliente" required v-model="clientCode"></v-text-field>
                             </v-col>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Nome do cliente" required v-model="clientName"></v-text-field>
                             </v-col>
-                            <v-col cols="12" v-show="!added && !failed">
+                            <v-col cols="12" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Email do cliente" required v-model="clientEmail"></v-text-field>
                             </v-col>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="NIF do cliente" required v-model="clientNIF"></v-text-field>
                             </v-col>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Número de telefone do cliente" required
                                 v-model="clientPhone"></v-text-field>
                             </v-col>
-                            <v-col cols="12" v-show="!added && !failed">
+                            <v-col cols="12" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Endereço do cliente" required v-model="clientAddress"></v-text-field>
                             </v-col>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Código postal do cliente" required
                                 v-model="clientPostalCode"></v-text-field>
                             </v-col>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Banner do cliente" required v-model="clientBanner"></v-text-field>
                             </v-col>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Cidade do cliente" required
                                 v-model="clientCity"></v-text-field>
                             </v-col>
-                            <v-col cols="6" v-show="!added && !failed">
+                            <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="País do cliente" required
                                 v-model="clientCountry"></v-text-field>
                             </v-col>
@@ -243,10 +243,10 @@
                         </v-container>
                       </v-card-text>
                       <v-card-actions class="justify-center">
-                        <v-btn color="blue darken-1" text @click="dialog1 = false; clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null">
+                        <v-btn hide-details color="blue darken-1" text @click="dialog1 = false; clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null">
                           Voltar
                         </v-btn>
-                        <v-btn color="blue darken-1" text v-show="!added && !failed" @click="addClient();  clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null; clientCity = null; clientCountry = null;">
+                        <v-btn hide-details color="blue darken-1" text v-show="!added && !failed" @click="addClient();  clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null; clientCity = null; clientCountry = null;">
                           Adicionar
                         </v-btn>
                       </v-card-actions>
