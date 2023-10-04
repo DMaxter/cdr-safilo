@@ -180,6 +180,7 @@ export default {
       store.isActive1 = false
       store.isActive2 = false
       store.isActive3 = false
+      store.isActive4 = false
       store.face1 = null
       store.face2 = null
       store.address = null

@@ -148,7 +148,7 @@
           </v-row>
           </v-col>
           </template>
-          <template v-else>
+          <template v-else-if="store.isActive3">
           <v-col cols="3" align="center">
             <v-row class="ml-1">
             <v-col class="pa-0">
@@ -226,6 +226,72 @@
                   <v-img :src=store.facesDefault[1].link ></v-img>
                   <template v-slot:activator="{ on, attrs }">
                   <v-img :src=store.facesDefault[1].link height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
+          <template v-else-if="store.isActive4">
+            <v-col cols = "6" class="ml-14">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0 ml-1">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[0].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].link height="40px" width="245px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "4" class="pa-0 pl-2">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[2].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0 mr-7">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[3].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[1].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].link height="40px" width="253px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
                   </v-tooltip>
                 </v-col>
@@ -719,7 +785,7 @@ export default {
         });
 
       var cost = 0;
-        for (let n = 1; n < 6; n++) {
+        for (let n = 1; n < this.length + 1; n++) {
           this.allMaterials.forEach(element => {
           if(element.name == this.material[`material`+n]){
             store.selectedMaterial.push(element.id)
@@ -817,6 +883,9 @@ export default {
     }
     },
      created: async function () {
+      if (store.isActive4) {
+        this.length = 4
+      }
       this.getMaterials()
       this.getBrands()
       if(store.backtracking){

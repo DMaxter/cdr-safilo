@@ -176,7 +176,7 @@
           </v-row>
           </v-col>
           </template>
-          <template v-else>
+          <template v-else-if="store.isActive3">
             <v-col cols="4">
             <v-row class="ml-1">
             <v-col class="pa-0">
@@ -236,6 +236,71 @@
                   max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[3].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[1].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
+          <template v-else-if="store.isActive4">
+            <v-col cols = "11">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[0].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "5" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[2].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[3].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
                   <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>
@@ -350,12 +415,12 @@
               <div>Largura: {{ store.dimensions[3].width }}</div>
               <div>Marca: {{ currBrand }}</div>
               <div>Acabamentos: {{ currFinishes[3] }}</div>
-              <div class="text-h6"> Face 5: </div>
-              <div> Material:  {{ materiales[4] }}   </div>
-              <div>Altura: {{ store.dimensions[4].height }}</div>
-              <div>Largura: {{ store.dimensions[4].width }} </div>
-              <div>Marca: {{ currBrand }}</div>
-              <div>Acabamentos: {{ currFinishes[4] }}</div>
+              <div class="text-h6" v-if="!store.isActive4"> Face 5: </div>
+              <div v-if="!store.isActive4"> Material:  {{ materiales[4] }}   </div>
+              <div v-if="!store.isActive4">Altura: {{ store.dimensions[4].height }}</div>
+              <div v-if="!store.isActive4">Largura: {{ store.dimensions[4].width }} </div>
+              <div v-if="!store.isActive4">Marca: {{ currBrand }}</div>
+              <div v-if="!store.isActive4">Acabamentos: {{ currFinishes[4] }}</div>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn
@@ -450,13 +515,14 @@ export default {
     console.log(this.store)
     console.log(this.totalPrice)
     this.allMaterials = await Backend.getMaterials()
-    for (var j = 0; j < 5; j++){
+    var cena = store.isActive4 ? 4 : 5
+    for (var j = 0; j < cena; j++){
       var a = this.allMaterials.filter(y => y.id == store.selectedMaterial[j])[0].name
         this.materiales.push(a)
     }
     console.log(this.materiales)
     this.allFinishes = await Backend.getFinishes()
-    this.currFinishes = Array.apply(null, Array(5)).map(function () {})
+    this.currFinishes = Array.apply(null, Array(cena)).map(function () {})
     var n = 0
     store.finishes.forEach(fin => {
       var strToUse = ""
@@ -663,6 +729,75 @@ export default {
           }
         },
       }
+    } else if(store.isActive4){
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        observations: store.observations,
+        application: store.application,
+        brand: {
+              id: store.currentBrandId[store.currentBrandId.length-1],
+            },
+        type: {
+          type: "SimpleShowcase",
+          top: {
+           
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            },
+            finishings: store.finishes[0]
+          },
+          bottom: {
+           
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            },
+            finishings: store.finishes[1]
+          },
+          left: {
+            
+            image: { 
+              id: store.images[2]
+            },
+            measurements: {
+              width: store.dimensions[2].width,
+              height: store.dimensions[2].height
+            },
+            material: { 
+              id: store.selectedMaterial[2]
+            },
+            finishings: store.finishes[2]
+          },
+          right: {
+           
+            image: { 
+              id: store.images[3]
+            },
+            measurements: {
+              width: store.dimensions[3].width,
+              height: store.dimensions[3].height
+            },
+            material: { 
+              id: store.selectedMaterial[3]
+            },
+            finishings: store.finishes[3]
+          },
+        }
+      }
     }
       console.log(request)
         await Backend.placeRequest(request)
@@ -842,6 +977,75 @@ export default {
             finishings: store.finishes[4]
           }
         },
+      }
+    } else if(store.isActive4){
+      request = {
+        clientId: store.currentClient,
+        amount: store.quantity,
+        observations: store.observations,
+        application: store.application,
+        brand: {
+              id: store.currentBrandId[store.currentBrandId.length-1],
+            },
+        type: {
+          type: "SimpleShowcase",
+          top: {
+           
+            image: { 
+              id: store.images[0]
+            },
+            measurements: {
+              width: store.dimensions[0].width,
+              height: store.dimensions[0].height
+            },
+            material: { 
+              id: store.selectedMaterial[0]
+            },
+            finishings: store.finishes[0]
+          },
+          bottom: {
+           
+            image: { 
+              id: store.images[1]
+            },
+            measurements: {
+              width: store.dimensions[1].width,
+              height: store.dimensions[1].height
+            },
+            material: { 
+              id: store.selectedMaterial[1]
+            },
+            finishings: store.finishes[1]
+          },
+          left: {
+            
+            image: { 
+              id: store.images[2]
+            },
+            measurements: {
+              width: store.dimensions[2].width,
+              height: store.dimensions[2].height
+            },
+            material: { 
+              id: store.selectedMaterial[2]
+            },
+            finishings: store.finishes[2]
+          },
+          right: {
+           
+            image: { 
+              id: store.images[3]
+            },
+            measurements: {
+              width: store.dimensions[3].width,
+              height: store.dimensions[3].height
+            },
+            material: { 
+              id: store.selectedMaterial[3]
+            },
+            finishings: store.finishes[3]
+          },
+        }
       }
     }
       console.log(request)

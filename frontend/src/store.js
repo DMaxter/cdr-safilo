@@ -5,6 +5,7 @@ export const store = reactive({
   isActive1: false,
   isActive2: false,
   isActive3: false,
+  isActive4: false,
   facesDefault:[
     {
       face: "A",

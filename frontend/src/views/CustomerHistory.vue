@@ -507,6 +507,26 @@ data () {
             nameClient: item.client.name
 
           }
+        } else if(item.type.type == "SimpleShowcase"){
+          store.isActive4 = true
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: item.brand.name,
+            modelo: item.type.type,
+            material: [item.type.top.material.name, item.type.bottom.material.name, item.type.left.material.name, item.type.right.material.name],
+            dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements],
+            estado: item.status,
+            images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application,
+            finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings],
+            codClient: item.client.id,
+            nameClient: item.client.name
+
+          }
         }
         this.$router.push({name: 'details'});
       },

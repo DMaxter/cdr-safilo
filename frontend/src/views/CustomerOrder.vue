@@ -61,7 +61,7 @@
           </v-menu>
           </v-row>
           <v-row justify="space-around" align="center" class="d-flex flex-column mt-0">
-           <v-col cols="auto" style="font-size: 1.5em;">
+           <v-col cols="auto" style="font-size: 1.5em;" class="pt-1 mb-1">
             Selecione o tipo de pedido
            </v-col>
           </v-row>
@@ -75,7 +75,7 @@
               height="100"
               width="100"
               contain
-              @click="store.isActive1 = !store.isActive1; store.isActive2 = false; store.isActive3 = false"
+              @click="store.isActive1 = !store.isActive1; store.isActive2 = false; store.isActive3 = false; store.isActive4 = false"
             > <div class="fill-height" :class="{ selected: store.isActive1 }"> </div> </v-img>
            </v-col>
           </v-row>
@@ -96,30 +96,42 @@
         <span align="center"> <v-icon> mdi-circle </v-icon> </span>
         </v-col>
         </v-row>
-          <v-row no-gutters align="center" class="d-flex flex-column mt-3 mb-3">
+          <v-row no-gutters align="center" class="d-flex flex-column mt-1 mb-6">
             Pedido de Montra
           </v-row>
            <v-row no-gutters justify="space-around" align="center">
-           <v-col cols="6">
+           <v-col cols="4">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column">
             <v-img
               :src = right
               height="100"
               width="200"
               contain 
-              @click="store.isActive2 = !store.isActive2; store.isActive1 = false; store.isActive3 = false;"
+              @click="store.isActive2 = !store.isActive2; store.isActive1 = false; store.isActive3 = false; store.isActive4 = false"
             > <div class="fill-height" :class="{ selected: store.isActive2 }"> </div> </v-img>
             <span class="pt-5"> imagem à direita </span>
             </v-row>
            </v-col>
-            <v-col cols="6">
+           <v-col cols="4">
+            <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column">
+            <v-img
+              :src = simple
+              height="100"
+              width="150"
+              contain 
+              @click="store.isActive4 = !store.isActive4; store.isActive1 = false; store.isActive3 = false; store.isActive2 = false"
+            > <div class="fill-height" :class="{ selected: store.isActive4 }"> </div> </v-img>
+            <span class="pt-5"> montra simples </span>
+            </v-row>
+           </v-col>
+            <v-col cols="4">
             <v-row no-gutters justify="space-around" align="center" class="d-flex flex-column">
               <v-img
               :src = left
               height="100"
               width="200"
               contain
-              @click="store.isActive3 = !store.isActive3; store.isActive2 = false; store.isActive1 = false"
+              @click="store.isActive3 = !store.isActive3; store.isActive2 = false; store.isActive1 = false; store.isActive4 = false"
             > <div class="fill-height" :class="{ selected: store.isActive3 }"> </div> </v-img>
             <span class="pt-5"> imagem à esquerda </span>
             </v-row>
@@ -179,6 +191,7 @@ export default {
     myImage: require('@/assets/default-placeholder.png'),
     right: require('@/assets/right.jpg'),
     left: require('@/assets/left.jpg'),
+    simple: require('@/assets/simple.png'),
     store
   }),
 
@@ -186,7 +199,7 @@ export default {
       nextScreen () {
         if(store.isActive1){
           this.$router.push({name: 'order2'});
-        } else if (store.isActive2 || store.isActive3) {
+        } else if (store.isActive2 || store.isActive3 || store.isActive4) {
           this.$router.push({name: 'ABC'});
         }
       },

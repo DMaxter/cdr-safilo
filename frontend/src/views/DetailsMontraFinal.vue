@@ -184,7 +184,7 @@
           </v-row> 
           <v-row justify="center" align="center" no-gutters class="d-flex flex-column mt-5">
             <v-row class="mt-1 mb-2" justify="center">
-              <template v-if="store.pedidoAtual.modelo == `RightShowcase`">
+              <template v-if="store.pedidoAtual.modelo == `RightShowcase` || store.pedidoAtual.modelo == `SimpleShowcase`">
             <v-col cols = "8">
               <v-row class="d-flex flex-column">
                 <v-col class="pa-0">

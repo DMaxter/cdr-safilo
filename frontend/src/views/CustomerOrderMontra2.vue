@@ -145,7 +145,7 @@
           </v-row>
           </v-col>
           </template>
-          <template v-else>
+          <template v-else-if="store.isActive3">
             <v-col cols="4">
             <v-row class="ml-1">
             <v-col class="pa-0">
@@ -220,6 +220,71 @@
                   max-height ="400px"
                   >
                   <v-img :src=store.facesDefault[1].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
+          <template v-else-if="store.isActive4">
+            <v-col cols = "11">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[0].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "5" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[2].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[3].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[1].link></v-img>
                   <template v-slot:activator="{ on, attrs }">
                   <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
                   </template>

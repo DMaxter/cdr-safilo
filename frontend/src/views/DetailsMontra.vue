@@ -171,7 +171,7 @@
             </v-btn-toggle>
           </v-menu>
         </template>
-          <v-row class="mt-1 mb-2" justify="center">
+          <v-row class="mt-1 mb-2" :class="{ 'mr-16' : store.pedidoAtual.modelo == `SimpleShowcase`}" justify="center">
             <template v-if="store.pedidoAtual.modelo == `RightShowcase`">
             <v-col cols = "4">
               <v-row class="d-flex flex-column">
@@ -256,7 +256,7 @@
           </v-row>
           </v-col>
           </template>
-          <template v-else>
+          <template v-else-if="store.pedidoAtual.modelo == 'LeftShowcase'">
           <v-col cols="2">
             <v-row class="ml-1">
             <v-col class="pa-0">
@@ -275,6 +275,72 @@
             </v-col>
           </v-row>
           </v-col>
+            <v-col cols = "4">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.pedidoAtual.images[0]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[0] height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.pedidoAtual.images[2]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[2] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.pedidoAtual.images[3]></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[3] height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.pedidoAtual.images[1] ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.pedidoAtual.images[1] height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
+          <template v-else-if="store.pedidoAtual.modelo == 'SimpleShowcase'">
             <v-col cols = "4">
               <v-row class="d-flex flex-column">
                 <v-col class="pa-0">
@@ -564,6 +630,9 @@ export default {
     menu3: false,
   }),
   async created() {
+    if (store.pedidoAtual.modelo == "SimpleShowcase"){
+      this.length = 4
+    }
     var profile = await Backend.getProfile()
     console.log(store.pedidoAtual)
     if(profile.roles[0] == 'COMMERCIAL' || profile.roles[0] == 'ADMIN'){ 

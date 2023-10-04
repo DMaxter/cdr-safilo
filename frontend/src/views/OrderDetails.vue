@@ -903,6 +903,189 @@
 
     </v-containter>
 
+    <v-containter v-if="(req5)" fill-height class="d-none" :class="(req5) && 'd-print-block'">
+    <br>
+    <br>
+    <br>
+    <br>
+  
+      <v-row justify="center" align="center">
+        <v-col cols="auto" >
+          <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6"> Face A</h3>
+            <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
+              <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
+              <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[0]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[0].height}} cm </v-col>
+              <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[0].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[0]}} </v-col>
+              </v-row>
+            </v-card>
+          </v-row>
+          <v-row justify="center" class="mt-8"> 
+            <h3> Imagem: </h3>
+          </v-row>
+          <v-row justify="center"> 
+            <img :src=store.pedidoAtual.images[0] width="700" height="500" style="object-fit:contain;">
+          </v-row>
+          </v-card>         
+        </v-col>
+    </v-row>
+    <v-row style="position: fixed; bottom: 10px; right: 5px;" class="d-flex"> 
+        <img :src="myImage2" style="object-fit:contain;" height="150" width="150">
+    </v-row>
+    <v-row style="position: fixed; bottom: 30px; right: 25px;" class="d-flex flex-column"> 
+      <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
+    </v-row>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <v-row justify="center" align="center">
+        <v-col cols="auto" >
+          <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6"> Face B </h3>
+            <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
+              <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
+              <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[1]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[1].height}} cm </v-col>
+              <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[1].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[1]}} </v-col>
+              </v-row>
+            </v-card>
+          </v-row>
+          <v-row justify="center" class="mt-8"> 
+            <h3> Imagem: </h3>
+          </v-row>
+          <v-row justify="center"> 
+            <img :src=store.pedidoAtual.images[1] width="700" height="500" style="object-fit:contain;">
+          </v-row>
+          </v-card>         
+        </v-col>
+    </v-row>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <v-row justify="center" align="center">
+        <v-col cols="auto" >
+          <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6"> Face C </h3>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
+              <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
+              <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[2]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[2].height}} cm </v-col>
+              <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[2].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[2]}} </v-col>
+              </v-row>
+            </v-card>
+          </v-row>
+          <v-row justify="center" class="mt-8"> 
+            <h3> Imagem: </h3>
+          </v-row>
+          <v-row justify="center"> 
+            <img :src=store.pedidoAtual.images[2] width="700" height="500" style="object-fit:contain;">
+          </v-row>
+          </v-card>         
+        </v-col>
+    </v-row>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <v-row justify="center" align="center">
+        <v-col cols="auto" >
+          <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
+          <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
+          <h3 class="mb-6 mt-6"> PEDIDO {{store.pedidoAtual.cod}} - {{store.pedidoAtual.modelo}}, Cliente: {{ store.pedidoAtual.nameClient }}, Cód: {{ store.pedidoAtual.codClient }}</h3>
+          <h3 class="mb-6"> Face D </h3>
+          <v-card color="#FAFAFA" height="90" width="700" class="mt-3" tile>
+              <v-row no-gutters justify="space-around" align="start" class="d-flex mt-0">
+              <v-col cols="auto" class="mt-6"> Marca: {{store.pedidoAtual.marca}}</v-col>
+              <v-col cols="auto" class="mt-6"> Material: {{store.pedidoAtual.material[3]}}</v-col>
+              <v-col cols="auto" class="mt-6"> Altura: {{store.pedidoAtual.dimensoes[3].height}} cm </v-col>
+              <v-col cols="auto" class="mt-6"> Largura: {{store.pedidoAtual.dimensoes[3].width}} cm </v-col>
+              </v-row>
+              <v-row no-gutters justify="center" class="d-flex mt-1">
+                <v-col cols="auto" class="mt-2"> Acabamentos: {{finiat[3]}} </v-col>
+              </v-row>
+            </v-card>
+          </v-row>
+          <v-row justify="center" class="mt-8"> 
+            <h3> Imagem: </h3>
+          </v-row>
+          <v-row justify="center"> 
+            <img :src=store.pedidoAtual.images[3] width="700" height="500" style="object-fit:contain;">
+          </v-row>
+          <v-row justify="space-around">
+            <v-col justify="center" class="mb-6 d-flex flex-column"> 
+              <h3> Observações: </h3>
+              {{store.pedidoAtual.observations}}
+            </v-col>
+
+            <v-col justify="center" class="mb-6 d-flex flex-column"> 
+              <h3> Endereço de entrega: </h3>
+              {{store.address}}, {{store.postalCode}}
+
+            </v-col>
+
+            <v-col justify="center" class="mb-6 d-flex flex-column"> 
+              <h3> Data: </h3>
+              {{store.pedidoAtual.data}}
+
+              <h3> Custo: </h3>
+              {{store.pedidoAtual.cost}}
+
+            </v-col>
+        </v-row>
+          </v-card>         
+        </v-col>
+    </v-row>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    </v-containter>
+
     <!-- NOT FOR PRINTING STUFF !!!!!!!!!!!!!!!!!-->
 
     <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex d-print-none"> 
@@ -946,6 +1129,7 @@ data () {
         req2: false,
         req3: false,
         req4: false,
+        req5: false,
         finiat: null,
         allClients: null,
         theme: (store.pedidoAtual.modelo == "OneFace" || store.pedidoAtual.modelo == "TwoFaces"),
@@ -1026,6 +1210,26 @@ async created(){
             cost: item.cost,
             application: item.application,
             finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings, item.type.side.finishings],
+            codClient: item.client.id,
+            nameClient: item.client.name
+
+          }
+        } else if(item.type.type == "SimpleShowcase"){
+          store.isActive4 = true
+          store.pedidoAtual = {
+            cod: item.id,
+            data: item.created,
+            marca: item.brand.name,
+            modelo: item.type.type,
+            material: [item.type.top.material.name, item.type.bottom.material.name, item.type.left.material.name, item.type.right.material.name],
+            dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements],
+            estado: item.status,
+            images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link],
+            quantity: item.quantidade,
+            observations: item.observations,
+            cost: item.cost,
+            application: item.application,
+            finishings: [item.type.top.finishings, item.type.bottom.finishings, item.type.left.finishings, item.type.right.finishings],
             codClient: item.client.id,
             nameClient: item.client.name
 
@@ -1137,6 +1341,34 @@ async created(){
     console.log(finAux)
     store.finishes = finAux
     this.req4 = true;
+  } else if (store.pedidoAtual.modelo == 'SimpleShowcase'){
+    var no3 = []
+    store.pedidoAtual.finishings.forEach(fin => {
+      var str3 = ""
+
+      if(fin.length > 1){
+        fin.forEach(f =>{
+          str3 = str3.concat(f.name + "; ")
+
+          if(!finAux.includes(f.name)){
+            finAux.push(f.name)
+          }
+        })
+      } else if(fin.length == 1){
+        str3 = str3.concat(fin[0].name + "; ")
+
+        if(!finAux.includes(fin[0].name)){
+        finAux.push(fin[0].name)
+        }
+      }
+      no3.push(str3)
+
+    })
+    this.finiat = no3
+
+    console.log(finAux)
+    store.finishes = finAux
+    this.req5 = true;
   }
   console.log(store.finishes)
   this.profile = await Backend.getProfile()
