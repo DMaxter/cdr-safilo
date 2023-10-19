@@ -581,7 +581,7 @@
     <br>
     <br>
   
-      <v-row justify="center" align="center">
+      <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -615,12 +615,6 @@
       <span style="font-size: 10px;">© 2022 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
     <br>
     <br>
     <br>
@@ -688,7 +682,7 @@
     <br>
     <br>
   
-      <v-row justify="center" align="center">
+      <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -726,14 +720,9 @@
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
 
-    <v-row justify="center" align="center">
+
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -765,13 +754,8 @@
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
 
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -803,13 +787,9 @@
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
 
-    <v-row justify="center" align="center">
+
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -837,11 +817,6 @@
         </v-col>
     </v-row>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
     <br>
     <br>
     <br>
@@ -909,7 +884,7 @@
     <br>
     <br>
   
-      <v-row justify="center" align="center">
+      <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -947,14 +922,8 @@
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
 
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -986,13 +955,8 @@
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
 
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -1024,12 +988,7 @@
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
+    
     <v-row justify="center" align="center">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
@@ -1425,6 +1384,9 @@ methods: {
 .page-break { display: block; page-break-before: always; }
 }
 
+.bruh {
+  page-break-after: always;
+}
 .customGradient {
   background-image: linear-gradient(#616161, grey);
 }
