@@ -657,11 +657,6 @@
         </v-col>
     </v-row>
 
-    <br>
-    <br>
-    <br>
-    <br>
-
     </v-containter>
 
     <v-containter v-if="(req3 || req4)" fill-height class="d-none" :class="(req3 || req4) && 'd-print-block'">
@@ -852,12 +847,6 @@
           </v-card>         
         </v-col>
     </v-row>
-
-    <br>
-    <br>
-    <br>
-    <br>
-
     </v-containter>
 
     <v-containter v-if="(req5)" fill-height class="d-none" :class="(req5) && 'd-print-block'">
@@ -1013,11 +1002,6 @@
           </v-card>         
         </v-col>
     </v-row>
-
-    <br>
-    <br>
-    <br>
-    <br>
 
     </v-containter>
 
