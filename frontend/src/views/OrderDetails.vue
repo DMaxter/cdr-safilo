@@ -567,12 +567,6 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
     </v-containter>
 
     <v-containter v-if="req2" fill-height class="d-none" :class="req2 && 'd-print-block'">
@@ -581,7 +575,7 @@
     <br>
     <br>
   
-      <v-row justify="center" align="center">
+      <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -607,12 +601,6 @@
           </v-row>
           </v-card>         
         </v-col>
-    </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
 
     <br>
@@ -668,12 +656,11 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
+
+    <br>
+    <br>
+    <br>
+    <br>
 
     </v-containter>
 
@@ -683,7 +670,7 @@
     <br>
     <br>
   
-      <v-row justify="center" align="center">
+      <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -710,12 +697,6 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
 
     <br>
     <br>
@@ -723,7 +704,7 @@
     <br>
 
 
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -750,19 +731,13 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
 
     <br>
     <br>
     <br>
     <br>
 
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -789,12 +764,6 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
 
     <br>
     <br>
@@ -802,7 +771,7 @@
     <br>
 
 
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -828,12 +797,6 @@
           </v-row>
           </v-card>         
         </v-col>
-    </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
 
     <br>
@@ -889,12 +852,11 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
+
+    <br>
+    <br>
+    <br>
+    <br>
 
     </v-containter>
 
@@ -904,7 +866,7 @@
     <br>
     <br>
   
-      <v-row justify="center" align="center">
+      <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -931,19 +893,13 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
 
     <br>
     <br>
     <br>
     <br>
 
-    <v-row justify="center" align="center" >
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -970,19 +926,13 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
 
     <br>
     <br>
     <br>
     <br>
 
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" class="bruh">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
           <v-row justify="center" align="center" class="fill-height d-flex flex-column" style="height: 250px">
@@ -1008,12 +958,6 @@
           </v-row>
           </v-card>         
         </v-col>
-    </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column bruh" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
     </v-row>
 
     <br>
@@ -1069,12 +1013,11 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row class="d-flex-column" justify="end"> 
-        <img :src="myImage2" style="object-fit:contain;" height="130" width="130">
-    </v-row>
-    <v-row  class="d-flex-column" justify="end"> 
-      <span style="font-size: 9px;">© 2022-2023 Casa dos Reclamos, Todos os direitos reservados.</span>
-    </v-row>
+
+    <br>
+    <br>
+    <br>
+    <br>
 
     </v-containter>
 
