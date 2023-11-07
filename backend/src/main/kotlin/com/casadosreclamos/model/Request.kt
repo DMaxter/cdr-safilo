@@ -39,5 +39,5 @@ open class Request {
     open var application: Boolean = false
 
     @OneToOne
-    open lateinit var type: RequestType
+    open var type: RequestType? = null
 }

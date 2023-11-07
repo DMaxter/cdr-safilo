@@ -6,7 +6,6 @@ import com.casadosreclamos.model.*
 import com.casadosreclamos.service.RequestService
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.CurrentIdentityAssociation
-import io.smallrye.common.annotation.Blocking
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -130,6 +129,22 @@ class RequestController {
             logger.info("User ${id.principal.name} is cancelling request with id $request")
 
             return@transformToUni requestService.cancel(request, id.principal.name)
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Authenticated
+    @Operation(summary = "Edit a request")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Request edited"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+    )
+    fun editRequest(@PathParam("id") requestId: Long, request: NewRequestDto): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is editing request with id $requestId")
+
+            return@transformToUni requestService.edit(requestId, id.principal.name, request)
         }
     }
 

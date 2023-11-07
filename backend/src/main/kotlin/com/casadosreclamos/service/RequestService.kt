@@ -2,6 +2,8 @@ package com.casadosreclamos.service
 
 import com.casadosreclamos.dto.*
 import com.casadosreclamos.exception.*
+import com.casadosreclamos.utils.getEmailCancelledRequest
+import com.casadosreclamos.utils.getEmailEditedRequest
 import com.casadosreclamos.utils.getEmailNewStandardRequest
 import com.casadosreclamos.model.Request
 import com.casadosreclamos.model.Role
@@ -261,10 +263,146 @@ class RequestService {
         }
     }
 
-    fun cancel(requestId: Long, email: String): Uni<Response> {
+    fun edit(requestId: Long, email: String, requestDto: NewRequestDto): Uni<Response> {
+        logger.info("Editing request $requestId")
+
+        validateRequestDto(requestDto)
+
         lateinit var roles: Set<Role>
 
-        // TODO: Send mail
+        val clientUni = clientRepository.findById(requestDto.clientId!!)
+        val brandUni = brandRepository.findByIdWithImages(requestDto.brand!!.id!!)
+
+        lateinit var editRequest: Request
+        lateinit var clientName: String
+        var brand: Brand? = null
+        lateinit var requestType: RequestType
+        lateinit var requester: User
+
+        var previousCost: Double = 0.0
+
+        return Panache.withTransaction {
+            userRepository.findByEmail(email).onItem().transformToUni { user ->
+                roles = user.roles
+
+                requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
+                    // Prevent other commercials from cancelling arbitrary requests
+                    if (request == null) {
+                        logger.error("Request with ID ${requestId} is not registered")
+
+                        throw InvalidIdException("request")
+                    }
+
+                    if (roles.contains(Role.ADMIN) || roles.contains(Role.CDR) || roles.contains(Role.MANAGER) || (roles.contains(
+                            Role.COMMERCIAL
+                        ) && request.requester.name == email)
+                    ) {
+                        request.lastUpdate = Date()
+                        request.observations = requestDto.observations
+                        request.application = requestDto.application!!
+                        request.amount = requestDto.amount!!
+
+                        requester = request.requester
+
+                        editRequest = request
+                    } else {
+                        logger.error("Commercial doesn't have permission to delete request")
+
+                        throw OperationNotPerformedException()
+                    }
+
+                    request
+                }.onItem().transformToUni { request ->
+                    Uni.combine().all().unis(clientUni, brandUni).asTuple().onItem().transformToUni { tuple ->
+                        val client = tuple.item1
+                        brand = tuple.item2
+
+                        if (client == null) {
+                            logger.error("Client with ID ${requestDto.clientId} is not registered")
+
+                            throw InvalidIdException("client")
+                        } else if (user == null) {
+                            logger.error("User with ID ${email} is not registered")
+
+                            throw InvalidUserException()
+                        } else if (brand == null) {
+                            logger.error("Brand with ID ${requestDto.brand!!.id!!} is not registered")
+
+                            throw InvalidIdException("brand")
+                        }
+
+                        clientName = client.name
+
+                        request.client = client
+                        request.brand = brand!!
+
+                        previousCost = request.cost!!
+
+                        // Delete previous RequestType
+                        request.type = null
+                        requestTypeRepository.deleteById(requestId).onItem().transformToUni { _ ->
+                            // Create RequestType instance
+                            toRequestType(requestDto.type!!, request.brand.images)
+                        }
+                    }
+                }.onItem().transformToUni { type ->
+                    // Assign requestType to request and search for user plafond
+                    requestType = type
+
+                    plafondRepository.findById(requester, brand!!)
+                }.onItem().transformToUni { plafond ->
+                    // Check if user has enough plafond and debit the amount for current request
+                    if (plafond == null) {
+                        logger.error("User doesn't have credits")
+
+                        throw NotEnoughCreditsException()
+                    }
+
+                    requestType.cost = requestType.cost * editRequest.amount + SEND_COST
+
+                    val difference = requestType.cost - previousCost
+
+                    if (plafond.amount < difference) {
+                        logger.error("User doesn't have enough credits: ${plafond.amount} to edit request of ${requestType.cost}")
+
+                        throw NotEnoughCreditsException()
+                    } else {
+                        plafond.amount -= difference
+                    }
+
+                    logger.info("Successfully debited credits from user")
+
+                    requestRepository.flush()
+                }.onItem().transformToUni { _ ->
+                    // Update the requestType and assign the cost to the request
+                    requestType.request = editRequest
+                    editRequest.type = requestType
+                    editRequest.cost = requestType.cost
+
+                    requestTypeRepository.persist(requestType).onItem()
+                        .invoke { _ -> logger.info("Successfully created requestType") }.onFailure()
+                        .invoke { e -> logger.error("Couldn't register requestType: $e") }
+                }.onItem().transformToUni { _ ->
+                    // Send email
+                    mailer.send(
+                        Mail.withText(
+                            "",
+                            "Pedido da Safilo editado",
+                            getEmailEditedRequest(requestId, requester.name, clientName, getType(requestType), brand!!.name)
+                        ).setTo(cdrMails)
+                    ).onItem().invoke { _ -> logger.info("Sent email with request") }.onFailure()
+                        .invoke { e -> logger.error("Couldn't send email with request: $e") }
+                }.onItem().transform { _ ->
+                    logger.info("Successful modification of request")
+
+                    Response.ok().build()
+                }
+            }
+        }
+    }
+
+    fun cancel(requestId: Long, email: String): Uni<Response> {
+        lateinit var roles: Set<Role>
 
         return Panache.withTransaction {
             userRepository.findByEmail(email).onItem().transformToUni { user ->
@@ -285,12 +423,25 @@ class RequestService {
                         request.status = RequestStatus.CANCELLED
                         request.lastUpdate = Date()
 
-                        logger.info("Successful cancellation of request")
                     } else {
                         logger.error("Commercial doesn't have permission to delete request")
 
                         throw OperationNotPerformedException()
                     }
+
+                    request
+                }.onItem().transformToUni { request ->
+                    // Send email
+                    mailer.send(
+                        Mail.withText(
+                            "",
+                            "Pedido da Safilo cancelado",
+                            getEmailCancelledRequest(user!!.name, request.client.name, requestId, getType(request.type!!))
+                        ).setTo(cdrMails)
+                    ).onItem().invoke { _ -> logger.info("Sent email with request") }.onFailure()
+                        .invoke { e -> logger.error("Couldn't send email with request: $e") }
+                }.onItem().transform { _ ->
+                    logger.info("Successful cancellation of request")
 
                     Response.ok().build()
                 }
@@ -328,8 +479,8 @@ class RequestService {
                 request.id,
                 getStatus(request.status),
                 request.created.toString(),
-                getType(request.type),
-                getMaterials(request.type),
+                getType(request.type!!),
+                getMaterials(request.type!!),
                 request.brand.name,
                 request.cost
             )

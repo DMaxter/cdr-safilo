@@ -28,7 +28,7 @@ data class RequestDto(
         request.lastUpdate,
         request.trackingCode,
         request.status,
-        RequestTypeDto.from(request.type),
+        RequestTypeDto.from(request.type!!),
         request.cost,
         request.observations,
         request.application,

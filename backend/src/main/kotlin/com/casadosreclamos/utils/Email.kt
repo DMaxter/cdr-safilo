@@ -63,18 +63,35 @@ fun getEmailAcceptedRequest(user: String, client: String, type: String, brand: S
            """.trimIndent()
 }
 
-fun getEmailCancelledRequest(user: String, client: String, type: String, brand: String, reason: String): String {
+fun getEmailEditedRequest(id: Long, user: String, client: String, type: String, brand: String): String {
     return """
-            Um pedido foi cancelado!
+            Um pedido foi editado!
 
             Resumo do pedido:
 
+            ID: $id
             Comercial: $user
             Cliente: $client
             Marca: $brand
             Tipo de pedido: $type
 
-            Motivo: $reason
+            Para ver todos os detalhes do pedido aceda à plataforma.
+
+
+            Este email é automático, por favor não responda
+           """.trimIndent()
+}
+
+fun getEmailCancelledRequest(user: String, client: String, id: Long, type: String): String {
+    return """
+            Um pedido foi cancelado!
+
+            Resumo do pedido:
+
+            ID: $id
+            Comercial: $user
+            Cliente: $client
+            Tipo de pedido: $type
 
             Para ver todos os detalhes do pedido aceda à plataforma.
 
