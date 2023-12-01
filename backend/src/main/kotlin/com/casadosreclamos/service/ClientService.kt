@@ -222,13 +222,13 @@ class ClientService {
             // Remove column names
             for (record in records.drop(1)) {
                 val id = record[0].toLong()
-                val banner = record[7]
+                val banner = record[6]
                 val name = record[1]
-                val fiscalNumber = record[6]
-                val email = record[8]
-                val phone = record[5]
-                val address = record[3]
-                val postalCode = record[4]
+                val fiscalNumber = record[5]
+                val email = record[7]
+                val phone = record[4]
+                val address = record[2]
+                val postalCode = record[3]
                 val city = record[9]
                 val country = record[8]
 
