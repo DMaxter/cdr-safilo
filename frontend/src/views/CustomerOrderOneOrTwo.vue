@@ -506,9 +506,6 @@ export default {
           }
           wowie = wowie + 1
         });
-        console.log(this.picked)
-        console.log("fodasse")
-        console.log(this.images)
         store.images = []
         this.getFace()
         if(store.currentRequest.type.type == "TwoFaces"){
