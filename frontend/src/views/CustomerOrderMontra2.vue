@@ -405,7 +405,15 @@ export default {
       console.log(this.observations)
       this.$router.push({name: 'ABCfinal2'});
     }
-  }
+  },
+  created(){
+      console.log(store.isEditing)
+      if(store.isEditing){
+        this.checkbox = store.currentRequest.application
+        this.observations = store.currentRequest.observations
+        this.quantity = 1
+      }
+    },
 };
 </script>
 

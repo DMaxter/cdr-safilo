@@ -199,6 +199,8 @@
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="getRequest(item)" class="mr-1">mdi-plus</v-icon>
             <v-icon @click="getRequestNewTab(item)" class="ml-1">mdi-open-in-new</v-icon>
+            <v-icon @click="dialog = true; reqtocan = item" class="ml-1">mdi-close</v-icon>
+            <v-icon @click="editRequest(item)" class="ml-1">mdi-pen</v-icon>
           </template>
     </v-data-table>
             </v-row>
@@ -220,6 +222,44 @@
           </v-card>
         </v-col>
     </v-row>
+    <v-dialog
+      v-model="dialog"
+      persistent
+      content-class="rounded-0"
+      max-width="500px"
+    >
+  
+      <v-card tile>
+        <v-card-title class="justify-center">
+          <span class="text-h5" v-show="!added && !failed"> Cancelar pedido </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row justify="center">
+              <span class="text-h5" v-show="added"> Pedido cancelado com sucesso! </span>
+              <span class="text-h5" v-show="failed"> Ocorreu um erro a cancelar o pedido </span>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false;"
+          >
+            Voltar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            v-show="!added && !failed && !toDelete && !toDelete2"
+            @click="cancelRequest(reqtocan)"
+          >
+            Cancelar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
       <v-img :src="myImage" contain height="180" width="180"></v-img>
     </v-row>
@@ -241,6 +281,10 @@ export default {
 data () {
       return {
         store,
+        dialog: false,
+        reqtocan: null,
+        added: false,
+        failed: false,
         myImage: require('@/assets/logologo1.png'),
         estadosList: [
           {text: "Qualquer", value: null},
@@ -367,6 +411,62 @@ data () {
       }
     },
     async created() {
+      store.selectedMaterial = []
+      store.currentBrandId = []
+      store.dimensions = []
+      store.images = []
+      store.isActive1 = false
+      store.isActive2 = false
+      store.isActive3 = false
+      store.isActive4 = false
+      store.face1 = null
+      store.face2 = null
+      store.address = null
+      store.uniqueBrands = null
+      store.quantity = null
+      store.observations = null
+      store.currentCost = null
+      store.application = false
+      store.currentClient = null
+      store.currentAddress = null
+      store.costPerBrand = null
+      store.isEditing = false
+      store.pedidoAtual = {
+        cod: null,
+        data: null,
+        marca: null,
+        modelo: null,
+        material: null,
+        dimensoes: null,
+        estado: null,
+        images: null,
+        quantity: null,
+        observations: null,
+        cost: null,
+        application: null
+      },
+        store.facesDefault = [
+          {
+            face: "A",
+            link: require('@/assets/A.png'),
+          },
+          {
+            face: "B",
+            link: require('@/assets/B.png'),
+          },
+          {
+            face: "C",
+            link: require('@/assets/C.png'),
+          },
+          {
+            face: "D",
+            link: require('@/assets/D.png'),
+          },
+          {
+            face: "E",
+            link: require('@/assets/E.png'),
+          },
+        ]
       this.requests = await Backend.getRequests()
       this.allBrands = await Backend.getBrands()
       this.allBrands.forEach(element => {
@@ -439,6 +539,41 @@ data () {
           this.dates = []
           this.$refs.menu.save(this.dates);
         }
+      },
+      editRequest(item) {
+        store.currentRequest = item
+        store.isEditing = true
+        if(item.type.type == "OneFace"){
+          store.isActive1 = true
+          this.$router.push({ name: 'order2' });
+        } else if(item.type.type == "TwoFaces"){
+          store.isActive1 = true
+          this.$router.push({ name: 'order2' });
+
+        } else if(item.type.type == "SimpleShowcase"){
+          store.isActive4 = true
+          this.$router.push({ name: 'ABC' });
+
+        } else if(item.type.type == "RightShowcase"){
+          store.isActive2 = true
+          this.$router.push({ name: 'ABC' });
+
+        } else if(item.type.type == "LeftShowcase"){
+          store.isActive3 = true
+          this.$router.push({ name: 'ABC' });
+
+        }
+      },
+      async cancelRequest(item) {
+        try{
+          await Backend.cancelRequest(item.id)
+          this.added = true
+      } catch (error) {
+        this.failed = true
+        // TODO: Show something
+        console.error(error)
+      }
+      this.reqtocan = null
       },
       getRequest(item) {
         console.log(item)

@@ -241,6 +241,16 @@ export default class Backend {
     })
   }
 
+  
+  static async cancelRequest(id) {
+    return httpClient.put(`/request/cancel/${id}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async updatePlafond(user, brand, ammount) {
     return httpClient.put(`/user/plafond/${user}/${brand}/${ammount}`).then(response => {
       return response.data
@@ -379,6 +389,15 @@ export default class Backend {
 
   static async addNote(id, note) {
     return httpClient.put(`/client/${id}`, note).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
+  static async editRequest(id, request) {
+    return httpClient.put(`/request/${id}`, request).then(response => {
       return response.data
     })
       .catch(async error => {

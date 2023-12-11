@@ -157,8 +157,10 @@
         <template>
           <v-card>
             <v-card-text>
-              <div class="text-h6 pt-12" v-show="added"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
-              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
+              <div class="text-h6 pt-12" v-show="added && !store.isEditing"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
+              <div class="text-h6 pt-12" v-show="added && store.isEditing"> Pedido editado com sucesso! A redirecionar para o Perfil </div>
+              <div class="text-h6 pt-12" v-show="failed && !store.isEditing"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
+              <div class="text-h6 pt-12" v-show="failed && store.isEditing"> Ocorreu um erro a editar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn
@@ -358,6 +360,7 @@ export default {
     });
     this.brandCost = [store.uniqueBrands[0] +" : "+ this.totalPrice.toFixed(2)]
     store.currentCost = this.totalPrice
+    this.observacoes = store.currentRequest.observations
   },
 
   methods: {
@@ -431,7 +434,11 @@ export default {
     }
       console.log(this.request)
       try{
-        await Backend.placeRequest(this.request)
+        if(store.isEditing){
+          await Backend.editRequest(store.currentRequest.id, this.request)
+        }else{
+          await Backend.placeRequest(this.request)
+        }
         this.added = true
         setTimeout(() => this.$router.push({name: 'profile'}), 4000);
       } catch (error) {
@@ -439,6 +446,7 @@ export default {
         setTimeout(() => this.$router.push({name: 'profile'}), 4000);
         this.failed = true
       }
+      setTimeout(() => store.isEditing = false, 4000);
     },
     async getRequestPrice() {
       this.request = null
@@ -511,6 +519,7 @@ export default {
       console.log(this.request)
       try{
         this.totalPrice = await Backend.getRequestPrice(this.request)
+        console.log(this.totalPrice)
       } catch (error) {
         console.log(error)
       }

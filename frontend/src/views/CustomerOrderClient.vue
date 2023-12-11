@@ -189,6 +189,7 @@ export default {
       store.currentClient = null
       store.currentAddress = null
       store.costPerBrand = null
+      store.isEditing = false
       store.pedidoAtual = {
         cod: null,
         data: null,

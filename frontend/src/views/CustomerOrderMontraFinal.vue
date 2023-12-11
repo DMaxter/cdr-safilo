@@ -369,8 +369,10 @@
         <template>
           <v-card>
             <v-card-text>
-              <div class="text-h6 pt-12" v-show="added"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
-              <div class="text-h6 pt-12" v-show="failed"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
+              <div class="text-h6 pt-12" v-show="added && !store.isEditing"> Pedido efetuado com sucesso! A redirecionar para o Perfil </div>
+              <div class="text-h6 pt-12" v-show="added && store.isEditing"> Pedido editado com sucesso! A redirecionar para o Perfil </div>
+              <div class="text-h6 pt-12" v-show="failed && !store.isEditing"> Ocorreu um erro a efetuar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
+              <div class="text-h6 pt-12" v-show="failed && store.isEditing"> Ocorreu um erro a editar o pedido. A redirecionar para o Perfil. {{ errorMsg }} </div>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn
@@ -797,7 +799,12 @@ export default {
       }
     }
       console.log(request)
-        await Backend.placeRequest(request)
+        if(store.isEditing){
+          await Backend.editRequest(store.currentRequest.id, request)
+          console.log("bruh?")
+        } else {
+          await Backend.placeRequest(request)
+        }
         this.added = true
         setTimeout(() => this.$router.push({name: 'profile'}), 3000);
       } catch (error) {

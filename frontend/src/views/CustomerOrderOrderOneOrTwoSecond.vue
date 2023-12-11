@@ -432,6 +432,42 @@ export default {
         this.loadImages()
         this.getFace()
         store.backtracking = false
+      } else if(store.isEditing){
+        console.log(store.currentRequest)
+        this.brand = store.currentRequest.brand.name
+        this.width = store.currentRequest.type.back.measurements.width
+        this.height = store.currentRequest.type.back.measurements.height
+        this.allMaterials = await Backend.getMaterials()
+        var mataux2 = null
+        this.allMaterials.forEach(element => {
+          if(element.id == store.currentRequest.type.back.material.id){
+            this.material = element.name
+            mataux2 = element
+          }
+        });
+        console.log(mataux2)
+        this.quantity = 1
+        this.getFinishes()
+        this.allFinishes = await Backend.getFinishes();
+        console.log(store.finishesAux)
+        if (this.finish == null){
+          this.finish = []
+        }
+        store.currentRequest.type.back.finishings.forEach(f => {
+          this.finish.push(f.name)
+        })
+        this.loadImages()
+        var wowie = 0
+        this.images.forEach(element => {
+          if(element.id == store.currentRequest.type.back.image.id){
+            this.picked = wowie
+          }
+          wowie = wowie + 1
+        });
+        console.log(this.picked)
+        console.log(this.images)
+        store.images = [store.images[0]]
+        this.getFace()
       }
       store.dimensions = [store.dimensions[0]]
       store.selectedMaterial = [store.selectedMaterial[0]]

@@ -240,7 +240,7 @@
           <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 40px;">
            <v-col cols="auto" class="pl-4">
             <v-btn
-              @click = "$router.push('order')"
+              @click = "goBack()"
               class="d-flex flex-column customGradient"
               small
               dark
@@ -362,7 +362,16 @@ export default {
         }
       },
 
+      goBack(){
+        if(store.isEditing){
+          this.$router.push({name: 'history'});
+        } else {
+          this.$router.push({name: 'order'});
+        }
+      },
+
       getFace () {
+        console.log(this.images)
         this.myImage = this.images[this.picked].link
         store.face1 = this.myImage
         store.images.push(this.images[this.picked].id)
@@ -422,6 +431,7 @@ export default {
       }
     },
     loadImages() {
+      store.images = []
       this.allBrands.forEach(element => {
           if(this.brand == element.name){
             this.images = element.images
@@ -463,6 +473,47 @@ export default {
         store.images = []
         this.getFace()
         store.backtracking = false
+      } else if(store.isEditing) {
+        store.currentClient = store.currentRequest.client.id
+        console.log(store.currentRequest)
+        this.brand = store.currentRequest.brand.name
+        this.width = store.currentRequest.type.cover.measurements.width
+        this.height = store.currentRequest.type.cover.measurements.height
+        this.allMaterials = await Backend.getMaterials()
+        var mataux2 = null
+        this.allMaterials.forEach(element => {
+          if(element.id == store.currentRequest.type.cover.material.id){
+            this.material = element.name
+            mataux2 = element
+          }
+        });
+        console.log(mataux2)
+        this.quantity = 1
+        this.getFinishes()
+        this.allFinishes = await Backend.getFinishes();
+        console.log(store.finishesAux)
+        if (this.finish == null){
+          this.finish = []
+        }
+        store.currentRequest.type.cover.finishings.forEach(f => {
+          this.finish.push(f.name)
+        })
+        this.loadImages()
+        var wowie = 0
+        this.images.forEach(element => {
+          if(element.id == store.currentRequest.type.cover.image.id){
+            this.picked = wowie
+          }
+          wowie = wowie + 1
+        });
+        console.log(this.picked)
+        console.log("fodasse")
+        console.log(this.images)
+        store.images = []
+        this.getFace()
+        if(store.currentRequest.type.type == "TwoFaces"){
+          this.ex4 = true
+        }
       } else {
         store.images = []
         store.face1 = null
@@ -474,6 +525,7 @@ export default {
       store.isActive1 = false
       store.isActive2 = false
       store.isActive3 = false
+      store.isActive4 = false
       store.face2 = null
       store.address = null
       store.uniqueBrands = null

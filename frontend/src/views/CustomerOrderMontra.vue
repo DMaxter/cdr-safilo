@@ -58,214 +58,309 @@
               <v-row :class="store.isActive2
                 ? 'mt-1 mb-2 mr-16 pr-4'
                 : 'mt-1 mb-2 mr-16 pr-16'" justify="center">
-                <template v-if="store.isActive2">
-                  <v-col cols="4">
-                    <v-row class="d-flex flex-column">
-                      <v-col class="pa-0">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[0].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                      <v-col>
-                        <v-row justify="space-between">
-                          <v-col cols="4" class="pa-0">
-                            <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                              max-height="400px">
-                              <v-img :src=store.facesDefault[2].link></v-img>
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs"
-                                  v-on="on"></v-img>
-                              </template>
-                            </v-tooltip>
-                          </v-col>
-                          <v-col cols="4" class="pa-0">
-                            <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                              max-height="400px">
-                              <v-img :src=store.facesDefault[3].link></v-img>
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs"
-                                  v-on="on"></v-img>
-                              </template>
-                            </v-tooltip>
-                          </v-col>
-                        </v-row>
-                      </v-col>
-                      <v-col class="pa-0">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[1].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                    </v-row>
+            <template v-if="store.isActive2">
+            <v-col cols = "4">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[0].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[2].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                   </v-col>
-                  <v-col cols="2">
-                    <v-row class="ml-1">
-                      <v-col class="pa-0">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[4].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                    </v-row>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[3].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
                   </v-col>
-                </template>
-                <template v-else-if="store.isActive3">
-                  <v-col cols="3" align="center">
-                    <v-row class="ml-1">
-                      <v-col class="pa-0">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[4].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-row class="d-flex flex-column">
-                      <v-col class="pa-0">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[0].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[0].link height="40px" width="250px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                      <v-col>
-                        <v-row justify="space-between">
-                          <v-col cols="4" class="pa-0">
-                            <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                              max-height="400px">
-                              <v-img :src=store.facesDefault[2].link></v-img>
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs"
-                                  v-on="on"></v-img>
-                              </template>
-                            </v-tooltip>
-                          </v-col>
-                          <v-col cols="4" class="pa-0">
-                            <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                              max-height="400px">
-                              <v-img :src=store.facesDefault[3].link></v-img>
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs"
-                                  v-on="on"></v-img>
-                              </template>
-                            </v-tooltip>
-                          </v-col>
-                        </v-row>
-                      </v-col>
-                      <v-col class="pa-0">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[1].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[1].link height="40px" width="250px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </template>
-                <template v-else-if="store.isActive4">
-                  <v-col cols="6" class="ml-14">
-                    <v-row class="d-flex flex-column">
-                      <v-col class="pa-0 ml-1">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[0].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[0].link height="40px" width="245px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                      <v-col>
-                        <v-row justify="space-between">
-                          <v-col cols="4" class="pa-0 pl-2">
-                            <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                              max-height="400px">
-                              <v-img :src=store.facesDefault[2].link></v-img>
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs"
-                                  v-on="on"></v-img>
-                              </template>
-                            </v-tooltip>
-                          </v-col>
-                          <v-col cols="4" class="pa-0 mr-7">
-                            <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                              max-height="400px">
-                              <v-img :src=store.facesDefault[3].link></v-img>
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs"
-                                  v-on="on"></v-img>
-                              </template>
-                            </v-tooltip>
-                          </v-col>
-                        </v-row>
-                      </v-col>
-                      <v-col class="pa-0">
-                        <v-tooltip bottom color="white" content-class="custom-tooltip" max-width="400px"
-                          max-height="400px">
-                          <v-img :src=store.facesDefault[1].link></v-img>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-img :src=store.facesDefault[1].link height="40px" width="253px" contain v-bind="attrs"
-                              v-on="on"></v-img>
-                          </template>
-                        </v-tooltip>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </template>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[1].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250.5px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
               </v-row>
-            </v-row>
-            <v-row align="center" justify="center" class="d-flex flex-column">
-              <v-col cols="4" class="pa-0 pb-2">
-                <v-select style="border-radius: 0px;" :items="brands" label="Marca" dense hide-details outlined
-                  v-model="brand" v-on:change="loadImages()"></v-select>
-              </v-col>
-              <v-card flat tile outlined :width="$vuetify.breakpoint.height > 670
+            </v-col>
+            <v-col cols="2">
+            <v-row class="ml-1">
+            <v-col class="pa-0">
+              <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[4].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+            </v-col>
+          </v-row>
+          </v-col>
+          </template>
+          <template v-else-if="store.isActive3">
+          <v-col cols="3" align="center">
+            <v-row class="ml-1">
+            <v-col class="pa-0">
+              <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[4].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[4].link height="140px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+            </v-col>
+          </v-row>
+          </v-col>
+            <v-col cols = "4">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[0].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].link height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[2].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[3].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[1].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].link height="40px" width="250px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
+          <template v-else-if="store.isActive4">
+            <v-col cols = "6" class="ml-14">
+              <v-row class="d-flex flex-column">
+                <v-col class="pa-0 ml-1">
+                   <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[0].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[0].link height="40px" width="245px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+                <v-col>
+                <v-row justify="space-between">
+                  <v-col cols = "4" class="pa-0 pl-2">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[2].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[2].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                  <v-col cols = "4" class="pa-0 mr-7">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[3].link></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[3].link height="60px" width="80px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                  </v-col>
+                </v-row>
+                </v-col>
+                <v-col class="pa-0">
+                  <v-tooltip
+                  bottom
+                  color="white"
+                  content-class="custom-tooltip"
+                  max-width = "400px"
+                  max-height ="400px"
+                  >
+                  <v-img :src=store.facesDefault[1].link ></v-img>
+                  <template v-slot:activator="{ on, attrs }">
+                  <v-img :src=store.facesDefault[1].link height="40px" width="253px" contain v-bind="attrs" v-on="on"></v-img>
+                  </template>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </template>
+          </v-row>
+          </v-row>
+          <v-row
+            align="center"
+            justify="center"
+            class="d-flex flex-column"
+          >
+          <v-col cols="4" class="pa-0 pb-2" >
+          <v-select
+          style="border-radius: 0px;"
+          :items="brands"
+          label="Marca"
+          dense
+          hide-details
+          outlined
+          v-model="brand"
+          v-on:change="loadImages()"
+        ></v-select>
+        </v-col>
+          <v-card
+            flat
+            tile
+            outlined
+            :width="$vuetify.breakpoint.height > 670
                 ? '500px'
-                : '650px'" style="background-color: rgba(235,235,238, 0.3);">
-                <v-window v-model="onboarding">
-                  <v-window-item v-for="n in length" :key="`card-${n}`">
-                    <v-row class="fill-height" align="center" justify="center">
-                      <v-card :height="$vuetify.breakpoint.height > 670
-                        ? '350px'
-                        : '200px'" :width="$vuetify.breakpoint.height > 670
-    ? '500px'
-    : '650px'" outlined style="background-color: rgba(235,235,238, 0.4);">
-                        <template v-if="$vuetify.breakpoint.height > 670">
-                          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
-                            <v-col cols="auto" class="pa-0 pb-3">
-                              <h2> Face {{ faces[n - 1] }} </h2>
-                              <h6> (selecionar pelo menos um acabamento obrigatório quando aplicável) </h6>
-                            </v-col>
-                            <v-row justify="center" align="center" class="d-flex">
-                              <v-col cols="3">
-                                <v-select style="border-radius: 0px;" :items="materials" label="Material" dense
-                                  hide-details outlined v-model="material[`material` + n]"
-                                  @change="getFinishes()"></v-select>
-                              </v-col>
+                : '650px'"
+            style="background-color: rgba(235,235,238, 0.3);"
+          >
+    <v-window
+      v-model="onboarding"
+    >
+      <v-window-item
+        v-for="n in length"
+        :key="`card-${n}`"
+      >
+          <v-row
+            class="fill-height"
+            align="center"
+            justify="center"
+          >
+        <v-card
+        :height="$vuetify.breakpoint.height > 670
+                ? '350px'
+                : '200px'"
+          :width="$vuetify.breakpoint.height > 670
+                ? '500px'
+                : '650px'"
+          outlined
+          style="background-color: rgba(235,235,238, 0.4);"
+        >
+        <template v-if="$vuetify.breakpoint.height > 670">
+          <v-row justify="center" align="center" class="d-flex flex-column mt-4">
+            <v-col cols="auto" class="pa-0 pb-3">
+              <h2> Face {{faces[n-1]}} </h2>
+              <h6> (selecionar pelo menos um acabamento obrigatório quando aplicável) </h6>
+            </v-col>
+          <v-row justify="center" align="center" class="d-flex">
+            <v-col cols="3" >
+          <v-select
+          style="border-radius: 0px;"
+          :items="materials"
+          label="Material"
+          dense
+          hide-details
+          outlined
+          v-model="material[`material`+n]"
+          @change="getFinishes()"
+        ></v-select>
+        </v-col>
 
                               <v-col cols="7">
                                 <v-select height="30" style="border-radius: 0px; width:280px" :items="finishes"
@@ -311,58 +406,80 @@
                                       Voltar
                                     </v-btn>
 
-                                    <v-btn color="green darken-1" text @click="dialog = false; getRefs()">
-                                      Confirmar
-                                    </v-btn>
-                                  </v-card-actions>
-                                </v-card>
-                              </v-dialog>
-                              <v-col cols=4>
-                                <v-img :src="myImage" contain height="100px" width="100px"
-                                  @click.stop="dialog = true"></v-img>
-                              </v-col>
-                              <v-col cols=8>
-                                <v-row justify="center" align="start" class="d-flex flex-column">
-                                  <v-col cols="auto">
-                                    Imagem Zona {{ faces[n - 1] }}
-                                  </v-col>
-                                  <v-col cols="auto" class="text-decoration-underline" @click="dialog = true">
-                                    Escolher Imagem
-                                  </v-col>
-                                </v-row>
-                              </v-col>
-                            </v-row>
-                            <v-col cols="12" class="mt-0">
-                              <v-row justify="center" align="start" class="d-flex flex-column">
-                                <v-col>
-                                  Medidas (cm)
-                                </v-col>
-                              </v-row>
-                              <v-row justify="center" class="d-flex flex-row">
-                                <v-col class="pa-0" cols="4">
-                                  <v-text-field style="border-radius: 0px;" label="Largura" class="mr-4" dense outlined
-                                    hide-details v-model="widths[`width` + n]"></v-text-field>
-                                </v-col>
-                                <v-col class="pa-0" cols="4">
-                                  <v-text-field style="border-radius: 0px;" label="Altura" class="ml-4" outlined dense
-                                    hide-details v-model="heights[`height` + n]"></v-text-field>
-                                </v-col>
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                        </template>
-                        <template v-else>
-                          <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-                            <v-col cols="auto" class="pa-0 pb-2 pt-2">
-                              <h3> Face {{ faces[n - 1] }} </h3>
-                              <h6> (selecionar pelo menos um acabamento obrigatório quando aplicável) </h6>
-                            </v-col>
-                            <v-row justify="center" align="center" class="d-flex">
-                              <v-col cols="3">
-                                <v-select style="border-radius: 0px;" :items="materials" label="Material" dense
-                                  hide-details outlined v-model="material[`material` + n]"
-                                  @change="getFinishes()"></v-select>
-                              </v-col>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false; getRefs()"
+          >
+            Confirmar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+            <v-col cols=4>
+            <v-img :src="myImage" contain height="100px" width="100px" @click.stop="dialog = true"></v-img>
+            </v-col>
+            <v-col cols=8>
+              <v-row justify="center" align="start" class="d-flex flex-column">
+                <v-col cols="auto">
+                  Imagem Zona {{faces[n-1]}}
+                </v-col>
+                <v-col cols="auto" class="text-decoration-underline" @click="dialog=true">
+                  Escolher Imagem
+                </v-col>
+              </v-row>
+            </v-col>
+            </v-row>
+            <v-col cols="12" class="mt-0">
+              <v-row justify="center" align="start" class="d-flex flex-column">
+                <v-col>
+              Medidas (cm)
+              </v-col>
+            </v-row>
+              <v-row justify="center" class="d-flex flex-row">
+              <v-col class="pa-0" cols="4">
+            <v-text-field style="border-radius: 0px;"
+            label="Largura"
+            class="mr-4"
+            dense
+            outlined
+            hide-details
+            v-model = "widths[`width`+n]"
+          ></v-text-field>
+              </v-col>
+            <v-col class="pa-0" cols="4">
+            <v-text-field style="border-radius: 0px;"
+            label="Altura"
+            class="ml-4"
+            outlined
+            dense
+            hide-details
+            v-model="heights[`height`+n]"
+          ></v-text-field>
+              </v-col>
+            </v-row>
+            </v-col>
+          </v-row>
+        </template>
+        <template v-else>
+          <v-row justify="center" align="center" class="d-flex flex-column mt-2">
+            <v-col cols="auto" class="pa-0 pb-2 pt-2">
+              <h3> Face {{faces[n-1]}} </h3>
+              <h6> (selecionar pelo menos um acabamento obrigatório quando aplicável) </h6>
+            </v-col>
+          <v-row justify="center" align="center" class="d-flex">
+            <v-col cols="3" >
+          <v-select
+          style="border-radius: 0px;"
+          :items="materials"
+          label="Material"
+          dense
+          hide-details
+          outlined
+          v-model="material[`material`+n]"
+          @change="getFinishes()"
+        ></v-select>
+        </v-col>
 
                               <v-col cols="3">
                                 <v-select style="border-radius: 0px;" :items="finishes" label="Acabamentos" dense multiple
@@ -430,36 +547,64 @@
                 </v-window>
 
 
-                <v-card-actions class="justify-space-between" style="background-color: rgba(235,235,238, 0.7);">
-                  <v-btn text @click="prev">
-                    <v-icon>mdi-chevron-left</v-icon>
-                  </v-btn>
-                  <v-item-group v-model="onboarding" class="text-center" mandatory>
-                    <v-item v-for="n in length" :key="`btn-${n}`" v-slot="{ active, toggle }">
-                      <v-btn :input-value="active" icon @click="toggle">
-                        <span> {{ faces[n - 1] }} </span>
-                      </v-btn>
-                    </v-item>
-                  </v-item-group>
-                  <v-btn text @click="next">
-                    <v-icon>mdi-chevron-right</v-icon>
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
-              <v-col cols="auto" class="pl-4">
-                <v-btn @click="$router.push('order')" class="d-flex flex-column customGradient" small dark tile> <v-icon
-                    style="transform: rotate(180deg);">mdi-play</v-icon>
-                  Voltar
-                </v-btn>
-              </v-col>
-              <v-col cols="auto">
-                <v-btn @click="nextScreen()" class="d-flex flex-column customGradient" small dark tile> Confirmar
-                  <v-icon>mdi-play</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
+    <v-card-actions class="justify-space-between" style="background-color: rgba(235,235,238, 0.7);">
+      <v-btn
+        text
+        @click="prev"
+      >
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <v-item-group
+        v-model="onboarding"
+        class="text-center"
+        mandatory
+      >
+        <v-item
+          v-for="n in length"
+          :key="`btn-${n}`"
+          v-slot="{ active, toggle }"
+        >
+          <v-btn
+            :input-value="active"
+            icon
+            @click="toggle"
+          >
+            <span> {{faces[n-1]}} </span>
+          </v-btn>
+        </v-item>
+      </v-item-group>
+      <v-btn
+        text
+        @click="next"
+      >
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+  </v-row>
+          <v-row no-gutters align="end" justify="space-between" class="d-flex pr-4" style="height: 55px;">
+           <v-col cols="auto" class="pl-4">
+            <v-btn
+              @click = "goBack()"
+              class="d-flex flex-column customGradient"
+              small
+              dark
+              tile
+            > <v-icon style="transform: rotate(180deg);">mdi-play</v-icon>
+            Voltar
+            </v-btn>
+           </v-col>
+            <v-col cols="auto">
+            <v-btn
+              @click="nextScreen()"
+              class="d-flex flex-column customGradient"
+              small
+              dark
+              tile
+            > Confirmar <v-icon >mdi-play</v-icon>
+            </v-btn>
+            </v-col>
+           </v-row>
           </v-card>
         </v-col>
       </v-row>
@@ -540,6 +685,13 @@ export default {
         console.error(error)
       }
     },
+    goBack(){
+        if(store.isEditing){
+          this.$router.push({name: 'history'});
+        } else {
+          this.$router.push({name: 'order'});
+        }
+      },
     nextScreen() {
       store.widths = this.widths
       store.heights = this.heights
@@ -594,27 +746,35 @@ export default {
       this.$router.push({ name: 'ABCfinal' });
     },
 
-    next() {
-      this.onboarding = this.onboarding + 1 === this.length
-        ? 0
-        : this.onboarding + 1
-    },
-    prev() {
-      this.onboarding = this.onboarding - 1 < 0
-        ? this.length - 1
-        : this.onboarding - 1
-    },
-    getRefs() {
-      store.facesDefault.forEach(element => {
-        if (element.face === this.faces[this.onboarding]) {
-          element.link = this.images[this.picked].link
-          var id = this.images[this.picked].id
-          this.picked = null
-          store.images.push(id)
+      next () {
+        this.onboarding = this.onboarding + 1 === this.length
+          ? 0
+          : this.onboarding + 1
+
+        if(store.isEditing){
+          this.getFinishes()
         }
-      });
-    },
-    getMaterials: async function () {
+      },
+      prev () {
+        this.onboarding = this.onboarding - 1 < 0
+          ? this.length - 1
+          : this.onboarding - 1
+
+        if(store.isEditing){
+          this.getFinishes()
+        }
+      },
+      getRefs () {
+        store.facesDefault.forEach(element => {
+          if (element.face === this.faces[this.onboarding]){
+            element.link = this.images[this.picked].link
+            var id = this.images[this.picked].id
+            this.picked = null
+            store.images[this.onboarding] = id
+          }
+        });
+      },
+      getMaterials: async function () {
       try {
         this.allMaterials = await Backend.getMaterials()
         this.allMaterials.forEach(element => {
@@ -642,6 +802,49 @@ export default {
     },
     loadImages() {
       this.images = []
+      if (store.isActive4) {
+        store.facesDefault = [
+          {
+            face: "A",
+            link: require('@/assets/A.png'),
+          },
+          {
+            face: "B",
+            link: require('@/assets/B.png'),
+          },
+          {
+            face: "C",
+            link: require('@/assets/C.png'),
+          },
+          {
+            face: "D",
+            link: require('@/assets/D.png'),
+          }
+        ]
+      } else {
+        store.facesDefault = [
+          {
+            face: "A",
+            link: require('@/assets/A.png'),
+          },
+          {
+            face: "B",
+            link: require('@/assets/B.png'),
+          },
+          {
+            face: "C",
+            link: require('@/assets/C.png'),
+          },
+          {
+            face: "D",
+            link: require('@/assets/D.png'),
+          },
+          {
+            face: "E",
+            link: require('@/assets/E.png'),
+          },
+        ]
+      }
       this.allBrands.forEach(element => {
         if (this.brand == element.name) {
           this.images = element.images
@@ -654,50 +857,200 @@ export default {
         }
       });
     }
-  },
-  created: async function () {
-    if (store.isActive4) {
-      this.length = 4
-    }
-    this.getMaterials()
-    this.getBrands()
-    if (store.backtracking) {
-      this.widths = store.widths
+    },
+     created: async function () {
+      if (store.isActive4) {
+        this.length = 4
+      }
+      this.getMaterials()
+      this.getBrands()
+      if(store.backtracking){
+      this.widths =  store.widths
       this.heights = store.heights
       this.material = store.materioscas
       this.allBrands = await Backend.getBrands()
-      this.allBrands.forEach(element => {
-        if (element.id == store.currentBrandId[0]) {
-          this.brand = element.name
+        this.allBrands.forEach(element => {
+          if(element.id == store.currentBrandId[0]){
+            this.brand = element.name
+          }
+        });
+        store.backtracking = false
+      }
+      store.images = []
+      if (store.isActive4) {
+        store.facesDefault = [
+          {
+            face: "A",
+            link: require('@/assets/A.png'),
+          },
+          {
+            face: "B",
+            link: require('@/assets/B.png'),
+          },
+          {
+            face: "C",
+            link: require('@/assets/C.png'),
+          },
+          {
+            face: "D",
+            link: require('@/assets/D.png'),
+          }
+        ]
+      } else {
+        store.facesDefault = [
+          {
+            face: "A",
+            link: require('@/assets/A.png'),
+          },
+          {
+            face: "B",
+            link: require('@/assets/B.png'),
+          },
+          {
+            face: "C",
+            link: require('@/assets/C.png'),
+          },
+          {
+            face: "D",
+            link: require('@/assets/D.png'),
+          },
+          {
+            face: "E",
+            link: require('@/assets/E.png'),
+          },
+        ]
+      }
+
+      if(store.isEditing){
+        store.currentClient = store.currentRequest.client.id
+        this.brand = store.currentRequest.brand.name
+        this.loadImages()
+        this.material = { material1: store.currentRequest.type.top.material.name,
+            material2: store.currentRequest.type.bottom.material.name,
+            material3: store.currentRequest.type.left.material.name,
+            material4: store.currentRequest.type.right.material.name,
+            material5: store.isActive4 ? null : store.currentRequest.type.side.material.name }
+        this.widths = { width1: store.currentRequest.type.top.measurements.width,
+           width2: store.currentRequest.type.bottom.measurements.width,
+           width3: store.currentRequest.type.left.measurements.width,
+           width4: store.currentRequest.type.right.measurements.width,
+           width5: store.isActive4 ? null : store.currentRequest.type.side.measurements.width}
+        this.heights = { height1: store.currentRequest.type.top.measurements.height,
+          height2: store.currentRequest.type.bottom.measurements.height,
+          height3: store.currentRequest.type.left.measurements.height,
+          height4: store.currentRequest.type.right.measurements.height,
+          height5: store.isActive4 ? null : store.currentRequest.type.side.measurements.height}
+        var fin1aux = []
+        var fin2aux = []
+        var fin3aux = []
+        var fin4aux = []
+        var fin5aux = []
+        var matsAux = []
+        for (let n = 1; n < this.length + 1; n++) {
+          this.allMaterials.forEach(element => {
+          if(element.name == this.material[`material`+n]){
+            matsAux.push(element)
+          }
+        })
+       }
+       console.log(matsAux)
+        store.currentRequest.type.top.finishings.forEach(elem => {
+          var added = false
+            matsAux[0].mandatoryFinishings.forEach(f => {
+                f.finishings.forEach(fini => {
+                  if(fini.name == elem.name){
+                    fin1aux.push(elem.name + " (Obrigatório)")
+                    added = true
+                  }
+                })
+            })
+            if(!added){
+              fin1aux.push(elem.name)
+            }
+        })
+        store.currentRequest.type.bottom.finishings.forEach(elem => {
+          var added = false
+            matsAux[1].mandatoryFinishings.forEach(f => {
+                f.finishings.forEach(fini => {
+                  if(fini.name == elem.name){
+                    fin2aux.push(elem.name + " (Obrigatório)")
+                    added = true
+                  }
+                })
+            })
+            if(!added){
+              fin2aux.push(elem.name)
+            }
+        })
+        store.currentRequest.type.left.finishings.forEach(elem => {
+          var added = false
+            matsAux[2].mandatoryFinishings.forEach(f => {
+                f.finishings.forEach(fini => {
+                  if(fini.name == elem.name){
+                    fin3aux.push(elem.name + " (Obrigatório)")
+                    added = true
+                  }
+                })
+            })
+            if(!added){
+              fin3aux.push(elem.name)
+            }
+        })
+        store.currentRequest.type.right.finishings.forEach(elem => {
+          var added = false
+            matsAux[3].mandatoryFinishings.forEach(f => {
+                f.finishings.forEach(fini => {
+                  if(fini.name == elem.name){
+                    fin4aux.push(elem.name + " (Obrigatório)")
+                    added = true
+                  }
+                })
+            })
+            if(!added){
+              fin4aux.push(elem.name)
+            }
+        })
+        if(!store.isActive4){
+          store.currentRequest.type.side.finishings.forEach(elem => {
+          var added = false
+            matsAux[4].mandatoryFinishings.forEach(f => {
+                f.finishings.forEach(fini => {
+                  if(fini.name == elem.name){
+                    fin5aux.push(elem.name + " (Obrigatório)")
+                    added = true
+                  }
+                })
+            })
+            if(!added){
+              fin5aux.push(elem.name)
+            }
+        })
         }
-      });
-      store.backtracking = false
+
+        this.finish = { finish1: fin1aux,
+          finish2: fin2aux,
+          finish3: fin3aux,
+          finish4: fin4aux,
+          finish5: store.isActive4 ? null : fin5aux}
+
+        await this.getFinishes()
+
+        store.facesDefault[0].link = store.currentRequest.type.top.image.link
+        store.images[0] = store.currentRequest.type.top.image.id
+        store.facesDefault[1].link = store.currentRequest.type.bottom.image.link
+        store.images[1] = store.currentRequest.type.bottom.image.id
+        store.facesDefault[2].link = store.currentRequest.type.left.image.link
+        store.images[2] = store.currentRequest.type.left.image.id
+        store.facesDefault[3].link = store.currentRequest.type.right.image.link
+        store.images[3] = store.currentRequest.type.right.image.id
+        if(!store.isActive4){
+          store.facesDefault[4].link = store.currentRequest.type.side.image.link
+          store.images[4] = store.currentRequest.type.side.image.id
+        }
+
+      }
+      store.finishes = []
     }
-    store.images = []
-    store.finishes = []
-    store.facesDefault = [
-      {
-        face: "A",
-        link: require('@/assets/A.png'),
-      },
-      {
-        face: "B",
-        link: require('@/assets/B.png'),
-      },
-      {
-        face: "C",
-        link: require('@/assets/C.png'),
-      },
-      {
-        face: "D",
-        link: require('@/assets/D.png'),
-      },
-      {
-        face: "E",
-        link: require('@/assets/E.png'),
-      },
-    ]
-  }
 };
 
 </script>
