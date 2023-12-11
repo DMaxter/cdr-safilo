@@ -801,7 +801,6 @@ export default {
       console.log(request)
         if(store.isEditing){
           await Backend.editRequest(store.currentRequest.id, request)
-          console.log("bruh?")
         } else {
           await Backend.placeRequest(request)
         }
