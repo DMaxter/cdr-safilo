@@ -103,7 +103,7 @@ jobs:
       - name: "Publish proxy artifact"
         uses: actions/upload-artifact@v3
         with:
-          name: proxy.py
+          name: proxy
           path: proxy.py
 
   deploy_application:
@@ -137,8 +137,8 @@ jobs:
       FEMA_PASSWORD: ${{ secrets.FEMA_PASSWORD }}
       FEMA_REPORT_CRON: "00 19 * * 1-5"
       FEMA_REPORT_EMAILS: ${{ secrets.FEMA_REPORT_EMAILS }}
-      QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL: ${{ secrets.FEMA_EXPEDITIONS_URL }}
-      QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_PROXY_ADDRESS: "127.0.0.1:9000"
+      FEMA_EXPEDITIONS_URL: ${{ secrets.FEMA_EXPEDITIONS_URL }}
+      FEMA_EXPEDITIONS_PROXY: "127.0.0.1:9000"
     needs:
       - build_backend
       - build_frontend
@@ -150,7 +150,7 @@ jobs:
       - name: Move artifacts to ansible folder
         run: |
           mkdir ansible/files
-          mv {backend,frontend,proxy.py} ansible/files
+          mv {backend,frontend,proxy/proxy.py} ansible/files
 
       - name: Run ansible playbook
         uses: dawidd6/action-ansible-playbook@v2
