@@ -31,6 +31,8 @@ jobs:
       MP_JWT_VERIFY_PUBLICKEY_LOCATION: /safilo/pub.pem
       SMALLRYE_JWT_SIGN_KEY_LOCATION: /safilo/priv.pem
 
+      QUARKUS_SCHEDULER_CRON_TYPE: unix
+
     steps:
       - name: "Download repository"
         uses: actions/checkout@v3
@@ -134,7 +136,6 @@ jobs:
       FEMA_USERNAME: ${{ secrets.FEMA_USERNAME }}
       FEMA_PASSWORD: ${{ secrets.FEMA_PASSWORD }}
       FEMA_REPORT_CRON: "00 19 * * 1-5"
-      QUARKUS_SCHEDULER_CRON_TYPE: unix
       FEMA_REPORT_EMAILS: ${{ secrets.FEMA_REPORT_EMAILS }}
       QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL: ${{ secrets.FEMA_EXPEDITIONS_URL }}
       QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_PROXY_ADDRESS: "127.0.0.1:9000"
