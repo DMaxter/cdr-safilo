@@ -101,7 +101,7 @@ jobs:
       - name: "Publish proxy artifact"
         uses: actions/upload-artifact@v3
         with:
-          name: proxy
+          name: proxy.py
           path: proxy.py
 
   deploy_application:
