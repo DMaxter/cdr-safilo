@@ -103,6 +103,7 @@ Deverá obter uma mensagem de sucesso ao abrir a carta de porte
 ### Ver uma carta de porte existente
 
 Passos:
+
 1. Fazer login na plataforma utilizando as suas credenciais
 2. No menu aceder a `PROCURAR` e pesquisar o pedido pretendido
 3. Clicar no ícone `+` do pedido
@@ -115,6 +116,7 @@ Passos:
 É possível cancelar cartas de porte já existentes.
 
 Passos:
+
 1. Fazer login na plataforma utilizando as suas credenciais
 2. No menu aceder a `PROCURAR` e pesquisar o pedido pretendido
 3. Clicar no ícone `+` do pedido
