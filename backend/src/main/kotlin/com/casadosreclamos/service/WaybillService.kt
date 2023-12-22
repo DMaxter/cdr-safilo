@@ -122,19 +122,34 @@ class WaybillService {
                 waybillDto.reference = requestId.toString()
                 waybillDto.source = source
 
-                if (waybillDto.destination == null) {
-                    val destination = Contact(
-                        request.client.name,
-                        Address(
-                            request.client.postalCode,
-                            request.client.country,
-                            request.client.city,
-                            request.client.address
-                        ),
-                        request.client.phone
-                    )
-                    waybillDto.destination = destination
+                val destination = Contact(
+                    request.client.name,
+                    Address(
+                        request.client.postalCode,
+                        request.client.country,
+                        request.client.city,
+                        request.client.address
+                    ),
+                    request.client.phone
+                )
+
+                // Override default parameters with the ones from request
+                if (waybillDto.destination != null) {
+                    if (waybillDto.destination!!.address?.postalCode != null) {
+                        destination.address!!.postalCode = waybillDto.destination!!.address!!.postalCode
+                    }
+                    if (waybillDto.destination!!.address?.address != null) {
+                        destination.address!!.address = waybillDto.destination!!.address!!.address
+                    }
+                    if (waybillDto.destination!!.address?.city != null) {
+                        destination.address!!.city = waybillDto.destination!!.address?.city
+                    }
+                    if (waybillDto.destination!!.address?.country != null) {
+                        destination.address!!.country = waybillDto.destination!!.address?.country
+                    }
                 }
+
+                waybillDto.destination = destination
 
                 if (waybillDto.description == null) {
                     waybillDto.description = ""
