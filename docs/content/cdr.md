@@ -82,6 +82,7 @@ Passos para introduzir um novo preço:
 4. Preencher o preço por metro quadrado, o preço fixo (se não existir o campo deve ser colocado a 0), o material ao qual o preço se aplica e os acabamentos aos quais o valor fixo deve ser aplicado
 5. Clicar em `ADICIONAR`
 
+
 ### Criar carta de porte
 
 A CDR consegue criar cartas de porte para os pedidos efetuados pelos comerciais da Safilo.
@@ -93,7 +94,31 @@ Passos:
 3. Clicar no ícone `+` do pedido
 4. Para criar uma carta de porte, clique no ícone :material-truck-delivery: (se este ícone não aparecer junto do ícone da impressora, contacte os programadores)
 5. Preencha os campos `Serviço`, `Número de pacotes`, `Tipo de encomenda`, `Peso Total`, `Descrição`, `Formato` e os campos de medida.
-   Os restantes campos apenas devem ser preenchidos caso ocorra um erro ao submeter uma carta de porte.
+   Os restantes campos apenas devem ser preenchidos caso ocorra um erro ao submeter uma carta de porte e seja necessário substituir os valores já presentes para o cliente do pedido
 6. Clicar em `CRIAR`
 
 Deverá obter uma mensagem de sucesso ao abrir a carta de porte
+
+
+### Ver uma carta de porte existente
+
+Passos:
+1. Fazer login na plataforma utilizando as suas credenciais
+2. No menu aceder a `PROCURAR` e pesquisar o pedido pretendido
+3. Clicar no ícone `+` do pedido
+4. Clicar no ícone :material-download:
+5. Selecionar o formato para a carta de porte: A6 ou A4 e clicar em `DESCARREGAR`
+
+
+### Cancelar uma carta de porte
+
+É possível cancelar cartas de porte já existentes.
+
+Passos:
+1. Fazer login na plataforma utilizando as suas credenciais
+2. No menu aceder a `PROCURAR` e pesquisar o pedido pretendido
+3. Clicar no ícone `+` do pedido
+4. Clicar no ícone :material-close:
+5. Clicar em `REMOVER` para confirmar que pretende cancelar a carta de porte
+
+Se ocorrer um erro ao remover a carta de porte, contacte os programadores
