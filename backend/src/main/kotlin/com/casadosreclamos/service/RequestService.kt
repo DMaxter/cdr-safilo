@@ -537,6 +537,7 @@ class RequestService {
             is OneDto -> "Uma face"
             is TwoDto -> "Duas faces"
             is ShowcaseDto -> "Montra"
+            is SimpleDto -> "Montra simples"
             else -> throw InvalidRequestTypeException()
         }
     }
@@ -546,6 +547,7 @@ class RequestService {
             is OneFace -> "Uma face"
             is TwoFaces -> "Duas faces"
             is Showcase -> "Montra"
+            is SimpleShowcase -> "Montra simples"
             else -> throw InvalidRequestTypeException()
         }
     }
@@ -555,6 +557,7 @@ class RequestService {
             is OneFace -> request.cover.material.name
             is TwoFaces -> request.cover.material.name + " | " + request.back.material.name
             is Showcase -> request.top.material.name + " | " + request.right.material.name + " | " + request.bottom.material.name + " | " + request.left.material.name + " | " + request.side.material.name
+            is SimpleShowcase -> request.top.material.name + " | " + request.right.material.name + " | " + request.bottom.material.name + " | " + request.left.material.name
             else -> throw InvalidRequestTypeException()
         }
     }

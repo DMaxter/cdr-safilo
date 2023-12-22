@@ -9,6 +9,6 @@ data class NewRequestDto(
     var application: Boolean?,
     var brand: BrandDto?,
 
-    @Schema(oneOf = [OneFace::class, TwoFaces::class, LeftShowcase::class, RightShowcase::class])
+    @Schema(oneOf = [OneFace::class, TwoFaces::class, LeftShowcase::class, RightShowcase::class, SimpleShowcase::class])
     var type: RequestTypeDto?
 )
