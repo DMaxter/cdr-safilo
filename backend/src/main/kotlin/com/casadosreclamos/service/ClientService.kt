@@ -229,7 +229,13 @@ class ClientService {
                 val address = record[2]
                 val postalCode = record[3]
                 val city = record[9]
-                val country = record[8]
+                val country = if (record[8] == "PORTUGAL") {
+                    "PT"
+                } else if (record[8] == "ESPANHA") {
+                    "ES"
+                } else {
+                    record[8]
+                }
 
                 val clientDto =
                     ClientDto(id, banner, name, fiscalNumber, email, phone, address, postalCode, city, country,"", mutableListOf())
