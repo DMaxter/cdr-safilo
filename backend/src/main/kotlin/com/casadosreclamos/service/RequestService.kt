@@ -615,7 +615,9 @@ class RequestService {
         val finishingUni = if (slotDto.finishings.isNullOrEmpty()) {
             Uni.createFrom().item(setOf())
         } else {
-            finishingService.find(slotDto.finishings!!).collect().with(Collectors.toSet())
+            finishingService.find(slotDto.finishings!!).filter { finishing ->
+                !finishing.obsolete
+            }.collect().with(Collectors.toSet())
         }
 
         return Uni.combine().all().unis(materialUni, priceUni, finishingUni).asTuple().onItem()

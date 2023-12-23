@@ -99,4 +99,21 @@ class FinishingController {
             return@transformToUni finishingService.delete(finishingId)
         }
     }
+
+    @PUT
+    @Path("/obsolete/{id}")
+    @RolesAllowed(CDR_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Make a finishing obsolete")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun makeObsolete(@PathParam("id") finishingId: Long): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id -> 
+            logger.info("User ${id.principal.name} is making finishing with id $finishingId obsolete")
+
+            return@transformToUni finishingService.makeObsolete(finishingId).onItem().transform { _ -> Response.ok().build() }
+        }
+    }
 }

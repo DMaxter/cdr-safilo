@@ -40,3 +40,4 @@ nb-configuration.xml
 *.pem
 
 application.properties
+kls_database.db
