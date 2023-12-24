@@ -923,6 +923,7 @@ export default {
 
       if(store.isEditing){
         store.currentClient = store.currentRequest.client.id
+        this.allBrands = await Backend.getBrands()
         this.brand = store.currentRequest.brand.name
         this.loadImages()
         this.material = { material1: store.currentRequest.type.top.material.name,
