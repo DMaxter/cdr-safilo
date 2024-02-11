@@ -201,7 +201,10 @@
                 </v-card>
               </template>
             </v-dialog>
-          <h3> PEDIDO {{store.pedidoAtual.cod}} - CÓD. CLIENTE {{ store.pedidoAtual.codClient }}</h3>
+          <h3> PEDIDO {{store.pedidoAtual.cod}} - CÓD. CLIENTE 
+            <span v-if="show" style="color: #e361b0" @click="dialog5 = true"> <u> {{ store.pedidoAtual.codClient }} </u></span> 
+            <span v-else> {{ store.pedidoAtual.codClient }} </span>
+          </h3>
             <v-card elevation="12" color="#FAFAFA" :height="$vuetify.breakpoint.height > 620
                 ? '450px' 
                 : '320px'" :width="$vuetify.breakpoint.height > 620
@@ -671,6 +674,30 @@
       </v-btn>
       <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" @click="deleteWaybill();">
         Remover
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
+<v-dialog v-if="this.show" v-model="dialog5" content-class="rounded-0" max-width="600px">
+  <v-card tile>
+    <v-card-title class="justify-center">
+      <span class="text-h6" v-show="!added && !failed"> Informações do Cliente {{currClient.id}}</span>
+    </v-card-title>
+    <v-card-text class="pb-0">
+      <v-container>
+        <v-row justify="center">
+          <v-col cols="12"> <span class="text-h6"> Nome: </span> <span class="text-body-1"> {{currClient.name}} </span></v-col>
+          <v-col cols="12"> <span class="text-h6"> Email: </span> <span class="text-body-1">{{currClient.email}}</span></v-col>
+          <v-col cols="12"> <span class="text-h6"> Telefone: </span> <span class="text-body-1">{{currClient.phone}}</span></v-col>
+          <v-col cols="12"> <span class="text-h6"> Morada: </span> <span class="text-body-1"> {{currClient.address}}</span></v-col>
+          <v-col cols="12"> <span class="text-h6"> Cód. Postal: </span> <span class="text-body-1">{{currClient.postalCode}}</span></v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-actions class="justify-center">
+      <v-btn color="blue darken-1" text @click="dialog5 = false;">
+        Voltar
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -1221,6 +1248,7 @@ data () {
         dialog2: false,
         dialog3: false,
         dialog4: false,
+        dialog5: false,
         currClient: null,
         noteToAdd: "",
         nota: false,
@@ -1496,7 +1524,7 @@ async created(){
     this.show = true
     var client = this.allClients.find(x => x.id == store.pedidoAtual.codClient)
     this.currClient = client
-    if(client.note != null){
+    if(client.note != ""){
       this.nota = true
       this.noteToAdd = client.note
     }
