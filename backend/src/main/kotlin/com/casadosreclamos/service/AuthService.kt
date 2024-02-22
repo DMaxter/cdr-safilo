@@ -336,7 +336,7 @@ class AuthService {
                             Mail.withText(
                                 username,
                                 "Pedido de substituição de password para a plataforma Safilo/CDR",
-                                getEmailPasswordRecovery(domain, user.name, userToken)
+                                getEmailPasswordRecovery(domain, user.email, userToken)
                             )
                         ).onItem().invoke { _ -> logger.info("Sent email to $username with token") }.onFailure()
                             .invoke { e -> logger.error("Couldn't send email with token: $e") }
