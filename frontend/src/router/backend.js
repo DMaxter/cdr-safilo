@@ -53,6 +53,15 @@ export default class Backend {
     })
   }
 
+  static async changePasswordWithToken(username, password, token) {
+    return httpClient.post(`/auth/forgot/${username}/${password}/${token}`).then(response => {
+      return response.data
+    })
+      .catch(async error => {
+      throw Error(await this.errorMessage(error.response))
+    })
+  }
+
   static async changePassword(oldPassword, newPassword) {
     return httpClient.put(`/user/password/${oldPassword}/${newPassword}`).then(response => {
       return response.data

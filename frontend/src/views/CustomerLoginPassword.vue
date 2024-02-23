@@ -15,7 +15,7 @@
               <v-form>
                 <v-text-field
                               class="mt-16"
-                              label="Username"
+                              label="Email"
                               type="text"
                               rounded
                               outlined
@@ -24,14 +24,38 @@
               </v-form>
               </v-card-text>
                 <v-card-actions class="justify-center">
-                  <v-btn color="#6e4e5d" class="white--text" @click="token">
-                    Enviar Código
+                  <v-btn
+                      width="33%" tile class="white--text customGradient"
+                      type="submit" @click="token(); dialog = true"
+                  >Enviar Link
                   </v-btn>
                 </v-card-actions>
 
           </v-card>
         </v-col>
     </v-row>
+    <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        max-width="600"
+    >
+      <template>
+        <v-card>
+          <v-card-text>
+            <div class="text-h6 pt-12" v-show="succeeded">Foi enviado um email para {{ username }} com um link para alterar a sua password.</div>
+            <div class="text-h6 pt-12" v-show="failed">Ocorreu um erro a alterar a password.</div>
+
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+                text
+                @click="dialog = false; failed = false; succeeded = false"
+            >Voltar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
     </v-container>
 
   </v-app>
@@ -48,16 +72,19 @@ export default {
 
   data: () => ({
      myImage: require('@/assets/logo.png'),
-     username: ""
+     username: "",
+     dialog: false,
+     succeeded: false,
+     failed: false
   }),
 
   methods: {
     token: async function () {
       try {
         await Backend.redefineWithToken(this.username)
-        this.$router.push('redefinePassword')
+        this.succeeded = true
       } catch(error) {
-        // TODO: Show something
+        this.failed = true
         console.log(error)
       }
     }
@@ -68,5 +95,8 @@ export default {
   #app {
   background: url('@/assets/background.jpg') center center fixed !important;
   background-size: cover;
+}
+.customGradient {
+  background-image: linear-gradient(#616161, grey);
 }
 </style>
