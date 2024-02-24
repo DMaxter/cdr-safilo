@@ -704,7 +704,7 @@
 </v-dialog>
     <!-- FOR PRINTING STUFF !!!!!!!!!!!!!!!!!-->
     
-    <v-containter class="d-none" :class="req1 && 'd-print-block'">
+    <v-container class="d-none" :class="req1 && 'd-print-block'">
       <v-row justify="center" align="center">
         <v-col cols="auto" >
           <v-card elevation="12" height="920" width="785" tile style="background-color: #E0E0E0; bottom: 40px;">
@@ -753,12 +753,9 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex"> 
-        <img :src="myImage2" style="object-fit:contain;" height="150" width="150">
-    </v-row>
-    </v-containter>
+    </v-container>
 
-    <v-containter v-if="req2" fill-height class="d-none" :class="req2 && 'd-print-block'">
+    <v-container v-if="req2" fill-height class="d-none" :class="req2 && 'd-print-block'">
     <br>
     <br>
     <br>
@@ -790,9 +787,6 @@
           </v-row>
           </v-card>         
         </v-col>
-    </v-row>
-    <v-row style="position: fixed; bottom: 10px; right: 5px;" class="d-flex"> 
-        <img :src="myImage2" style="object-fit:contain;" height="150" width="150">
     </v-row>
 
     <br>
@@ -849,9 +843,9 @@
         </v-col>
     </v-row>
 
-    </v-containter>
+    </v-container>
 
-    <v-containter v-if="(req3 || req4)" fill-height class="d-none" :class="(req3 || req4) && 'd-print-block'">
+    <v-container v-if="(req3 || req4)" fill-height class="d-none" :class="(req3 || req4) && 'd-print-block'">
     <br>
     <br>
     <br>
@@ -884,9 +878,7 @@
           </v-card>         
         </v-col>
     </v-row>
-    <v-row style="position: fixed; bottom: 10px; right: 5px;" class="d-flex"> 
-        <img :src="myImage2" style="object-fit:contain;" height="150" width="150">
-    </v-row>
+    
     <br>
     <br>
     <br>
@@ -1041,9 +1033,9 @@
           </v-card>         
         </v-col>
     </v-row>
-    </v-containter>
+    </v-container>
 
-    <v-containter v-if="(req5)" fill-height class="d-none" :class="(req5) && 'd-print-block'">
+    <v-container v-if="(req5)" fill-height class="d-none" :class="(req5) && 'd-print-block'">
     <br>
     <br>
     <br>
@@ -1197,13 +1189,14 @@
         </v-col>
     </v-row>
 
-    </v-containter>
+    </v-container>
 
     <!-- NOT FOR PRINTING STUFF !!!!!!!!!!!!!!!!!-->
 
     <v-row style="position: absolute; bottom: 0px; right: 0px;" class="d-flex d-print-none"> 
         <v-img :src="myImage2" contain height="180" width="180"></v-img>
     </v-row>
+
     </v-container>
 
   </v-app>
@@ -1539,7 +1532,9 @@ async created(){
 },
 methods: {
   print(){
+    document.getElementById("footnote").setAttribute("hidden", true)
     window.print();
+    document.getElementById("footnote").removeAttribute("hidden")
   },
   goBack(){
     if(this.$route.query.id != null){
