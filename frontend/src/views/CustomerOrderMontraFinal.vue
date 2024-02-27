@@ -524,13 +524,16 @@ export default {
     this.currFinishes = Array.apply(null, Array(cena)).map(function () {})
     var n = 0
     store.finishes.forEach(fin => {
+      console.log(fin)
       var strToUse = ""
       if (fin.length > 1){
         fin.forEach(finit => {
-          strToUse = strToUse.concat(finit.name + "; ")
+          let nameToUse = this.allFinishes.find(x => x.id == finit.id).name
+          strToUse = strToUse.concat(nameToUse + "; ")
         })
       } else if (fin.length == 1){
-        strToUse = fin[0].name + ";"
+        let nameToUse = this.allFinishes.find(x => x.id == fin[0].id).name
+        strToUse = nameToUse + ";"
       } else (
         strToUse = "Nenhum"
       )

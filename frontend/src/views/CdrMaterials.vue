@@ -586,7 +586,7 @@
       max-width="500px"
     >
       <template v-slot:activator="{ on, attrs }">
-      <v-btn height="60" width="310" tile class="mb-3 ml-1 customGradient" dark v-bind="attrs" v-on="on" @click="getFinishes(); added2 = false, failed2 = false"> Alterar Acabamentos </v-btn>
+      <v-btn height="60" width="310" tile class="mb-3 ml-1 customGradient" dark v-bind="attrs" v-on="on" @click="getFinishes(); added2 = false, failed2 = false, pickedFinish = null"> Alterar Acabamentos </v-btn>
       </template>
       <v-card tile>
         <v-card-title class="justify-center">
@@ -611,10 +611,11 @@
                 cols="8"
               >
                 <v-select
+                  hide-details
                   :items=availableFinishes
                   required
                   v-model = pickedFinish
-                  @change="selected=true"
+                  @change="selected=true; setObsolete()"
                   v-show="!added2 && !failed2 && !toDelete && !toDelete2"
                 ></v-select>
               </v-col>
@@ -623,6 +624,7 @@
                 v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
               >
                 <v-text-field
+                  hide-details
                   label="Novo nome do Acabamento"
                   required
                   v-model="newFinishName"
@@ -652,6 +654,14 @@
                   :items=available
                   v-model="newFinishMaterials"
                 ></v-select>
+              </v-col>
+              <v-col
+                class="ml-16"
+                v-show="!added1 && !failed1"
+              >
+                <v-checkbox label="Obsoleto?" v-model="obsolete">
+
+                </v-checkbox>
               </v-col>
                 <v-btn
                   class="mx-2 customGradient"
@@ -910,6 +920,7 @@ export default {
 data () {
       return {
         myImage: require('@/assets/logologo1.png'),
+        obsolete: false,
         dialog: false,
         dialog1: false,
         dialog3: false,
@@ -1250,12 +1261,19 @@ methods: {
       }
     },
 
+    setObsolete: function () {
+      var selFin = this.allFinishes.find(x => x.name == this.pickedFinish)
+      this.obsolete = selFin.obsolete
+    },  
+
     updateFinish: async function () {
       try {
         var idToUse = null
+        var secondName = null
         this.allFinishes.forEach(element => {
           if(element.name == this.pickedFinish){
             idToUse = element.id
+            secondName = element.name
           }
         });
         var matId = [];
@@ -1263,8 +1281,10 @@ methods: {
           if(this.newFinishMaterials.includes(material.name))
             matId.push({id: material.id})
         })
-        var finishToAdd = {id: idToUse, name: this.newFinishName, cost: this.newFinishCost, materials: matId}
+        this.newFinishName = this.newFinishName == null ? secondName : this.newFinishName
+        var finishToAdd = {id: idToUse, name: this.newFinishName, cost: this.newFinishCost, materials: matId, obsolete: this.obsolete}
         await Backend.updateFinish(finishToAdd)
+        this.obsolete = false
         this.added2 = true
       } catch (error) {
         this.failed2 = true 

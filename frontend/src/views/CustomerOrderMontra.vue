@@ -668,14 +668,17 @@ export default {
         });
         this.allFinishes = await Backend.getFinishes()
         this.allFinishes.forEach(element => {
-          if (selectedMat.additionalFinishings.find(x => x.id == element.id))
+          let x = selectedMat.additionalFinishings.find(x => x.id == element.id)
+          if(x != undefined && !x.obsolete){
             this.finishes.push(element.name)
+          }
         });
         this.allFinishGroups = await Backend.getFinishGroups()
         this.allFinishGroups.forEach(element => {
           if (selectedMat.mandatoryFinishings.find(x => x.id == element.id)) {
             element.finishings.forEach(element2 => {
-              this.finishes.push(element2.name + " (Obrigatório)")
+              if(!element2.obsolete)
+                this.finishes.push(element2.name + " (Obrigatório)")
             })
           }
         });

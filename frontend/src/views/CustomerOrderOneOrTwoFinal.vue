@@ -360,7 +360,7 @@ export default {
     });
     this.brandCost = [store.uniqueBrands[0] +" : "+ this.totalPrice.toFixed(2)]
     store.currentCost = this.totalPrice
-    this.observacoes = store.currentRequest.observations
+    this.observacoes = store.currentRequest === null ? "" : store.currentRequest.observations
   },
 
   methods: {
