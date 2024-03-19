@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DOMAIN_NAME: ${{ secrets.HOST }}
+      DOMAIN_NAME: ${{ vars.HOST }}
 
       QUARKUS_DATASOURCE_JDBC: false
 
@@ -26,7 +26,7 @@ jobs:
       MP_JWT_TOKEN_HEADER: Cookie
       MP_JWT_TOKEN_COOKIE: identity
       SMALLRYE_JWT_PATH_GROUPS: roles
-      MP_JWT_VERIFY_ISSUER: https://${{ secrets.HOST }}:8080
+      MP_JWT_VERIFY_ISSUER: https://${[ vars.HOST }}:8080
       MP_JWT_VERIFY_PUBLICKEY_ALGORITHM: RS256
       MP_JWT_VERIFY_PUBLICKEY_LOCATION: /safilo/pub.pem
       SMALLRYE_JWT_SIGN_KEY_LOCATION: /safilo/priv.pem
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VUE_APP_ROOT_API: https://${{ secrets.HOST }}:8889
+      VUE_APP_ROOT_API: https://${{ vars.HOST }}:8889
       VUE_APP_NAME: Casa dos Reclamos
 
     steps:
@@ -109,8 +109,8 @@ jobs:
   deploy_application:
     runs-on: ubuntu-latest
     env:
-      DOMAIN_NAME: ${{ secrets.HOST }}
-      CDR_EMAILS: ${{ secrets.CDR_MAILS }}
+      DOMAIN_NAME: ${{ vars.HOST }}
+      CDR_EMAILS: ${{ vars.CDR_MAILS }}
 
       BACKEND: backend/
       FRONTEND: frontend/
@@ -119,25 +119,25 @@ jobs:
       QUARKUS_HTTP_SSL_CERTIFICATE_FILE: ${{ secrets.SSL_CERT }}
       QUARKUS_HTTP_SSL_CERTIFICATE_KEY_FILE: ${{ secrets.SSL_KEY }}
       QUARKUS_HTTP_CORS: true
-      QUARKUS_HTTP_CORS_ORIGINS: https://${{ secrets.HOST }}
+      QUARKUS_HTTP_CORS_ORIGINS: https://${{ vars.HOST }}
       QUARKUS_HTTP_CORS_METHODS: GET,PUT,POST,DELETE
-      QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY: ${{ secrets.IMAGE_DIR }}
+      QUARKUS_HTTP_BODY_UPLOADS_DIRECTORY: ${{ vars.IMAGE_DIR }}
 
-      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://${{ secrets.MYSQL_HOST }}:3306/${{ secrets.DB_NAME }}
+      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://${{ vars.MYSQL_HOST }}:3306/${{ vars.DB_NAME }}
       QUARKUS_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USER }}
       QUARKUS_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASS }}
 
-      QUARKUS_MAILER_HOST: ${{ secrets.SMTP_HOST }}
-      QUARKUS_MAILER_PORT: ${{ secrets.SMTP_PORT }}
-      QUARKUS_MAILER_USERNAME: ${{ secrets.SMTP_USER }}
+      QUARKUS_MAILER_HOST: ${{ vars.SMTP_HOST }}
+      QUARKUS_MAILER_PORT: ${{ vars.SMTP_PORT }}
+      QUARKUS_MAILER_USERNAME: ${{ vars.SMTP_MAIL }}
       QUARKUS_MAILER_PASSWORD: ${{ secrets.SMTP_PASS }}
-      QUARKUS_MAILER_FROM: ${{ secrets.SMTP_MAIL }}
+      QUARKUS_MAILER_FROM: ${{ vars.SMTP_MAIL }}
 
       FEMA_USERNAME: ${{ secrets.FEMA_USERNAME }}
       FEMA_PASSWORD: ${{ secrets.FEMA_PASSWORD }}
       FEMA_REPORT_CRON: "00 19 * * 1-5"
-      FEMA_REPORT_EMAILS: ${{ secrets.FEMA_REPORT_EMAILS }}
-      FEMA_EXPEDITIONS_URL: ${{ secrets.FEMA_EXPEDITIONS_URL }}
+      FEMA_REPORT_EMAILS: ${{ vars.FEMA_REPORT_EMAILS }}
+      FEMA_EXPEDITIONS_URL: ${{ vars.FEMA_EXPEDITIONS_URL }}
       FEMA_EXPEDITIONS_PROXY: "127.0.0.1:9000"
     needs:
       - build_backend
