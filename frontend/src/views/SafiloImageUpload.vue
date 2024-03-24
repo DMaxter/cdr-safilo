@@ -255,11 +255,10 @@ export default {
         if (element.name == this.brand) {
           done = true
           var link = "";
-          if (String(this.image).includes("https://drive.google.com/file/d/") && String(this.image).includes("/view")) {
-            var code = String(this.image).replace('file/d/','thumbnail?id=');
-            code = code.replace('/view?usp=sharing','')
+          if (String(this.image).includes("https://drive.google.com/file/d/") && String(this.image).includes("/view?usp=sharing")) {
+            var code = String(this.image).replace('file/d/', 'thumbnail?id=');
+            code = code.replace('/view?usp=sharing', '')
             link = code + "&sz=w1080"
-            console.log(link)
           } else {
             link = String(this.image)
           }
