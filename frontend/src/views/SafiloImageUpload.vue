@@ -43,7 +43,7 @@
                   </v-btn>
 
                   <v-btn color="#6e4e5d" value="right" @click="$router.push('configure')" height="64" width="160"
-                    class="customGradient">
+                    class="customGradient v-btn--active">
                     <span class="white--text" style="font-size: 12px">Configurar</span>
 
                     <v-icon right>
@@ -171,7 +171,7 @@
 <script>
 import { store } from '@/store.js'
 import Backend from '@/router/backend'
-import axios from 'axios'
+//import axios from 'axios'
 
 export default {
   name: 'CustomerHistory',
@@ -256,9 +256,10 @@ export default {
           done = true
           var link = "";
           if (String(this.image).includes("https://drive.google.com/file/d/") && String(this.image).includes("/view")) {
-            const regex = /(https:\/\/lh3.google[^\\]*)/
-            let content = await axios.get(this.image)
-            link = regex.exec(content.data)[1]
+            var code = String(this.image).replace('file/d/','thumbnail?id=');
+            code = code.replace('/view?usp=sharing','')
+            link = code + "&sz=w1080"
+            console.log(link)
           } else {
             link = String(this.image)
           }
