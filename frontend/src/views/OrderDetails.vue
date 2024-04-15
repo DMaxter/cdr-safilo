@@ -548,79 +548,82 @@
     </v-row>
 
 <v-dialog v-if="this.show" v-model="dialog2" persistent content-class="rounded-0" max-width="600px">
-  <v-card tile>
-    <v-card-title class="justify-center pt-3 pb-0">
-      <span class="text-h5" v-show="!added && !failed"> Criar carta de porte</span>
-    </v-card-title>
-    <v-card-text class="pb-0">
-      <v-container>
-        <v-row justify="center">
-          <span class="text-h5" v-show="added"> Carta de porte criada com sucesso! </span>
-                <span class="text-h5" v-show="failed">Ocorreu um erro a criar a carta de porte:<br/>{{ this.errorMsg }} </span>
-          <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
-          <v-col cols="6" v-show="!added && !failed && !displayLoad">
-            <v-select label="Serviço" :items="allServices" item-value="id" item-text="name" required v-model="pickedService"></v-select>
-          </v-col>
-          <v-col cols="6" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Número de pacotes" min=0 required v-model="numberOfPackages"></v-text-field>
-          </v-col>
-          <v-col cols="6" v-show="!added && !failed && !displayLoad">
-            <v-select label="Tipo de encomenda" :items="packageTypes" item-value="id" item-text="name" required v-model="pickedPackage"></v-select>
-          </v-col>
-          <v-col cols="6" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Peso Total (Kg)" min=0 step=0.01 required v-model="totalWeight"></v-text-field>
-          </v-col>
-          <v-col cols="12" v-show="!added && !failed && !displayLoad">
-            <v-text-field label="Descrição" required
-              v-model="description"></v-text-field>
-          </v-col>
-          <v-col cols="3" v-show="!added && !failed && !displayLoad">
-            <v-select label="Formato" :items="allFormats" item-value="id" item-text="name" required v-model="pickedFormat"></v-select>
-          </v-col>
-          <v-col cols="3" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Altura (m)" min=0 step=0.01 required
-              v-model="packageHeight"></v-text-field>
-          </v-col>
-          <v-col cols="3" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Largura (m)" min=0 step=0.01 required
-              v-model="packageWidth"></v-text-field>
-          </v-col>
-          <v-col cols="3" v-show="!added && !failed && !displayLoad">
-            <v-text-field type="number" label="Comprimento (m)" min=0 step=0.01 required
-              v-model="packageLength"></v-text-field>
-          </v-col>
-          <v-col cols="4" v-show="!added && !failed && !displayLoad">
-            <v-text-field label="Nr. de Telefone" required
-              v-model="phoneNumber"></v-text-field>
-          </v-col>
-          <v-col cols="4" v-show="!added && !failed && !displayLoad">
-            <v-autocomplete label="País" required
-              v-model="country" :items="paises"></v-autocomplete>
-          </v-col>
-          <v-col cols="4" v-show="!added && !failed && !displayLoad">
-            <v-text-field label="Cidade" required
-              v-model="city"></v-text-field>
-          </v-col>
-          <v-col cols="6" v-show="!added && !failed && !displayLoad" class="pb-0">
-            <v-text-field label="Morada" required
-              v-model="address"></v-text-field>
-          </v-col>
-          <v-col cols="6" v-show="!added && !failed && !displayLoad" class="pb-0">
-            <v-text-field label="Cód. Postal" required
-              v-model="postalCode"></v-text-field>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-text>
-    <v-card-actions class="justify-center pt-0 pb-1">
-      <v-btn color="blue darken-1" text @click="dialog2 = false; description = '', phoneNumber = null; country = null; city = null; address = null; postalCode = null; pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
-        Voltar
-      </v-btn>
-      <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" @click="waybill(); description = '', phoneNumber = null; country = null; city = null; address = null; postalCode = null; pickedService = null; numberOfPackages = null; pickedPackage = null; totalWeight = null; pickedFormat = null; packageHeight = null; packageWidth = null; packageLength = null">
-        Criar
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+  <form @submit.prevent="waybill">
+    <v-card tile>
+      <v-card-title class="d-flex flex-column justify-center pt-3 pb-0">
+        <span class="text-h5" v-show="!added && !failed"> Criar carta de porte</span>
+        <span style="font-size: 12px" v-show="!added && !failed && !displayLoad"> Campos que começem com * são obrigatórios! </span>
+      </v-card-title>
+      <v-card-text class="pb-0">
+        <v-container>
+          <v-row justify="center">
+            <span class="text-h5" v-show="added"> Carta de porte criada com sucesso! </span>
+                  <span class="text-h5" v-show="failed">Ocorreu um erro a criar a carta de porte:<br/>{{ this.errorMsg }} </span>
+            <v-progress-circular indeterminate color="grey" v-show="displayLoad"></v-progress-circular>
+            <v-col cols="6" v-show="!added && !failed && !displayLoad">
+              <v-autocomplete clearable hide-details label="*Serviço" :items="allServices" item-value="id" item-text="name" required v-model="pickedService"></v-autocomplete>
+            </v-col>
+            <v-col cols="6" v-show="!added && !failed && !displayLoad">
+              <v-text-field hide-details type="number" label="*Número de pacotes" min=0 required v-model="numberOfPackages"></v-text-field>
+            </v-col>
+            <v-col cols="6" v-show="!added && !failed && !displayLoad">
+              <v-autocomplete clearable hide-details label="*Tipo de encomenda" :items="packageTypes" item-value="id" item-text="name" required v-model="pickedPackage"></v-autocomplete>
+            </v-col>
+            <v-col cols="6" v-show="!added && !failed && !displayLoad">
+              <v-text-field hide-details type="number" label="*Peso Total (Kg)" min=0 step=0.01 required v-model="totalWeight"></v-text-field>
+            </v-col>
+            <v-col cols="12" v-show="!added && !failed && !displayLoad">
+              <v-text-field  hide-details label="*Descrição" required
+                v-model="description"></v-text-field>
+            </v-col>
+            <v-col cols="3" v-show="!added && !failed && !displayLoad">
+              <v-autocomplete clearable hide-details label="*Formato" :items="allFormats" item-value="id" item-text="name" required v-model="pickedFormat"></v-autocomplete>
+            </v-col>
+            <v-col cols="3" v-show="!added && !failed && !displayLoad">
+              <v-text-field hide-details type="number" label="*Altura (m)" min=0 step=0.01 required
+                v-model="packageHeight"></v-text-field>
+            </v-col>
+            <v-col cols="3" v-show="!added && !failed && !displayLoad">
+              <v-text-field hide-details type="number" label="*Largura (m)" min=0 step=0.01 required
+                v-model="packageWidth"></v-text-field>
+            </v-col>
+            <v-col cols="3" v-show="!added && !failed && !displayLoad">
+              <v-text-field hide-details type="number" label="*Comprimento (m)" min=0 step=0.01 required
+                v-model="packageLength"></v-text-field>
+            </v-col>
+            <v-col cols="4" v-show="!added && !failed && !displayLoad">
+              <v-text-field hide-details label="Nr. de Telefone"
+                v-model="phoneNumber"></v-text-field>
+            </v-col>
+            <v-col cols="4" v-show="!added && !failed && !displayLoad">
+              <v-autocomplete clearable hide-details label="País"
+                v-model="country" :items="paises"></v-autocomplete>
+            </v-col>
+            <v-col cols="4" v-show="!added && !failed && !displayLoad">
+              <v-text-field hide-details label="Cidade"
+                v-model="city"></v-text-field>
+            </v-col>
+            <v-col cols="6" v-show="!added && !failed && !displayLoad" class="pb-3">
+              <v-text-field hide-details label="Morada"
+                v-model="address"></v-text-field>
+            </v-col>
+            <v-col cols="6" v-show="!added && !failed && !displayLoad" class="pb-3">
+              <v-text-field hide-details label="Cód. Postal"
+                v-model="postalCode"></v-text-field>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+      <v-card-actions class="justify-center pt-0 pb-1">
+        <v-btn color="blue darken-1" text @click="dialog2 = false">
+          Voltar
+        </v-btn>
+        <v-btn color="blue darken-1" text v-show="!added && !failed && !displayLoad" type="submit">
+          Criar
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </form>
 </v-dialog>
 
 <v-dialog v-if="this.show" v-model="dialog3" persistent content-class="rounded-0" max-width="600px">
@@ -1517,7 +1520,7 @@ async created(){
     this.show = true
     var client = this.allClients.find(x => x.id == store.pedidoAtual.codClient)
     this.currClient = client
-    if(client.note != ""){
+    if(client.note != null && client.note != ""){
       this.nota = true
       this.noteToAdd = client.note
     }
@@ -1567,6 +1570,20 @@ methods: {
       this.hasWaybill = true
       this.displayLoad = false
       this.added = true
+      this.description = ''
+      this.phoneNumber = null
+      this.country = null
+      this.city = null 
+      this.address = null 
+      this.postalCode = null 
+      this.pickedService = null
+      this.numberOfPackages = null
+      this.pickedPackage = null
+      this.totalWeight = null
+      this.pickedFormat = null
+      this.packageHeight = null
+      this.packageWidth = null
+      this.packageLength = null
     }catch(e){
       this.errorMsg = e.message
       this.failed = true
