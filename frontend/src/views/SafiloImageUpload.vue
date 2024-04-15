@@ -237,9 +237,6 @@ export default {
           this.brands.push(element.name)
           if (element.images.length > 0) {
             element.images.forEach(element2 => {
-              if(element2.link.includes("https://drive.google.com/uc?export=view&id=")){
-                element2.link = element2.link.replace("uc?export=view&id=", "thumbnail?id=") + "&sz=w1080"
-              }
               this.defaultImages.push(element2);
             });
           }
