@@ -101,7 +101,7 @@
 
           <v-text-field
             style="border-radius: 0px"
-            v-model="quantity"
+            v-model="amount"
             label="Quantidade"
             hide-details
             dense
@@ -269,7 +269,7 @@ export default {
     checkbox: false,
     width: null,
     height: null,
-    quantity: null,
+    amount: null,
     brand: null,
     material: null,
     collapseOnScroll: true,
@@ -298,8 +298,8 @@ export default {
             store.selectedMaterial.push(element.id)
           }
         });
-        var cost2 = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
-        store.currentCost = store.currentCost + (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
+        var cost2 = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.amount )
+        store.currentCost = store.currentCost + (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.amount )
         store.dimensions.push({width: this.width, height: this.height})
         var fafa = []
         var finAux = []
@@ -420,7 +420,7 @@ export default {
         store.images.pop()
         this.width = store.dimensions[1].width
         this.height = store.dimensions[1].height
-        this.quantity = store.quantity
+        this.amount = store.amount
         this.allMaterials = await Backend.getMaterials()
         this.allMaterials.forEach(element => {
           if(element.id == store.selectedMaterial[1]){
@@ -449,7 +449,7 @@ export default {
           }
         });
         console.log(mataux2)
-        this.quantity = 1
+        this.amount = 1
         this.getFinishes()
         this.allFinishes = await Backend.getFinishes();
         console.log(store.finishesAux)

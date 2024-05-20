@@ -568,7 +568,7 @@ export default {
       if(store.isActive2){
       request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: store.observations,
         application: store.application,
         brand: {
@@ -651,7 +651,7 @@ export default {
     } else if(store.isActive3) { 
       request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: store.observations,
         application: store.application,
         brand: {
@@ -734,7 +734,7 @@ export default {
     } else if(store.isActive4){
       request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: store.observations,
         application: store.application,
         brand: {
@@ -821,7 +821,7 @@ export default {
       if(store.isActive2){
       request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: store.observations,
         application: store.application,
         brand: {
@@ -904,7 +904,7 @@ export default {
     } else if(store.isActive3) { 
       request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: store.observations,
         application: store.application,
         brand: {
@@ -987,7 +987,7 @@ export default {
     } else if(store.isActive4){
       request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: store.observations,
         application: store.application,
         brand: {

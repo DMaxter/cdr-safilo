@@ -114,7 +114,7 @@
 
           <v-text-field
             style="border-radius: 0px"
-            v-model="quantity"
+            v-model="amount"
             label="Quantidade"
             hide-details
             dense
@@ -289,7 +289,7 @@ export default {
     checkbox: false,
     width: null,
     height: null,
-    quantity: null,
+    amount: null,
     brand: null,
     material: null,
     collapseOnScroll: true,
@@ -329,10 +329,10 @@ export default {
             store.selectedMaterial.push(element.id)
           }
         });
-        store.currentCost = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.quantity )
+        store.currentCost = (((((this.width/100) * (this.height/100)) * cost) + (this.checkbox ? 500 : 0)) * this.amount )
         costPerBrand.set(this.brand, store.currentCost)
         store.dimensions.push({width: this.width, height: this.height})
-        store.quantity = this.quantity
+        store.amount = this.amount
         store.currentBrand = this.brand
         store.application = this.checkbox
         store.uniqueBrands = uniqueBrands
@@ -466,7 +466,7 @@ export default {
           }
         });
         console.log(mataux)
-        this.quantity = store.quantity
+        this.amount = store.amount
         this.getFinishes()
         this.allFinishes = await Backend.getFinishes();
         console.log(store.finishesAux)
@@ -493,7 +493,7 @@ export default {
           }
         });
         console.log(mataux2)
-        this.quantity = 1
+        this.amount = 1
         this.getFinishes()
         this.allFinishes = await Backend.getFinishes();
         console.log(store.finishesAux)
@@ -531,7 +531,7 @@ export default {
       store.face2 = null
       store.address = null
       store.uniqueBrands = null
-      store.quantity = null
+      store.amount = null
       store.observations = null
       store.currentCost = null
       store.application = false
@@ -546,7 +546,7 @@ export default {
         dimensoes: null,
         estado: null,
         images: null,
-        quantity: null,
+        amount: null,
         observations: null,
         cost: null,
         application: null

@@ -369,7 +369,7 @@ export default {
       if(store.face2 == null){
       this.request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: this.observacoes,
         application: store.application,
         brand: {
@@ -395,7 +395,7 @@ export default {
     } else { 
       this.request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: this.observacoes,
         application: store.application,
         brand: {
@@ -453,7 +453,7 @@ export default {
       if(store.face2 == null){
       this.request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: this.observacoes,
         application: store.application,
         brand: {
@@ -479,7 +479,7 @@ export default {
     } else { 
       this.request = {
         clientId: store.currentClient,
-        amount: store.quantity,
+        amount: store.amount,
         observations: this.observacoes,
         application: store.application,
         brand: {

@@ -187,10 +187,10 @@
           <v-card tile elevation="2" outlined color="#FAFAFA" height="80" width="200" style="width: 400px; border-radius: 15px">
             <v-row justify="center" align="center" class="d-flex flex-column">
             <v-col class="pt-4">
-            Referência do Pedido:
+            Referência do Pedido: {{store.pedidoAtual.cod}}
             </v-col>
-            <v-col>
-              {{store.pedidoAtual.cod}}
+            <v-col class="pt-4">
+            Quantidade: {{store.pedidoAtual.amount}}
             </v-col>
             </v-row>
             </v-card>

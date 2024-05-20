@@ -182,7 +182,7 @@ export default {
       store.face2 = null
       store.address = null
       store.uniqueBrands = null
-      store.quantity = null
+      store.amount = null
       store.observations = null
       store.currentCost = null
       store.application = false
@@ -199,7 +199,7 @@ export default {
         dimensoes: null,
         estado: null,
         images: null,
-        quantity: null,
+        amount: null,
         observations: null,
         cost: null,
         application: null

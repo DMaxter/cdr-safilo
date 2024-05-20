@@ -11,6 +11,7 @@ export default class RequestDto {
   measurements = null // Measurements
   application = null // Boolean
   images = null // RequestTypeDto
+  amount = null // Int
 
   constructor(obj) {
     if (obj) {
@@ -25,6 +26,7 @@ export default class RequestDto {
       this.measurement = new Measurements(obj.measurement)
       this.application = obj.application
       this.images = RequestTypeDto.from(obj.images)
+      this.amount = obj.amount
     }
   }
 }

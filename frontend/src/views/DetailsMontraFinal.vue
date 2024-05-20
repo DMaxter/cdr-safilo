@@ -363,7 +363,7 @@
             Quantidade:
             </v-col>
             <v-col>
-              {{store.pedidoAtual.quantity}}
+              {{store.pedidoAtual.amount}}
             </v-col>
             </v-row>
             </v-card>

@@ -215,6 +215,7 @@
               <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0">
               <v-col cols="auto" class="ml-4"> Data:  {{store.pedidoAtual.data}}</v-col>
               <v-col cols="auto" class="ml-4"> Marca: {{store.pedidoAtual.marca}} </v-col>
+              <v-col cols="auto" class="ml-4"> Quantidade:  {{store.pedidoAtual.amount}}</v-col>
               <v-col cols="auto" class="ml-4"> Modelo: {{store.pedidoAtual.modelo}} </v-col>
               <v-col cols="auto" class="ml-4"> Material:</v-col>
               <v-slide-group
@@ -285,63 +286,6 @@
                   </v-btn>
                 </v-slide-item>
               </v-slide-group>
-              <v-col cols="auto" class="d-flex ml-4"> Estado: {{store.pedidoAtual.estado}}
-                <template>
-    <v-dialog
-      v-if="this.show"
-      v-model="dialog1"
-      persistent
-      max-width="500px"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn class="d-flex ml-5 customGradient" small dark tile v-bind="attrs" v-on="on"> Alterar 
-              <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
-        </v-btn>  
-      </template>
-      <v-card>
-        <v-card-title class="justify-center">
-          <span class="text-h5"> Alterar estado do pedido </span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row justify="center">
-              <v-col
-                cols="8"
-              >
-                <v-select
-                  :items=available
-                  required
-                  v-model = picked
-                ></v-select>
-              </v-col>
-              <v-col
-                cols="12"
-              >
-              Estado atual: {{store.pedidoAtual.estado}}
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions class="justify-center">
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="dialog1 = false;"
-          >
-            Voltar
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="updateStatus(); dialog1 = false;"
-          >
-            Alterar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-</template>
-              </v-col>
               </v-row>
             </template>
             <template v-else>
@@ -349,6 +293,7 @@
               <v-row justify="center" align="center" class="d-flex">
               <v-col cols="auto" class="ml-7"> Data:  {{store.pedidoAtual.data}}</v-col>
               <v-col cols="auto" class="ml-7"> Marca: {{store.pedidoAtual.marca}} </v-col>
+              <v-col cols="auto" class="ml-7"> Quantidade: {{store.pedidoAtual.amount}} </v-col>
               <v-col cols="auto" class="ml-7"> Modelo: {{store.pedidoAtual.modelo}} </v-col>
               </v-row>
               <v-col cols="auto" class="ml-4"> Material:</v-col>
@@ -420,63 +365,6 @@
                   </v-btn>
                 </v-slide-item>
               </v-slide-group>
-              <v-col cols="auto" class="d-flex ml-4"> Estado: {{store.pedidoAtual.estado}}
-                <template>
-    <v-dialog
-      v-if="this.show"
-      v-model="dialog1"
-      persistent
-      max-width="500px"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn class="d-flex ml-5 customGradient" small dark tile v-bind="attrs" v-on="on"> Alterar 
-              <v-icon class="pl-1" size="15" dark> mdi-cog-outline </v-icon>
-        </v-btn>  
-      </template>
-      <v-card>
-        <v-card-title class="justify-center">
-          <span class="text-h5"> Alterar estado do pedido </span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row justify="center">
-              <v-col
-                cols="8"
-              >
-                <v-select
-                  :items=available
-                  required
-                  v-model = picked
-                ></v-select>
-              </v-col>
-              <v-col
-                cols="12"
-              >
-              Estado atual: {{store.pedidoAtual.estado}}
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions class="justify-center">
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="dialog1 = false;"
-          >
-            Voltar
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="updateStatus(); dialog1 = false;"
-          >
-            Alterar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-</template>
-              </v-col>
               </v-row>
             </template>
             </v-card>
@@ -739,6 +627,11 @@
             </v-col>
 
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
+              <h3> Quantidade: </h3>
+              {{store.pedidoAtual.amount}}
+            </v-col>
+
+            <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Endereço de entrega: </h3>
               {{store.address}}, {{store.postalCode}}
 
@@ -825,6 +718,11 @@
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Observações: </h3>
               {{store.pedidoAtual.observations}}
+            </v-col>
+
+            <v-col justify="center" class="mb-6 d-flex flex-column"> 
+              <h3> Quantidade: </h3>
+              {{store.pedidoAtual.amount}}
             </v-col>
 
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
@@ -1019,6 +917,11 @@
             </v-col>
 
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
+              <h3> Quantidade: </h3>
+              {{store.pedidoAtual.amount}}
+            </v-col>
+
+            <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Endereço de entrega: </h3>
               {{store.address}}, {{store.postalCode}}
 
@@ -1174,6 +1077,11 @@
             </v-col>
 
             <v-col justify="center" class="mb-6 d-flex flex-column"> 
+              <h3> Quantidade: </h3>
+              {{store.pedidoAtual.amount}}
+            </v-col>
+
+            <v-col justify="center" class="mb-6 d-flex flex-column"> 
               <h3> Endereço de entrega: </h3>
               {{store.address}}, {{store.postalCode}}
 
@@ -1296,7 +1204,7 @@ async created(){
             dimensoes: [item.type.cover.measurements],
             estado: item.status,
             images: [item.type.cover.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,
@@ -1315,7 +1223,7 @@ async created(){
             dimensoes: [item.type.cover.measurements, item.type.back.measurements],
             estado: item.status,
             images: [item.type.cover.image.link, item.type.back.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,
@@ -1339,7 +1247,7 @@ async created(){
             dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements, item.type.side.measurements],
             estado: item.status,
             images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link, item.type.side.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,
@@ -1359,7 +1267,7 @@ async created(){
             dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements],
             estado: item.status,
             images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,

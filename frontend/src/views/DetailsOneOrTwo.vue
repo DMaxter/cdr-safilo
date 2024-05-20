@@ -231,7 +231,7 @@
             <v-col cols="auto">
           <v-text-field
             style="width: 257px; pointer-events: none; border-radius: 0px;"
-            :label= store.pedidoAtual.quantity
+            :label= store.pedidoAtual.amount
             hide-details
             dense
             outlined

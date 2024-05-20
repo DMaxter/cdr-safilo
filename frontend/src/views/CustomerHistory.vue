@@ -324,7 +324,7 @@ data () {
                 src: require('@/assets/dos.jpg'),
               },
             ],
-            quantidade: 1,
+            amount: 1,
             observacoes: "Por favor despachem-se",
             custo: 300,
             aplicacao: true, 
@@ -353,7 +353,7 @@ data () {
                 src: require('@/assets/dos.jpg'),
               },
             ],
-            quantidade: 1,
+            amount: 1,
             observacoes: "Por favor despachem-se",
             custo: 300,
             aplicacao: true, 
@@ -370,7 +370,7 @@ data () {
                 src: require('@/assets/quatre.png'),
               },
             ],
-            quantidade: [2],
+            amount: [2],
             observacoes: "Por favor despachem-se",
             custo: 400,
             aplicacao: [false], 
@@ -390,7 +390,7 @@ data () {
                 src: require('@/assets/trese.png'),
               },
             ],
-            quantidade: [3, 4],
+            amount: [3, 4],
             observacoes: "Por favor despachem-se",
             custo: 400,
             aplicacao: [true, false], 
@@ -423,7 +423,7 @@ data () {
       store.face2 = null
       store.address = null
       store.uniqueBrands = null
-      store.quantity = null
+      store.amount = null
       store.observations = null
       store.currentCost = null
       store.application = false
@@ -440,7 +440,7 @@ data () {
         dimensoes: null,
         estado: null,
         images: null,
-        quantity: null,
+        amount: null,
         observations: null,
         cost: null,
         application: null
@@ -589,7 +589,7 @@ data () {
             dimensoes: [item.type.cover.measurements],
             estado: item.status,
             images: [item.type.cover.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,
@@ -607,7 +607,7 @@ data () {
             dimensoes: [item.type.cover.measurements, item.type.back.measurements],
             estado: item.status,
             images: [item.type.cover.image.link, item.type.back.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,
@@ -630,7 +630,7 @@ data () {
             dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements, item.type.side.measurements],
             estado: item.status,
             images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link, item.type.side.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,
@@ -650,7 +650,7 @@ data () {
             dimensoes: [item.type.top.measurements, item.type.bottom.measurements, item.type.left.measurements, item.type.right.measurements],
             estado: item.status,
             images: [item.type.top.image.link, item.type.bottom.image.link, item.type.left.image.link, item.type.right.image.link],
-            quantity: item.quantidade,
+            amount: item.amount,
             observations: item.observations,
             cost: item.cost,
             application: item.application,

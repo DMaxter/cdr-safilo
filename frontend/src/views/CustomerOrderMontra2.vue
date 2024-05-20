@@ -308,7 +308,7 @@
           name="input-7-4"
           label="Quantidade"
           value=""
-          v-model="quantity"
+          v-model="amount"
         ></v-textarea>
           </v-col>
           <v-col cols="5">
@@ -383,23 +383,23 @@ export default {
   data: () => ({
     myImage2: require('@/assets/logologo1.png'),
     store,
-    quantity: null,
+    amount: null,
     checkbox: false,
     observations: null,
   }),
 
   methods: {
     nextScreen () {
-      store.currentCost = store.currentCost * this.quantity
+      store.currentCost = store.currentCost * this.amount
       if(this.checkbox){
         store.currentCost += 500
       }
-      var quantidade = this.quantity
+      var amount = this.amount
       store.costPerBrand.forEach(function(value, key) {
-        var newValue = value * quantidade
+        var newValue = value * amount
         store.costPerBrand.set(key, newValue)
       })
-      store.quantity = this.quantity
+      store.amount = this.amount
       store.observations = this.observations
       store.application = this.checkbox
       console.log(this.observations)
@@ -411,7 +411,7 @@ export default {
       if(store.isEditing){
         this.checkbox = store.currentRequest.application
         this.observations = store.currentRequest.observations
-        this.quantity = 1
+        this.amount = 1
       }
     },
 };
