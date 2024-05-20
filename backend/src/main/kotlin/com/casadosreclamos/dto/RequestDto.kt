@@ -18,7 +18,8 @@ data class RequestDto(
     var cost: Double?,
     var observations: String?,
     var application: Boolean?,
-    var brand: BrandDto?
+    var brand: BrandDto?,
+    var amount: Int?
 ) {
     constructor(request: Request) : this(
         request.id,
@@ -32,6 +33,7 @@ data class RequestDto(
         request.cost,
         request.observations,
         request.application,
-        BrandDto(request.brand.id, request.brand.name, null)
+        BrandDto(request.brand.id, request.brand.name, null),
+        request.amount
     )
 }
