@@ -255,12 +255,14 @@ export default {
         if (element.name == this.brand) {
           done = true
           var link = "";
-          if (String(this.image).includes("https://drive.google.com/file/d/") && String(this.image).includes("/view?usp=sharing")) {
-            var code = String(this.image).replace('file/d/', 'thumbnail?id=');
-            code = code.replace('/view?usp=sharing', '')
-            link = code + "&sz=w1080"
+          var orig_link = String(this.image);
+          if (orig_link.includes("https://drive.google.com/file/d/") && (orig_link.includes("/view?usp=sharing") || orig_link.includes("/view?usp=drive_link"))) {
+            var code = orig_link.replace('file/d/', 'thumbnail?id=');
+            code = code.replace('/view?usp=sharing', '');
+            code = code.replace('/view?usp=drive_link', '');
+            link = code + "&sz=w1080";
           } else {
-            link = String(this.image)
+            link = orig_link;
           }
 
           await Backend.addImage(element.id, link)
