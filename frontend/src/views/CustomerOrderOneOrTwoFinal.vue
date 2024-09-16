@@ -183,15 +183,15 @@
               <div class="text-h6 pt-12"> Resumo do pedido: </div>
               <div class="text-h6"> Face 1: </div>
               <div> Material: {{ materiales[0] }} </div>
-              <div>Altura: {{ request.type.cover.measurements.width }}</div>
-              <div>Largura: {{ request.type.cover.measurements.height }}</div>
+              <div>Altura: {{ request.type.cover.measurements.height }}</div>
+              <div>Largura: {{ request.type.cover.measurements.width }}</div>
               <div>Marca: {{ currBrand }}</div>
               <div>Acabamentos: {{ store.finishesAux[0] }}</div>
               <template v-if=!oneFace>
                 <div class="text-h6"> Face 2: </div>
               <div> Material: {{ materiales[1] }} </div>
-              <div>Altura: {{ request.type.back.measurements.width }}</div>
-              <div>Largura: {{ request.type.back.measurements.height }}</div>
+              <div>Altura: {{ request.type.back.measurements.height }}</div>
+              <div>Largura: {{ request.type.back.measurements.width }}</div>
               <div>Marca: {{ currBrand }}</div>
               <div>Acabamentos: {{ store.finishesAux[1] }}</div>
               </template>
@@ -304,10 +304,8 @@ export default {
       this.facetas = [store.face1, store.face2]
       this.oneFace = false
     }
-    console.log(this.totalPrice)
     this.allMaterials = await Backend.getMaterials()
     this.allMaterials.forEach(material => {
-      console.log(this.request)
       if(material.id == this.request.type.cover.material.id){
         this.materiales.push(material.name)
       }
@@ -317,17 +315,13 @@ export default {
         } 
       }
     })
-    console.log(this.materiales)
     this.allBrands = await Backend.getBrands()
     this.currBrand = this.allBrands.find(x => x.id == store.currentBrandId[0]).name
     this.allFinishes = await Backend.getFinishes()
-    console.log(store.finishesAux)
     this.currFinishes = ""
     this.allFinishes.forEach(fin => {
       if(this.oneFace){
         store.finishes[0].forEach(f => {
-        console.log(f)
-        console.log(fin)
         if(fin.id == f.id){
         this.currFinishes = this.currFinishes.concat(fin.name + "; ")
       }
@@ -337,8 +331,6 @@ export default {
         for(var i = 0; i < store.finishes.length; i++){
         var auxstr = ""
         store.finishes[i].forEach(f => {
-        console.log(f)
-        console.log(fin)
         if(fin.id == f.id){
         auxstr = auxstr.concat(fin.name + "; ")
       }
@@ -350,7 +342,6 @@ export default {
     if(this.oneFace){
       this.currFinishes = [this.currFinishes]
     }
-    console.log(this.currFinishes)
 
     var currentUser = await Backend.getProfile()
     currentUser.credits.forEach(element => {
@@ -432,7 +423,6 @@ export default {
         },
       }
     }
-      console.log(this.request)
       try{
         if(store.isEditing){
           await Backend.editRequest(store.currentRequest.id, this.request)
@@ -516,10 +506,8 @@ export default {
         },
       }
     }
-      console.log(this.request)
       try{
         this.totalPrice = await Backend.getRequestPrice(this.request)
-        console.log(this.totalPrice)
       } catch (error) {
         console.log(error)
       }
