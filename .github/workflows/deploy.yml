@@ -111,6 +111,7 @@ jobs:
     env:
       DOMAIN_NAME: ${{ vars.HOST }}
       CDR_EMAILS: ${{ vars.CDR_MAILS }}
+      CANCEL_EMAILS: ${{ vars.CANCEL_EMAILS }}
 
       BACKEND: backend/
       FRONTEND: frontend/

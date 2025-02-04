@@ -77,6 +77,10 @@ class RequestService {
     @ConfigProperty(name = "cdr.emails")
     lateinit var cdrMails: List<String>
 
+    @Inject
+    @ConfigProperty(name = "cdr.cancel-emails")
+    lateinit var cancelMails: List<String>
+
     fun get(id: Long): Uni<Request> {
         return requestRepository.findById(id)
     }
@@ -286,16 +290,16 @@ class RequestService {
                 roles = user.roles
 
                 requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
-                    // Prevent other commercials from cancelling arbitrary requests
                     if (request == null) {
                         logger.error("Request with ID ${requestId} is not registered")
 
                         throw InvalidIdException("request")
                     }
 
+                    // Prevent other commercials from editing arbitrary requests
                     if (roles.contains(Role.ADMIN) || roles.contains(Role.CDR) || roles.contains(Role.MANAGER) || (roles.contains(
                             Role.COMMERCIAL
-                        ) && request.requester.name == email)
+                        ) && request.requester.email == email)
                     ) {
                         request.lastUpdate = Date()
                         request.observations = requestDto.observations
@@ -409,16 +413,16 @@ class RequestService {
                 roles = user.roles
 
                 requestRepository.findById(requestId).onItem().ifNotNull().transform { request ->
-                    // Prevent other commercials from cancelling arbitrary requests
                     if (request == null) {
                         logger.error("Request with ID ${requestId} is not registered")
 
                         throw InvalidIdException("request")
                     }
 
+                    // Prevent other commercials from cancelling arbitrary requests
                     if (roles.contains(Role.ADMIN) || roles.contains(Role.CDR) || roles.contains(Role.MANAGER) || (roles.contains(
                             Role.COMMERCIAL
-                        ) && request.requester.name == email)
+                        ) && request.requester.email == email)
                     ) {
                         request.status = RequestStatus.CANCELLED
                         request.lastUpdate = Date()
@@ -437,7 +441,7 @@ class RequestService {
                             "",
                             "Pedido da Safilo cancelado",
                             getEmailCancelledRequest(user!!.name, request.client.name, requestId, getType(request.type!!))
-                        ).setTo(cdrMails)
+                        ).setTo(cancelMails)
                     ).onItem().invoke { _ -> logger.info("Sent email with request") }.onFailure()
                         .invoke { e -> logger.error("Couldn't send email with request: $e") }
                 }.onItem().transform { _ ->

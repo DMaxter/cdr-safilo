@@ -380,9 +380,19 @@ export default class Backend {
 
   static async isLoggedIn() {
     return httpClient.get("/auth/logged").then(response => {
+      // Empty response means user is authenticated
+      if (response.status == 200 && response.data.length == 0) {
+        return true
+      }
+
+      // FIXME: Remove after migration to Rust
       return response.data
     })
       .catch(async error => {
+        // Unauthorized is not an error in this case
+        if (error.response.status == 401) {
+          return false;
+        }
       throw Error(await this.errorMessage(error.response))
     })
   }
