@@ -159,4 +159,4 @@ jobs:
           playbook: ansible/deploy.yml
           key: ${{ secrets.SSH_KEY }}
           inventory: |
-            safilo ansible_host=${{ secrets.HOST }} ansible_user=${{ secrets.SSH_USER }} ansible_port=${{ secrets.SSH_PORT }}
+            safilo ansible_host=${{ vars.HOST }} ansible_user=${{ secrets.SSH_USER }} ansible_port=${{ secrets.SSH_PORT }}
