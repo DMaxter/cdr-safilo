@@ -72,7 +72,7 @@ export default class Backend {
   }
 
   static async addMaterial(material) {
-    return httpClient.post(`/material/`, material).then(response => {
+    return httpClient.post(`/material`, material).then(response => {
       return response.data
     })
       .catch(async error => {
