@@ -34,6 +34,7 @@ import com.casadosreclamos.dto.SimpleShowcase as SimpleDto
 import com.casadosreclamos.dto.TwoFaces as TwoDto
 
 private const val SEND_COST = 16.75
+private const val APPLICATION_COST = 100
 
 @ApplicationScoped
 class RequestService {
@@ -155,6 +156,10 @@ class RequestService {
 
                 requestType.cost = requestType.cost * request.amount + SEND_COST
 
+                if (request.application) {
+                    requestType.cost += APPLICATION_COST;
+                }
+
                 if (plafond.amount < requestType.cost) {
                     logger.error("User doesn't have enough credits: ${plafond.amount} for request of ${requestType.cost}")
 
@@ -221,7 +226,11 @@ class RequestService {
                 // Create RequestType instance
                 toRequestType(request.type!!, brand.images)
             }.onItem().transform { requestType ->
-                val cost = requestType.cost * request.amount!! + SEND_COST
+                var cost = requestType.cost * request.amount!! + SEND_COST
+
+                if (request.application!!) {
+                    cost += APPLICATION_COST;
+                }
 
                 logger.info("The request cost is $cost")
 
@@ -363,6 +372,9 @@ class RequestService {
                     }
 
                     requestType.cost = requestType.cost * editRequest.amount + SEND_COST
+                    if (requestDto.application!!) {
+                        requestType.cost += APPLICATION_COST;
+                    }
 
                     val difference = requestType.cost - previousCost
 
