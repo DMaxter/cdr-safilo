@@ -481,6 +481,7 @@ class RequestService {
             "Estado",
             "Data",
             "Tipo de Pedido",
+            "Aplicação",
             "Materiais",
             "Marca",
             "Custo"
@@ -496,6 +497,7 @@ class RequestService {
                 getStatus(request.status),
                 request.created.toString(),
                 getType(request.type!!),
+                if (request.application) { "Sim" } else { "Não" },
                 getMaterials(request.type!!),
                 request.brand.name,
                 request.cost
