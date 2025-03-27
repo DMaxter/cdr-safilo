@@ -9,7 +9,7 @@ open class Client {
     open var id: Long = 0
 
     @ManyToOne
-    open lateinit var banner: Banner
+    open var banner: Banner? = null
 
     open lateinit var name: String
 

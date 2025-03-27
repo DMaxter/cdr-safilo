@@ -61,10 +61,6 @@ class ClientService {
             logger.error("Client ID is invalid")
 
             throw InvalidIdException("client")
-        } else if (clientDto.banner == null || clientDto.banner!!.isEmpty()) {
-            logger.error("Client Banner is null or empty")
-
-            throw InvalidBannerException()
         } else if (clientDto.email == null || clientDto.email!!.isEmpty() || !EMAIL_REGEX.matches(clientDto.email!!)) {
             logger.error("Client email is null, empty or has incorrect format")
 
@@ -110,7 +106,13 @@ class ClientService {
         client.country = clientDto.country!!
         client.images = mutableSetOf()
 
-        return createBannerIfNotExists(clientDto.banner!!).onItem().transformToUni { banner ->
+        val bannerUni = if (clientDto.banner == null) {
+            Uni.createFrom().nullItem()
+        } else {
+            createBannerIfNotExists(clientDto.banner!!)
+        }
+
+        return bannerUni.onItem().transformToUni { banner ->
             client.banner = banner
 
             Panache.withTransaction {
@@ -127,10 +129,6 @@ class ClientService {
             logger.error("Client ID is invalid")
 
             throw InvalidIdException("client")
-        } else if (clientDto.banner == null || clientDto.banner!!.isEmpty()) {
-            logger.error("Client Banner is null or empty")
-
-            throw InvalidBannerException()
         } else if (clientDto.email == null || clientDto.email!!.isEmpty() || !EMAIL_REGEX.matches(clientDto.email!!)) {
             logger.error("Client email is null, empty or has incorrect format")
 

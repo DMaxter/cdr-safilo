@@ -489,7 +489,7 @@ class RequestService {
 
         return bannerRequests.onItem().transform { request ->
             writer.printRecord(
-                request.client.banner.name,
+                request.client.banner?.name,
                 request.client.id,
                 request.client.name,
                 request.requester.email,

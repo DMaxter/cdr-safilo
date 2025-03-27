@@ -19,7 +19,7 @@ data class ClientDto(
 ) {
     constructor(client: Client) : this(
         client.id,
-        client.banner.name,
+        client.banner?.name,
         client.name,
         client.fiscalNumber,
         client.email,
