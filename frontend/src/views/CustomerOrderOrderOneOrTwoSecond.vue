@@ -146,6 +146,7 @@
       v-model="dialog"
       persistent
       max-width="800"
+      scrollable
     >
       <v-card>
         <v-card-title class="text-h5">
@@ -209,7 +210,7 @@
                 <v-col cols="auto">
                   Imagem Face 2
                 </v-col>
-                <v-col cols="auto" class="text-decoration-underline">
+                <v-col cols="auto" class="text-decoration-underline" @click="dialog=true">
                   Escolher Imagem
                 </v-col>
               </v-row>
@@ -415,9 +416,10 @@ export default {
     },
     created: async function () {
       this.getMaterials()
-      this.getBrands()
+      await this.getBrands()
       if(store.backtracking){
-        store.images.pop()
+        //store.images.pop()
+        this.brand = store.uniqueBrands[0]
         this.width = store.dimensions[1].width
         this.height = store.dimensions[1].height
         this.amount = store.amount
@@ -433,6 +435,7 @@ export default {
         this.picked = store.pickado2
         store.images = [store.images[0]]
         this.loadImages()
+        store.images = []
         this.getFace()
         store.backtracking = false
       } else if(store.isEditing){
@@ -476,8 +479,7 @@ export default {
       store.selectedMaterial = [store.selectedMaterial[0]]
       store.finishes = [store.finishes[0]]
       store.finishesAux = [store.finishesAux[0]]
-      console.log(store.finishesAux)
-
+      this.loadImages()
     }
 };
 

@@ -451,8 +451,8 @@ export default {
     }
     },
     created: async function () {
-      this.getMaterials()
-      this.getBrands()
+      await this.getMaterials()
+      await this.getBrands()
       if(store.backtracking){
         this.brand = store.uniqueBrands[0]
         this.width = store.dimensions[0].width
