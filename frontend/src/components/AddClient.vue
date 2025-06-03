@@ -10,7 +10,7 @@
         <span style="font-size: 11px">Adicionar Cliente </span></v-btn
       >
     </template>
-    <v-card tile>
+    <v-card>
       <v-card-title class="justify-center pt-2 pb-1">
         <span class="text-h5 pt-1 pb-1"> Adicionar Cliente </span>
       </v-card-title>
