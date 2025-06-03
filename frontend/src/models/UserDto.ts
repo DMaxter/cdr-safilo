@@ -1,4 +1,4 @@
-class PlafondDetail {
+export class PlafondDetail {
   brand: string;
   amount: number;
 
