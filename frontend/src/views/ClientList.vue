@@ -2,7 +2,7 @@
   <Container>
     <v-row justify="center" align="center" class="d-flex flex-column mt-2">
       <Message v-model="failure" message="Não foi possível obter a lista de clientes" />
-      <v-data-table
+      <v-data-table-virtual
         :headers="headers"
         :items="allClients"
         fixed-header
@@ -10,9 +10,9 @@
         :search="searchValue"
         no-data-text="Não existem clientes registados"
         item-key="id"
-        height="400"
-        max-width="100%"
+        height="500"
         items-per-page="50"
+        style="max-width: 98%"
         class="elevation-1 my-header-style"
       >
         <template v-slot:top>
@@ -37,7 +37,7 @@
           <v-icon @click="openClientInfo(item)">visibility</v-icon>
           <v-icon v-if="canEdit" @click="editClient(item)">edit</v-icon>
         </template>
-      </v-data-table>
+      </v-data-table-virtual>
       <v-row class="flex-row" justify="space-around" style="width: 80%">
         <UploadClients @updated="refreshClients" />
         <v-btn
