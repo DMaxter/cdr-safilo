@@ -92,3 +92,5 @@ import AddClient from "@components/AddClient.vue";
 app.component("AddClient", AddClient);
 import EditClient from "@components/EditClient.vue";
 app.component("EditClient", EditClient);
+import PlafondDetail from "@components/PlafondDetail.vue";
+app.component("PlafondDetail", PlafondDetail);

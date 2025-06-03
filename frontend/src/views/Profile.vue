@@ -4,7 +4,7 @@
       <v-avatar color="#808080" size="100" class="mb-6 customGradient">
         <v-icon size="80" dark>account_circle</v-icon>
       </v-avatar>
-      {{ userStore.user.name }}
+      {{ user.user.name }}
     </v-row>
     <v-row justify="start" align="start" class="d-flex ml-4">
       <v-col cols="1">
@@ -13,18 +13,19 @@
         </v-avatar>
       </v-col>
       <v-col cols="2" class="d-flex flex-column ml-10" align="left">
-        Plafond Geral
+        Plafond Total
         <v-main class="text-no-wrap" align="center" style="background-color: #cfcfcf">
           {{ credits }}
         </v-main>
       </v-col>
       <v-col cols="1" align="left" class>
-        <template v-if="detailPlafond">
+        <template v-if="hasPlafond">
+          <PlafondDetail v-model="plafondDetail" :credits="user.user.credits" />
           <v-avatar
             color="#808080"
             size="30"
             class="d-flex customGradient2"
-            @click="router.push('plafond')"
+            @click="showPlafondDetail()"
           >
             <v-icon size="20" dark class="d-flex">help_outline</v-icon>
           </v-avatar>
@@ -40,7 +41,7 @@
       <v-col cols="4" class="d-flex flex-column ml-10" align="left">
         Email
         <v-main class="text-no-wrap" align="center" style="background-color: #cfcfcf">
-          {{ userStore.user.email }}
+          {{ user.user.email }}
         </v-main>
       </v-col>
     </v-row>
@@ -77,16 +78,20 @@ import { computed, ref } from "vue";
 import Backend from "@/router/backend";
 import { useUserStore } from "@stores/user";
 
-const userStore = useUserStore();
-await userStore.init();
+const user = useUserStore();
+await user.init();
 
 const router = useRouter();
-const credits = ref("0");
-const profile = null;
+const credits = ref(0);
 
-const detailPlafond: boolean = userStore.isCommercial() || userStore.isAdmin();
+const hasPlafond: boolean = user.isCommercial() || user.isAdmin();
+const plafondDetail = ref(false);
 
-credits.value = userStore.user
+function showPlafondDetail() {
+  plafondDetail.value = true;
+}
+
+credits.value = user.user
   .credits!!.map((element) => element.amount)
   .reduce((sum, e) => sum + e, 0)
   .toFixed(2);
