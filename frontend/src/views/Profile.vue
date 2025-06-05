@@ -59,14 +59,14 @@
       </v-col>
       <v-btn
         class="d-flex mt-9 text-white customGradient"
-        tile
         height="25"
         elevation="2"
-        @click="router.push('passwordChange')"
+        @click="showPasswordChange()"
       >
         Alterar
         <v-icon class="pl-1" size="15" dark>settings</v-icon>
       </v-btn>
+      <PasswordChange v-model="changePassword" />
     </v-row>
   </Container>
 </template>
@@ -82,19 +82,23 @@ const user = useUserStore();
 await user.init();
 
 const router = useRouter();
-const credits = ref(0);
+const credits = user.user
+  .credits!!.map((element) => element.amount)
+  .reduce((sum, e) => sum + e, 0)
+  .toFixed(2);
 
 const hasPlafond: boolean = user.isCommercial() || user.isAdmin();
 const plafondDetail = ref(false);
+
+const changePassword = ref(false);
 
 function showPlafondDetail() {
   plafondDetail.value = true;
 }
 
-credits.value = user.user
-  .credits!!.map((element) => element.amount)
-  .reduce((sum, e) => sum + e, 0)
-  .toFixed(2);
+function showPasswordChange() {
+  changePassword.value = true;
+}
 </script>
 
 <style lang="scss" scoped>
