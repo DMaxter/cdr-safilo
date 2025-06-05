@@ -94,3 +94,5 @@ import EditClient from "@components/EditClient.vue";
 app.component("EditClient", EditClient);
 import PlafondDetail from "@components/PlafondDetail.vue";
 app.component("PlafondDetail", PlafondDetail);
+import PasswordChange from "@components/PasswordChange.vue";
+app.component("PasswordChange", PasswordChange);
