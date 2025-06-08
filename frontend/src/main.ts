@@ -12,6 +12,7 @@ import { router } from "@/router";
 
 const app = createApp(App);
 
+// Vuetify
 const materialSymbols = {
   component: (props) =>
     h(VLigatureIcon, {
@@ -75,11 +76,16 @@ app.use(
     },
   }),
 );
+
+// Pinia
 app.use(createPinia());
+
+// Router
 app.use(router);
 
 app.mount("#app");
 
+// Components
 import Menu from "@components/Menu.vue";
 app.component("Menu", Menu);
 import Container from "@components/Container.vue";
@@ -96,3 +102,15 @@ import PlafondDetail from "@components/PlafondDetail.vue";
 app.component("PlafondDetail", PlafondDetail);
 import PasswordChange from "@components/PasswordChange.vue";
 app.component("PasswordChange", PasswordChange);
+import RequestSummary from "@components/RequestSummary.vue";
+app.component("RequestSummary", RequestSummary);
+import CancelRequest from "@components/CancelRequest.vue";
+app.component("CancelRequest", CancelRequest);
+import PrintRequest from "@components/PrintRequest.vue";
+app.component("PrintRequest", PrintRequest);
+import PrintSlot from "@components/PrintSlot.vue";
+app.component("PrintSlot", PrintSlot);
+import Waybill from "@components/Waybill.vue";
+app.component("Waybill", Waybill);
+import OpenWaybill from "@components/OpenWaybill.vue";
+app.component("OpenWaybill", OpenWaybill);

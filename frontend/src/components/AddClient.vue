@@ -73,8 +73,8 @@
         </v-container>
       </v-card-text>
       <v-card-actions class="justify-center">
-        <v-btn hide-details color="blue darken-1" text @click="close()"> Voltar </v-btn>
-        <v-btn hide-details color="blue darken-1" text @click="addClient()"> Adicionar </v-btn>
+        <v-btn hide-details color="blue darken-1" text @click="close()">Voltar</v-btn>
+        <v-btn hide-details color="blue darken-1" text @click="addClient()">Adicionar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
