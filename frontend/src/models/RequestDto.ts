@@ -1,7 +1,7 @@
-import BrandDto from "./BrandDto";
-import MaterialDto from "./MaterialDto";
-import Measurements from "./Measurements";
-import { RequestTypeDto } from "./RequestTypeDto";
+import BrandDto from "@models/BrandDto";
+import MaterialDto from "@models/MaterialDto";
+import Measurements from "@models/Measurements";
+import { RequestTypeDto } from "@models/RequestTypeDto";
 
 // Consider creating an enum for RequestStatus
 type RequestStatus = string; // Replace with actual enum if available
@@ -15,24 +15,13 @@ export default class RequestDto {
   trackingCode: string | null = null;
   status: RequestStatus | null = null;
   brand: BrandDto | null = null;
-  material: MaterialDto | null = null;
-  measurements: Measurements | null = null;
   application: boolean | null = null;
-  images: RequestTypeDto | null = null;
+  type: RequestTypeDto | null = null;
   amount: number | null = null;
+  cost: number | null = null;
+  observations: string | null = null;
 
-  constructor(
-    obj?: Partial<
-      Omit<RequestDto, "created" | "lastUpdate" | "brand" | "material" | "measurements" | "images">
-    > & {
-      created?: string | Date;
-      lastUpdate?: string | Date;
-      brand?: any;
-      material?: any;
-      measurement?: any; // Note: there's a typo in original code (measurement vs measurements)
-      images?: any;
-    },
-  ) {
+  constructor(obj?: Partial<RequestDto>) {
     if (obj) {
       this.id = obj.id ?? null;
       this.user = obj.user ?? null;
@@ -42,11 +31,23 @@ export default class RequestDto {
       this.trackingCode = obj.trackingCode ?? null;
       this.status = obj.status ?? null;
       this.brand = obj.brand ? new BrandDto(obj.brand) : null;
-      this.material = obj.material ? new MaterialDto(obj.material) : null;
-      this.measurements = obj.measurement ? new Measurements(obj.measurement) : null; // Fixed typo
       this.application = obj.application ?? null;
-      this.images = obj.images ? RequestTypeDto.from(obj.images) : null;
+      this.type = obj.type ? RequestTypeDto.from(obj.type) : null;
       this.amount = obj.amount ?? null;
+      this.cost = obj.cost ?? null;
+      this.observations = obj.observations ?? null;
     }
+  }
+
+  getMaterials(): String[] {
+    return this.type.getMaterials();
+  }
+
+  getFinishings(): String[][] {
+    return this.type.getFinishings();
+  }
+
+  getMeasurements(): number[][] {
+    return this.type.getMeasurements();
   }
 }

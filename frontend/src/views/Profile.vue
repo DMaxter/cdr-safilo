@@ -2,7 +2,7 @@
   <Container>
     <v-row justify="center" align="center" class="d-flex flex-column mb-10 mt-3">
       <v-avatar color="#808080" size="100" class="mb-6 customGradient">
-        <v-icon size="80" dark>account_circle</v-icon>
+        <v-icon size="80">account_circle</v-icon>
       </v-avatar>
       {{ user.user.name }}
     </v-row>
