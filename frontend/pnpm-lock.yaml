@@ -17,6 +17,9 @@ dependencies:
   vue-router:
     specifier: ^4.5.0
     version: 4.5.1(vue@3.5.16)
+  vue-to-print:
+    specifier: ^1.4.0
+    version: 1.4.0(vue@3.5.16)
   vuetify:
     specifier: ^3.8.7
     version: 3.8.7(typescript@5.8.3)(vue@3.5.16)
@@ -2226,6 +2229,14 @@ packages:
       vue: ^3.2.0
     dependencies:
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.16(typescript@5.8.3)
+    dev: false
+
+  /vue-to-print@1.4.0(vue@3.5.16):
+    resolution: {integrity: sha512-HNq9BAvB7gTT3eQQasdvVfcsQzBcH/bfokFKToM8ABjZ35+brdKZXda5UCCB+9uiuKP8YEGfMzav8YeD3MtUPg==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
       vue: 3.5.16(typescript@5.8.3)
     dev: false
 

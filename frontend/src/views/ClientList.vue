@@ -8,6 +8,7 @@
         fixed-header
         hover
         :search="searchValue"
+        items-per-page-text="Clientes por página:"
         no-data-text="Não existem clientes registados"
         item-key="id"
         height="500"
@@ -34,8 +35,10 @@
           </v-container>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon @click="openClientInfo(item)">visibility</v-icon>
-          <v-icon v-if="canEdit" @click="editClient(item)">edit</v-icon>
+          <v-icon @click="openClientInfo(item)" v-tooltip="'Ver cliente'">visibility</v-icon>
+          <v-icon v-if="canEdit" @click="editClient(item)" v-tooltip="'Editar cliente'"
+            >edit</v-icon
+          >
         </template>
       </v-data-table-virtual>
       <v-row class="flex-row" justify="space-around" style="width: 80%">
@@ -59,7 +62,6 @@
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { store } from "@/store.js";
 import { useUserStore } from "@/stores/user";
 import Backend from "@/router/backend";
 import ClientDto from "@models/ClientDto";

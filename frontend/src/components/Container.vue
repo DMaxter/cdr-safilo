@@ -5,7 +5,7 @@
         <v-card
           elevation="12"
           height="800"
-          width="1400"
+          width="1500"
           max-width="100%"
           color="#FAFAFA"
           style="border-radius: 15px"

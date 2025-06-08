@@ -15,4 +15,16 @@ export default class RequestSlotDto {
     this.material = new MaterialDto(obj.material);
     this.finishings = obj.finishings.map((f) => new FinishingDto(f));
   }
+
+  getMaterial(): String {
+    return this.material.name;
+  }
+
+  getFinishings(): String[] {
+    return this.finishings.map((f) => f.name);
+  }
+
+  getMeasurements(): number[] {
+    return [this.measurements.width, this.measurements.height];
+  }
 }
