@@ -7,66 +7,66 @@
           <v-row justify="center">
             <Message v-model="success" message="Cliente editado com sucesso!" />
             <Message v-model="failure" message="Ocorreu um erro a editar o cliente" />
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field
                 label="Código do cliente"
                 disabled
                 v-model="props.client.id"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field
                 label="Nome do cliente"
                 required
                 v-model="props.client.name"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" class="pb-0">
+            <v-col cols="12">
               <v-text-field
                 label="Email do cliente"
                 required
                 v-model="props.client.email"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field
                 label="NIF do cliente"
                 required
                 v-model="props.client.fiscalNumber"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field
                 label="Número de telefone do cliente"
                 required
                 v-model="props.client.phone"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" class="pb-0">
+            <v-col cols="12">
               <v-text-field
                 label="Endereço do cliente"
                 required
                 v-model="props.client.address"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field
                 label="Código postal do cliente"
                 required
                 v-model="props.client.postalCode"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field label="Banner do cliente" v-model="props.client.banner"></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field
                 label="Cidade do cliente"
                 required
                 v-model="props.client.city"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6">
               <v-text-field
                 label="País do cliente"
                 required
