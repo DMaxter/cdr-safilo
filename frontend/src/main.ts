@@ -12,6 +12,7 @@ import { router } from "@/router";
 
 const app = createApp(App);
 
+// Vuetify
 const materialSymbols = {
   component: (props) =>
     h(VLigatureIcon, {
@@ -21,45 +22,49 @@ const materialSymbols = {
 };
 
 const aliases = {
+  calendar: "event",
+  cancel: "cancel",
+  checkboxIndeterminate: "indeterminate_check_box",
+  checkboxOff: "check_box_outline_blank",
+  checkboxOn: "check_box",
+  clear: "cancel",
+  close: "close",
   collapse: "keyboard_arrow_up",
   complete: "check",
-  cancel: "cancel",
-  close: "close",
-  delete: "cancel",
-  clear: "cancel",
-  success: "check_circle",
-  info: "info",
-  warning: "priority_high",
-  error: "warning",
-  prev: "chevron_left",
-  next: "chevron_right",
-  checkboxOn: "check_box",
-  checkboxOff: "check_box_outline_blank",
-  checkboxIndeterminate: "indeterminate_check_box",
+  delete: "delete",
   delimiter: "fiber_manual_record",
-  sortAsc: "arrow_upward",
-  sortDesc: "arrow_downward",
-  expand: "keyboard_arrow_down",
-  menu: "menu",
-  subgroup: "arrow_drop_down",
+  download: "download",
   dropdown: "arrow_drop_down",
-  radioOn: "radio_button_checked",
-  radioOff: "radio_button_unchecked",
   edit: "edit",
+  error: "warning",
+  expand: "keyboard_arrow_down",
+  eyeDropper: "colorize",
+  file: "attach_file",
+  first: "first_page",
+  info: "info",
+  last: "last_page",
+  loading: "cached",
+  menu: "menu",
+  minus: "remove",
+  next: "chevron_right",
+  open: "open_in_new",
+  plus: "add",
+  prev: "chevron_left",
+  radioOff: "radio_button_unchecked",
+  radioOn: "radio_button_checked",
   ratingEmpty: "star_border",
   ratingFull: "star",
   ratingHalf: "star_half",
-  loading: "cached",
-  first: "first_page",
-  last: "last_page",
-  unfold: "unfold_more",
-  file: "attach_file",
-  plus: "add",
-  minus: "remove",
-  calendar: "event",
+  sortAsc: "arrow_upward",
+  sortDesc: "arrow_downward",
+  subgroup: "arrow_drop_down",
+  success: "check_circle",
   treeviewCollapse: "arrow_drop_down",
   treeviewExpand: "arrow_right",
-  eyeDropper: "colorize",
+  upload: "upload",
+  unfold: "unfold_more",
+  view: "visibility",
+  warning: "priority_high",
 };
 
 app.use(
@@ -75,11 +80,16 @@ app.use(
     },
   }),
 );
+
+// Pinia
 app.use(createPinia());
+
+// Router
 app.use(router);
 
 app.mount("#app");
 
+// Components
 import Menu from "@components/Menu.vue";
 app.component("Menu", Menu);
 import Container from "@components/Container.vue";
@@ -96,3 +106,17 @@ import PlafondDetail from "@components/PlafondDetail.vue";
 app.component("PlafondDetail", PlafondDetail);
 import PasswordChange from "@components/PasswordChange.vue";
 app.component("PasswordChange", PasswordChange);
+import RequestSummary from "@components/RequestSummary.vue";
+app.component("RequestSummary", RequestSummary);
+import CancelRequest from "@components/CancelRequest.vue";
+app.component("CancelRequest", CancelRequest);
+import PrintRequest from "@components/PrintRequest.vue";
+app.component("PrintRequest", PrintRequest);
+import PrintSlot from "@components/PrintSlot.vue";
+app.component("PrintSlot", PrintSlot);
+import Waybill from "@components/Waybill.vue";
+app.component("Waybill", Waybill);
+import OpenWaybill from "@components/OpenWaybill.vue";
+app.component("OpenWaybill", OpenWaybill);
+import DownloadWaybill from "@components/DownloadWaybill.vue";
+app.component("DownloadWaybill", DownloadWaybill);

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="enabled" persistent content-class="rounded-0" max-width="500px">
+  <v-dialog v-model="enabled" persistent max-width="500px">
     <template v-slot:activator="{ props }">
       <v-btn
         height="50"
@@ -14,55 +14,55 @@
       <v-card-title class="justify-center pt-2 pb-1">
         <span class="text-h5 pt-1 pb-1"> Adicionar Cliente </span>
       </v-card-title>
-      <v-card-text class="pb-0">
+      <v-card-text class="pb-0 pt-0">
         <v-container>
           <v-row justify="center">
             <Message v-model="success" message="Cliente adicionado com sucesso!" />
             <Message v-model="failure" message="Ocorreu um erro a adicionar o cliente" />
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field label="Código do cliente" required v-model="client.id"></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field label="Nome do cliente" required v-model="client.name"></v-text-field>
             </v-col>
-            <v-col cols="12" class="pb-0">
+            <v-col cols="12" class="pb-0 pt-0">
               <v-text-field label="Email do cliente" required v-model="client.email"></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field
                 label="NIF do cliente"
                 required
                 v-model="client.fiscalNumber"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field
                 label="Número de telefone do cliente"
                 required
                 v-model="client.phone"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" class="pb-0">
+            <v-col cols="12" class="pb-0 pt-0">
               <v-text-field
                 label="Endereço do cliente"
                 required
                 v-model="client.address"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field
                 label="Código postal do cliente"
                 required
                 v-model="client.postalCode"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field label="Banner do cliente" v-model="client.banner"></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field label="Cidade do cliente" required v-model="client.city"></v-text-field>
             </v-col>
-            <v-col cols="6" class="pb-0">
+            <v-col cols="6" class="pb-0 pt-0">
               <v-text-field
                 label="País do cliente"
                 required
@@ -73,8 +73,8 @@
         </v-container>
       </v-card-text>
       <v-card-actions class="justify-center">
-        <v-btn hide-details color="blue darken-1" text @click="close()"> Voltar </v-btn>
-        <v-btn hide-details color="blue darken-1" text @click="addClient()"> Adicionar </v-btn>
+        <v-btn @click="close()"><v-icon>$prev</v-icon>Voltar</v-btn>
+        <v-btn color="blue darken-1" @click="addClient()">Adicionar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
