@@ -16,14 +16,15 @@
     "pinia": "^3.0.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
+    "vue-to-print": "^1.4.0",
     "vuetify": "^3.8.7"
   },
   "devDependencies": {
-    "material-symbols": "^0.31.4",
     "@tsconfig/node23": "^23.0.2",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
+    "material-symbols": "^0.31.4",
     "npm-run-all2": "^7.0.2",
     "prettier": "^3.5.3",
     "sass": "^1.87.0",
