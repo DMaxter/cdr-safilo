@@ -20,7 +20,6 @@
                 label="Utilizador"
                 type="text"
                 rounded
-                required
                 variant="outlined"
                 v-model="auth.email"
               ></v-text-field>
@@ -28,7 +27,6 @@
                 label="Palavra-passe"
                 type="password"
                 rounded
-                required
                 variant="outlined"
                 hide-details
                 v-model="auth.password"

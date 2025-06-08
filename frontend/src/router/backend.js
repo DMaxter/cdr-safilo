@@ -1,4 +1,10 @@
-import UserDto from "@/models/UserDto.ts";
+import LabelFormat from "@models/fema/LabelFormat";
+import PackageType from "@models/fema/PackageType";
+import Service from "@models/fema/Service";
+
+import RequestDto from "@models/RequestDto";
+import UserDto from "@models/UserDto";
+
 import axios from "axios";
 
 const httpClient = axios.create();
@@ -6,8 +12,8 @@ const httpClient = axios.create();
 // Set default configuration for requests
 httpClient.defaults.timeout = 10000;
 
-if (import.meta.env.VUE_APP_ROOT_API) {
-  httpClient.defaults.baseURL = import.meta.env.VUE_APP_ROOT_API;
+if (import.meta.env.VITE_BACKEND_URL) {
+  httpClient.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 } else {
   httpClient.defaults.baseURL = "http://localhost:8080";
 }
@@ -453,7 +459,7 @@ export default class Backend {
     return httpClient
       .get("/request")
       .then((response) => {
-        return response.data;
+        return response.data.map((request) => new RequestDto(request)).reverse();
       })
       .catch(async (error) => {
         throw Error(await this.errorMessage(error.response));
@@ -553,33 +559,33 @@ export default class Backend {
       });
   }
 
-  static async getServices(id) {
+  static async getFemaServices(id) {
     return httpClient
       .get(`/waybill/services/${id}`, { timeout: 300000 })
       .then((response) => {
-        return response.data;
+        return response.data.map((s) => new Service(s));
       })
       .catch(async (error) => {
         throw Error(await this.errorMessage(error.response));
       });
   }
 
-  static async getPackages() {
+  static async getFemaPackages() {
     return httpClient
       .get(`/waybill/packages`)
       .then((response) => {
-        return response.data;
+        return response.data.map((p) => new PackageType(p));
       })
       .catch(async (error) => {
         throw Error(await this.errorMessage(error.response));
       });
   }
 
-  static async getFormats() {
+  static async getLabelFormats() {
     return httpClient
       .get(`/waybill/formats`)
       .then((response) => {
-        return response.data;
+        return response.data.map((l) => new LabelFormat(l));
       })
       .catch(async (error) => {
         throw Error(await this.errorMessage(error.response));
@@ -605,7 +611,7 @@ export default class Backend {
       });
   }
 
-  static async downloadWaybill(format, id) {
+  static async downloadWaybill(id, format) {
     return httpClient
       .get(`/waybill/${id}/${format}`, { responseType: "blob", timeout: 300000 })
       .then((response) => {
@@ -624,7 +630,7 @@ export default class Backend {
       });
   }
 
-  static async deleteWaybill(id) {
+  static async cancelWaybill(id) {
     return httpClient
       .delete(`/waybill/${id}`, { timeout: 300000 })
       .then((response) => {
