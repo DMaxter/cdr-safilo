@@ -12,15 +12,11 @@
       <div align="center">
         <Message v-model="success" message="Clientes carregados com sucesso!" />
         <Message v-model="failure" message="Ocorreu um erro ao carregar o ficheiro de clientes" />
-        <v-img
-          :src="UploadIcon"
-          contain
-          height="60px"
-          width="60px"
-          class="mb-6 mt-3"
+        <v-icon
+          size=100
           style="cursor: pointer"
           @click="handleFileImport"
-        ></v-img>
+        >$upload</v-icon>
         <input
           ref="uploader"
           class="d-none"
@@ -47,7 +43,6 @@
 import { computed, reactive, ref, useTemplateRef } from "vue";
 
 import Backend from "@/router/backend";
-import UploadIcon from "@/assets/upload.svg";
 
 const emit = defineEmits(["updated"]);
 

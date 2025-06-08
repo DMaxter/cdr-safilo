@@ -35,11 +35,16 @@
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="d-flex flex-row customGradient" small tile dark @click="close">
+        <v-btn class="d-flex flex-row" @click="close">
           <v-icon>$prev</v-icon>
           Voltar
         </v-btn>
-        <v-btn class="d-flex flex-column customGradient" small tile dark :disabled="!canChangePassword" @click="changePassword">
+        <v-btn
+          class="d-flex flex-column"
+          color="green"
+          :disabled="!canChangePassword"
+          @click="changePassword"
+        >
           Confirmar<v-icon>$next</v-icon>
         </v-btn>
       </v-card-actions>
@@ -61,9 +66,15 @@ const currentPassword = ref("");
 const newPassword = ref("");
 const repeatNewPassword = ref("");
 
-const required = (value => !!value || "Campo obrigatório");
-const newPasswordRules = [required, value => value != currentPassword.value || "Palavra-passe atual e a nova têm de ser diferentes"];
-const repeatPasswordRules = [required, value => value == newPassword.value || "Palavras-passe não são iguais!"];
+const required = (value) => !!value || "Campo obrigatório";
+const newPasswordRules = [
+  required,
+  (value) => value != currentPassword.value || "Palavra-passe atual e a nova têm de ser diferentes",
+];
+const repeatPasswordRules = [
+  required,
+  (value) => value == newPassword.value || "Palavras-passe não são iguais!",
+];
 
 const currentRef = useTemplateRef("current");
 const newRef = useTemplateRef("new");
@@ -73,11 +84,11 @@ onUpdated(() => {
   if (enabled.value) {
     currentRef.value.focus();
   }
-})
+});
 
 const canChangePassword = computed(() => {
   try {
-    return currentRef.value.isValid && newRef.value.isValid && repeatRef.value.isValid
+    return currentRef.value.isValid && newRef.value.isValid && repeatRef.value.isValid;
   } catch (error) {
     return false;
   }
@@ -90,7 +101,7 @@ async function changePassword() {
         await Backend.changePassword(currentPassword, newPassword);
       } catch (error) {
         console.error(error);
-        throw Error(error)
+        throw Error(error);
       }
     }
   }
