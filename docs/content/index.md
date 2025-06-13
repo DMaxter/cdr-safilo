@@ -29,4 +29,3 @@ Caso seja necessário alguma intervenção ou haja alguma dúvida, contactar os 
 | Nome | Email |
 |:------:|:-------:|
 | Daniel Matos | <daniel99matos@gmail.com>|
-| André Figueiredo | <andre.figueiredo@netcabo.pt> |
