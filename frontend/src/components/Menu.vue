@@ -43,20 +43,6 @@
 
         <v-btn
           color="#808080"
-          value="center1"
-          @click="router.push('history')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-          v-if="store.isCommercial() || store.isAdmin()"
-        >
-          <span style="font-size: 12px">Histórico</span>
-
-          <v-icon right>history</v-icon>
-        </v-btn>
-
-        <v-btn
-          color="#808080"
           value="center2"
           @click="router.push('search')"
           height="64"
