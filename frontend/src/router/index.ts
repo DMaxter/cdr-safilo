@@ -1,18 +1,18 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Backend from './backend'
+import { createRouter, createWebHistory } from "vue-router";
+import Backend from "./backend";
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: () => import('@views/CustomerLogin.vue'),
-    meta: { title: import.meta.env.VUE_APP_NAME, requiresAuth: false }
+    path: "/",
+    name: "home",
+    component: () => import("@views/Login.vue"),
+    meta: { title: import.meta.env.VUE_APP_NAME, requiresAuth: false },
   },
   {
-    path: '/profile',
-    name: 'profile',
+    path: "/profile",
+    name: "profile",
     meta: { title: "Perfil | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/CustomerProfile.vue')
+    component: () => import("@views/Profile.vue"),
   },
   {
     path: '/search',
@@ -45,34 +45,19 @@ const routes = [
     component: () => import('@views/CustomerOrderOneOrTwoFinal.vue')
   },
   {
-    path: '/recoverCode',
-    name: 'recoverCode',
-    meta: { title: "Recuperar Palavra-passe | " + import.meta.env.VUE_APP_NAME, requiresAuth: false},
-    component: () => import('@views/CustomerLoginPassword.vue')
+    path: "/redefine-password",
+    name: "redefine-password",
+    meta: {
+      title: "Redefinir Palavra-passe | " + import.meta.env.VUE_APP_NAME,
+      requiresAuth: false,
+    },
+    component: () => import("@views/RedefinePassword.vue"),
   },
   {
-    path: '/redefinePassword',
-    name: 'redefinePassword',
-    meta: { title: "Redefinir Palavra-passe | " + import.meta.env.VUE_APP_NAME, requiresAuth: false },
-    component: () => import('@views/CustomerLoginPasswordChange.vue')
-  },
-  {
-    path: '/passwordChange',
-    name: 'passwordChange',
-    meta: { title: "Alterar Palavra-passe | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/CustomerProfilePassword.vue')
-  },
-  {
-    path: '/history',
-    name: 'history',
+    path: "/history",
+    name: "history",
     meta: { title: "Histórico | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/CustomerHistory.vue')
-  },
-  {
-    path: '/plafond',
-    name: 'plafond',
-    meta: { title: "Plafond | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/CustomerPlafond.vue')
+    component: () => import("@views/History.vue"),
   },
   {
     path: '/ABC',
@@ -135,10 +120,10 @@ const routes = [
     component: () => import('@views/SearchResults.vue')
   },
   {
-    path: '/Clients',
-    name: 'clients',
+    path: "/clients",
+    name: "clients",
     meta: { title: "Clientes | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloClients.vue')
+    component: () => import("@views/ClientList.vue"),
   },
   {
     path: '/ClientInfo',
@@ -204,25 +189,25 @@ const routes = [
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-router.beforeEach(async (to,from,next) => {
-  //get the authenticated user 
-  let authUser = await Backend.isLoggedIn()
+router.beforeEach(async (to, from, next) => {
+  //get the authenticated user
+  let authUser = await Backend.isLoggedIn();
 
   //check sensitive routes
   if (to.meta.requiresAuth) {
-      if (!authUser) {
-        next('/')
-      } else {
-        next();
-      }
-  } else {
+    if (!authUser) {
+      next("/");
+    } else {
       next();
+    }
+  } else {
+    next();
   }
 });
 
 router.afterEach(async (to) => {
-    document.title = to.meta.title;
+  document.title = to.meta.title as string;
 });

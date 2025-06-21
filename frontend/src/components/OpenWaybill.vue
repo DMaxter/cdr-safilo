@@ -7,7 +7,7 @@
       <v-row justify="center">
         <v-col cols="6" class="pb-0 pt-0">
           <v-select
-            ref="serviceRef"
+            ref="service"
             label="Serviço*"
             compact
             :items="services"
@@ -20,7 +20,7 @@
         </v-col>
         <v-col cols="6" class="pb-0 pt-0">
           <v-text-field
-            ref="amountRef"
+            ref="amount"
             label="Número de pacotes*"
             type="number"
             min="1"
@@ -31,7 +31,7 @@
         </v-col>
         <v-col cols="6" class="pb-0 pt-0">
           <v-select
-            ref="packageRef"
+            ref="package"
             label="Tipo de encomenda*"
             :items="packages"
             item-title="name"
@@ -43,7 +43,7 @@
         </v-col>
         <v-col cols="6" class="pb-0 pt-0">
           <v-text-field
-            ref="weightRef"
+            ref="weight"
             label="Peso Total (kg)*"
             type="number"
             min="0"
@@ -55,7 +55,7 @@
         </v-col>
         <v-col cols="12" class="pb-0 pt-0">
           <v-text-field
-            ref="descriptionRef"
+            ref="description"
             label="Descrição*"
             :rules="[required]"
             variant="underlined"
@@ -64,7 +64,7 @@
         </v-col>
         <v-col cols="3" class="pb-0 pt-0">
           <v-select
-            ref="formatRef"
+            ref="format"
             label="Formato*"
             :items="labels"
             :rules="[required]"
@@ -74,7 +74,7 @@
         </v-col>
         <v-col cols="3" class="pb-0 pt-0">
           <v-text-field
-            ref="heightRef"
+            ref="height"
             label="Altura (m)*"
             type="number"
             min="0"
@@ -86,7 +86,7 @@
         </v-col>
         <v-col cols="3" class="pb-0 pt-0">
           <v-text-field
-            ref="widthRef"
+            ref="width"
             label="Largura (m)*"
             type="number"
             min="0"
@@ -98,7 +98,7 @@
         </v-col>
         <v-col cols="3" class="pb-0 pt-0">
           <v-text-field
-            ref="lengthRef"
+            ref="length"
             label="Comprimento (m)*"
             type="number"
             min="0"
@@ -195,15 +195,15 @@ const [labels, packages, _] = await Promise.all([
   init(),
 ]);
 
-const serviceRef = useTemplateRef("serviceRef");
-const amountRef = useTemplateRef("amountRef");
-const packageRef = useTemplateRef("packageRef");
-const weightRef = useTemplateRef("weightRef");
-const descriptionRef = useTemplateRef("descriptionRef");
-const formatRef = useTemplateRef("formatRef");
-const heightRef = useTemplateRef("heightRef");
-const widthRef = useTemplateRef("widthRef");
-const lengthRef = useTemplateRef("lengthRef");
+const serviceRef = useTemplateRef("service");
+const amountRef = useTemplateRef("amount");
+const packageRef = useTemplateRef("package");
+const weightRef = useTemplateRef("weight");
+const descriptionRef = useTemplateRef("description");
+const formatRef = useTemplateRef("format");
+const heightRef = useTemplateRef("height");
+const widthRef = useTemplateRef("width");
+const lengthRef = useTemplateRef("length");
 
 const canOpenWaybill = computed(() =>
   checkAllRefsValid([
