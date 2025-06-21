@@ -20,7 +20,7 @@ fun getEmailPasswordRecovery(domain: String, user: String, token: String): Strin
         return """
             Foi efetuado um pedido de substituição de password para a conta associada a este email
 
-            Para proceder à alteração da password aceda a https://${domain}/#/redefinePassword?email=${user}&token=${token}
+            Para proceder à alteração da password aceda a https://${domain}/redefine-password?email=${user}&token=${token}
 
 
             Este é um email automático, por favor não responda
