@@ -5,14 +5,8 @@
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="auto">
-        <v-card
-          title="Iniciar Sessão"
-          elevation="12"
-          color="#FAFAFA"
-          height="370"
-          width="450"
-          style="border-radius: 15px"
-        >
+        <v-card elevation="12" color="#FAFAFA" height="370" width="450" style="border-radius: 15px">
+          <v-card-title>Iniciar Sessão</v-card-title>
           <v-form @submit.prevent="login">
             <v-card-text>
               <v-text-field
@@ -53,11 +47,12 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+
 import Backend from "@/router/backend";
 import AuthDto from "@/models/AuthDto";
 import CDRLogo from "@/assets/logo.png";
-import { useRouter } from "vue-router";
-import { ref, reactive } from "vue";
 
 const failure = ref(false);
 
