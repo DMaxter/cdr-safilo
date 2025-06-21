@@ -120,3 +120,5 @@ import OpenWaybill from "@components/OpenWaybill.vue";
 app.component("OpenWaybill", OpenWaybill);
 import DownloadWaybill from "@components/DownloadWaybill.vue";
 app.component("DownloadWaybill", DownloadWaybill);
+import RecoveryCode from "@components/RecoveryCode.vue";
+app.component("RecoveryCode", RecoveryCode);

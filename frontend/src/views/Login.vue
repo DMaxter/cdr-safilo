@@ -9,12 +9,11 @@
           title="Iniciar Sessão"
           elevation="12"
           color="#FAFAFA"
-          height="400"
+          height="370"
           width="450"
           style="border-radius: 15px"
         >
           <v-form @submit.prevent="login">
-            <v-divider></v-divider>
             <v-card-text>
               <v-text-field
                 label="Utilizador"
@@ -32,26 +31,24 @@
                 v-model="auth.password"
               ></v-text-field>
             </v-card-text>
-            <v-card-actions>
-              <div justify="center" align="center" style="width: 100%">
-                <v-btn color="#616161" text @click="router.push('recoverCode')">
-                  Esqueceu-se da palavra passe?
-                </v-btn>
+            <v-card-actions class="d-flex flex-column">
+              <v-btn color="#616161" text @click="showRecover()">
+                Esqueceu-se da palavra passe?
+              </v-btn>
 
-                <v-btn width="33%" tile class="mt-16 text-white customGradient" type="submit"
-                  >Entrar
-                </v-btn>
-
-                <Message
-                  v-model="failure"
-                  message="O nome de utilizador ou palavra-passe está incorreto"
-                />
-              </div>
+              <v-btn width="33%" rounded class="mt-8 text-white customGradient" type="submit"
+                >Entrar
+              </v-btn>
             </v-card-actions>
+            <Message
+              v-model="failure"
+              message="O nome de utilizador ou a palavra-passe estão incorretos"
+            />
           </v-form>
         </v-card>
       </v-col>
     </v-row>
+    <RecoveryCode v-model="recover" />
   </v-container>
 </template>
 
@@ -63,8 +60,11 @@ import { useRouter } from "vue-router";
 import { ref, reactive } from "vue";
 
 const failure = ref(false);
+
 const auth = reactive(new AuthDto());
 const router = useRouter();
+
+const recover = ref(false);
 
 async function login() {
   try {
@@ -74,6 +74,10 @@ async function login() {
     failure.value = true;
     console.error(error);
   }
+}
+
+function showRecover() {
+  recover.value = true;
 }
 </script>
 

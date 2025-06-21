@@ -12,11 +12,7 @@
       <div align="center">
         <Message v-model="success" message="Clientes carregados com sucesso!" />
         <Message v-model="failure" message="Ocorreu um erro ao carregar o ficheiro de clientes" />
-        <v-icon
-          size=100
-          style="cursor: pointer"
-          @click="handleFileImport"
-        >$upload</v-icon>
+        <v-icon size="100" style="cursor: pointer" @click="handleFileImport">$upload</v-icon>
         <input
           ref="uploader"
           class="d-none"
