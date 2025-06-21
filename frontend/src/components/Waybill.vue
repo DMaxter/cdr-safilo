@@ -16,9 +16,9 @@
         <v-btn @click="showDownload()"><v-icon>$download</v-icon>Descarregar</v-btn>
         <v-btn color="red" @click="showCancel()"><v-icon>$cancel</v-icon>Cancelar</v-btn>
       </v-card-actions>
-        <Message v-model="cancelling" :message="cancelMessage()" :action="performCancel" />
-        <Message v-model="cancelSuccess" message="Carta de porte cancelada com sucesso" />
-        <Message v-model="cancelFailure" message="Ocorreu um erro ao cancelar a carta de porte" />
+      <Message v-model="cancelling" :message="cancelMessage()" :action="performCancel" />
+      <Message v-model="cancelSuccess" message="Carta de porte cancelada com sucesso" />
+      <Message v-model="cancelFailure" message="Ocorreu um erro ao cancelar a carta de porte" />
       <DownloadWaybill v-model="downloading" :request="props.request.id" />
     </v-card>
   </v-dialog>
