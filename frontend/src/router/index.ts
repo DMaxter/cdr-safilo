@@ -15,12 +15,6 @@ const routes = [
     component: () => import("@views/Profile.vue"),
   },
   {
-    path: '/search',
-    name: 'search',
-    meta: { title: "Pesquisar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/CustomerSearch.vue')
-  },
-  {
     path: '/order',
     name: 'order',
     meta: { title: "Encomendar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
@@ -54,10 +48,10 @@ const routes = [
     component: () => import("@views/RedefinePassword.vue"),
   },
   {
-    path: "/history",
-    name: "history",
-    meta: { title: "Histórico | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import("@views/History.vue"),
+    path: "/search",
+    name: "search",
+    meta: { title: "Pesquisa | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+    component: () => import("@views/Search.vue"),
   },
   {
     path: '/ABC',
@@ -112,12 +106,6 @@ const routes = [
     name: 'detailsOneOrTwoFinal',
     meta: { title: "Encomendar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
     component: () => import('@views/DetailsOneOrTwoFinal.vue')
-  },
-  {
-    path: '/SearchResults',
-    name: 'searchResults',
-    meta: { title: "Resultados da Pesquisa | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SearchResults.vue')
   },
   {
     path: "/clients",
