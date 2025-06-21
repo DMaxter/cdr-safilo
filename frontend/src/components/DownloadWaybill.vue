@@ -3,11 +3,20 @@
     <v-card>
       <v-card-title>Descarregar carta de porte</v-card-title>
       <v-card-text>
-        <v-select ref="formatRef" :rules="[required]" variant="underlined" :items="labels" label="Formato" v-model="format"></v-select>
+        <v-select
+          ref="formatRef"
+          :rules="[required]"
+          variant="underlined"
+          :items="labels"
+          label="Formato"
+          v-model="format"
+        ></v-select>
       </v-card-text>
       <v-card-actions>
         <v-btn @click="close()"><v-icon>$prev</v-icon>Voltar</v-btn>
-        <v-btn :disabled="!canDownload" @click="download()"><v-icon>$download</v-icon>Descarregar</v-btn>
+        <v-btn :disabled="!canDownload" @click="download()"
+          ><v-icon>$download</v-icon>Descarregar</v-btn
+        >
       </v-card-actions>
     </v-card>
     <Message v-model="downloadFailure" message="Ocorreu um erro ao descarregar a carta de porte" />
@@ -24,12 +33,12 @@ const props = defineProps({
   request: {
     required: true,
     type: Number,
-  }
+  },
 });
 
 const labels = await Backend.getLabelFormats();
 
-const format = ref("")
+const format = ref("");
 const formatRef = useTemplateRef("formatRef");
 
 const enabled = defineModel<boolean>();
