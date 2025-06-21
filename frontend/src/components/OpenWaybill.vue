@@ -205,7 +205,19 @@ const heightRef = useTemplateRef("heightRef");
 const widthRef = useTemplateRef("widthRef");
 const lengthRef = useTemplateRef("lengthRef");
 
-const canOpenWaybill = computed(() => checkAllRefsValid([serviceRef, amountRef, packageRef, weightRef, descriptionRef, formatRef, heightRef, widthRef, lengthRef]) );
+const canOpenWaybill = computed(() =>
+  checkAllRefsValid([
+    serviceRef,
+    amountRef,
+    packageRef,
+    weightRef,
+    descriptionRef,
+    formatRef,
+    heightRef,
+    widthRef,
+    lengthRef,
+  ]),
+);
 
 async function init() {
   await getServices();
