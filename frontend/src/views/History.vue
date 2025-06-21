@@ -230,7 +230,7 @@ const headers = [
     class: "my-header-style",
     key: "id",
     sortable: true,
-    order: "desc"
+    order: "desc",
   },
   {
     title: "Estado",
