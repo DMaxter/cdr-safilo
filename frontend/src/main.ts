@@ -122,3 +122,5 @@ import DownloadWaybill from "@components/DownloadWaybill.vue";
 app.component("DownloadWaybill", DownloadWaybill);
 import RecoveryCode from "@components/RecoveryCode.vue";
 app.component("RecoveryCode", RecoveryCode);
+import ClientNote from "@components/ClientNote.vue";
+app.component("ClientNote", ClientNote);
