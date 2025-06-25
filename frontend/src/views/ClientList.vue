@@ -39,9 +39,10 @@
           <v-icon v-if="canEdit" @click="editClient(item)" v-tooltip="'Editar cliente'"
             >edit</v-icon
           >
+          <v-icon v-if="canAnnotate" @click="showClientNote(item)" v-tooltip="'Nota do cliente'">sticky_note_2</v-icon>
         </template>
       </v-data-table-virtual>
-      <v-row class="flex-row" justify="space-around" style="width: 80%">
+      <v-row v-if="canEdit" class="flex-row" justify="space-around" style="width: 80%">
         <UploadClients @updated="refreshClients" />
         <v-btn
           height="50"
@@ -53,7 +54,8 @@
         </v-btn>
         <AddClient @updated="refreshClients" />
       </v-row>
-      <EditClient v-model="editing" :client="editingClient" @updated="refreshClients" />
+      <EditClient v-model="editing" :client="selectedClient" @updated="refreshClients" />
+      <ClientNote v-model="annotating" :client="selectedClient" @updated="refreshClients" />
     </v-row>
   </Container>
 </template>
@@ -77,9 +79,14 @@ const banners = reactive([]);
 
 const searchValue = ref("");
 
+const canAnnotate = user.isCdr() || user.isAdmin();
+
 const canEdit = user.isSafilo() || user.isAdmin();
-const editingClient = ref(new ClientDto());
 const editing: ClientDto = ref(false);
+
+const annotating = ref(false);
+
+const selectedClient = ref(new ClientDto());
 
 await getClients();
 
@@ -118,12 +125,17 @@ async function refreshClients() {
   await getClients();
 }
 
+function showClientNote(client: ClientDto) {
+  selectedClient.value = client;
+  annotating.value = true;
+}
+
 function openClientInfo(client) {
   router.push({ name: "clientInfo" });
 }
 
 async function editClient(client: ClientDto) {
-  editingClient.value = client;
+  selectedClient.value = client;
   editing.value = true;
 }
 
