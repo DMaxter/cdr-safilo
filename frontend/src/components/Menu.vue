@@ -6,7 +6,6 @@
           height="64"
           width="100"
           class="white--text customGradient"
-          color="#808080"
           v-bind="props"
         >
           Menu
@@ -15,8 +14,6 @@
 
       <v-btn-toggle dense tile dark borderless style="height: 64px">
         <v-btn
-          color="#6e4e5d"
-          value="left"
           @click="router.push('profile')"
           height="64"
           width="130"
@@ -28,13 +25,10 @@
         </v-btn>
 
         <v-btn
-          color="#6e4e5d"
-          value="center1"
           @click="router.push('clients')"
           height="64"
           width="130"
           class="customGradient text-white"
-          v-if="store.isSafilo() || store.isCommercial() || store.isAdmin()"
         >
           <span style="font-size: 12px">Clientes</span>
 
@@ -42,8 +36,6 @@
         </v-btn>
 
         <v-btn
-          color="#808080"
-          value="center2"
           @click="router.push('search')"
           height="64"
           width="130"
@@ -55,8 +47,6 @@
         </v-btn>
 
         <v-btn
-          color="#808080"
-          value="right"
           @click="router.push('orderClient')"
           height="64"
           width="130"
@@ -69,22 +59,6 @@
         </v-btn>
 
         <v-btn
-          color="#6e4e5d"
-          value="center2"
-          @click="$router.push('notes')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-          v-if="store.isCdr() || store.isAdmin()"
-        >
-          <span style="font-size: 12px">Notas</span>
-
-          <v-icon right>sticky_note_2</v-icon>
-        </v-btn>
-
-        <v-btn
-          color="#6e4e5d"
-          value="right"
           @click="router.push('materiais')"
           height="64"
           width="130"
@@ -97,8 +71,6 @@
         </v-btn>
 
         <v-btn
-          color="#6e4e5d"
-          value="right"
           @click="router.push('configure')"
           height="64"
           width="160"
@@ -115,7 +87,6 @@
       height="64"
       width="100"
       class="white--text customGradient"
-      color="#808080"
       @click="logout()"
     >
       Logout
