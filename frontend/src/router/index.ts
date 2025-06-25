@@ -167,13 +167,7 @@ const routes = [
     meta: { title: "Histórico do Cliente | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
     component: () => import('@views/SafiloClientHistory.vue')
   },
-  {
-    path: '/notes',
-    name: 'notas',
-    meta: { title: "Notas | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/CdrNotes.vue')
-  }
-]
+];
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

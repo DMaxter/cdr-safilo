@@ -498,7 +498,7 @@ export default class Backend {
       });
   }
 
-  static async addNote(id, note) {
+  static async editNote(id, note) {
     return httpClient
       .put(`/client/${id}`, note)
       .then((response) => {
@@ -600,7 +600,7 @@ export default class Backend {
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = url;
-        a.download = `CartaDePorte.pdf`;
+        a.download = `CartaPorte-Pedido${id}.pdf`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -619,7 +619,7 @@ export default class Backend {
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = url;
-        a.download = `CartaDePorte.pdf`;
+        a.download = `CartaPorte-Pedido${id}.pdf`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

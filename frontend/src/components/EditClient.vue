@@ -77,7 +77,7 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-btn hide-details color="blue darken-1" text @click="close()"> Voltar </v-btn>
+        <v-btn hide-details color="blue darken-1" text @click="close()">Voltar</v-btn>
         <v-btn hide-details color="blue darken-1" text @click="updateClient()">Atualizar</v-btn>
       </v-card-actions>
     </v-card>
@@ -85,8 +85,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import type { PropType } from "vue";
+import { ref, type PropType } from "vue";
 
 import Backend from "@/router/backend";
 import ClientDto from "@models/ClientDto";
