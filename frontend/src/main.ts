@@ -1,10 +1,14 @@
 import { createApp, h } from "vue";
 import { createPinia } from "pinia";
+
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import { pt } from "vuetify/locale";
 import "vuetify/styles";
 import { VLigatureIcon } from "vuetify/lib/composables/icons.mjs";
+import { VFileUpload } from "vuetify/labs/VFileUpload";
+
 import "material-symbols/outlined.scss";
 
 import App from "@/App.vue";
@@ -22,6 +26,7 @@ const materialSymbols = {
 };
 
 const aliases = {
+  addImage: "add_photo_alternate",
   calendar: "event",
   cancel: "cancel",
   checkboxIndeterminate: "indeterminate_check_box",
@@ -40,6 +45,7 @@ const aliases = {
   expand: "keyboard_arrow_down",
   eyeDropper: "colorize",
   file: "attach_file",
+  filter: "filter_alt",
   first: "first_page",
   info: "info",
   last: "last_page",
@@ -69,7 +75,15 @@ const aliases = {
 
 app.use(
   createVuetify({
-    components,
+    components: {
+      ...components,
+      VFileUpload,
+    },
+    date: {
+      locale: {
+        pt: "pt-PT",
+      },
+    },
     directives,
     icons: {
       defaultSet: "materialSymbols",
@@ -77,6 +91,10 @@ app.use(
       sets: {
         materialSymbols,
       },
+    },
+    locale: {
+      locale: "pt",
+      messages: { pt },
     },
   }),
 );
@@ -96,8 +114,6 @@ import Container from "@components/Container.vue";
 app.component("Container", Container);
 import Message from "@components/Message.vue";
 app.component("Message", Message);
-import UploadClients from "@components/UploadClients.vue";
-app.component("UploadClients", UploadClients);
 import AddClient from "@components/AddClient.vue";
 app.component("AddClient", AddClient);
 import EditClient from "@components/EditClient.vue";
@@ -124,3 +140,9 @@ import RecoveryCode from "@components/RecoveryCode.vue";
 app.component("RecoveryCode", RecoveryCode);
 import ClientNote from "@components/ClientNote.vue";
 app.component("ClientNote", ClientNote);
+import TableFilter from "@components/TableFilter.vue";
+app.component("TableFilter", TableFilter);
+import ImageManagement from "@components/ImageManagement.vue";
+app.component("ImageManagement", ImageManagement);
+import FileUpload from "@components/FileUpload.vue";
+app.component("FileUpload", FileUpload);
