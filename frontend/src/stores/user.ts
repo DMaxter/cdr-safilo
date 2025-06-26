@@ -26,7 +26,7 @@ export const useUserStore = defineStore("user", () => {
     user.email = null;
     user.name = null;
     user.credits = null;
-    user.roles = null;
+    user.roles = [];
   }
 
   function isSafilo(): boolean {

@@ -4,14 +4,19 @@
       <v-col cols="auto" style="padding: 0">
         <v-card
           elevation="12"
-          height="800"
           width="1500"
           max-width="100%"
+          max-height="100%"
           color="#FAFAFA"
           style="border-radius: 15px"
         >
           <Menu />
-          <slot />
+          <v-card-text>
+            <slot />
+          </v-card-text>
+          <v-card-actions v-if="slots.actions">
+            <slot name="actions" />
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -22,5 +27,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useSlots } from "vue";
+
 import CDRLogo from "@/assets/logo-slogan-white.png";
+
+const slots = useSlots();
 </script>

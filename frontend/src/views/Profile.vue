@@ -73,7 +73,7 @@
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 import Backend from "@/router/backend";
 import { useUserStore } from "@stores/user";
