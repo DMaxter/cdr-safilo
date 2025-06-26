@@ -1,14 +1,7 @@
 <template>
   <v-dialog v-model="enabled" persistent max-width="500px">
     <template v-slot:activator="{ props }">
-      <v-btn
-        height="50"
-        width="145"
-        class="mb-3 mt-11 ml-3 customGradient text-white"
-        v-bind="props"
-      >
-        <span style="font-size: 11px">Adicionar Cliente </span></v-btn
-      >
+      <v-btn class="mt-3 mb-3" v-bind="props">Adicionar Cliente</v-btn>
     </template>
     <v-card>
       <v-card-title class="justify-center pt-2 pb-1">

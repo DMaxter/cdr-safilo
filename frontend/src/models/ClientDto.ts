@@ -1,3 +1,5 @@
+import ImageDto from "@models/ImageDto";
+
 export default class ClientDto {
   id: number | string;
   banner: string | null = null;
@@ -9,8 +11,9 @@ export default class ClientDto {
   phone: string;
   city: string;
   country: string;
+  images: ImageDto[] = [];
 
-  constructor(obj?: ClientDto) {
+  constructor(obj?: Partial<ClientDto>) {
     if (obj) {
       this.id = obj.id;
       this.banner = obj.banner;
@@ -22,6 +25,7 @@ export default class ClientDto {
       this.postalCode = obj.postalCode;
       this.city = obj.city;
       this.country = obj.country;
+      this.images = obj.images.map((i) => new ImageDto(i));
     }
   }
 
@@ -36,5 +40,6 @@ export default class ClientDto {
     this.postalCode = "";
     this.city = "";
     this.country = "";
+    this.images = [];
   }
 }
