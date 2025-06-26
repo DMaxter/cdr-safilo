@@ -198,6 +198,15 @@ export default class Backend {
       });
   }
 
+  static async deleteClientImages(ids) {
+    return httpClient
+      .delete("/image/client", { data: ids })
+      .then((response) => response.data)
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error.response));
+      });
+  }
+
   static async deleteBrand(id) {
     return httpClient
       .delete(`/brand/${id}`)
@@ -223,6 +232,17 @@ export default class Backend {
   static async deleteFinishGroup(id) {
     return httpClient
       .delete(`/finishing/group/${id}`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error.reponse));
+      });
+  }
+
+  static async getClient(id) {
+    return httpClient
+      .get(`/client/${id}`)
       .then((response) => {
         return response.data;
       })
@@ -520,9 +540,14 @@ export default class Backend {
       });
   }
 
-  static async addImageToClient(id, file) {
+  static async addClientImage(id, files) {
     var formData = new FormData();
-    formData.append("images", file);
+
+    files.forEach((file) => {
+      console.log(file);
+      formData.append("images", file);
+    });
+
     return httpClient
       .post(`/image/client/${id}`, formData, {
         headers: {
