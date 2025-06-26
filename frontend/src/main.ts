@@ -22,6 +22,7 @@ const materialSymbols = {
 };
 
 const aliases = {
+  addImage: "add_photo_alternate",
   calendar: "event",
   cancel: "cancel",
   checkboxIndeterminate: "indeterminate_check_box",

@@ -2,12 +2,7 @@
   <v-row no-gutters justify="space-between" class="pt-2 pl-2 pr-2">
     <v-menu :offset-x="true" tile>
       <template v-slot:activator="{ props }">
-        <v-btn
-          height="64"
-          width="100"
-          class="white--text customGradient"
-          v-bind="props"
-        >
+        <v-btn height="64" width="100" class="white--text customGradient" v-bind="props">
           Menu
         </v-btn>
       </template>
@@ -83,12 +78,7 @@
         </v-btn>
       </v-btn-toggle>
     </v-menu>
-    <v-btn
-      height="64"
-      width="100"
-      class="white--text customGradient"
-      @click="logout()"
-    >
+    <v-btn height="64" width="100" class="white--text customGradient" @click="logout()">
       Logout
     </v-btn>
   </v-row>

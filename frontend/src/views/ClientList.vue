@@ -34,12 +34,14 @@
             </v-row>
           </v-container>
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template v-slot:item.actions="{ item }">
           <v-icon @click="openClientInfo(item)" v-tooltip="'Ver cliente'">visibility</v-icon>
           <v-icon v-if="canEdit" @click="editClient(item)" v-tooltip="'Editar cliente'"
             >edit</v-icon
           >
-          <v-icon v-if="canAnnotate" @click="showClientNote(item)" v-tooltip="'Nota do cliente'">sticky_note_2</v-icon>
+          <v-icon v-if="canAnnotate" @click="showClientNote(item)" v-tooltip="'Nota do cliente'"
+            >sticky_note_2</v-icon
+          >
         </template>
       </v-data-table-virtual>
       <v-row v-if="canEdit" class="flex-row" justify="space-around" style="width: 80%">
@@ -131,7 +133,7 @@ function showClientNote(client: ClientDto) {
 }
 
 function openClientInfo(client) {
-  router.push({ name: "clientInfo" });
+  router.push({ name: "client", query: { id: client.id } });
 }
 
 async function editClient(client: ClientDto) {

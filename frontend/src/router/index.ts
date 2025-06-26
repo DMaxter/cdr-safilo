@@ -114,59 +114,59 @@ const routes = [
     component: () => import("@views/ClientList.vue"),
   },
   {
-    path: '/ClientInfo',
-    name: 'clientInfo',
+    path: "/client",
+    name: "client",
     meta: { title: "Informação de Cliente | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloSpecificClient.vue')
+    component: () => import("@views/ClientInfo.vue"),
   },
-  {
-    path: '/ClientStores',
-    name: 'clientStores',
-    meta: { title: "Lojas do Cliente | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloClientStores.vue')
-  },
-  {
-    path: '/StoreInfo',
-    name: 'storeInfo',
-    meta: { title: "Informação de Loja | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloClientSpecificStore.vue')
-  },
-  {
-    path: '/Configure',
-    name: 'configure',
-    meta: { title: "Configurar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloConfigure.vue')
-  },
-  {
-    path: '/ImageUpload',
-    name: 'imageUpload',
-    meta: { title: "Adicionar Imagem | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloImageUpload.vue')
-  },
-  {
-    path: '/PlafondChange',
-    name: 'plafondChange',
-    meta: { title: "Atribuir Plafond | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloPlafondChange.vue')
-  },
-  {
-    path: '/Materiais',
-    name: 'materiais',
-    meta: { title: "Materiais | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/CdrMaterials.vue')
-  },
-  {
-    path: '/brandChange',
-    name: 'brandChange',
-    meta: { title: "Marcas | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloBrandChanges.vue')
-  },
-  {
-    path: '/clientHistory',
-    name: 'clientHistory',
-    meta: { title: "Histórico do Cliente | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/SafiloClientHistory.vue')
-  },
+  //{
+  //  path: '/ClientStores',
+  //  name: 'clientStores',
+  //  meta: { title: "Lojas do Cliente | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/SafiloClientStores.vue')
+  //},
+  //{
+  //  path: '/StoreInfo',
+  //  name: 'storeInfo',
+  //  meta: { title: "Informação de Loja | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/SafiloClientSpecificStore.vue')
+  //},
+  //{
+  //  path: '/Configure',
+  //  name: 'configure',
+  //  meta: { title: "Configurar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/SafiloConfigure.vue')
+  //},
+  //{
+  //  path: '/ImageUpload',
+  //  name: 'imageUpload',
+  //  meta: { title: "Adicionar Imagem | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/SafiloImageUpload.vue')
+  //},
+  //{
+  //  path: '/PlafondChange',
+  //  name: 'plafondChange',
+  //  meta: { title: "Atribuir Plafond | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/SafiloPlafondChange.vue')
+  //},
+  //{
+  //  path: '/Materiais',
+  //  name: 'materiais',
+  //  meta: { title: "Materiais | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/CdrMaterials.vue')
+  //},
+  //{
+  //  path: '/brandChange',
+  //  name: 'brandChange',
+  //  meta: { title: "Marcas | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/SafiloBrandChanges.vue')
+  //},
+  //{
+  //  path: '/clientHistory',
+  //  name: 'clientHistory',
+  //  meta: { title: "Histórico do Cliente | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+  //  component: () => import('@views/SafiloClientHistory.vue')
+  //},
 ];
 
 export const router = createRouter({
