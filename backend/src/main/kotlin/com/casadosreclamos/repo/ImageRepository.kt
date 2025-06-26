@@ -7,8 +7,11 @@ import io.smallrye.mutiny.Multi
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class ImageRepository: PanacheRepository<Image> {
+class ImageRepository : PanacheRepository<Image> {
     fun findAll(images: Set<Long>): Multi<Image> {
-        return stream("FROM Images i WHERE i.id in (:images)", Parameters.with("images", images).map())
+        return stream(
+                "FROM Image i WHERE i.id in (:images)",
+                Parameters.with("images", images).map()
+        )
     }
 }

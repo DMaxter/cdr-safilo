@@ -11,8 +11,8 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-    <Message v-model="success" message="Nota editada com sucesso" />
-    <Message v-model="failure" message="Ocorreu um erro ao editar a nota" />
+  <Message v-model="success" message="Nota editada com sucesso" />
+  <Message v-model="failure" message="Ocorreu um erro ao editar a nota" />
 </template>
 
 <script lang="ts" setup>
