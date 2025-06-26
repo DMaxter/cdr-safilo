@@ -7,7 +7,7 @@
         </div>
       </v-card-text>
       <v-card-actions class="justify-end">
-        <v-btn text @click="close()">Voltar </v-btn>
+        <v-btn text @click="close()">Voltar</v-btn>
         <v-btn
           text
           v-if="props.action"
