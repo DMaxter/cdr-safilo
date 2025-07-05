@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception.fema
 
-private const val MSG = "Waybill is already opened for this request"
+private const val MSG = "Uma carta de porte já foi aberta para este pedido"
 
-class WaybillAlreadyOpenedException: FEMAException(MSG)
+class WaybillAlreadyOpenedException : FEMAException(MSG)
+

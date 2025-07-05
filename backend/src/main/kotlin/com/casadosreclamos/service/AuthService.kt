@@ -1,18 +1,18 @@
 package com.casadosreclamos.service
 
-import com.casadosreclamos.utils.EMAIL_REGEX
 import com.casadosreclamos.dto.AuthDto
 import com.casadosreclamos.dto.RegisterDto
 import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.exception.*
-import com.casadosreclamos.utils.getEmailPasswordRecovery
-import com.casadosreclamos.utils.getEmailRegisteredCommercial
 import com.casadosreclamos.model.PasswordToken
 import com.casadosreclamos.model.PasswordTokenId
 import com.casadosreclamos.model.Role
 import com.casadosreclamos.model.User
 import com.casadosreclamos.repo.PasswordTokenRepository
 import com.casadosreclamos.repo.UserRepository
+import com.casadosreclamos.utils.EMAIL_REGEX
+import com.casadosreclamos.utils.getEmailPasswordRecovery
+import com.casadosreclamos.utils.getEmailRegisteredCommercial
 import io.quarkus.elytron.security.common.BcryptUtil
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.quarkus.mailer.Mail
@@ -22,9 +22,6 @@ import io.quarkus.runtime.configuration.ProfileManager
 import io.smallrye.jwt.build.Jwt
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
-import org.bouncycastle.util.io.pem.PemReader
-import org.eclipse.microprofile.config.inject.ConfigProperty
-import org.jboss.logging.Logger
 import java.io.File
 import java.io.InputStreamReader
 import java.security.KeyFactory
@@ -39,6 +36,9 @@ import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.NewCookie
 import javax.ws.rs.core.Response
+import org.bouncycastle.util.io.pem.PemReader
+import org.eclipse.microprofile.config.inject.ConfigProperty
+import org.jboss.logging.Logger
 
 // JWT Configuration
 private const val ALGORITHM = "RSA"
@@ -62,33 +62,21 @@ private const val TIME: Long = 3 // hours
 @Startup
 @ApplicationScoped
 class AuthService {
-    @Inject
-    lateinit var logger: Logger
+    @Inject lateinit var logger: Logger
 
-    @Inject
-    lateinit var userRepository: UserRepository
+    @Inject lateinit var userRepository: UserRepository
 
-    @Inject
-    lateinit var tokenRepository: PasswordTokenRepository
+    @Inject lateinit var tokenRepository: PasswordTokenRepository
 
-    @Inject
-    lateinit var mailer: ReactiveMailer
+    @Inject lateinit var mailer: ReactiveMailer
 
-    @Inject
-    @ConfigProperty(name = "mp.jwt.verify.issuer")
-    lateinit var issuer: String
+    @Inject @ConfigProperty(name = "mp.jwt.verify.issuer") lateinit var issuer: String
 
-    @Inject
-    @ConfigProperty(name = "mp.jwt.token.cookie")
-    lateinit var cookie: String
+    @Inject @ConfigProperty(name = "mp.jwt.token.cookie") lateinit var cookie: String
 
-    @Inject
-    @ConfigProperty(name = "smallrye.jwt.sign.key.location")
-    lateinit var keyPath: String
+    @Inject @ConfigProperty(name = "smallrye.jwt.sign.key.location") lateinit var keyPath: String
 
-    @Inject
-    @ConfigProperty(name = "domain.name")
-    lateinit var domain: String
+    @Inject @ConfigProperty(name = "domain.name") lateinit var domain: String
 
     lateinit var key: PrivateKey
 
@@ -96,95 +84,119 @@ class AuthService {
     fun init() {
         logger.info("Creating admin user")
 
-        val admin = User(
-            ADMIN_NAME, ADMIN_MAIL, BcryptUtil.bcryptHash(ADMIN_PASS), mutableSetOf(Role.ADMIN)
-        )
+        val admin =
+                User(
+                        ADMIN_NAME,
+                        ADMIN_MAIL,
+                        BcryptUtil.bcryptHash(ADMIN_PASS),
+                        mutableSetOf(Role.ADMIN)
+                )
         admin.credits = mutableSetOf()
 
         Panache.withTransaction {
-            userRepository.findByEmail(ADMIN_NAME).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
-                if (user == null) {
-                    return@transformToUni userRepository.persist(admin).onItemOrFailure()
-                        .invoke { _: User?, error: Throwable? ->
-                            if (fail == null) {
-                                logger.info("Admin created successfully")
-                            } else {
-                                logger.error("Failed to create admin: $error")
-                            }
+                    userRepository.findByEmail(ADMIN_NAME).onItemOrFailure().transformToUni {
+                            user: User?,
+                            fail: Throwable? ->
+                        if (user == null) {
+                            return@transformToUni userRepository
+                                    .persist(admin)
+                                    .onItemOrFailure()
+                                    .invoke { _: User?, error: Throwable? ->
+                                        if (fail == null) {
+                                            logger.info("Admin created successfully")
+                                        } else {
+                                            logger.error("Failed to create admin: $error")
+                                        }
+                                    }
+                        } else if (fail != null) {
+                            logger.error("Failed to find admin: $fail")
+                        } else {
+                            logger.warn("Admin already created")
                         }
-                } else if (fail != null) {
-                    logger.error("Failed to find admin: $fail")
-                } else {
-                    logger.warn("Admin already created")
-                }
 
-                return@transformToUni Uni.createFrom().nullItem()
-            }
-        }.await().indefinitely()
+                        return@transformToUni Uni.createFrom().nullItem()
+                    }
+                }
+                .await()
+                .indefinitely()
 
         logger.info("Creating CDR user")
 
-        val cdr = User(
-            CDR_NAME, CDR_MAIL, BcryptUtil.bcryptHash(CDR_PASS), mutableSetOf(Role.CDR)
-        )
+        val cdr = User(CDR_NAME, CDR_MAIL, BcryptUtil.bcryptHash(CDR_PASS), mutableSetOf(Role.CDR))
         cdr.credits = mutableSetOf()
 
         Panache.withTransaction {
-            userRepository.findByEmail(CDR_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
-                if (user == null) {
-                    return@transformToUni userRepository.persist(cdr).onItemOrFailure()
-                        .invoke { _: User?, error: Throwable? ->
-                            if (fail == null) {
-                                logger.info("CDR user created successfully")
-                            } else {
-                                logger.error("Failed to create CDR user: $error")
-                            }
+                    userRepository.findByEmail(CDR_MAIL).onItemOrFailure().transformToUni {
+                            user: User?,
+                            fail: Throwable? ->
+                        if (user == null) {
+                            return@transformToUni userRepository
+                                    .persist(cdr)
+                                    .onItemOrFailure()
+                                    .invoke { _: User?, error: Throwable? ->
+                                        if (fail == null) {
+                                            logger.info("CDR user created successfully")
+                                        } else {
+                                            logger.error("Failed to create CDR user: $error")
+                                        }
+                                    }
+                        } else if (fail != null) {
+                            logger.error("Failed to find CDR user: $fail")
+                        } else {
+                            logger.warn("CDR user already created")
                         }
-                } else if (fail != null) {
-                    logger.error("Failed to find CDR user: $fail")
-                } else {
-                    logger.warn("CDR user already created")
-                }
 
-                return@transformToUni Uni.createFrom().nullItem()
-            }
-        }.await().indefinitely()
+                        return@transformToUni Uni.createFrom().nullItem()
+                    }
+                }
+                .await()
+                .indefinitely()
 
         logger.info("Creating Safilo user")
 
-        val safilo = User(
-            SAFILO_NAME, SAFILO_MAIL, BcryptUtil.bcryptHash(SAFILO_PASS), mutableSetOf(Role.MANAGER)
-        )
+        val safilo =
+                User(
+                        SAFILO_NAME,
+                        SAFILO_MAIL,
+                        BcryptUtil.bcryptHash(SAFILO_PASS),
+                        mutableSetOf(Role.MANAGER)
+                )
         safilo.credits = mutableSetOf()
 
         Panache.withTransaction {
-            userRepository.findByEmail(SAFILO_MAIL).onItemOrFailure().transformToUni { user: User?, fail: Throwable? ->
-                if (user == null) {
-                    return@transformToUni userRepository.persist(safilo).onItemOrFailure()
-                        .invoke { _: User?, error: Throwable? ->
-                            if (fail == null) {
-                                logger.info("Safilo user created successfully")
-                            } else {
-                                logger.error("Failed to create Safilo user: $error")
-                            }
+                    userRepository.findByEmail(SAFILO_MAIL).onItemOrFailure().transformToUni {
+                            user: User?,
+                            fail: Throwable? ->
+                        if (user == null) {
+                            return@transformToUni userRepository
+                                    .persist(safilo)
+                                    .onItemOrFailure()
+                                    .invoke { _: User?, error: Throwable? ->
+                                        if (fail == null) {
+                                            logger.info("Safilo user created successfully")
+                                        } else {
+                                            logger.error("Failed to create Safilo user: $error")
+                                        }
+                                    }
+                        } else if (fail != null) {
+                            logger.error("Failed to find Safilo user: $fail")
+                        } else {
+                            logger.warn("Safilo user already created")
                         }
-                } else if (fail != null) {
-                    logger.error("Failed to find Safilo user: $fail")
-                } else {
-                    logger.warn("Safilo user already created")
-                }
 
-                return@transformToUni Uni.createFrom().nullItem()
-            }
-        }.await().indefinitely()
+                        return@transformToUni Uni.createFrom().nullItem()
+                    }
+                }
+                .await()
+                .indefinitely()
 
         logger.info("Initializing Authentication Service")
         val file =
-            if (ProfileManager.getActiveProfile() == "dev" || ProfileManager.getActiveProfile() == "test") AuthService::class.java.getResourceAsStream(
-                keyPath
-            ) else File(
-                keyPath
-            ).inputStream()
+                if (ProfileManager.getActiveProfile() == "dev" ||
+                                ProfileManager.getActiveProfile() == "test"
+                )
+                        AuthService::class.java.getResourceAsStream(keyPath)
+                else File(keyPath).inputStream()
 
         if (file != null) {
             logger.debug("Found key file")
@@ -208,7 +220,11 @@ class AuthService {
 
         val user = User()
 
-        if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
+        if (credentials.email == null ||
+                        credentials.password == null ||
+                        credentials.email!!.isEmpty() ||
+                        credentials.password!!.isEmpty()
+        ) {
             logger.error("Email or password are null or empty")
             throw InvalidCredentialsException()
         } else if (!EMAIL_REGEX.matches(credentials.email!!)) {
@@ -229,27 +245,42 @@ class AuthService {
             userRepository.exists(user.email).onItem().transformToUni { value ->
                 return@transformToUni if (value) {
                     logger.error("The user with email ${user.email} is already registered")
-                    throw AlreadyExistsException("User")
+                    throw AlreadyExistsException("Utilizador")
                 } else {
-                    userRepository.persist(user).onItem().invoke { _ -> logger.info("User ${user.name} created") }
-                        .onFailure().invoke { e -> logger.error("Couldn't persist user ${user.email}: $e") }
+                    userRepository
+                            .persist(user)
+                            .onItem()
+                            .invoke { _ -> logger.info("User ${user.name} created") }
+                            .onFailure()
+                            .invoke { e -> logger.error("Couldn't persist user ${user.email}: $e") }
                 }
             }
-        }.onItem().ifNotNull().transformToUni { _ ->
-            mailer.send(
-                Mail.withText(
-                    user.email, "Registo na plataforma Safilo/CDR", getEmailRegisteredCommercial(credentials)
-                )
-            ).onItem().invoke { _ ->
-                logger.info("Mail with credentials sent to ${user.email}")
-            }.onFailure().invoke { e ->
-                logger.error("Couldn't send email with credentials: $e")
-            }
-        }.onItem().transform { _ ->
-            logger.info("Successfully registered user")
-
-            user
         }
+                .onItem()
+                .ifNotNull()
+                .transformToUni { _ ->
+                    mailer.send(
+                                    Mail.withText(
+                                            user.email,
+                                            "Registo na plataforma Safilo/CDR",
+                                            getEmailRegisteredCommercial(credentials)
+                                    )
+                            )
+                            .onItem()
+                            .invoke { _ ->
+                                logger.info("Mail with credentials sent to ${user.email}")
+                            }
+                            .onFailure()
+                            .invoke { e ->
+                                logger.error("Couldn't send email with credentials: $e")
+                            }
+                }
+                .onItem()
+                .transform { _ ->
+                    logger.info("Successfully registered user")
+
+                    user
+                }
     }
 
     fun getAll(): Multi<UserDto> {
@@ -260,33 +291,49 @@ class AuthService {
     fun login(credentials: AuthDto): Uni<Response> {
         logger.info("Logging in with ${credentials}")
 
-        if (credentials.email == null || credentials.password == null || credentials.email!!.isEmpty() || credentials.password!!.isEmpty()) {
+        if (credentials.email == null ||
+                        credentials.password == null ||
+                        credentials.email!!.isEmpty() ||
+                        credentials.password!!.isEmpty()
+        ) {
             logger.error("Email or password are null or empty")
             throw InvalidCredentialsException()
         }
 
-        return Panache.withTransaction { userRepository.findByEmail(credentials.email!!) }.onItem()
-            .transformToUni { user ->
-                if (user == null) {
-                    logger.error("User ${credentials.email} is not registered")
+        return Panache.withTransaction { userRepository.findByEmail(credentials.email!!) }
+                .onItem()
+                .transformToUni { user ->
+                    if (user == null) {
+                        logger.error("User ${credentials.email} is not registered")
 
-                    throw InvalidCredentialsException()
-                } else if (!BcryptUtil.matches(credentials.password!!, user.password)) {
-                    logger.error("Password doesn't match for user ${credentials.email}")
+                        throw InvalidCredentialsException()
+                    } else if (!BcryptUtil.matches(credentials.password!!, user.password)) {
+                        logger.error("Password doesn't match for user ${credentials.email}")
 
-                    Uni.createFrom().failure(InvalidCredentialsException())
-                } else {
-                    Uni.createFrom().item(user)
+                        Uni.createFrom().failure(InvalidCredentialsException())
+                    } else {
+                        Uni.createFrom().item(user)
+                    }
                 }
-            }.onItem().transform { user: User ->
-                logger.info("Successfully logged in")
+                .onItem()
+                .transform { user: User ->
+                    logger.info("Successfully logged in")
 
-                Response.ok().cookie(
-                    NewCookie(
-                        cookie, generateJwt(user), "/", domain, "", Duration.ofHours(TIME).seconds.toInt(), true, true
-                    )
-                ).build()
-            }
+                    Response.ok()
+                            .cookie(
+                                    NewCookie(
+                                            cookie,
+                                            generateJwt(user),
+                                            "/",
+                                            domain,
+                                            "",
+                                            Duration.ofHours(TIME).seconds.toInt(),
+                                            true,
+                                            true
+                                    )
+                            )
+                            .build()
+                }
     }
 
     fun logout(): Uni<Response> {
@@ -294,7 +341,11 @@ class AuthService {
         logger.info("Successfully logged out")
 
         return Uni.createFrom()
-            .item(Response.ok().cookie(NewCookie(cookie, "", "/", domain, "", 0, true, true)).build())
+                .item(
+                        Response.ok()
+                                .cookie(NewCookie(cookie, "", "/", domain, "", 0, true, true))
+                                .build()
+                )
     }
 
     @Throws(InvalidUserException::class)
@@ -305,9 +356,17 @@ class AuthService {
         }
 
         // Generate random alphanumeric token
-        val userToken = SecureRandom().ints(48, 123).filter { (it <= 57 || it >= 64) && (it <= 90 || it >= 97) }.limit(
-            TOKEN_LEN
-        ).collect(::StringBuilder, StringBuilder::appendCodePoint, StringBuilder::append).toString()
+        val userToken =
+                SecureRandom()
+                        .ints(48, 123)
+                        .filter { (it <= 57 || it >= 64) && (it <= 90 || it >= 97) }
+                        .limit(TOKEN_LEN)
+                        .collect(
+                                ::StringBuilder,
+                                StringBuilder::appendCodePoint,
+                                StringBuilder::append
+                        )
+                        .toString()
 
         return Panache.withTransaction {
             userRepository.findByEmail(username).onItem().transformToUni { user ->
@@ -329,27 +388,43 @@ class AuthService {
 
                     logger.info("Generated token $userToken")
 
-                    tokenRepository.persist(token).onItem().transformToUni { _ ->
-                        logger.info("Token for $user created successfully")
+                    tokenRepository
+                            .persist(token)
+                            .onItem()
+                            .transformToUni { _ ->
+                                logger.info("Token for $user created successfully")
 
-                        mailer.send(
-                            Mail.withText(
-                                username,
-                                "Pedido de substituição de password para a plataforma Safilo/CDR",
-                                getEmailPasswordRecovery(domain, user.email, userToken)
-                            )
-                        ).onItem().invoke { _ -> logger.info("Sent email to $username with token") }.onFailure()
-                            .invoke { e -> logger.error("Couldn't send email with token: $e") }
-                    }.onFailure().invoke { e -> logger.error("Couldn't persist token: $e") }
+                                mailer.send(
+                                                Mail.withText(
+                                                        username,
+                                                        "Pedido de substituição de password para a plataforma Safilo/CDR",
+                                                        getEmailPasswordRecovery(
+                                                                domain,
+                                                                user.email,
+                                                                userToken
+                                                        )
+                                                )
+                                        )
+                                        .onItem()
+                                        .invoke { _ ->
+                                            logger.info("Sent email to $username with token")
+                                        }
+                                        .onFailure()
+                                        .invoke { e ->
+                                            logger.error("Couldn't send email with token: $e")
+                                        }
+                            }
+                            .onFailure()
+                            .invoke { e -> logger.error("Couldn't persist token: $e") }
                 } else {
                     logger.error("User $user is not registered")
 
                     Uni.createFrom().nullItem()
                 }
             }
-        }.onItem().transform { _ ->
-            Response.ok().build()
         }
+                .onItem()
+                .transform { _ -> Response.ok().build() }
     }
 
     @Throws(InvalidTokenException::class, InvalidPasswordException::class)
@@ -376,36 +451,48 @@ class AuthService {
             val userUni = userRepository.findByEmail(username)
             val tokenUni = tokenRepository.findById(username, tokenHashed)
 
-            Uni.combine().all().unis(userUni, tokenUni).asTuple().onItem().transformToUni { tuple ->
-                val user = tuple.item1
-                val token = tuple.item2
+            Uni.combine()
+                    .all()
+                    .unis(userUni, tokenUni)
+                    .asTuple()
+                    .onItem()
+                    .transformToUni { tuple ->
+                        val user = tuple.item1
+                        val token = tuple.item2
 
-                logger.info("Fetched user ${user}")
-                logger.info("Fetched token ${token}")
+                        logger.info("Fetched user ${user}")
+                        logger.info("Fetched token ${token}")
 
-                if (user == null || token == null) {
-                    logger.error("Username or token doesn't exist")
+                        if (user == null || token == null) {
+                            logger.error("Username or token doesn't exist")
 
-                    throw InvalidTokenException()
-                }
+                            throw InvalidTokenException()
+                        }
 
-                user.password = BcryptUtil.bcryptHash(password)
+                        user.password = BcryptUtil.bcryptHash(password)
 
-                logger.info("Changed password")
+                        logger.info("Changed password")
 
-                // Delete token
-                tokenRepository.delete(token)
-            }.onItem().transform {
-                logger.info("Deleted token")
+                        // Delete token
+                        tokenRepository.delete(token)
+                    }
+                    .onItem()
+                    .transform {
+                        logger.info("Deleted token")
 
-                Response.ok().build()
-            }.onFailure().invoke { e -> logger.error("Couldn't delete token: $e") }
+                        Response.ok().build()
+                    }
+                    .onFailure()
+                    .invoke { e -> logger.error("Couldn't delete token: $e") }
         }
     }
 
     private fun generateJwt(user: User): String {
-        return Jwt.issuer(issuer).claim("sub", user.email).claim("roles", user.roles).expiresIn(Duration.ofHours(TIME))
-            .sign(key)
+        return Jwt.issuer(issuer)
+                .claim("sub", user.email)
+                .claim("roles", user.roles)
+                .expiresIn(Duration.ofHours(TIME))
+                .sign(key)
     }
 
     private fun sha512(bytes: ByteArray): String {
@@ -414,7 +501,9 @@ class AuthService {
     }
 
     private fun printableHexString(hash: ByteArray): String {
-        return hash.map { Integer.toHexString(0xFF and it.toInt()) }.map { if (it.length < 2) "0$it" else it }
-            .fold("") { back, new -> back + new }
+        return hash
+                .map { Integer.toHexString(0xFF and it.toInt()) }
+                .map { if (it.length < 2) "0$it" else it }
+                .fold("") { back, new -> back + new }
     }
 }

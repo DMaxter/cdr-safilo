@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Not enought credits to make a request"
+private const val MSG = "Sem plafond suficiente para realizar o pedido"
 
-class NotEnoughCreditsException: CDRException(MSG)
+class NotEnoughCreditsException : CDRException(MSG)
+

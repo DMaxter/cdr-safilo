@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Missing price for finishings/material"
+private const val MSG = "Preço não existente para acabamentos ou material"
 
 class MissingPriceException : CDRException(MSG)
+

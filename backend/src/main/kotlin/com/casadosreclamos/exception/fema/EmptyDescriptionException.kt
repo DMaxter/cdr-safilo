@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception.fema
 
-private const val MSG = "Description is empty or non existent"
+private const val MSG = "A descrição é inexistente ou está vazia"
 
-class EmptyDescriptionException: FEMAException(MSG)
+class EmptyDescriptionException : FEMAException(MSG)
+

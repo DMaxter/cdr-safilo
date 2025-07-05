@@ -68,7 +68,7 @@ class FinishingService {
                                     "A finishing with name ${finishing.name} is already registered"
                             )
 
-                            throw AlreadyExistsException("Finishing")
+                            throw AlreadyExistsException("Acabamento")
                         } else {
                             finishingRepository
                                     .persist(finishing)
@@ -111,7 +111,7 @@ class FinishingService {
         if (finishingDto.id == null || finishingDto.id!! <= 0) {
             logger.error("Finishing ID is invalid")
 
-            throw InvalidIdException("finishing")
+            throw InvalidIdException("acabamento")
         } else if (finishingDto.name == null || finishingDto.name!!.isEmpty()) {
             logger.error("Finishing name is null or empty")
 
@@ -128,7 +128,7 @@ class FinishingService {
                                     "A finishing with name ${finishingDto.name} is already registered"
                             )
 
-                            throw AlreadyExistsException("Finishing")
+                            throw AlreadyExistsException("Acabamento")
                         }
 
                         finishingRepository.findById(finishingDto.id!!).onItem().transform {
@@ -138,7 +138,7 @@ class FinishingService {
                                         "Finishing with ID ${finishingDto.id} is not registered"
                                 )
 
-                                throw InvalidIdException("finishing")
+                                throw InvalidIdException("acabamento")
                             }
 
                             finishing.name = finishingDto.name!!
@@ -169,7 +169,7 @@ class FinishingService {
                     .transform { e ->
                         logger.error("Couldn't delete finishing: $e")
 
-                        InvalidIdException("finishing")
+                        InvalidIdException("acabamento")
                     }
         }
     }
@@ -183,7 +183,7 @@ class FinishingService {
                         if (finishing == null) {
                             logger.error("Finishing with ID $id is not registered")
 
-                            throw InvalidIdException("finishing")
+                            throw InvalidIdException("acabamento")
                         }
 
                         finishing.obsolete = true
@@ -244,13 +244,13 @@ class FinishingService {
                         if (exists) {
                             logger.error("A finishing group with name $name is already registered")
 
-                            throw AlreadyExistsException("FinishingGroup")
+                            throw AlreadyExistsException("Grupo de acabamentos")
                         } else if (finishingsFetched.size < finishings.size) {
                             logger.error(
                                     "Invalid or repeated finishings detected. Fetched: ${finishingsFetched}"
                             )
 
-                            throw InvalidIdException("finishing")
+                            throw InvalidIdException("acabamento")
                         }
 
                         group.finishings = finishingsFetched
@@ -273,7 +273,7 @@ class FinishingService {
         if (group.id == null || group.id!! <= 0) {
             logger.error("Finishing Group ID is invalid")
 
-            throw InvalidIdException("finishing group")
+            throw InvalidIdException("grupo de acabamentos")
         } else if (group.name.isNullOrEmpty()) {
             logger.error("Finishing Group name is null or empty")
 
@@ -310,17 +310,17 @@ class FinishingService {
                                     "A finishing group with name ${group.name!!} is already registered"
                             )
 
-                            throw AlreadyExistsException("FinishingGroup")
+                            throw AlreadyExistsException("Grupo de acabamentos")
                         } else if (finishingGroup == null) {
                             logger.error("Finishing group with ID ${group.id} is not registered")
 
-                            throw InvalidIdException("finishing group")
+                            throw InvalidIdException("grupo de acabamentos")
                         } else if (finishings.size < group.finishings!!.size) {
                             logger.error(
                                     "Invalid or repeated finishings detected. Fetched: ${finishings}"
                             )
 
-                            throw InvalidIdException("finishing")
+                            throw InvalidIdException("acabamento")
                         }
 
                         finishingGroup.name = group.name!!
@@ -337,7 +337,7 @@ class FinishingService {
         if (id <= 0) {
             logger.error("Finishing Group ID is invalid")
 
-            throw InvalidIdException("finishing group")
+            throw InvalidIdException("grupo de acabamentos")
         }
 
         return Panache.withTransaction {
@@ -353,7 +353,7 @@ class FinishingService {
                     .transform { e ->
                         logger.error("Couldn't delete finishing group: $e")
 
-                        InvalidIdException("finishing group")
+                        InvalidIdException("grupo de acabamentos")
                     }
         }
     }

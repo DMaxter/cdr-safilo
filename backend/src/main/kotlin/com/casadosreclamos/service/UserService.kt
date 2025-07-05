@@ -15,33 +15,27 @@ import io.quarkus.elytron.security.common.BcryptUtil
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
-import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
+import org.jboss.logging.Logger
 
 @ApplicationScoped
 class UserService {
-    @Inject
-    lateinit var logger: Logger
+    @Inject lateinit var logger: Logger
 
-    @Inject
-    lateinit var userRepository: UserRepository
+    @Inject lateinit var userRepository: UserRepository
 
-    @Inject
-    lateinit var plafondRepository: PlafondRepository
+    @Inject lateinit var plafondRepository: PlafondRepository
 
-    @Inject
-    lateinit var brandRepository: BrandRepository
+    @Inject lateinit var brandRepository: BrandRepository
 
     fun getAllUsers(): Multi<User> {
         return userRepository.streamAllWithCredits()
     }
 
     fun getInfo(user: String): Uni<User> {
-        return Panache.withTransaction {
-            userRepository.findByEmailWithCredits(user)
-        }
+        return Panache.withTransaction { userRepository.findByEmailWithCredits(user) }
     }
 
     @Throws(InvalidCredentialsException::class)
@@ -78,7 +72,7 @@ class UserService {
         } else if (brandId <= 0) {
             logger.error("Brand ID is invalid")
 
-            throw InvalidIdException("brand")
+            throw InvalidIdException("marca")
         } else if (credits < 0) {
             logger.error("Plafond is invalid")
 
@@ -93,53 +87,65 @@ class UserService {
         val brandUni = brandRepository.findById(brandId)
 
         return Panache.withTransaction {
-            Uni.combine().all().unis(userUni, brandUni).asTuple().onItem().transformToUni { tuple ->
-                user = tuple.item1
-                brand = tuple.item2
+            Uni.combine()
+                    .all()
+                    .unis(userUni, brandUni)
+                    .asTuple()
+                    .onItem()
+                    .transformToUni { tuple ->
+                        user = tuple.item1
+                        brand = tuple.item2
 
-                if (user == null) {
-                    logger.error("User with ID ${userId} is not registered")
+                        if (user == null) {
+                            logger.error("User with ID ${userId} is not registered")
 
-                    throw InvalidUserException()
-                } else if (brand == null) {
-                    logger.error("Brand with ID ${brandId} is not registered")
+                            throw InvalidUserException()
+                        } else if (brand == null) {
+                            logger.error("Brand with ID ${brandId} is not registered")
 
-                    throw InvalidIdException("brand")
-                }
+                            throw InvalidIdException("marca")
+                        }
 
-                plafondRepository.findById(user!!, brand!!)
-            }.onItem().transformToUni { plafond ->
-                if (plafond != null) {
+                        plafondRepository.findById(user!!, brand!!)
+                    }
+                    .onItem()
+                    .transformToUni { plafond ->
+                        if (plafond != null) {
 
-                    plafond.amount = credits
+                            plafond.amount = credits
 
-                    logger.info("Successfully change existing plafond")
+                            logger.info("Successfully change existing plafond")
 
-                    Uni.createFrom().item(plafond)
-                } else {
-                    logger.info("Creating new plafond entry")
+                            Uni.createFrom().item(plafond)
+                        } else {
+                            logger.info("Creating new plafond entry")
 
-                    val newPlafond = Plafond()
+                            val newPlafond = Plafond()
 
-                    plafondId.userId = user!!.name
-                    plafondId.brandId = brand!!.id
+                            plafondId.userId = user!!.name
+                            plafondId.brandId = brand!!.id
 
-                    newPlafond.amount = credits
-                    newPlafond.id = plafondId
-                    newPlafond.user = user!!
-                    newPlafond.brand = brand!!
+                            newPlafond.amount = credits
+                            newPlafond.id = plafondId
+                            newPlafond.user = user!!
+                            newPlafond.brand = brand!!
 
-                    plafondRepository.persist(newPlafond).onItem()
-                        .invoke { _ -> logger.info("Successfully created plafond") }.onFailure()
-                        .invoke { e -> logger.error("Couldn't register plafond: $e") }
-                }
-            }.onItem().transform { plafond ->
-                user!!.credits.add(plafond)
+                            plafondRepository
+                                    .persist(newPlafond)
+                                    .onItem()
+                                    .invoke { _ -> logger.info("Successfully created plafond") }
+                                    .onFailure()
+                                    .invoke { e -> logger.error("Couldn't register plafond: $e") }
+                        }
+                    }
+                    .onItem()
+                    .transform { plafond ->
+                        user!!.credits.add(plafond)
 
-                logger.info("Added plafond to user")
+                        logger.info("Added plafond to user")
 
-                user
-            }
+                        user
+                    }
         }
     }
 }

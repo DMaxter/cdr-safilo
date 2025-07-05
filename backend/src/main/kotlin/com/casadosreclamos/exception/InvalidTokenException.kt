@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Invalid token"
+private const val MSG = "Token inválido"
 
-class InvalidTokenException: CDRException(MSG)
+class InvalidTokenException : CDRException(MSG)
+

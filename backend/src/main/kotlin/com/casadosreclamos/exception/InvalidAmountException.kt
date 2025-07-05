@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Invalid amount"
+private const val MSG = "Quantidade inválida"
 
-class InvalidAmountException: CDRException(MSG)
+class InvalidAmountException : CDRException(MSG)
+

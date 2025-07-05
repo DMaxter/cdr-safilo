@@ -115,7 +115,7 @@ class RequestService {
                         if (client == null) {
                             logger.error("Client with ID ${requestDto.clientId} is not registered")
 
-                            throw InvalidIdException("client")
+                            throw InvalidIdException("cliente")
                         } else if (user == null) {
                             logger.error("User with ID ${email} is not registered")
 
@@ -125,7 +125,7 @@ class RequestService {
                                     "Brand with ID ${requestDto.brand!!.id!!} is not registered"
                             )
 
-                            throw InvalidIdException("brand")
+                            throw InvalidIdException("marca")
                         }
 
                         clientName = client.name
@@ -243,11 +243,11 @@ class RequestService {
                         if (client == null) {
                             logger.error("Client with ID ${request.clientId} is not registered")
 
-                            throw InvalidIdException("client")
+                            throw InvalidIdException("cliente")
                         } else if (brand == null) {
                             logger.error("Brand with ID ${request.brand!!.id!!} is not registered")
 
-                            throw InvalidIdException("brand")
+                            throw InvalidIdException("marca")
                         }
 
                         // Create RequestType instance
@@ -298,7 +298,7 @@ class RequestService {
                 if (request == null) {
                     logger.error("Request with ID ${requestId} is not registered")
 
-                    throw InvalidIdException("request")
+                    throw InvalidIdException("pedido")
                 }
 
                 request.status = RequestStatus.DONE
@@ -342,7 +342,7 @@ class RequestService {
                             if (request == null) {
                                 logger.error("Request with ID ${requestId} is not registered")
 
-                                throw InvalidIdException("request")
+                                throw InvalidIdException("pedido")
                             }
 
                             // Prevent other commercials from editing arbitrary requests
@@ -384,7 +384,7 @@ class RequestService {
                                                     "Client with ID ${requestDto.clientId} is not registered"
                                             )
 
-                                            throw InvalidIdException("client")
+                                            throw InvalidIdException("cliente")
                                         } else if (user == null) {
                                             logger.error("User with ID ${email} is not registered")
 
@@ -394,7 +394,7 @@ class RequestService {
                                                     "Brand with ID ${requestDto.brand!!.id!!} is not registered"
                                             )
 
-                                            throw InvalidIdException("brand")
+                                            throw InvalidIdException("marca")
                                         }
 
                                         clientName = client.name
@@ -522,7 +522,7 @@ class RequestService {
                             if (req == null) {
                                 logger.error("Request with ID ${requestId} is not registered")
 
-                                throw InvalidIdException("request")
+                                throw InvalidIdException("pedido")
                             }
 
                             request = req
@@ -788,7 +788,7 @@ class RequestService {
                                 "Invalid or repeated finishings detected. Fetched: $finishings"
                         )
 
-                        throw InvalidIdException("finishing")
+                        throw InvalidIdException("acabamento")
                     }
 
                     // Check if image exists
@@ -801,7 +801,7 @@ class RequestService {
                     if (image == null) {
                         logger.error("Image with ID ${slotDto.image!!.id} is not registered")
 
-                        throw InvalidIdException("image")
+                        throw InvalidIdException("imagem")
                     }
 
                     // Check if mandatory finishings are fulfilled
@@ -947,7 +947,7 @@ class RequestService {
         if (image?.id == null || image.id!! <= 0) {
             logger.error("Slot image ID is invalid")
 
-            throw InvalidIdException("image")
+            throw InvalidIdException("imagem")
         }
     }
 
@@ -973,7 +973,7 @@ class RequestService {
         ) {
             logger.error("At least one slot finishing has invalid ID")
 
-            throw InvalidIdException("finishing")
+            throw InvalidIdException("acabamento")
         }
     }
 
@@ -981,7 +981,7 @@ class RequestService {
         if (request.clientId == null || request.clientId!! <= 0) {
             logger.error("Request Client ID is invalid")
 
-            throw InvalidIdException("client")
+            throw InvalidIdException("cliente")
         } else if (request.amount == null || request.amount!! <= 0) {
             logger.error("Request amount is invalid")
 
@@ -997,7 +997,7 @@ class RequestService {
         } else if (request.brand == null || request.brand!!.id!! <= 0) {
             logger.error("Request Brand ID is invalid")
 
-            throw InvalidIdException("brand")
+            throw InvalidIdException("marca")
         }
 
         validateType(request.type!!)

@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Invalid password"
+private const val MSG = "Palavra-passe inválida"
 
-class InvalidPasswordException: CDRException(MSG)
+class InvalidPasswordException : CDRException(MSG)
+

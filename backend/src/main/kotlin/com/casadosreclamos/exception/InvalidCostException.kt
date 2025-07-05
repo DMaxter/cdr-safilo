@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Invalid cost"
+private const val MSG = "Custo inválido"
 
-class InvalidCostException: CDRException(MSG)
+class InvalidCostException : CDRException(MSG)
+

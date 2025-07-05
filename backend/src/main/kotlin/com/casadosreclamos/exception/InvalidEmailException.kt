@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Invalid email"
+private const val MSG = "Email inválido"
 
-class InvalidEmailException: CDRException(MSG)
+class InvalidEmailException : CDRException(MSG)
+

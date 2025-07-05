@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Invalid fiscal number"
+private const val MSG = "NIF inválido"
 
-class InvalidFiscalNumberException: CDRException(MSG)
+class InvalidFiscalNumberException : CDRException(MSG)
+

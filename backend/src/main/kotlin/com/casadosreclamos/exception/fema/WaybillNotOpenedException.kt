@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception.fema
 
-private const val MSG = "A waybill is not open for this request"
+private const val MSG = "Não existe uma carta de porte para este pedido"
 
-class WaybillNotOpenedException: FEMAException(MSG)
+class WaybillNotOpenedException : FEMAException(MSG)
+

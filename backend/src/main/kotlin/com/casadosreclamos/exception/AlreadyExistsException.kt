@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = " already exists"
+private const val MSG = " já existe"
 
-class AlreadyExistsException(field: String): CDRException(field + MSG)
+class AlreadyExistsException(field: String) : CDRException(field + MSG)
+

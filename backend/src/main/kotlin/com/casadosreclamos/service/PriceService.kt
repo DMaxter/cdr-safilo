@@ -5,7 +5,6 @@ import com.casadosreclamos.dto.PriceDto
 import com.casadosreclamos.exception.InvalidCostException
 import com.casadosreclamos.exception.InvalidIdException
 import com.casadosreclamos.exception.MissingPriceException
-import com.casadosreclamos.exception.PriceNotFoundException
 import com.casadosreclamos.model.request.Price
 import com.casadosreclamos.repo.PriceRepository
 import io.quarkus.hibernate.reactive.panache.Panache
@@ -103,7 +102,7 @@ class PriceService {
         ) {
             logger.error("At least one price finishing has invalid ID")
 
-            throw InvalidIdException("finishing")
+            throw InvalidIdException("acabamento")
         }
 
         val materialUni = materialService.find(priceDto.material!!)
@@ -133,7 +132,7 @@ class PriceService {
                 ) {
                     logger.error("Invalid or repeated finishings detected. Fetched: $finishings")
 
-                    throw InvalidIdException("finishing")
+                    throw InvalidIdException("acabamento")
                 }
 
                 val price = Price()
@@ -158,7 +157,7 @@ class PriceService {
         if (priceDto.id == null || priceDto.id!! <= 0) {
             logger.error("Price ID is invalid")
 
-            throw InvalidIdException("price")
+            throw InvalidIdException("preço")
         } else if (priceDto.costPerSquareMeter == null || priceDto.costPerSquareMeter!! <= 0) {
             logger.error("Price cost per square meter is invalid")
 
@@ -179,13 +178,13 @@ class PriceService {
         ) {
             logger.error("At least one price finishing has invalid ID")
 
-            throw InvalidIdException("finishing")
+            throw InvalidIdException("acabamento")
         }
 
         return Panache.withTransaction {
             priceRepository.findById(priceDto.id!!).onItem().transformToUni { price ->
                 if (price == null) {
-                    throw PriceNotFoundException()
+                    throw InvalidIdException("preço")
                 }
 
                 val materialUni = materialService.find(priceDto.material!!)
@@ -221,7 +220,7 @@ class PriceService {
                                         "Invalid or repeated finishings detected. Fetched: $finishings"
                                 )
 
-                                throw InvalidIdException("finishing")
+                                throw InvalidIdException("acabamento")
                             }
 
                             price.costPerSquareMeter = priceDto.costPerSquareMeter!!
@@ -244,7 +243,7 @@ class PriceService {
                         if (!deleted) {
                             logger.error("Price with ID $id is not registered")
 
-                            throw PriceNotFoundException()
+                            throw InvalidIdException("preço")
                         }
 
                         logger.info("Successfully deleted price")

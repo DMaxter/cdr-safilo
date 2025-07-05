@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Operation could not be performed"
+private const val MSG = "Impossível executar a operação"
 
 class OperationNotPerformedException : CDRException(MSG)
+

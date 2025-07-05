@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception.fema
 
-private const val MSG = "Couldn't close day"
+private const val MSG = "Não foi possível efetuar o fecho de dia"
 
-class CloseDayException: FEMAException(MSG)
+class CloseDayException : FEMAException(MSG)
+

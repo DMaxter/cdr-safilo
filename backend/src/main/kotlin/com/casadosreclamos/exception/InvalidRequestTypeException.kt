@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception
 
-private const val MSG = "Invalid type of request: images need to be selected"
+private const val MSG = "Tipo de pedido inválido"
 
-class InvalidRequestTypeException: CDRException(MSG)
+class InvalidRequestTypeException : CDRException(MSG)
+

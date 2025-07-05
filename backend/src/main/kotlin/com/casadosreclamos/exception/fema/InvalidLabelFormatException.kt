@@ -1,5 +1,6 @@
 package com.casadosreclamos.exception.fema
 
-private const val MSG = "Label format is invalid"
+private const val MSG = "O formato da etiqueta é inválido"
 
-class InvalidLabelFormatException: FEMAException(MSG)
+class InvalidLabelFormatException : FEMAException(MSG)
+

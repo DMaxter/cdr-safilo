@@ -11,21 +11,18 @@ import com.casadosreclamos.repo.ImageRepository
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
-import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
+import org.jboss.logging.Logger
 
 @ApplicationScoped
 class BrandService {
-    @Inject
-    lateinit var logger: Logger
+    @Inject lateinit var logger: Logger
 
-    @Inject
-    lateinit var brandRepository: BrandRepository
+    @Inject lateinit var brandRepository: BrandRepository
 
-    @Inject
-    lateinit var imageRepository: ImageRepository
+    @Inject lateinit var imageRepository: ImageRepository
 
     fun getAll(): Multi<BrandDto> {
         return brandRepository.streamAllWithImages().map { BrandDto(it) }
@@ -48,10 +45,14 @@ class BrandService {
                 return@transformToUni if (value) {
                     logger.error("A brand with name $brandName is already registered")
 
-                    throw AlreadyExistsException("Brand")
+                    throw AlreadyExistsException("Marca")
                 } else {
-                    brandRepository.persist(brand).onItem().invoke { _ -> logger.info("Successfully registered brand") }
-                        .onFailure().invoke { e -> logger.error("Couldn't register brand: $e") }
+                    brandRepository
+                            .persist(brand)
+                            .onItem()
+                            .invoke { _ -> logger.info("Successfully registered brand") }
+                            .onFailure()
+                            .invoke { e -> logger.error("Couldn't register brand: $e") }
                 }
             }
         }
@@ -65,7 +66,7 @@ class BrandService {
                 if (brand == null) {
                     logger.error("Brand with ID $brandId is not registered")
 
-                    throw InvalidIdException("brand")
+                    throw InvalidIdException("marca")
                 }
 
                 val image = Image()
@@ -75,8 +76,12 @@ class BrandService {
 
                 logger.info("Added image to brand")
 
-                imageRepository.persist(image).onItem().invoke { _ -> logger.info("Successfully added image") }
-                    .onFailure().invoke { e -> logger.error("Couldn't save image: $e") }
+                imageRepository
+                        .persist(image)
+                        .onItem()
+                        .invoke { _ -> logger.info("Successfully added image") }
+                        .onFailure()
+                        .invoke { e -> logger.error("Couldn't save image: $e") }
             }
         }
     }
@@ -85,7 +90,7 @@ class BrandService {
         if (id <= 0) {
             logger.error("Brand ID is invalid")
 
-            throw InvalidIdException("brand")
+            throw InvalidIdException("marca")
         } else if (name.isEmpty()) {
             logger.error("Name is empty")
 
@@ -97,14 +102,14 @@ class BrandService {
                 if (value) {
                     logger.error("A brand with name $name is already registered")
 
-                    throw AlreadyExistsException("Brand")
+                    throw AlreadyExistsException("Marca")
                 }
 
                 brandRepository.findByIdWithImages(id).onItem().transform { brand ->
                     if (brand == null) {
                         logger.error("Brand with ID $id is not registered")
 
-                        throw InvalidIdException("brand")
+                        throw InvalidIdException("marca")
                     }
 
                     brand.name = name
@@ -119,15 +124,19 @@ class BrandService {
 
     @Throws(InvalidIdException::class)
     fun delete(id: Long): Uni<Response> {
-        return Panache.withTransaction { brandRepository.deleteById(id) }.onItem().transform {
-            logger.info("Successfully deleted brand")
+        return Panache.withTransaction { brandRepository.deleteById(id) }
+                .onItem()
+                .transform {
+                    logger.info("Successfully deleted brand")
 
-            Response.ok().build()
-        }.onFailure().transform { e ->
-            logger.error("Couldn't delete brand: $e")
+                    Response.ok().build()
+                }
+                .onFailure()
+                .transform { e ->
+                    logger.error("Couldn't delete brand: $e")
 
-            InvalidIdException("brand")
-        }
+                    InvalidIdException("marca")
+                }
     }
 
     fun deleteImage(id: Long): Uni<Response> {
@@ -136,16 +145,26 @@ class BrandService {
                 if (image == null) {
                     logger.error("Image doesn't exist")
 
-                    throw InvalidIdException("image")
+                    throw InvalidIdException("imagem")
                 }
 
-                Uni.join().all(brandRepository.findByIdWithImages(image.brand!!.id).onItem().transform { brand ->
-                    brand.images.remove(image)
-                }, imageRepository.deleteById(id)).andFailFast().onItem().transform {
-                    logger.info("Successfully deleted image")
+                Uni.join()
+                        .all(
+                                brandRepository
+                                        .findByIdWithImages(image.brand!!.id)
+                                        .onItem()
+                                        .transform { brand -> brand.images.remove(image) },
+                                imageRepository.deleteById(id)
+                        )
+                        .andFailFast()
+                        .onItem()
+                        .transform {
+                            logger.info("Successfully deleted image")
 
-                    Response.ok().build()
-                }.onFailure().invoke { e -> logger.error("Couldn't delete image: $e") }
+                            Response.ok().build()
+                        }
+                        .onFailure()
+                        .invoke { e -> logger.error("Couldn't delete image: $e") }
             }
         }
     }

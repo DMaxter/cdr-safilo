@@ -51,7 +51,7 @@ class WaybillService {
     fun getShippingServices(requestId: Long): Uni<List<Service>> {
         if (requestId <= 0) {
             logger.error("Request ID is invalid!")
-            throw InvalidIdException("request")
+            throw InvalidIdException("pedido")
         }
 
         logger.info("Retrieving request with id $requestId")
@@ -59,7 +59,7 @@ class WaybillService {
         return requestService.get(requestId).onItem().transformToUni { request ->
             if (request == null) {
                 logger.error("Request ID is invalid!")
-                throw InvalidIdException("request")
+                throw InvalidIdException("pedido")
             }
 
             val source = Address(CDR_POSTAL, CDR_COUNTRY, CDR_CITY)
@@ -82,13 +82,13 @@ class WaybillService {
     fun openWaybill(requestId: Long, waybillDto: WaybillDto): Uni<File> {
         if (requestId <= 0) {
             logger.error("Request ID is invalid!")
-            throw InvalidIdException("request")
+            throw InvalidIdException("pedido")
         } else if (waybillDto.service?.id.isNullOrBlank()) {
             logger.error("FEMA service is invalid!")
-            throw InvalidIdException("FEMA service")
+            throw InvalidIdException("serviço da FEMA")
         } else if (waybillDto.packaging == null || waybillDto.packaging.id.isNullOrBlank()) {
             logger.error("FEMA package type is invalid!")
-            throw InvalidIdException("FEMA package type")
+            throw InvalidIdException("tipo de embalagem da FEMA")
         } else if (waybillDto.totalWeight == null || waybillDto.totalWeight <= 0) {
             logger.error("Weight is invalid!")
             throw InvalidAmountException()
@@ -118,7 +118,7 @@ class WaybillService {
             requestService.get(requestId).onItem().transformToUni { request ->
                 if (request == null) {
                     logger.error("Request ID is invalid!")
-                    throw InvalidIdException("request")
+                    throw InvalidIdException("pedido")
                 } else if (request.trackingCode != null) {
                     logger.error("Waybill already opened for request!")
                     throw WaybillAlreadyOpenedException()
@@ -197,7 +197,7 @@ class WaybillService {
     fun cancelWaybill(requestId: Long): Uni<Void> {
         if (requestId <= 0) {
             logger.error("Request ID is invalid!")
-            throw InvalidIdException("request")
+            throw InvalidIdException("pedido")
         }
 
         logger.info("Retrieving request with id $requestId")
@@ -206,7 +206,7 @@ class WaybillService {
             requestService.get(requestId).onItem().transformToUni { request ->
                 if (request == null) {
                     logger.error("Request ID is invalid!")
-                    throw InvalidIdException("request")
+                    throw InvalidIdException("pedido")
                 } else if (request.trackingCode == null) {
                     logger.error("Waybill not opened for request!")
                     throw WaybillNotOpenedException()
@@ -225,7 +225,7 @@ class WaybillService {
     fun getWaybill(requestId: Long, labelFormat: String): Uni<File> {
         if (requestId <= 0) {
             logger.error("Request ID is invalid!")
-            throw InvalidIdException("request")
+            throw InvalidIdException("pedido")
         }
 
         logger.info("Retrieving request with id $requestId")
@@ -233,7 +233,7 @@ class WaybillService {
         return requestService.get(requestId).onItem().transformToUni { request ->
             if (request == null) {
                 logger.error("Request ID is invalid!")
-                throw InvalidIdException("request")
+                throw InvalidIdException("pedido")
             } else if (request.trackingCode == null) {
                 logger.error("Waybill not opened for request!")
                 throw WaybillNotOpenedException()
