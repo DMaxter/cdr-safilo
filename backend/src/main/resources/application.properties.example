@@ -1,5 +1,7 @@
 # HTTP
 quarkus.http.port=8080
+quarkus.http.cors=true
+quarkus.http.cors.origins=http://localhost:8081
 domain.name=localhost
 
 # Database
@@ -38,6 +40,15 @@ quarkus.mailer.password=<PASSWORD>
 quarkus.mailer.from=<EMAIL>
 ## Requests recipient
 cdr.email=<CDR EMAIL>
+cdr.cancel-emails=<CDR EMAIL>
 
 # File upload
 quarkus.http.body.uploads-directory=<UPLOAD DIR>
+image.base=<IMAGE>
+
+#Fema
+quarkus.scheduler.cron-type=unix
+fema.report.emails=<FEMA EMAIL>
+fema.password=<PASSWORD>
+fema.username=<USERNAME>
+fema.report.cron=<CRON>

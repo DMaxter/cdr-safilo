@@ -13,4 +13,6 @@ open class Brand {
 
     @OneToMany(mappedBy = "brand", orphanRemoval = true)
     open lateinit var images: MutableList<Image>
+
+    open var obsolete: Boolean = false
 }
