@@ -148,4 +148,27 @@ class UserService {
                     }
         }
     }
+
+    @Throws(InvalidIdException::class)
+    fun disableUser(email: String): Uni<Void>{
+        return Panache.withTransaction{
+            userRepository
+                .findByEmail(email)
+                .onItem()
+                .transformToUni{ user ->
+                    if (user == null) {
+                        logger.error("User with email $email is not registered")
+
+                        throw InvalidIdException("user")
+                    }
+                    user.userDisabled = true
+
+                    logger.info("Successfully disabled user")
+
+                    return@transformToUni Uni.createFrom().voidItem()
+                }
+                .onFailure()
+                .invoke {e -> logger.error("Couldn't disable user: $e")}
+        }
+    }
 }
