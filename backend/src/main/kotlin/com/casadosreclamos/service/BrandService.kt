@@ -195,4 +195,28 @@ class BrandService {
                 .invoke { e -> logger.error("Couldn't mark brand as obsolete: $e") }
         }
     }
+
+    @Throws(InvalidIdException::class)
+    fun makeActive(id: Long): Uni<Void> {
+        return Panache.withTransaction {
+            brandRepository
+                .findById(id)
+                .onItem()
+                .transformToUni { brand ->
+                    if (brand == null) {
+                        logger.error("Brand with ID $id is not registered")
+
+                        throw InvalidIdException("Brand")
+                    }
+
+                    brand.obsolete = false
+
+                    logger.info("Successfully activated brand")
+
+                    return@transformToUni Uni.createFrom().voidItem()
+                }
+                .onFailure()
+                .invoke { e -> logger.error("Couldn't activate brand: $e") }
+        }
+    }
 }

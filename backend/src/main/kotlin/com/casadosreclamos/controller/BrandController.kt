@@ -149,4 +149,23 @@ class BrandController {
             }
         }
     }
+
+    @PUT
+    @Path("/active/{brand}")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Make a brand active")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun makeActive(@PathParam("brand") brand: Long): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is activating brand $brand ")
+
+            return@transformToUni brandService.makeActive(brand).onItem().transform { _ ->
+                Response.ok().build()
+            }
+        }
+    }
 }
