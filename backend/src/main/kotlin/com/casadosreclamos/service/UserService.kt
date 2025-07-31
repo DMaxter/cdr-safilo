@@ -8,7 +8,6 @@ import com.casadosreclamos.model.Plafond
 import com.casadosreclamos.model.PlafondId
 import com.casadosreclamos.model.User
 import com.casadosreclamos.model.request.Brand
-import com.casadosreclamos.model.COMMERCIAL_ROLE
 import com.casadosreclamos.model.Role
 import com.casadosreclamos.repo.BrandRepository
 import com.casadosreclamos.repo.PlafondRepository
