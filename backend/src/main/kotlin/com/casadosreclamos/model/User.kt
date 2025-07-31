@@ -34,5 +34,9 @@ open class User() {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     open lateinit var credits: MutableSet<Plafond>
 
-    open var userDisabled: Boolean = false
+    open var disabled: Boolean = false
+
+    fun isDisabled(): Boolean{
+        return disabled
+    }
 }

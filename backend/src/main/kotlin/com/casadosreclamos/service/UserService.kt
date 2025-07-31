@@ -161,7 +161,7 @@ class UserService {
 
                         throw InvalidIdException("user")
                     }
-                    user.userDisabled = true
+                    user.disabled = true
 
                     logger.info("Successfully disabled user")
 

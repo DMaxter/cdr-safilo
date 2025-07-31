@@ -311,7 +311,10 @@ class AuthService {
                         logger.error("Password doesn't match for user ${credentials.email}")
 
                         Uni.createFrom().failure(InvalidCredentialsException())
-                    } else {
+                    } else if(user.isDisabled()){
+                        logger.error("User ${credentials.email} is disabled")
+                        throw InvalidCredentialsException()
+                    } else{
                         Uni.createFrom().item(user)
                     }
                 }
@@ -371,6 +374,10 @@ class AuthService {
         return Panache.withTransaction {
             userRepository.findByEmail(username).onItem().transformToUni { user ->
                 if (user != null) {
+                    if(user.isDisabled()){
+                        logger.error("User $user is disabled")
+                        throw InvalidUserException()
+                    }
                     val token = PasswordToken()
                     token.id = PasswordTokenId()
                     token.id.user = user.email
