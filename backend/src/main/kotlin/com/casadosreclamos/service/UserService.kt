@@ -8,6 +8,8 @@ import com.casadosreclamos.model.Plafond
 import com.casadosreclamos.model.PlafondId
 import com.casadosreclamos.model.User
 import com.casadosreclamos.model.request.Brand
+import com.casadosreclamos.model.COMMERCIAL_ROLE
+import com.casadosreclamos.model.Role
 import com.casadosreclamos.repo.BrandRepository
 import com.casadosreclamos.repo.PlafondRepository
 import com.casadosreclamos.repo.UserRepository
@@ -159,6 +161,10 @@ class UserService {
                     if (user == null) {
                         logger.error("User with email $email is not registered")
 
+                        throw InvalidIdException("user")
+                    }
+                    if(!user.roles.contains(Role.COMMERCIAL)){
+                        logger.error("User with email $email is not a Commercial")
                         throw InvalidIdException("user")
                     }
                     user.disabled = true
