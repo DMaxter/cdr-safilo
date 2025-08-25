@@ -34,6 +34,15 @@ jobs:
       QUARKUS_SCHEDULER_CRON_TYPE: unix
 
     steps:
+      - name: "Notify Discord - Start Backend Build"
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ always() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Backend Build"
+          GITHUB_JOB_STATUS: ${{ job.status }}
+
       - name: "Download repository"
         uses: actions/checkout@v4
 
@@ -64,6 +73,15 @@ jobs:
           name: ansible
           path: deploy
 
+      - name: "Notify Discord - Backend Build Failure"
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ failure() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Backend Build Failure"
+          GITHUB_JOB_STATUS: ${{ job.status }}
+
   build_frontend:
     runs-on: ubuntu-latest
 
@@ -72,6 +90,15 @@ jobs:
       VUE_APP_NAME: Casa dos Reclamos
 
     steps:
+      - name: "Notify Discord - Start Frontend Build "
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ always() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Frontend Build"
+          GITHUB_JOB_STATUS: ${{ job.status }}
+
       - name: "Download repository"
         uses: actions/checkout@v4
 
@@ -99,6 +126,14 @@ jobs:
           name: frontend
           path: frontend/dist
 
+      - name: "Notify Discord - Frontend Build Failure"
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ failure() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Frontend Build Failure"
+          GITHUB_JOB_STATUS: ${{ job.status }}
   proxy:
     runs-on: ubuntu-latest
     steps:
@@ -150,6 +185,15 @@ jobs:
       - build_frontend
       - proxy
     steps:
+      - name: "Notify Discord - Start Deploy"
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ always() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Start Deploy"
+          GITHUB_JOB_STATUS: ${{ job.status }}
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
 
@@ -165,3 +209,23 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           inventory: |
             safilo ansible_host=${{ vars.HOST }} ansible_user=${{ secrets.SSH_USER }} ansible_port=${{ secrets.SSH_PORT }}
+      
+
+      - name: "Notify Discord - Deploy Failed"
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ failure() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Deploy Failed"
+          GITHUB_JOB_STATUS: ${{ job.status }}
+
+      - name: "Notify Discord - Deploy Success"
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ success() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Deploy Success"
+          GITHUB_JOB_STATUS: ${{ job.status }}
+
