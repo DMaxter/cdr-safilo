@@ -10,6 +10,7 @@ import com.casadosreclamos.exception.fema.WaybillAlreadyOpenedException
 import com.casadosreclamos.exception.fema.WaybillNotOpenedException
 import com.casadosreclamos.utils.FemaClient
 import com.casadosreclamos.utils.getEmailDailyReportSuccess
+import com.casadosreclamos.model.request.RequestStatus
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.reactive.ReactiveMailer
@@ -123,7 +124,7 @@ class WaybillService {
                     logger.error("Waybill already opened for request!")
                     throw WaybillAlreadyOpenedException()
                 }
-
+                request.status = RequestStatus.DONE
                 val source =
                         Contact(
                                 CDR_NAME,
@@ -211,6 +212,7 @@ class WaybillService {
                     logger.error("Waybill not opened for request!")
                     throw WaybillNotOpenedException()
                 }
+                request.status = RequestStatus.ORDERED
 
                 logger.info("Cancelling waybill at FEMA")
                 client.cancelWaybill(request.trackingCode!!).onItem().transform {
