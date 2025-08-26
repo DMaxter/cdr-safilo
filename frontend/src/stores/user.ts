@@ -2,7 +2,7 @@ import { reactive } from "vue";
 import { defineStore } from "pinia";
 
 import Backend from "@/router/backend";
-import UserDto from "@models/UserDto";
+import UserDto from "@models/dto/UserDto";
 
 export const useUserStore = defineStore("user", () => {
   const user = reactive(new UserDto());

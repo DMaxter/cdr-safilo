@@ -1,5 +1,5 @@
-import Measurements from "@models/Measurements";
-import { RequestTypeDto } from "@models/RequestTypeDto";
+import Measurements from "@models/dto/Measurements";
+import { RequestTypeDto } from "@models/dto/RequestTypeDto";
 
 export default class NewRequestDto {
   clientId: number | null = null;

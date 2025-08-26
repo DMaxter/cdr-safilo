@@ -28,6 +28,7 @@ import { computed, ref, useTemplateRef } from "vue";
 
 import Backend from "@/router/backend";
 import { checkAllRefsValid, required } from "@/rules";
+import LabelFormat from "@models/dto/fema/LabelFormat";
 
 const props = defineProps({
   request: {
@@ -39,7 +40,7 @@ const props = defineProps({
 const labels = await Backend.getLabelFormats();
 
 const format = ref("");
-const formatRef = useTemplateRef("formatRef");
+const formatRef = useTemplateRef<LabelFormat>("formatRef");
 
 const enabled = defineModel<boolean>();
 
@@ -50,10 +51,10 @@ const canDownload = computed(() => checkAllRefsValid([formatRef]));
 async function download() {
   try {
     await Backend.downloadWaybill(props.request, format.value);
-  } catch (error) {
+  } catch (error: any) {
     downloadFailure.value = true;
     console.log(error);
-    throw Error(error);
+    throw Error(error as string);
   }
 }
 

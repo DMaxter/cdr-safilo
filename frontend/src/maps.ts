@@ -1,27 +1,7 @@
-import { RequestType } from "@models/RequestType";
-
-export enum Status {
-  Ordered = "Encomendado",
-  Done = "Finalizado",
-  Cancelled = "Cancelado",
-}
-
-export const statusMap = {
-  ORDERED: Status.Ordered,
-  DONE: Status.Done,
-  CANCELLED: Status.Cancelled,
-};
+import { Status } from "@models/dto/RequestStatus";
 
 export const statusItems = [
   { name: "Encomendado", value: Status.Ordered },
   { name: "Finalizado", value: Status.Done },
   { name: "Cancelado", value: Status.Cancelled },
 ];
-
-export const typeMap = {
-  OneFace: RequestType.OneFace,
-  TwoFaces: RequestType.TwoFaces,
-  SimpleShowcase: RequestType.SimpleShowcase,
-  LeftShowcase: RequestType.LeftShowcase,
-  RightShowcase: RequestType.RightShowcase,
-};

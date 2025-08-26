@@ -1,8 +1,8 @@
-import Contact from "@models/fema/Contact";
-import Dimensions from "@models/fema/Dimensions";
-import LabelFormat from "@models/fema/LabelFormat";
-import PackageType from "@models/fema/PackageType";
-import Service from "@models/fema/Service";
+import Contact from "@models/dto/fema/Contact";
+import Dimensions from "@models/dto/fema/Dimensions";
+import LabelFormat from "@models/dto/fema/LabelFormat";
+import PackageType from "@models/dto/fema/PackageType";
+import Service from "@models/dto/fema/Service";
 
 export default class WaybillDto {
   reference: string | null = null;
