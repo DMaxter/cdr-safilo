@@ -75,7 +75,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
 import Backend from "@/router/backend";
-import ClientDto from "@models/ClientDto";
+import ClientDto from "@models/dto/ClientDto";
 
 const route = useRoute();
 const router = useRouter();

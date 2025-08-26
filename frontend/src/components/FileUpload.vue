@@ -45,24 +45,15 @@ const props = defineProps({
   },
 });
 
-const enabled = defineModel<Boolean>();
+const enabled = defineModel<boolean>();
 
 const emit = defineEmits(["upload"]);
 
 const selectedFiles = ref([]);
 const isSelected = computed(() => selectedFiles.value.length != 0);
 
-function handleFileUpload() {
-  uploader.value.click();
-}
-
-function onFileChanged(e) {
-  selectedFiles.length = 0;
-  selectedFiles.unshift(...e.target.files);
-}
-
 function close() {
-  selectedFiles.length = 0;
+  selectedFiles.value.length = 0;
 
   enabled.value = false;
 }

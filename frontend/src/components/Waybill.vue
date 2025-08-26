@@ -28,7 +28,7 @@
 import { ref } from "vue";
 
 import Backend from "@/router/backend";
-import RequestDto from "@models/RequestDto";
+import RequestDto from "@models/dto/RequestDto";
 
 const props = defineProps({
   request: {

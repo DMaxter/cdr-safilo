@@ -1,4 +1,4 @@
-import ImageDto from "@models/ImageDto";
+import ImageDto from "@models/dto/ImageDto";
 
 export default class BrandDto {
   id: number | null = null;

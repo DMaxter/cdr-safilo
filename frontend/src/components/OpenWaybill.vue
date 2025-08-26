@@ -164,10 +164,11 @@
 import { computed, reactive, ref, useTemplateRef, watch, type PropType } from "vue";
 
 import Backend from "@/router/backend";
-import RequestDto from "@models/RequestDto";
-import WaybillDto from "@models/fema/WaybillDto";
-import LabelFormat from "@models/fema/LabelFormat";
-import PackageType from "@models/fema/PackageType";
+import RequestDto from "@models/dto/RequestDto";
+import WaybillDto from "@models/dto/fema/WaybillDto";
+import LabelFormat from "@models/dto/fema/LabelFormat";
+import PackageType from "@models/dto/fema/PackageType";
+import Service from "@models/dto/fema/Service";
 import { checkAllRefsValid, required } from "@/rules";
 
 const emit = defineEmits(["created"]);
@@ -179,7 +180,7 @@ const error = computed(() => "Ocorreu um erro a abrir a carta de porte: " + erro
 const errorMsg = ref("");
 const waybill = reactive(new WaybillDto());
 
-const services = reactive([]);
+const services = reactive<Service[]>([]);
 const countries = ["PT", "ES"];
 
 const props = defineProps({
@@ -195,15 +196,15 @@ const [labels, packages, _] = await Promise.all([
   init(),
 ]);
 
-const serviceRef = useTemplateRef("service");
-const amountRef = useTemplateRef("amount");
-const packageRef = useTemplateRef("package");
-const weightRef = useTemplateRef("weight");
-const descriptionRef = useTemplateRef("description");
-const formatRef = useTemplateRef("format");
-const heightRef = useTemplateRef("height");
-const widthRef = useTemplateRef("width");
-const lengthRef = useTemplateRef("length");
+const serviceRef = useTemplateRef<Service>("service");
+const amountRef = useTemplateRef<number>("amount");
+const packageRef = useTemplateRef<PackageType>("package");
+const weightRef = useTemplateRef<number>("weight");
+const descriptionRef = useTemplateRef<string>("description");
+const formatRef = useTemplateRef<LabelFormat>("format");
+const heightRef = useTemplateRef<number>("height");
+const widthRef = useTemplateRef<number>("width");
+const lengthRef = useTemplateRef<number>("length");
 
 const canOpenWaybill = computed(() =>
   checkAllRefsValid([
@@ -222,11 +223,11 @@ const canOpenWaybill = computed(() =>
 async function init() {
   await getServices();
 
-  waybill.destination.address.country = props.request.client.country;
-  waybill.destination.address.city = props.request.client.city;
-  waybill.destination.address.postalCode = props.request.client.postalCode;
-  waybill.destination.address.address = props.request.client.address;
-  waybill.destination.phone = props.request.client.phone;
+  waybill.destination.address.country = props.request.client!!.country;
+  waybill.destination.address.city = props.request.client!!.city;
+  waybill.destination.address.postalCode = props.request.client!!.postalCode;
+  waybill.destination.address.address = props.request.client!!.address;
+  waybill.destination.phone = props.request.client!!.phone;
 }
 
 async function getServices() {
@@ -242,8 +243,8 @@ async function openWaybill() {
 
       success.value = true;
       emit("created");
-    } catch (error) {
-      errorMsg.value = error;
+    } catch (error: any) {
+      errorMsg.value = error as string;
       failure.value = true;
       console.error(error);
     }

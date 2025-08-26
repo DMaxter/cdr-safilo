@@ -26,7 +26,7 @@
               :items="header.items ? header.items : undefined"
               :itemTitle="header.itemTitle ? header.itemTitle : undefined"
               :itemValue="header.itemValue ? header.itemValue : undefined"
-              v-model="searchFilter[header.filterKey]"
+              v-model="searchFilter[header.filterKey as keyof SearchViewFilter]"
               @filter="updateFilterURL"
             />
             <v-icon class="v-data-table-header__sort-icon" :icon="getSortIcon(column)"></v-icon>
@@ -47,12 +47,12 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon @click="showSummary(item)" v-tooltip="'Ver resumo'">$view</v-icon>
-          <v-icon @click="openRequestNewTab(item)" v-tooltip="'Ver detalhes'">$open</v-icon>
+          <v-icon @click="console.error('TODO')" v-tooltip="'Ver detalhes'">$open</v-icon>
           <!-- TODO: Implement edit -->
           <v-icon
             v-if="
               (canManipulate || (user.isCommercial() && item.user == user.user.name)) &&
-              statusMap[item.status] == Status.Ordered
+              item.status!! === Status.Ordered
             "
             @click="editRequest(item)"
             v-tooltip="'Editar'"
@@ -61,7 +61,7 @@
           <v-icon
             v-if="
               (canManipulate || (user.isCommercial() && item.user == user.user.name)) &&
-              statusMap[item.status] == Status.Ordered
+              item.status!! === Status.Ordered
             "
             @click="showCancel(item)"
             v-tooltip="'Cancelar'"
@@ -77,13 +77,16 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 import { useDate } from "vuetify";
 
-import { statusMap, statusItems, Status } from "@/maps";
-import { store } from "@/store.js"; // FIXME: DELETE
+import { statusItems } from "@/maps";
 import { useUserStore } from "@stores/user";
-import RequestDto from "@models/RequestDto";
+import RequestDto from "@models/dto/RequestDto";
+import { Status } from "@models/dto/RequestStatus";
+import CustomHeader from "@models/CustomHeader";
+import SearchViewFilter from "@models/SearchViewFilter";
+import SimpleClient from "@models/simple/Client";
 import Backend from "@/router/backend";
 
 const user = useUserStore();
@@ -95,10 +98,10 @@ const route = useRoute();
 const router = useRouter();
 const date = useDate();
 
-const requests = reactive([]);
-const commercials = reactive([]);
-const clients = reactive([]);
-const ids = reactive([]);
+const requests: RequestDto[] = reactive([]);
+const commercials: String[] = reactive([]);
+const clients: SimpleClient[] = reactive([]);
+const ids: Number[] = reactive([]);
 
 onMounted(async () => {
   await refreshRequests();
@@ -124,7 +127,7 @@ const filteredRequests = computed(() =>
       include = false;
     } else if (
       searchFilter["commercial"].length > 0 &&
-      !searchFilter["commercial"].includes(r.user)
+      !searchFilter["commercial"].includes(r.user!!)
     ) {
       include = false;
     } else if (
@@ -144,14 +147,7 @@ const filteredRequests = computed(() =>
   }),
 );
 
-// Custom properties being injected:
-// - searchable - whether or not the column values can be searched
-// - type - for searchable columns, the type of search to perform (only date supported - leave empty for other)
-// - items - for searchable columns, if there is a subset to choose from
-// - itemTitle - if items is set, what should be displayed to the user to select
-// - itemValue - if items is set, what should be the value returned from selection
-// - filterKey - for searchable columns, the property name in searchFilter to store the filter selection
-const headers = [
+const headers: CustomHeader[] = [
   {
     title: "ID",
     align: "center",
@@ -167,7 +163,7 @@ const headers = [
     title: "Estado",
     align: "center",
     key: "status",
-    value: (value) => statusMap[value.status],
+    value: "status",
     searchable: true,
     sortable: true,
     items: statusItems,
@@ -211,7 +207,7 @@ const headers = [
     title: "Custo",
     align: "center",
     key: "cost",
-    value: (value) => value.cost.toFixed(2),
+    value: (value: RequestDto) => value.cost.toFixed(2),
     searchable: false,
     sortable: true,
   },
@@ -223,7 +219,7 @@ const headers = [
 ];
 
 // Search filters
-const searchFilter = reactive({
+const searchFilter: SearchViewFilter = reactive({
   id: [],
   status: [],
   client: [],
@@ -233,7 +229,7 @@ const searchFilter = reactive({
 
 // Parse route path
 if (route.query.id) {
-  searchFilter["id"] = [route.query.id].flat().map((id) => {
+  searchFilter["id"] = [route.query.id!!].flat().map((id) => {
     try {
       return Number(id);
     } catch (e) {
@@ -242,10 +238,10 @@ if (route.query.id) {
   });
 }
 if (route.query.status) {
-  searchFilter["status"] = [route.query.status].flat();
+  searchFilter["status"] = [route.query.status!!].flat();
 }
 if (route.query.client) {
-  searchFilter["client"] = [route.query.client].flat().map((id) => {
+  searchFilter["client"] = [route.query.client!!].flat().map((id) => {
     try {
       return Number(id);
     } catch (e) {
@@ -254,10 +250,10 @@ if (route.query.client) {
   });
 }
 if (route.query.commercial) {
-  searchFilter["commercial"] = [route.query.commercial].flat();
+  searchFilter["commercial"] = [route.query.commercial!!].flat();
 }
 if (route.query.creationDate) {
-  searchFilter["creationDate"] = [route.query.creationDate].flat().map((date) => {
+  searchFilter["creationDate"] = [route.query.creationDate!!].flat().map((date: string) => {
     try {
       return Date.parse(date);
     } catch (e) {
@@ -272,42 +268,45 @@ async function refreshRequests() {
   clients.length = 0;
   ids.length = 0;
 
-  let retrieved = await Backend.getRequests();
+  let retrieved: RequestDto[] = await Backend.getRequests();
 
   requests.unshift(...retrieved);
 
-  const clientIds = new Set();
+  const clientIds: Set<Number> = new Set();
 
   clients.unshift(
     ...requests
       .filter((r) => {
-        const seen = clientIds.has(r.client.id);
-        clientIds.add(r.client.id);
+        const seen = clientIds.has(r.client!!.id!!);
+        clientIds.add(r.client!!.id!!);
 
         return !seen;
       })
-      .map((r) => ({
-        id: r.client.id,
-        name: `${r.client.id} - ${r.client.name} - ${r.client.city}`,
-      })),
+      .map(
+        (r) =>
+          new SimpleClient({
+            id: r.client!!.id!!,
+            name: `${r.client!!.id} - ${r.client!!.name} - ${r.client!!.city}`,
+          }),
+      ),
   );
 
-  commercials.unshift(...new Set(requests.map((r) => r.user)));
-  ids.unshift(...retrieved.map((r) => r.id));
+  commercials.unshift(...new Set(requests.map((r) => r.user!!)));
+  ids.unshift(...retrieved.map((r) => r.id!!));
 }
 
-function showSummary(item) {
+function showSummary(item: RequestDto) {
   toSummarize.value = item;
   showing.value = true;
 }
 
-function showCancel(item) {
+function showCancel(item: RequestDto) {
   cancelling.value = true;
-  toCancel.value = item.id;
+  toCancel.value = item.id!!;
 }
 
 // Visual stuff
-function getStatusIcon(value) {
+function getStatusIcon(value: Status) {
   if (value == Status.Cancelled) {
     return "cancel";
   } else if (value == Status.Ordered) {
@@ -319,7 +318,7 @@ function getStatusIcon(value) {
   }
 }
 
-function getStatusColor(value) {
+function getStatusColor(value: Status) {
   if (value == Status.Cancelled) {
     return "red";
   } else if (value == Status.Ordered) {
@@ -332,13 +331,13 @@ function getStatusColor(value) {
 }
 
 function updateFilterURL() {
-  let query = {};
+  let query: LocationQueryRaw = {};
 
   if (searchFilter["id"]) {
     query["id"] = searchFilter["id"];
   }
   if (searchFilter["status"]) {
-    query["status"] = searchFilter["status"];
+    query["status"] = searchFilter["status"].map((s) => s.toString());
   }
   if (searchFilter["client"]) {
     query["client"] = searchFilter["client"];
@@ -347,7 +346,7 @@ function updateFilterURL() {
     query["commercial"] = searchFilter["commercial"];
   }
   if (searchFilter["creationDate"]) {
-    query["creationDate"] = searchFilter["creationDate"];
+    query["creationDate"] = searchFilter["creationDate"].map((d) => d.toString());
   }
 
   router.push({ query: query });
@@ -355,31 +354,32 @@ function updateFilterURL() {
 
 /***/
 // TODO: Implement
-function editRequest(item) {
-  store.currentRequest = item;
-  store.isEditing = true;
-  if (item.type.type == "OneFace") {
-    store.isActive1 = true;
-    $router.push({ name: "order2" });
-  } else if (item.type.type == "TwoFaces") {
-    store.isActive1 = true;
-    $router.push({ name: "order2" });
-  } else if (item.type.type == "SimpleShowcase") {
-    store.isActive4 = true;
-    $router.push({ name: "ABC" });
-  } else if (item.type.type == "RightShowcase") {
-    store.isActive2 = true;
-    $router.push({ name: "ABC" });
-  } else if (item.type.type == "LeftShowcase") {
-    store.isActive3 = true;
-    $router.push({ name: "ABC" });
-  }
-}
-
-function openRequestNewTab(item) {
-  let route = $router.resolve({ name: "details", query: { id: item.id } });
-  window.open(route.href, "_blank");
-}
+function editRequest(item: RequestDto) {}
+//function editRequest(item) {
+//  store.currentRequest = item;
+//  store.isEditing = true;
+//  if (item.type.type == "OneFace") {
+//    store.isActive1 = true;
+//    $router.push({ name: "order2" });
+//  } else if (item.type.type == "TwoFaces") {
+//    store.isActive1 = true;
+//    $router.push({ name: "order2" });
+//  } else if (item.type.type == "SimpleShowcase") {
+//    store.isActive4 = true;
+//    $router.push({ name: "ABC" });
+//  } else if (item.type.type == "RightShowcase") {
+//    store.isActive2 = true;
+//    $router.push({ name: "ABC" });
+//  } else if (item.type.type == "LeftShowcase") {
+//    store.isActive3 = true;
+//    $router.push({ name: "ABC" });
+//  }
+//}
+//
+//function openRequestNewTab(item) {
+//  let route = $router.resolve({ name: "details", query: { id: item.id } });
+//  window.open(route.href, "_blank");
+//}
 /***/
 </script>
 
