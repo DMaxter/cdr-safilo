@@ -1,27 +1,29 @@
-import RequestSlotDto from "@models/RequestSlotDto";
-import { RequestType } from "@models/RequestType";
-
-import { typeMap } from "@/maps";
+import RequestSlotDto from "@models/dto/RequestSlotDto";
+import { RequestType } from "@models/dto/RequestType";
 
 export class RequestTypeDto {
-  type: string | null = null;
+  type: RequestType | null = null;
 
   static from(obj: RequestTypeDto): RequestTypeDto {
-    switch (typeMap[obj.type]) {
-      case RequestType.OneFace:
+    switch (obj.type as string) {
+      case "OneFace":
         return new OneFace(obj as OneFace);
-      case RequestType.TwoFaces:
+      case "TwoFaces":
         return new TwoFaces(obj as TwoFaces);
-      case RequestType.LeftShowcase:
+      case "LeftShowcase":
         return new LeftShowcase(obj as LeftShowcase);
-      case RequestType.RightShowcase:
+      case "RightShowcase":
         return new RightShowcase(obj as RightShowcase);
-      case RequestType.SimpleShowcase:
+      case "SimpleShowcase":
         return new SimpleShowcase(obj as SimpleShowcase);
       default:
         throw new Error(`Unknown request type: ${obj.type}`);
     }
   }
+
+  getFinishings?(): string[][];
+  getMaterials?(): string[];
+  getMeasurements?(): number[][];
 }
 
 export class OneFace extends RequestTypeDto {
@@ -34,11 +36,11 @@ export class OneFace extends RequestTypeDto {
     this.type = RequestType.OneFace;
   }
 
-  getMaterials(): String[] {
+  getMaterials(): string[] {
     return [this.cover.getMaterial()];
   }
 
-  getFinishings(): String[][] {
+  getFinishings(): string[][] {
     return [this.cover.getFinishings()];
   }
 
@@ -59,11 +61,11 @@ export class TwoFaces extends RequestTypeDto {
     this.type = RequestType.TwoFaces;
   }
 
-  getMaterials(): String[] {
+  getMaterials(): string[] {
     return [this.cover.getMaterial(), this.back.getMaterial()];
   }
 
-  getFinishings(): String[][] {
+  getFinishings(): string[][] {
     return [this.cover.getFinishings(), this.back.getFinishings()];
   }
 
@@ -100,23 +102,23 @@ export class LeftShowcase extends ShowcaseDto {
     super(obj);
   }
 
-  getMaterials(): String[] {
+  getMaterials(): string[] {
     return [
       this.top.getMaterial(),
       this.bottom.getMaterial(),
       this.left.getMaterial(),
       this.right.getMaterial(),
-      this.side.getMaterial(),
+      this.side!!.getMaterial(),
     ];
   }
 
-  getFinishings(): String[][] {
+  getFinishings(): string[][] {
     return [
       this.top.getFinishings(),
       this.bottom.getFinishings(),
       this.left.getFinishings(),
       this.right.getFinishings(),
-      this.side.getFinishings(),
+      this.side!!.getFinishings(),
     ];
   }
 
@@ -126,7 +128,7 @@ export class LeftShowcase extends ShowcaseDto {
       this.bottom.getMeasurements(),
       this.left.getMeasurements(),
       this.right.getMeasurements(),
-      this.side.getMeasurements(),
+      this.side!!.getMeasurements(),
     ];
   }
 }
@@ -138,23 +140,23 @@ export class RightShowcase extends ShowcaseDto {
     super(obj);
   }
 
-  getMaterials(): String[] {
+  getMaterials(): string[] {
     return [
       this.top.getMaterial(),
       this.bottom.getMaterial(),
       this.left.getMaterial(),
       this.right.getMaterial(),
-      this.side.getMaterial(),
+      this.side!!.getMaterial(),
     ];
   }
 
-  getFinishings(): String[][] {
+  getFinishings(): string[][] {
     return [
       this.top.getFinishings(),
       this.bottom.getFinishings(),
       this.left.getFinishings(),
       this.right.getFinishings(),
-      this.side.getFinishings(),
+      this.side!!.getFinishings(),
     ];
   }
 
@@ -164,7 +166,7 @@ export class RightShowcase extends ShowcaseDto {
       this.bottom.getMeasurements(),
       this.left.getMeasurements(),
       this.right.getMeasurements(),
-      this.side.getMeasurements(),
+      this.side!!.getMeasurements(),
     ];
   }
 }
@@ -176,7 +178,7 @@ export class SimpleShowcase extends ShowcaseDto {
     super(obj);
   }
 
-  getMaterials(): String[] {
+  getMaterials(): string[] {
     return [
       this.top.getMaterial(),
       this.bottom.getMaterial(),
@@ -185,7 +187,7 @@ export class SimpleShowcase extends ShowcaseDto {
     ];
   }
 
-  getFinishings(): String[][] {
+  getFinishings(): string[][] {
     return [
       this.top.getFinishings(),
       this.bottom.getFinishings(),

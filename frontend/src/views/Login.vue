@@ -51,7 +51,7 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 
 import Backend from "@/router/backend";
-import AuthDto from "@/models/AuthDto";
+import AuthDto from "@models/dto/AuthDto";
 import CDRLogo from "@/assets/logo.png";
 
 const failure = ref(false);

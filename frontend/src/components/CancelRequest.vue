@@ -34,11 +34,11 @@ async function performCancel() {
     close();
 
     emit("cancelled");
-  } catch (error) {
+  } catch (error: any) {
     cancelSuccess.value = false;
     close();
 
-    throw Error(error);
+    throw Error(error as string);
   }
 }
 

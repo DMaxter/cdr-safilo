@@ -42,30 +42,6 @@
         </v-btn>
 
         <v-btn
-          @click="router.push('orderClient')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-          v-if="user.isCommercial() || user.isAdmin()"
-        >
-          <span style="font-size: 12px">Novo Pedido</span>
-
-          <v-icon right>playlist_add</v-icon>
-        </v-btn>
-
-        <v-btn
-          @click="router.push('materiais')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-          v-if="user.isCdr() || user.isAdmin()"
-        >
-          <span style="font-size: 12px">Materiais</span>
-
-          <v-icon right>book</v-icon>
-        </v-btn>
-
-        <v-btn
           @click="router.push('configure')"
           height="64"
           width="160"
@@ -75,6 +51,18 @@
           <span style="font-size: 12px">Configurar</span>
 
           <v-icon right>settings</v-icon>
+        </v-btn>
+
+        <v-btn
+          @click="router.push('orderClient')"
+          height="64"
+          width="130"
+          class="customGradient text-white"
+          v-if="user.isCommercial() || user.isAdmin()"
+        >
+          <span style="font-size: 12px">Novo Pedido</span>
+
+          <v-icon right>playlist_add</v-icon>
         </v-btn>
       </v-btn-toggle>
     </v-menu>

@@ -1,4 +1,4 @@
-import Address from "@models/fema/Address";
+import Address from "@models/dto/fema/Address";
 
 export default class Contact {
   name: string = "";
