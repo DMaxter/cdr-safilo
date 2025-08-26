@@ -2,16 +2,18 @@
   <v-dialog v-model="enabled" transition="dialog-bottom-transition" max-width="50%">
     <v-card :title="`Pedido ${props.request.id}`">
       <v-card-text>
-        <p><b>Tipo: </b>{{ props.request.type.type }}</p>
-        <p><b>Marca: </b>{{ props.request.brand.name }}</p>
-        <p><b>Estado: </b>{{ statusMap[props.request.status] }}</p>
-        <p><b>Cliente: </b>{{ props.request.client.name }}</p>
+        <p><b>Tipo: </b>{{ props.request.type!!.type }}</p>
+        <p><b>Marca: </b>{{ props.request.brand!!.name }}</p>
+        <p><b>Estado: </b>{{ props.request.status }}</p>
+        <p><b>Cliente: </b>{{ props.request.client!!.name }}</p>
         <!-- TODO: Add link to client details -->
-        <p><b>Morada: </b>{{ props.request.client.address }}, {{ props.request.client.city }}</p>
+        <p>
+          <b>Morada: </b>{{ props.request.client!!.address }}, {{ props.request.client!!.city }}
+        </p>
         <p><b>Comercial: </b>{{ props.request.user }}</p>
-        <p><b>Data de criação: </b>{{ props.request.created.toLocaleString("pt-PT") }}</p>
-        <p><b>Última atualização: </b>{{ props.request.lastUpdate.toLocaleString("pt-PT") }}</p>
-        <p><b>Custo: </b>{{ props.request.cost.toFixed(2) }} Créditos</p>
+        <p><b>Data de criação: </b>{{ props.request.created!!.toLocaleString("pt-PT") }}</p>
+        <p><b>Última atualização: </b>{{ props.request.lastUpdate!!.toLocaleString("pt-PT") }}</p>
+        <p><b>Custo: </b>{{ props.request.cost!!.toFixed(2) }} Créditos</p>
         <p><b>Materiais: </b>{{ processArray(props.request.getMaterials()) }}</p>
         <p><b>Acabamentos: </b>{{ finishings ? finishings : "Sem acabamentos" }}</p>
         <p>
@@ -28,7 +30,7 @@
         <v-btn
           v-if="
             (canManipulate || (user.isCommercial() && request.user == user.user.name)) &&
-            statusMap[request.status] == Status.Ordered
+            request.status == Status.Ordered
           "
           @click="cancel()"
           color="red"
@@ -58,9 +60,10 @@
 import { onUpdated, ref, useTemplateRef } from "vue";
 import { useRouter } from "vue-router";
 
-import { statusMap, Status } from "@/maps";
 import { useUserStore } from "@stores/user";
-import RequestDto from "@models/RequestDto";
+import PrintRequestComponent from "@components/PrintRequest.vue";
+import RequestDto from "@models/dto/RequestDto";
+import { Status } from "@models/dto/RequestStatus";
 
 const router = useRouter();
 
@@ -83,7 +86,7 @@ await user.init();
 const canManipulate = user.isSafilo() || user.isCdr() || user.isAdmin();
 const cancelling = ref(false);
 
-const printer = useTemplateRef("printer");
+const printer = useTemplateRef<typeof PrintRequestComponent>("printer");
 
 const waybill = ref(false);
 
@@ -96,7 +99,7 @@ function cancel() {
 }
 
 function print() {
-  printer.value.handlePrint();
+  printer.value!!.handlePrint();
 }
 
 function openWaybillDialog() {
@@ -104,7 +107,7 @@ function openWaybillDialog() {
 }
 
 function openDetails() {
-  router.push("request", { id: props.request.id });
+  router.push({ name: "request", params: { id: props.request.id } });
 }
 
 function close() {
@@ -112,11 +115,11 @@ function close() {
 }
 
 // Helper functions
-function processMeasurements(measurements) {
+function processMeasurements(measurements: number[][]) {
   return measurements.map((m) => m.join("x")).join(", ");
 }
 
-function processArray(arr) {
+function processArray(arr: string[]) {
   return Object.entries(countElems(arr))
     .map(([key, val]) => {
       if (val > 1) {
@@ -128,11 +131,11 @@ function processArray(arr) {
     .join(", ");
 }
 
-function countElems(arr) {
+function countElems(arr: string[]): Map<string, number> {
   return arr.reduce((acc, cur) => {
-    acc[cur] = (acc[cur] || 0) + 1;
+    acc.set(cur, (acc.get(cur) || 0) + 1);
 
     return acc;
-  }, {});
+  }, new Map<string, number>());
 }
 </script>

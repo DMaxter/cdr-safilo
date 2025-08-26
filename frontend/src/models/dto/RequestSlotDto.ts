@@ -1,7 +1,7 @@
-import FinishingDto from "@models/FinishingDto";
-import ImageDto from "@models/ImageDto";
-import MaterialDto from "@models/MaterialDto";
-import Measurements from "@models/Measurements";
+import FinishingDto from "@models/dto/FinishingDto";
+import ImageDto from "@models/dto/ImageDto";
+import MaterialDto from "@models/dto/MaterialDto";
+import Measurements from "@models/dto/Measurements";
 
 export default class RequestSlotDto {
   image: ImageDto;
@@ -16,11 +16,11 @@ export default class RequestSlotDto {
     this.finishings = obj.finishings.map((f) => new FinishingDto(f));
   }
 
-  getMaterial(): String {
+  getMaterial(): string {
     return this.material.name;
   }
 
-  getFinishings(): String[] {
+  getFinishings(): string[] {
     return this.finishings.map((f) => f.name);
   }
 

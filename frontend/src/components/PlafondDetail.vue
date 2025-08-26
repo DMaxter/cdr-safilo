@@ -29,25 +29,25 @@
 import type { PropType } from "vue";
 
 import Backend from "@/router/backend";
-import { PlafondDetail } from "@models/UserDto";
+import { PlafondDetail } from "@models/dto/UserDto";
 
 const headers = [
   {
     title: "Marca",
     value: "brand",
     width: "200px",
-    align: "left",
+    align: "start" as const,
     class: "my-header-style",
     sortable: true,
   },
   {
     title: "Plafond",
     width: "200px",
-    align: "right",
+    align: "end" as const,
     key: "amount",
     class: "my-header-style",
     sortable: true,
-    value: (item) => item.amount.toFixed(2),
+    value: (item: PlafondDetail) => item.amount.toFixed(2),
   },
 ];
 

@@ -19,7 +19,9 @@
     </v-row>
     <template v-slot:actions>
       <v-row justify="space-around">
-        <v-btn v-if="canManageImages" @click="openImageManagement()" v-tooltip="'Imagens'">Imagens</v-btn>
+        <v-btn v-if="canManageImages" @click="openImageManagement()" v-tooltip="'Imagens'"
+          >Imagens</v-btn
+        >
         <v-btn @click="router.push({ name: 'search', query: { client: client.id } })"
           >Histórico</v-btn
         >

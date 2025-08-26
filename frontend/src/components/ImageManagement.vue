@@ -13,13 +13,12 @@
             >
               <v-img
                 :class="[selectedClass, 'image-slot']"
-                :key="image.id"
-                :src="image.link"
+                key="id"
+                :src="image.link!!"
                 height="150"
                 max-height="150"
                 width="150"
                 max-width="150"
-                @click="toggle()"
               />
             </v-item>
           </v-row>
@@ -53,6 +52,8 @@
 <script lang="ts" setup>
 import { computed, ref, type PropType } from "vue";
 
+import ImageDto from "@models/dto/ImageDto";
+
 const enabled = defineModel<boolean>();
 
 const props = defineProps({
@@ -78,7 +79,7 @@ const isSelected = computed(() => selected.value !== undefined);
 
 const uploading = ref(false);
 
-function handleUpload(files) {
+function handleUpload(files: File[]) {
   emit("add", files);
 }
 
