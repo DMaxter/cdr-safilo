@@ -1,7 +1,9 @@
-import BrandDto from "@models/BrandDto";
-import MaterialDto from "@models/MaterialDto";
-import Measurements from "@models/Measurements";
-import { RequestTypeDto } from "@models/RequestTypeDto";
+import BrandDto from "@models/dto/BrandDto";
+import ClientDto from "@models/dto/ClientDto";
+import MaterialDto from "@models/dto/MaterialDto";
+import Measurements from "@models/dto/Measurements";
+import { RequestTypeDto } from "@models/dto/RequestTypeDto";
+import { Status } from "@models/dto/RequestStatus";
 
 // Consider creating an enum for RequestStatus
 type RequestStatus = string; // Replace with actual enum if available
@@ -9,7 +11,7 @@ type RequestStatus = string; // Replace with actual enum if available
 export default class RequestDto {
   id: number | null = null;
   user: string | null = null;
-  client: string | null = null;
+  client: ClientDto | null = null;
   created: Date | null = null;
   lastUpdate: Date | null = null;
   trackingCode: string | null = null;
@@ -29,7 +31,7 @@ export default class RequestDto {
       this.created = obj.created ? new Date(obj.created) : null;
       this.lastUpdate = obj.lastUpdate ? new Date(obj.lastUpdate) : null;
       this.trackingCode = obj.trackingCode ?? null;
-      this.status = obj.status ?? null;
+      this.status = obj.status ? getStatus(obj.status) : null;
       this.brand = obj.brand ? new BrandDto(obj.brand) : null;
       this.application = obj.application ?? null;
       this.type = obj.type ? RequestTypeDto.from(obj.type) : null;
@@ -39,15 +41,27 @@ export default class RequestDto {
     }
   }
 
-  getMaterials(): String[] {
-    return this.type.getMaterials();
+  getMaterials(): string[] {
+    return this.type!!.getMaterials();
   }
 
-  getFinishings(): String[][] {
-    return this.type.getFinishings();
+  getFinishings(): string[][] {
+    return this.type!!.getFinishings();
   }
 
   getMeasurements(): number[][] {
-    return this.type.getMeasurements();
+    return this.type!!.getMeasurements();
+  }
+}
+
+function getStatus(status: string) {
+  if (status === "ORDERED") {
+    return Status.Ordered;
+  } else if (status === "CANCELLED") {
+    return Status.Cancelled;
+  } else if (status === "DONE") {
+    return Status.Done;
+  } else {
+    throw Error(`Invalid status: ${status}`);
   }
 }

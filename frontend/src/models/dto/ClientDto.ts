@@ -1,7 +1,7 @@
-import ImageDto from "@models/ImageDto";
+import ImageDto from "@models/dto/ImageDto";
 
 export default class ClientDto {
-  id: number | string;
+  id: number | undefined = undefined;
   banner: string | null = null;
   name: string;
   address: string;
@@ -11,6 +11,7 @@ export default class ClientDto {
   phone: string;
   city: string;
   country: string;
+  note: string | null = null;
   images: ImageDto[] = [];
 
   constructor(obj?: Partial<ClientDto>) {
@@ -30,7 +31,7 @@ export default class ClientDto {
   }
 
   clear() {
-    this.id = "";
+    this.id = undefined;
     this.banner = null;
     this.name = "";
     this.fiscalNumber = "";

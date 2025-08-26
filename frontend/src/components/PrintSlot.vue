@@ -3,7 +3,7 @@
   <p class="text-h6" align="center">{{ props.name }}</p>
   <div class="d-flex justify-space-evenly">
     <v-img
-      :src="props.slot.image.link"
+      :src="props.slot.image.link!!"
       max-width="30%"
       style="border: 2px solid black; margin-bottom: 5px"
     ></v-img>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import RequestSlot from "@models/RequestSlotDto";
+import RequestSlot from "@models/dto/RequestSlotDto";
 
 const props = defineProps({
   slot: {

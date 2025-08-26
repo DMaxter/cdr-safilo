@@ -88,7 +88,7 @@
 import { ref, type PropType } from "vue";
 
 import Backend from "@/router/backend";
-import ClientDto from "@models/ClientDto";
+import ClientDto from "@models/dto/ClientDto";
 
 const emit = defineEmits(["updated"]);
 

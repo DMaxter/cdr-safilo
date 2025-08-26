@@ -1,9 +1,9 @@
-import LabelFormat from "@models/fema/LabelFormat";
-import PackageType from "@models/fema/PackageType";
-import Service from "@models/fema/Service";
+import LabelFormat from "@models/dto/fema/LabelFormat";
+import PackageType from "@models/dto/fema/PackageType";
+import Service from "@models/dto/fema/Service";
 
-import RequestDto from "@models/RequestDto";
-import UserDto from "@models/UserDto";
+import RequestDto from "@models/dto/RequestDto";
+import UserDto from "@models/dto/UserDto";
 
 import axios from "axios";
 

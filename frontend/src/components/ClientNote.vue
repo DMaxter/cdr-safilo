@@ -20,6 +20,7 @@ import { ref, type PropType } from "vue";
 
 import { useUserStore } from "@stores/user";
 import Backend from "@/router/backend";
+import ClientDto from "@models/dto/ClientDto";
 
 const emit = defineEmits(["updated"]);
 
@@ -44,10 +45,10 @@ async function edit() {
     success.value = true;
     emit("updated");
     close();
-  } catch (error) {
+  } catch (error: any) {
     failure.value = true;
     console.error(error);
-    throw Error(error);
+    throw Error(error as string);
   }
 }
 
