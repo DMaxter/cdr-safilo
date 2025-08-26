@@ -41,10 +41,10 @@ async function recover() {
   try {
     await Backend.redefineWithToken(email.value);
     success.value = true;
-  } catch (error) {
+  } catch (error: any) {
     failure.value = true;
     console.log(error);
-    throw Error(error);
+    throw Error(error as string);
   }
 }
 

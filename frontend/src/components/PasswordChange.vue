@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onUpdated, ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 
 import Backend from "@/router/backend";
 import { checkAllRefsValid, required } from "@/rules";
@@ -69,22 +69,17 @@ const repeatNewPassword = ref("");
 
 const newPasswordRules = [
   required,
-  (value) => value != currentPassword.value || "Palavra-passe atual e a nova têm de ser diferentes",
+  (value: string) =>
+    value != currentPassword.value || "Palavra-passe atual e a nova têm de ser diferentes",
 ];
 const repeatPasswordRules = [
   required,
-  (value) => value == newPassword.value || "Palavras-passe não são iguais!",
+  (value: string) => value == newPassword.value || "Palavras-passe não são iguais!",
 ];
 
-const currentRef = useTemplateRef("current");
-const newRef = useTemplateRef("new");
-const repeatRef = useTemplateRef("repeat");
-
-onUpdated(() => {
-  if (enabled.value) {
-    currentRef.value.focus();
-  }
-});
+const currentRef = useTemplateRef<string>("current");
+const newRef = useTemplateRef<string>("new");
+const repeatRef = useTemplateRef<string>("repeat");
 
 const canChangePassword = computed(() => checkAllRefsValid([currentRef, newRef, repeatRef]));
 
@@ -94,9 +89,9 @@ async function changePassword() {
       if (newPassword.value == repeatNewPassword.value) {
         try {
           await Backend.changePassword(currentPassword, newPassword);
-        } catch (error) {
+        } catch (error: any) {
           console.error(error);
-          throw Error(error);
+          throw Error(error as string);
         }
       }
     }
