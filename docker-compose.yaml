@@ -24,11 +24,18 @@ services:
       MP_JWT_VERIFY_PUBLICKEY_ALGORITHM: RS256
       MP_JWT_VERIFY_ISSUER: https://localhost:8080
       QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: create
+      QUARKUS_MAILER_HOST: mailhog
+      QUARKUS_MAILER_PORT: 1025
+      QUARKUS_MAILER_FROM: cdr@gmail.com
+      CDR_EMAILS: cdr@gmail.com
+      CDR_CANCEL_EMAILS: cdr@gmail.com
     ports:
       - "8080:8080"
     depends_on:
       database:
         condition: service_healthy
+      mailhog:
+        condition: service_started
     networks:
       - app-network
 
@@ -48,7 +55,12 @@ services:
       interval: 5s
       retries: 10
       start_period: 15s
-
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+     - "8025:8025"
+    networks:
+     - app-network
 networks:
   app-network:
 
