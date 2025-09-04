@@ -1,0 +1,56 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+        - "8081:80"
+    depends_on:
+      - backend
+    networks:
+    - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DOMAIN_NAME: localhost
+      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://database:3306/db
+      QUARKUS_DATASOURCE_USERNAME: root
+      QUARKUS_DATASOURCE_PASSWORD: test
+      SMALLRYE_JWT_SIGN_KEY_LOCATION: /app/priv.pem
+      MP_JWT_VERIFY_PUBLICKEY_LOCATION: /app/pub.pem
+      MP_JWT_VERIFY_PUBLICKEY_ALGORITHM: RS256
+      MP_JWT_VERIFY_ISSUER: https://localhost:8080
+      QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: create
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ptest"]
+      interval: 5s
+      retries: 10
+      start_period: 15s
+
+networks:
+  app-network:
+
+volumes:
+    db_data:
