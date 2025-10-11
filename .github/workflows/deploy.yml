@@ -36,7 +36,6 @@ jobs:
     steps:
       - name: "Notify Discord - Start Backend Build"
         uses: th0th/notify-discord@v0.4.1
-        if: ${{ always() }}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -92,7 +91,6 @@ jobs:
     steps:
       - name: "Notify Discord - Start Frontend Build "
         uses: th0th/notify-discord@v0.4.1
-        if: ${{ always() }}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -187,7 +185,6 @@ jobs:
     steps:
       - name: "Notify Discord - Start Deploy"
         uses: th0th/notify-discord@v0.4.1
-        if: ${{ always() }}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
