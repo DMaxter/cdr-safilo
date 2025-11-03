@@ -1,39 +1,52 @@
 <template>
   <Container>
-    <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-      <Message v-model="failure" message="Não foi possível obter a lista de clientes" />
-      <v-data-table-virtual
-        :headers="headers"
-        :items="filteredClients"
-        fixed-header
-        hover
-        item-key="id"
-        items-per-page-text="Clientes por página:"
-        no-data-text="Não existem clientes registados"
-        height="500"
-        items-per-page="50"
-        style="max-width: 98%"
-        class="elevation-1 my-header-style"
+    <div style="height: 90%">
+      <P-DataTable
+        paginator
+        scrollable
+        removableSort
+        class="max-w-98/100"
+        scrollHeight="flex"
+        filterDisplay="row"
+        :value="clientStore.clients"
+        :rows="10"
+        :rowsPerPageOptions="[5, 10, 20, 50, 100]"
+        v-model:filters="filters"
       >
-        <template
-          v-for="(header, i) in headers"
-          v-slot:[`header.${header.key}`]="{ column, getSortIcon, toggleSort }"
-        >
-          <div class="v-data-table-header__content">
-            <span>{{ header.title }}</span>
-            <TableFilter
-              v-if="header.searchable"
-              :type="header.type ? header.type : undefined"
-              :items="header.items ? header.items : undefined"
-              :itemTitle="header.itemTitle ? header.itemTitle : undefined"
-              :itemValue="header.itemValue ? header.itemValue : undefined"
-              v-model="searchFilter[header.filterKey]"
-              @filter="updateFilterURL"
-            />
-            <v-icon class="v-data-table-header__sort-icon" :icon="getSortIcon(column)"></v-icon>
+        <!--FIXME: More than 20 items makes actions go off the page -->
+
+        <template #header>
+          <div class="flex justify-end">
+            <P-IconField>
+              <P-InputIcon>
+                <Icon icon="search" />
+              </P-InputIcon>
+              <P-InputText v-model="filters['global'].value" placeholder="Procurar" />
+            </P-IconField>
           </div>
         </template>
-        <template v-slot:item.actions="{ item }">
+
+        <P-Column sortable field="id" header="Código">
+          <template #filter="{ filterModel, filterCallback }">
+            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Código" />
+          </template>
+        </P-Column>
+        <P-Column sortable field="banner" header="Banner">
+          <template #filter="{ filterModel, filterCallback }">
+            <P-MultiSelect filter v-model="filterModel.value" @change="filterCallback()" :options="banners" placeholder="Banner" />
+          </template>
+        </P-Column>
+        <P-Column sortable field="name" header="Nome">
+          <template #filter="{ filterModel, filterCallback }">
+            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
+          </template>
+        </P-Column>
+        <P-Column sortable field="city" header="Cidade">
+          <template #filter="{ filterModel, filterCallback }">
+            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Cidade" />
+          </template>
+        </P-Column>
+        <!--<template v-slot:item.actions="{ item }">
           <v-icon @click="openClientInfo(item)" v-tooltip="'Ver cliente'">visibility</v-icon>
           <v-icon v-if="canEdit" @click="editClient(item)" v-tooltip="'Editar cliente'"
             >edit</v-icon
@@ -41,15 +54,14 @@
           <v-icon v-if="canAnnotate" @click="showClientNote(item)" v-tooltip="'Nota do cliente'"
             >sticky_note_2</v-icon
           >
-        </template>
-      </v-data-table-virtual>
-    </v-row>
-    <template v-slot:actions v-if="canEdit">
-      <v-row class="flex-row" justify="space-around" style="width: 90%">
-        <v-btn class="mt-3 mb-3" v-if="canEdit" @click="upload">Carregar Clientes</v-btn>
-        <v-btn class="mt-3 mb-3" @click="getRequests()">Descarregar pedidos</v-btn>
-        <AddClient v-if="canEdit" @updated="refreshClients" />
-      </v-row>
+        </template>-->
+      </P-DataTable>
+    </div>
+    <template #actions>
+      <P-Button @click="refresh">Atualizar</P-Button>
+      <P-Button v-if="canEdit" @click="upload">Carregar Clientes</P-Button>
+      <P-Button @click="getRequests()">Descarregar pedidos</P-Button>
+        <!--<AddClient v-if="canEdit" @updated="refreshClients" />
       <FileUpload
         v-if="canEdit"
         v-model="uploading"
@@ -64,37 +76,43 @@
       <Message
         v-model="uploadFailure"
         message="Ocorreu um erro ao carregar o ficheiro de clientes"
-      />
+      />-->
     </template>
   </Container>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref } from "vue";
+import { FilterMatchMode } from "@primevue/core/api";
+import { useToast } from "primevue/usetoast";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import { useUserStore } from "@/stores/user";
-import Backend from "@/router/backend";
-import ClientDto from "@models/dto/ClientDto";
+import { useAuthStore } from "@stores/auth";
+import { useClientStore } from "@stores/clients";
+
+import Backend from "@/router/backend_old";
+import { Client } from "@router/backend/services/client/types";
 
 const route = useRoute();
 const router = useRouter();
 const failure = ref(false);
 
-const user = useUserStore();
-await user.init();
+const TITLE = "Lista de Clientes";
 
-const ids = reactive([]);
-const clients = reactive([]);
-const banners = reactive([]);
-const cities = reactive([]);
+const authStore = useAuthStore();
+const clientStore = useClientStore();
+const toast = useToast();
 
-const searchValue = ref("");
+const ids = reactive([]); // TODO: REMOVE
+const banners = computed(() => [...new Set(clientStore.clients.map((c) => c.banner))]);
+const cities = reactive([]); // TODO: REMOVE
 
-const canAnnotate = user.isCdr() || user.isAdmin();
+const searchValue = ref(""); // TODO: REMOVE
 
-const canEdit = user.isSafilo() || user.isAdmin();
-const editing: ClientDto = ref(false);
+const canAnnotate = authStore.isCdr() || authStore.isAdmin();
+
+const canEdit = authStore.isSafilo() || authStore.isAdmin();
+const editing = ref<Client | null>(null);
 
 const annotating = ref(false);
 
@@ -102,55 +120,19 @@ const uploading = ref(false);
 const uploadSuccess = ref(false);
 const uploadFailure = ref(false);
 
-const selectedClient = ref(new ClientDto());
+const selectedClient = ref<Client>(new Client());
 
-await refreshClients();
+onMounted(async () => {
+  await refresh();
+});
 
-const headers = [
-  {
-    title: "Código",
-    align: "center",
-    key: "id",
-    value: "id",
-    sortable: true,
-    searchable: true,
-    items: ids,
-    filterKey: "id",
-  },
-  {
-    title: "Banner",
-    align: "center",
-    key: "banner",
-    value: "banner",
-    sortable: true,
-    searchable: true,
-    items: banners,
-    filterKey: "banner",
-  },
-  {
-    title: "Nome",
-    value: "name",
-    align: "center",
-    key: "name",
-    sortable: true,
-    searchable: true,
-    items: clients,
-    itemTitle: "name",
-    itemValue: "id",
-    filterKey: "name",
-  },
-  {
-    title: "Cidade",
-    value: "city",
-    align: "center",
-    key: "city",
-    sortable: true,
-    searchable: true,
-    items: cities,
-    filterKey: "city",
-  },
-  { value: "actions", align: "right", sortable: false },
-];
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  banner: { value: null, matchMode: FilterMatchMode.IN },
+  name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  city: { value: null, matchMode: FilterMatchMode.STARTS_WITH }
+});
 
 const searchFilter = reactive({
   id: [],
@@ -177,6 +159,7 @@ const filteredClients = computed(() =>
   }),
 );
 
+// FIXME: UPDATE TO USE NEW VALUES
 if (route.query.id) {
   searchFilter["id"] = [route.query.id].flat().map((id) => {
     try {
@@ -196,6 +179,20 @@ if (route.query.city) {
   searchFilter["city"] = [route.query.city].flat();
 }
 
+async function refresh() {
+  const response = await clientStore.getClients();
+
+  if (!response.success) {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Não foi possível obter a lista de clientes",
+      life: 10000,
+    });
+  }
+}
+
+// TODO: REMOVE
 async function refreshClients() {
   clients.length = 0;
   banners.length = 0;
@@ -224,7 +221,7 @@ async function importClients(file) {
   }
 }
 
-function showClientNote(client: ClientDto) {
+function showClientNote(client: Client) {
   selectedClient.value = client;
   annotating.value = true;
 }
@@ -233,7 +230,7 @@ function openClientInfo(client) {
   router.push({ name: "client", query: { id: client.id } });
 }
 
-async function editClient(client: ClientDto) {
+async function editClient(client: Client) {
   selectedClient.value = client;
   editing.value = true;
 }

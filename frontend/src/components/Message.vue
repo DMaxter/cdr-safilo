@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="enabled" transition="dialog-bottom-transition" max-width="80%">
+  <P-Dialog v-model="enabled" transition="dialog-bottom-transition" max-width="80%">
     <v-card>
       <v-card-text>
         <div class="text-h6 pt-12">
@@ -7,19 +7,19 @@
         </div>
       </v-card-text>
       <v-card-actions class="justify-end">
-        <v-btn text @click="close()">Voltar</v-btn>
-        <v-btn
+        <P-Button text @click="close()">Voltar</P-Button>
+        <P-Button
           text
           v-if="props.action"
           @click="
             props.action();
             close();
           "
-          >Confirmar</v-btn
+          >Confirmar</P-Button
         >
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </P-Dialog>
 </template>
 
 <script lang="ts" setup>

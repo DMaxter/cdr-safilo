@@ -44,7 +44,7 @@ import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
-import Backend from "@/router/backend";
+import Backend from "@/router/backend_old";
 import ClientDto from "@models/ClientDto";
 
 const managing = ref(false);
