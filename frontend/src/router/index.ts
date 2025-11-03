@@ -1,17 +1,26 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Backend from "./backend";
+
+import { useAuthStore } from "@stores/auth";
+
+const BASE_TITLE = "Casa dos Reclamos";
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: () => import("@views/Login.vue"),
-    meta: { title: import.meta.env.VUE_APP_NAME, requiresAuth: false },
+    meta: {
+      title: BASE_TITLE,
+      requiresAuth: false 
+    },
   },
   {
     path: "/profile",
     name: "profile",
-    meta: { title: "Perfil | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+    meta: {
+      title: `Perfil | ${BASE_TITLE}`,
+      requiresAuth: true
+    },
     component: () => import("@views/Profile.vue"),
   },
   //{
@@ -169,21 +178,20 @@ const routes = [
   //},
 ];
 
-export const router = createRouter({
+const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 
 router.beforeEach(async (to, from, next) => {
-  //get the authenticated user
-  let authUser = await Backend.isLoggedIn();
+  const authStore = useAuthStore();
 
   //check sensitive routes
   if (to.meta.requiresAuth) {
-    if (!authUser) {
-      next("/");
-    } else {
+    if (await authStore.isLoggedIn()) {
       next();
+    } else {
+      next("/");
     }
   } else {
     next();
@@ -193,3 +201,5 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach(async (to) => {
   document.title = to.meta.title as string;
 });
+
+export default router;

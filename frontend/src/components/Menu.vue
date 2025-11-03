@@ -1,92 +1,74 @@
 <template>
-  <v-row no-gutters justify="space-between" class="pt-2 pl-2 pr-2">
-    <v-menu :offset-x="true" tile>
-      <template v-slot:activator="{ props }">
-        <v-btn height="64" width="100" class="white--text customGradient" v-bind="props">
-          Menu
-        </v-btn>
-      </template>
-
-      <v-btn-toggle dense tile dark borderless style="height: 64px">
-        <v-btn
-          @click="router.push('profile')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-        >
-          <span style="font-size: 12px">Perfil</span>
-
-          <v-icon right>account_circle</v-icon>
-        </v-btn>
-
-        <v-btn
-          @click="router.push('clients')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-        >
-          <span style="font-size: 12px">Clientes</span>
-
-          <v-icon right>people</v-icon>
-        </v-btn>
-
-        <v-btn
-          @click="router.push('search')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-        >
-          <span style="font-size: 12px">Procurar</span>
-
-          <v-icon right>search</v-icon>
-        </v-btn>
-
-        <v-btn
-          @click="router.push('configure')"
-          height="64"
-          width="160"
-          class="customGradient text-white"
-          v-if="user.isSafilo() || user.isAdmin()"
-        >
-          <span style="font-size: 12px">Configurar</span>
-
-          <v-icon right>settings</v-icon>
-        </v-btn>
-
-        <v-btn
-          @click="router.push('orderClient')"
-          height="64"
-          width="130"
-          class="customGradient text-white"
-          v-if="user.isCommercial() || user.isAdmin()"
-        >
-          <span style="font-size: 12px">Novo Pedido</span>
-
-          <v-icon right>playlist_add</v-icon>
-        </v-btn>
-      </v-btn-toggle>
-    </v-menu>
-    <v-btn height="64" width="100" class="white--text customGradient" @click="logout()">
-      Logout
-    </v-btn>
-  </v-row>
+  <P-Menubar :model="items">
+    <template #item="{ item, props }">
+      <Router-Link v-slot="{ href, navigate }" :to="item.route" custom>
+        <a :href="href" v-bind="props.action" @click="navigate" v-if="item.display !== undefined ? item.display! : true">
+          <Icon :icon="item.icon" />
+          <span>{{ item.label }}</span>
+        </a>
+      </Router-Link>
+    </template>
+    <template #end>
+      <div class="h-full p-menubar-item">
+        <div id="logout" class="h-full p-menubar-item-content" @click="logout">
+          <Icon icon="logout" />
+          <span>Logout</span>
+        </div>
+      </div>
+    </template>
+  </P-Menubar>
 </template>
 
 <script lang="ts" setup>
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import Backend from "@/router/backend";
-import { useUserStore } from "@stores/user";
+import { useAuthStore } from "@stores/auth";
 
 const router = useRouter();
-const user = useUserStore();
-await user.init();
+const authStore = useAuthStore();
+
+const items = ref([
+  {
+    label: "Perfil",
+    icon: "account_circle",
+    route: "profile",
+  },
+  {
+    label: "Clientes",
+    icon: "people",
+    route: "clients",
+  },
+  {
+    label: "Procurar",
+    icon: "search",
+    route: "search",
+  },
+  {
+    label: "Configurar",
+    icon: "settings",
+    route: "configure",
+    display: computed(() => authStore.isSafilo() || authStore.isAdmin())
+  },
+  {
+    label: "Novo Pedido",
+    icon: "playlist_add",
+    route: "order",
+    display: computed(() => authStore.isCommercial() || authStore.isAdmin())
+  }
+]);
 
 async function logout() {
-  await Backend.logout();
-  user.clear();
   router.push("/");
+  await authStore.logout();
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#logout {
+  padding: var(--p-menubar-base-item-padding);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+</style>
