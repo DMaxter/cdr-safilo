@@ -1,73 +1,74 @@
 <template>
-  <v-container fluid class="d-flex flex-column align-center justify-center fill-height">
-    <v-row justify="center" align="center">
-      <v-img :src="CDRLogo" contain width="350px"></v-img>
-    </v-row>
-    <v-row justify="center" align="center">
-      <v-col cols="auto">
-        <v-card elevation="12" color="#FAFAFA" height="370" width="450" style="border-radius: 15px">
-          <v-card-title>Iniciar Sessão</v-card-title>
-          <v-form @submit.prevent="login">
-            <v-card-text>
-              <v-text-field
-                label="Utilizador"
-                type="text"
-                rounded
-                variant="outlined"
-                v-model="auth.email"
-              ></v-text-field>
-              <v-text-field
-                label="Palavra-passe"
-                type="password"
-                rounded
-                variant="outlined"
-                hide-details
-                v-model="auth.password"
-              ></v-text-field>
-            </v-card-text>
-            <v-card-actions class="d-flex flex-column">
-              <v-btn color="#616161" text @click="showRecover()">
-                Esqueceu-se da palavra passe?
-              </v-btn>
-
-              <v-btn width="33%" rounded class="mt-8 text-white customGradient" type="submit"
-                >Entrar
-              </v-btn>
-            </v-card-actions>
-            <Message
-              v-model="failure"
-              message="O nome de utilizador ou a palavra-passe estão incorretos"
+  <div class="flex flex-col justify-around items-center h-full">
+    <img :src="CDRLogo" class="object-contain m-w-[350px]" />
+    <P-Card class="max-w-[500px] w-1/2 max-h-[330px] h-1/2">
+      <template #title>Iniciar Sessão</template>
+      <template #content>
+        <P-Form @submit="login" class="flex flex-col">
+          <P-FloatLabel variant="on" class="mt-[10px]">
+            <P-InputText
+              fluid
+              size="large"
+              id="email"
+              type="text"
+              v-model="auth.email"
             />
-          </v-form>
-        </v-card>
-      </v-col>
-    </v-row>
-    <RecoveryCode v-model="recover" />
-  </v-container>
+            <label for="email">Email</label>
+          </P-FloatLabel>
+          <P-FloatLabel variant="on" class="mt-[10px]">
+            <P-InputText
+              fluid
+              size="large"
+              id="password"
+              type="password"
+              v-model="auth.password"
+            />
+            <label for="password">Palavra-passe</label>
+          </P-FloatLabel>
+          <P-Button text @click="showRecover()" class="mt-[30px]">
+            Esqueci-me da palavra-passe
+          </P-Button>
+
+          <P-Button width="33%" class="my-[10px]" type="submit"
+            >Entrar
+          </P-Button>
+        </P-Form>
+      </template>
+    </P-Card>
+  </div>
+  <RecoveryCode v-model="recover" />
 </template>
 
 <script lang="ts" setup>
+import { useToast } from "primevue/usetoast";
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 
-import Backend from "@/router/backend";
-import AuthDto from "@models/dto/AuthDto";
+import { useAuthStore } from "@stores/auth";
+import { Login } from "@router/backend/services/auth/types";
 import CDRLogo from "@/assets/logo.png";
 
-const failure = ref(false);
-
-const auth = reactive(new AuthDto());
+const auth = ref(new Login());
 const router = useRouter();
 
 const recover = ref(false);
 
+const authStore = useAuthStore();
+const toast = useToast();
+
 async function login() {
-  try {
-    await Backend.login(auth);
+  const response = await authStore.login(auth.value);
+
+  if (response.success) {
     router.push("profile");
-  } catch (error) {
-    failure.value = true;
-    console.error(error);
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Erro de autenticação",
+      detail: "O nome de utilizador ou a palavra-passe estão incorretos",
+      life: 10000
+    });
+    console.error(response);
   }
 }
 
@@ -75,5 +76,3 @@ function showRecover() {
   recover.value = true;
 }
 </script>
-
-<style lang="scss" scoped></style>

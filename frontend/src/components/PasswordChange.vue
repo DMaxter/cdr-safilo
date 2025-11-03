@@ -1,68 +1,71 @@
 <template>
-  <v-dialog v-model="enabled" persistent content-class="rounded-0" max-width="500px">
-    <v-card>
-      <v-card-title>Alterar Palavra-passe</v-card-title>
-      <v-card-text>
-        <v-text-field
-          class="mt-2"
-          label="Palavra-passe"
-          type="password"
-          ref="current"
-          :rules="[required]"
-          outlined
-          hide-details="auto"
-          v-model="currentPassword"
-        ></v-text-field>
-        <v-text-field
-          class="mt-2"
-          label="Nova palavra-passe"
-          type="password"
-          ref="new"
-          :rules="newPasswordRules"
-          outlined
-          hide-details="auto"
-          v-model="newPassword"
-        ></v-text-field>
-        <v-text-field
-          class="mt-2"
-          label="Repetir nova palavra-passe"
-          type="password"
-          ref="repeat"
-          :rules="repeatPasswordRules"
-          outlined
-          hide-details="auto"
-          v-model="repeatNewPassword"
-        ></v-text-field>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn class="d-flex flex-row" @click="close">
-          <v-icon>$prev</v-icon>
-          Voltar
-        </v-btn>
-        <v-btn
-          class="d-flex flex-column"
-          color="green"
-          :disabled="!canChangePassword"
-          @click="changePassword"
-        >
-          Confirmar<v-icon>$next</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-    <Message v-model="success" message="A palavra-passe foi alterada com sucesso" />
-  </v-dialog>
+  <P-Dialog modal class="max-w-95/100" v-model:visible="enabled">
+    <template #header>Alterar Palavra-passe</template>
+    <P-FloatLabel class="field" variant="on">
+      <P-InputText
+        fluid
+        id="current"
+        type="password"
+        ref="current"
+        v-model="currentPassword"
+      />
+      <label for="current">Palavra-passe atual</label>
+    </P-FloatLabel>
+    <P-FloatLabel class="field" variant="on">
+      <P-InputText
+        fluid
+        id="new"
+        type="password"
+        ref="new"
+        v-model="newPassword"
+      />
+      <label for="new">Nova palavra-passe</label>
+    </P-FloatLabel>
+    <P-FloatLabel class="field" variant="on">
+      <P-InputText
+        fluid
+        id="repeat"
+        label="Repetir nova palavra-passe"
+        type="password"
+        ref="repeat"
+        v-model="repeatNewPassword"
+      />
+      <label for="repeat">Repetir nova palavra-passe</label>
+    </P-FloatLabel>
+    <template #footer>
+      <P-Button class="flex flex-row" @click="close">
+        <Icon icon="prev" />
+        Voltar
+      </P-Button>
+      <P-Button
+        class="flex flex-row"
+        @click="changePassword">
+        <!--:disabled="!canChangePassword"-->
+        Confirmar
+        <Icon icon="next" />
+      </P-Button>
+    </template>
+    <!--<Message v-model="success" message="A palavra-passe foi alterada com sucesso" />-->
+  </P-Dialog>
 </template>
 
 <script lang="ts" setup>
+import { useToast } from "primevue/usetoast";
 import { computed, ref, useTemplateRef } from "vue";
 
-import Backend from "@/router/backend";
+import { useAuthStore } from "@stores/auth";
 import { checkAllRefsValid, required } from "@/rules";
 
 const enabled = defineModel<boolean>();
 const success = ref(false);
 const failure = ref(false);
 
+const TITLE = "Alteração de palavra-passe";
+
+const authStore = useAuthStore();
+const toast = useToast();
+
+// TODO: Validation rules
 const currentPassword = ref("");
 const newPassword = ref("");
 const repeatNewPassword = ref("");
@@ -87,11 +90,22 @@ async function changePassword() {
   if (canChangePassword) {
     if (newPassword.value != "" && repeatNewPassword.value != "") {
       if (newPassword.value == repeatNewPassword.value) {
-        try {
-          await Backend.changePassword(currentPassword, newPassword);
-        } catch (error: any) {
-          console.error(error);
-          throw Error(error as string);
+        const response = await authStore.changePassword(currentPassword.value, newPassword.value);
+
+        if (response.success) {
+          toast.add({
+            severity: "success",
+            summary: TITLE,
+            detail: "A palavra-passe foi alterada com sucesso"
+          });
+        } else {
+          toast.add({
+            severity: "error",
+            summary: TITLE,
+            detail: "Não foi possível alterar a palavra-passe",
+            life: 10000
+          });
+          console.error(response);
         }
       }
     }
@@ -105,3 +119,9 @@ function close() {
   enabled.value = false;
 }
 </script>
+
+<style lang="scss" scoped>
+.field {
+  margin-top: 10px;
+}
+</style>

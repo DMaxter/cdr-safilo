@@ -1,29 +1,22 @@
 <template>
-  <v-container fluid class="d-flex flex-column align-center justify-center fill-height">
-    <v-row justify="center" align="center" style="max-width: 100%">
-      <v-col cols="auto" style="padding: 0">
-        <v-card
-          elevation="12"
-          width="1500"
-          max-width="100%"
-          max-height="100%"
-          color="#FAFAFA"
-          style="border-radius: 15px"
-        >
-          <Menu />
-          <v-card-text>
-            <slot />
-          </v-card-text>
-          <v-card-actions v-if="slots.actions">
-            <slot name="actions" />
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row style="position: absolute; bottom: 0px; right: 0px" class="d-flex">
-      <v-img :src="CDRLogo" contain height="180" width="180"></v-img>
-    </v-row>
-  </v-container>
+  <div class="flex flex-col items-center justify-center max-h-97/100 h-full">
+    <P-Card class="max-w-90/100 w-[1500px] max-h-9/10" >
+      <template #content>
+        <div class="h-9/10">
+          <Menu class="mb-[10px]"/>
+          <slot />
+        </div>
+      </template>
+      <template #footer v-if="slots.actions">
+        <div class="flex justify-around">
+          <slot name="actions" />
+        </div>
+      </template>
+    </P-Card>
+    <div class="absolute bottom-0 right-0">
+      <img :src="CDRLogo" class="object-contain h-[180px] w-[180px]" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
