@@ -1,93 +1,84 @@
 <template>
   <Container>
-    <v-row justify="center" align="center" class="d-flex flex-column mb-10 mt-3">
-      <v-avatar color="#808080" size="100" class="mb-6 customGradient">
-        <v-icon size="80">account_circle</v-icon>
-      </v-avatar>
-      {{ user.user.name }}
-    </v-row>
-    <v-row justify="start" align="start" class="d-flex ml-4">
-      <v-col cols="1">
-        <v-avatar color="#808080" size="50" class="d-flex ml-12 customGradient">
-          <v-icon size="50" dark class="d-flex">attach_money</v-icon>
-        </v-avatar>
-      </v-col>
-      <v-col cols="2" class="d-flex flex-column ml-10" align="left">
-        Plafond Total
-        <v-main class="text-no-wrap" align="center" style="background-color: #cfcfcf">
-          {{ credits }}
-        </v-main>
-      </v-col>
-      <v-col cols="1" align="left" class>
-        <template v-if="hasPlafond">
-          <PlafondDetail v-model="plafondDetail" :credits="user.user.credits" />
-          <v-avatar
-            color="#808080"
-            size="30"
-            class="d-flex customGradient2"
-            @click="showPlafondDetail()"
-          >
-            <v-icon size="20" dark class="d-flex">help_outline</v-icon>
-          </v-avatar>
-        </template>
-      </v-col>
-    </v-row>
-    <v-row justify="start" align="start" class="d-flex ml-4 pt-7">
-      <v-col cols="1">
-        <v-avatar color="#808080" size="50" class="d-flex ml-12 customGradient">
-          <v-icon size="30" dark class="d-flex">email</v-icon>
-        </v-avatar>
-      </v-col>
-      <v-col cols="4" class="d-flex flex-column ml-10" align="left">
-        Email
-        <v-main class="text-no-wrap" align="center" style="background-color: #cfcfcf">
-          {{ user.user.email }}
-        </v-main>
-      </v-col>
-    </v-row>
-    <v-row justify="start" align="start" class="d-flex ml-4 pt-7">
-      <v-col cols="1">
-        <v-avatar color="#808080" size="50" class="d-flex ml-12 customGradient">
-          <v-icon size="35" dark class="d-flex">lock</v-icon>
-        </v-avatar>
-      </v-col>
-      <v-col cols="3" class="d-flex flex-column ml-10" align="left">
-        Password
-        <v-main class="text-no-wrap" width="" align="center" style="background-color: #cfcfcf">
-          ******
-        </v-main>
-      </v-col>
-      <v-btn
-        class="d-flex mt-9 text-white customGradient"
-        height="25"
-        elevation="2"
-        @click="showPasswordChange()"
-      >
-        Alterar
-        <v-icon class="pl-1" size="15" dark>settings</v-icon>
-      </v-btn>
-      <PasswordChange v-model="changePassword" />
-    </v-row>
+    <div class="flex flex-col justify-center items-center mb-[10px] mt-[30px]">
+      <Circle :size="100">
+        <Icon icon="account_circle" :size="80" />
+      </Circle>
+      {{ authStore.logged.name }}
+    </div>
+    <div class="my-[30px] flex justify-around">
+      <div class="flex justify-start items-center">
+        <Circle :size="50">
+          <Icon icon="attach_money" :size="50" />
+        </Circle>
+        <div class="ml-[10px]">
+          Plafond Total
+          <div class="field">
+            {{ credits }}
+          </div>
+        </div>
+        <div class="ml-[10px]">
+          <template v-if="hasPlafond">
+            <PlafondDetail v-model="plafondDetail" :credits="authStore.logged.credits" />
+            <Circle
+              class="cursor-pointer"
+              :size="30"
+              @click="showPlafondDetail()"
+            >
+              <Icon icon="help_outline" :size="20" />
+            </Circle>
+          </template>
+        </div>
+      </div>
+      <div class="flex justify-around items-center">
+        <Circle :size="50">
+          <Icon icon="email" :size="40" />
+        </Circle>
+        <div class="ml-[10px]">
+          Email
+          <div class="field">
+            {{ authStore.logged.email }}
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-around items-center">
+        <Circle :size="50">
+          <Icon icon="lock" :size="40" />
+        </Circle>
+        <div class="ml-[10px]">
+          Password
+          <div class="field">
+            **********
+          </div>
+        </div>
+        <P-Button
+          class="ml-[10px]"
+          @click="showPasswordChange()"
+        >
+          Alterar
+          <Icon icon="settings" :size="15" />
+        </P-Button>
+      </div>
+    </div>
   </Container>
+  <PasswordChange v-model="changePassword" />
 </template>
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
-import Backend from "@/router/backend";
-import { useUserStore } from "@stores/user";
+import { useAuthStore } from "@stores/auth";
 
-const user = useUserStore();
-await user.init();
+const authStore = useAuthStore();
 
 const router = useRouter();
-const credits = user.user
+const credits = authStore.logged
   .credits!!.map((element) => element.amount)
   .reduce((sum, e) => sum + e, 0)
   .toFixed(2);
 
-const hasPlafond: boolean = user.isCommercial() || user.isAdmin();
+const hasPlafond: boolean = authStore.isCommercial() || authStore.isAdmin();
 const plafondDetail = ref(false);
 
 const changePassword = ref(false);
@@ -102,6 +93,12 @@ function showPasswordChange() {
 </script>
 
 <style lang="scss" scoped>
+@use "@styles/variables" as *;
+
+.field {
+  background-color: $light-grey;
+}
+
 .customGradient2 {
   background-image: linear-gradient(#616161, grey);
   cursor: pointer;

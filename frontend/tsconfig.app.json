@@ -10,7 +10,10 @@
       "@/*": ["./src/*"],
       "@components/*": ["./src/components/*"],
       "@models/*": ["./src/models/*"],
+      "@router": ["./src/router/index.ts"],
+      "@router/*": ["./src/router/*"],
       "@stores/*": ["./src/stores/*"],
+      "@styles/*": ["./src/styles/*"],
       "@views/*": ["./src/views/*"]
     }
   }
