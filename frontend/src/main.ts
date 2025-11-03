@@ -1,148 +1,123 @@
 import { createApp, h } from "vue";
 import { createPinia } from "pinia";
-
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
-import { pt } from "vuetify/locale";
-import "vuetify/styles";
-import { VLigatureIcon } from "vuetify/lib/composables/icons.mjs";
-import { VFileUpload } from "vuetify/labs/VFileUpload";
-
-import "material-symbols/outlined.scss";
+import PrimeVue from "primevue/config";
+import ToastService from 'primevue/toastservice';
+import { definePreset } from '@primeuix/themes';
+import Aura from "@primeuix/themes/aura";
+import { pt } from "primelocale/js/pt.js";
 
 import App from "@/App.vue";
-import { router } from "@/router";
+import router from "@router";
 
 const app = createApp(App);
 
-// Vuetify
-const materialSymbols = {
-  component: (props) =>
-    h(VLigatureIcon, {
-      ...props,
-      class: "material-symbols-outlined",
-    }),
-};
-
-const aliases = {
-  addImage: "add_photo_alternate",
-  calendar: "event",
-  cancel: "cancel",
-  checkboxIndeterminate: "indeterminate_check_box",
-  checkboxOff: "check_box_outline_blank",
-  checkboxOn: "check_box",
-  clear: "cancel",
-  close: "close",
-  collapse: "keyboard_arrow_up",
-  complete: "check",
-  delete: "delete",
-  delimiter: "fiber_manual_record",
-  download: "download",
-  dropdown: "arrow_drop_down",
-  edit: "edit",
-  error: "warning",
-  expand: "keyboard_arrow_down",
-  eyeDropper: "colorize",
-  file: "attach_file",
-  filter: "filter_alt",
-  first: "first_page",
-  info: "info",
-  last: "last_page",
-  loading: "cached",
-  menu: "menu",
-  minus: "remove",
-  next: "chevron_right",
-  open: "open_in_new",
-  plus: "add",
-  prev: "chevron_left",
-  radioOff: "radio_button_unchecked",
-  radioOn: "radio_button_checked",
-  ratingEmpty: "star_border",
-  ratingFull: "star",
-  ratingHalf: "star_half",
-  sortAsc: "arrow_upward",
-  sortDesc: "arrow_downward",
-  subgroup: "arrow_drop_down",
-  success: "check_circle",
-  treeviewCollapse: "arrow_drop_down",
-  treeviewExpand: "arrow_right",
-  upload: "upload",
-  unfold: "unfold_more",
-  view: "visibility",
-  warning: "priority_high",
-};
-
-app.use(
-  createVuetify({
-    components: {
-      ...components,
-      VFileUpload,
-    },
-    date: {
-      locale: {
-        pt: "pt-PT",
-      },
-    },
-    directives,
-    icons: {
-      defaultSet: "materialSymbols",
-      aliases,
-      sets: {
-        materialSymbols,
-      },
-    },
-    locale: {
-      locale: "pt",
-      messages: { pt },
-    },
-  }),
-);
-
-// Pinia
+app.use(ToastService);
 app.use(createPinia());
 
-// Router
+const preset = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50: '{pink.50}',
+      100: '{pink.100}',
+      200: '{pink.200}',
+      300: '{pink.300}',
+      400: '{pink.400}',
+      500: '{pink.500}',
+      600: '{pink.600}',
+      700: '{pink.700}',
+      800: '{pink.800}',
+      900: '{pink.900}',
+      950: '{pink.950}'
+    }
+  }
+});
+
+app.use(PrimeVue, {
+  locale: pt,
+  theme: {
+    preset: preset,
+    options: {
+      darkModeSelector: false,
+    }
+  }
+});
+
 app.use(router);
 
-app.mount("#app");
+// PrimeVue Components
+import Button from "primevue/button";
+import Card from "primevue/card";
+import Column from 'primevue/column';
+import DataTable from "primevue/datatable";
+import Dialog from "primevue/dialog";
+import FloatLabel from "primevue/floatlabel";
+import { Form, FormField } from "@primevue/forms";
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+import InputText from "primevue/inputtext";
+import Menubar from 'primevue/menubar';
+import MultiSelect from "primevue/multiselect";
+import Toast from "primevue/toast";
 
-// Components
-import Menu from "@components/Menu.vue";
-app.component("Menu", Menu);
+app.component("P-Button", Button);
+app.component("P-Card", Card);
+app.component("P-Column", Column);
+app.component("P-DataTable", DataTable);
+app.component("P-Dialog", Dialog);
+app.component("P-FloatLabel", FloatLabel);
+app.component("P-Form", Form);
+app.component("P-FormField", FormField);
+app.component("P-IconField", IconField);
+app.component("P-InputIcon", InputIcon);
+app.component("P-InputText", InputText);
+app.component("P-Menubar", Menubar);
+app.component("P-MultiSelect", MultiSelect);
+app.component("P-Toast", Toast);
+
+
+// Custom Components
+// import AddClient from "@components/AddClient.vue";
+// import CancelRequest from "@components/CancelRequest.vue";
+import Circle from "@components/Circle.vue";
+// import ClientNote from "@components/ClientNote.vue";
 import Container from "@components/Container.vue";
-app.component("Container", Container);
-import Message from "@components/Message.vue";
-app.component("Message", Message);
-import AddClient from "@components/AddClient.vue";
-app.component("AddClient", AddClient);
-import EditClient from "@components/EditClient.vue";
-app.component("EditClient", EditClient);
-import PlafondDetail from "@components/PlafondDetail.vue";
-app.component("PlafondDetail", PlafondDetail);
+// import DownloadWaybill from "@components/DownloadWaybill.vue";
+// import EditClient from "@components/EditClient.vue";
+// import FileUpload from "@components/FileUpload.vue";
+import Icon from "@components/Icon.vue";
+// import ImageManagement from "@components/ImageManagement.vue";
+import Menu from "@components/Menu.vue";
+// import Message from "@components/Message.vue";
+// import OpenWaybill from "@components/OpenWaybill.vue";
 import PasswordChange from "@components/PasswordChange.vue";
-app.component("PasswordChange", PasswordChange);
-import RequestSummary from "@components/RequestSummary.vue";
-app.component("RequestSummary", RequestSummary);
-import CancelRequest from "@components/CancelRequest.vue";
-app.component("CancelRequest", CancelRequest);
-import PrintRequest from "@components/PrintRequest.vue";
-app.component("PrintRequest", PrintRequest);
-import PrintSlot from "@components/PrintSlot.vue";
-app.component("PrintSlot", PrintSlot);
-import Waybill from "@components/Waybill.vue";
-app.component("Waybill", Waybill);
-import OpenWaybill from "@components/OpenWaybill.vue";
-app.component("OpenWaybill", OpenWaybill);
-import DownloadWaybill from "@components/DownloadWaybill.vue";
-app.component("DownloadWaybill", DownloadWaybill);
+import PlafondDetail from "@components/PlafondDetail.vue";
+// import PrintRequest from "@components/PrintRequest.vue";
+// import PrintSlot from "@components/PrintSlot.vue";
 import RecoveryCode from "@components/RecoveryCode.vue";
+// import RequestSummary from "@components/RequestSummary.vue";
+// import TableFilter from "@components/TableFilter.vue";
+// import Waybill from "@components/Waybill.vue";
+// 
+// app.component("AddClient", AddClient);
+// app.component("CancelRequest", CancelRequest);
+app.component("Circle", Circle);
+// app.component("ClientNote", ClientNote);
+app.component("Container", Container);
+// app.component("DownloadWaybill", DownloadWaybill);
+// app.component("EditClient", EditClient);
+// app.component("FileUpload", FileUpload);
+app.component("Icon", Icon);
+// app.component("ImageManagement", ImageManagement);
+app.component("Menu", Menu);
+// app.component("Message", Message);
+// app.component("OpenWaybill", OpenWaybill);
+app.component("PasswordChange", PasswordChange);
+app.component("PlafondDetail", PlafondDetail);
+// app.component("PrintRequest", PrintRequest);
+// app.component("PrintSlot", PrintSlot);
 app.component("RecoveryCode", RecoveryCode);
-import ClientNote from "@components/ClientNote.vue";
-app.component("ClientNote", ClientNote);
-import TableFilter from "@components/TableFilter.vue";
-app.component("TableFilter", TableFilter);
-import ImageManagement from "@components/ImageManagement.vue";
-app.component("ImageManagement", ImageManagement);
-import FileUpload from "@components/FileUpload.vue";
-app.component("FileUpload", FileUpload);
+// app.component("RequestSummary", RequestSummary);
+// app.component("TableFilter", TableFilter);
+// app.component("Waybill", Waybill);
+
+app.mount("#app");

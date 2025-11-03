@@ -87,7 +87,7 @@ import { Status } from "@models/dto/RequestStatus";
 import CustomHeader from "@models/CustomHeader";
 import SearchViewFilter from "@models/SearchViewFilter";
 import SimpleClient from "@models/simple/Client";
-import Backend from "@/router/backend";
+import Backend from "@/router/backend_old";
 
 const user = useUserStore();
 await user.init();
