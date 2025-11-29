@@ -1,54 +1,49 @@
 <template>
-  <v-dialog v-model="enabled" persistent max-width="500px">
-    <v-card>
-      <v-card-title>Nota do cliente</v-card-title>
-      <v-card-text>
-        <v-textarea v-model="props.client.note" />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn hide-details color="blue darken-1" text @click="close()">Voltar</v-btn>
-        <v-btn hide-details color="blue darken-1" text @click="edit()">Editar</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <Message v-model="success" message="Nota editada com sucesso" />
-  <Message v-model="failure" message="Ocorreu um erro ao editar a nota" />
+  <P-Dialog modal class="max-w-95/100 w-[500px]" v-model:visible="enabled">
+    <template #header>Nota do cliente</template>
+      <P-Textarea autoResize fluid v-model="props.client.note" />
+    <template #footer>
+      <P-Button text @click="close()">Voltar</P-Button>
+      <P-Button text @click="edit()">Editar</P-Button>
+    </template>
+  </P-Dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref, type PropType } from "vue";
+import { useToast } from "primevue/usetoast";
 
-import { useUserStore } from "@stores/user";
-import Backend from "@/router/backend";
-import ClientDto from "@models/dto/ClientDto";
-
-const emit = defineEmits(["updated"]);
-
-const props = defineProps({
-  client: {
-    required: true,
-    type: Object as PropType<ClientDto>,
-  },
-});
-
-const user = useUserStore();
-await user.init();
+import { Client } from "@router/backend/services/client/types";
+import { useClientStore } from "@stores/clients";
 
 const enabled = defineModel<boolean>();
 
-const success = ref(false);
-const failure = ref(false);
+const props = defineProps<{
+  client: Client,
+}>();
+
+const TITLE = "Edição de nota de cliente";
+
+const clientStore = useClientStore();
+const toast = useToast();
 
 async function edit() {
-  try {
-    await Backend.editNote(props.client.id, props.client.note);
-    success.value = true;
-    emit("updated");
-    close();
-  } catch (error: any) {
-    failure.value = true;
-    console.error(error);
-    throw Error(error as string);
+  const response = await clientStore.editNote(props.client.id, props.client.note);
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: TITLE,
+      detail: "Nota editada com sucesso",
+      life: 10000
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Ocorreu um erro a editar a nota",
+      life: 10000
+    });
+    console.error(response);
   }
 }
 

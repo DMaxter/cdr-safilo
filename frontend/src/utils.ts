@@ -15,3 +15,9 @@ export function getEnumKeyByValue(enumObj: object, value: string): string | unde
     console.error(`Value "${value}" not found in ${enumObj}`);
   }
 }
+
+export enum ManageMode {
+  Add = "ADD",
+  Edit = "EDIT",
+  None = "NONE"
+};

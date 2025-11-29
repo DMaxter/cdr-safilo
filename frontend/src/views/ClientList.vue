@@ -13,8 +13,8 @@
         :rowsPerPageOptions="[5, 10, 20, 50, 100]"
         v-model:filters="filters"
       >
-        <!--FIXME: More than 20 items makes actions go off the page -->
-
+        <!--FIXME: More than 10 items makes actions go off the page -->
+        <template #empty>Não existem clientes registados</template>
         <template #header>
           <div class="flex justify-end">
             <P-IconField>
@@ -46,38 +46,32 @@
             <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Cidade" />
           </template>
         </P-Column>
-        <!--<template v-slot:item.actions="{ item }">
-          <v-icon @click="openClientInfo(item)" v-tooltip="'Ver cliente'">visibility</v-icon>
-          <v-icon v-if="canEdit" @click="editClient(item)" v-tooltip="'Editar cliente'"
-            >edit</v-icon
-          >
-          <v-icon v-if="canAnnotate" @click="showClientNote(item)" v-tooltip="'Nota do cliente'"
-            >sticky_note_2</v-icon
-          >
-        </template>-->
+        <P-Column>
+          <template #body = "{ data }">
+            <Icon icon="visibility" @click="openClientInfo(data)" v-tooltip="'Ver cliente'" />
+            <Icon v-if="canManage" icon="edit" @click="editClient(data)" v-tooltip="'Editar cliente'" />
+            <Icon v-if="canAnnotate" icon="sticky_note_2" @click="showClientNote(data)" v-tooltip="'Nota do cliente'" />
+          </template>
+        </P-Column>
       </P-DataTable>
     </div>
     <template #actions>
       <P-Button @click="refresh">Atualizar</P-Button>
-      <P-Button v-if="canEdit" @click="upload">Carregar Clientes</P-Button>
+      <P-Button v-if="canManage" @click="addClient">Adicionar Cliente</P-Button>
+      <P-Button v-if="canManage" @click="showUpload">Carregar Clientes</P-Button>
       <P-Button @click="getRequests()">Descarregar pedidos</P-Button>
-        <!--<AddClient v-if="canEdit" @updated="refreshClients" />
       <FileUpload
-        v-if="canEdit"
+        v-if="canManage"
         v-model="uploading"
         accept="text/csv"
         title="Carregar Clientes"
-        @upload="importClients"
         :multiple="false"
+        :maxFiles="1"
+        :uploader="importClients"
       />
-      <EditClient v-model="editing" :client="selectedClient" @updated="refreshClients" />
-      <ClientNote v-model="annotating" :client="selectedClient" @updated="refreshClients" />
-      <Message v-model="uploadSuccess" message="Clientes carregados com sucesso!" />
-      <Message
-        v-model="uploadFailure"
-        message="Ocorreu um erro ao carregar o ficheiro de clientes"
-      />-->
     </template>
+    <ClientManagement v-model="manageMode" :client="selectedClient" />
+    <ClientNote v-model="annotating" :client="selectedClient" />
   </Container>
 </template>
 
@@ -89,8 +83,8 @@ import { useRoute, useRouter } from "vue-router";
 
 import { useAuthStore } from "@stores/auth";
 import { useClientStore } from "@stores/clients";
+import { ManageMode } from "@/utils";
 
-import Backend from "@/router/backend_old";
 import { Client } from "@router/backend/services/client/types";
 
 const route = useRoute();
@@ -98,6 +92,7 @@ const router = useRouter();
 const failure = ref(false);
 
 const TITLE = "Lista de Clientes";
+const IMPORT_TITLE = "Importação de Clientes";
 
 const authStore = useAuthStore();
 const clientStore = useClientStore();
@@ -111,20 +106,31 @@ const searchValue = ref(""); // TODO: REMOVE
 
 const canAnnotate = authStore.isCdr() || authStore.isAdmin();
 
-const canEdit = authStore.isSafilo() || authStore.isAdmin();
-const editing = ref<Client | null>(null);
+const canManage = authStore.isSafilo() || authStore.isAdmin();
+const manageMode = ref<ManageMode>(ManageMode.None);
 
 const annotating = ref(false);
 
 const uploading = ref(false);
-const uploadSuccess = ref(false);
-const uploadFailure = ref(false);
 
 const selectedClient = ref<Client>(new Client());
 
 onMounted(async () => {
   await refresh();
 });
+
+async function refresh() {
+  const response = await clientStore.getClients();
+
+  if (!response.success) {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Não foi possível obter a lista de clientes",
+      life: 10000,
+    });
+  }
+}
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -134,6 +140,12 @@ const filters = ref({
   city: { value: null, matchMode: FilterMatchMode.STARTS_WITH }
 });
 
+async function addClient() {
+  selectedClient.value = new Client();
+  manageMode.value = ManageMode.Add;
+}
+
+// FIXME: UPDATE TO USE NEW VALUES
 const searchFilter = reactive({
   id: [],
   banner: [],
@@ -141,25 +153,6 @@ const searchFilter = reactive({
   city: [],
 });
 
-const filteredClients = computed(() =>
-  clients.filter((c) => {
-    let include = true;
-
-    if (searchFilter["id"].length > 0 && !searchFilter["id"].includes(c.id)) {
-      include = false;
-    } else if (searchFilter["banner"].length > 0 && !searchFilter["banner"].includes(c.banner)) {
-      include = false;
-    } else if (searchFilter["name"].length > 0 && !searchFilter["name"].includes(c.name)) {
-      include = false;
-    } else if (searchFilter["city"].length > 0 && !searchFilter["city"].includes(c.city)) {
-      include = false;
-    }
-
-    return include;
-  }),
-);
-
-// FIXME: UPDATE TO USE NEW VALUES
 if (route.query.id) {
   searchFilter["id"] = [route.query.id].flat().map((id) => {
     try {
@@ -177,71 +170,6 @@ if (route.query.name) {
 }
 if (route.query.city) {
   searchFilter["city"] = [route.query.city].flat();
-}
-
-async function refresh() {
-  const response = await clientStore.getClients();
-
-  if (!response.success) {
-    toast.add({
-      severity: "error",
-      summary: TITLE,
-      detail: "Não foi possível obter a lista de clientes",
-      life: 10000,
-    });
-  }
-}
-
-// TODO: REMOVE
-async function refreshClients() {
-  clients.length = 0;
-  banners.length = 0;
-  ids.length = 0;
-  cities.length = 0;
-
-  try {
-    clients.unshift(...(await Backend.getClients()));
-    banners.unshift(...new Set(clients.map((c) => c.banner)));
-    ids.unshift(...clients.map((c) => c.id));
-    cities.unshift(...new Set(clients.map((c) => c.city)));
-  } catch (error) {
-    console.error(error);
-    throw Error(error);
-  }
-}
-
-async function importClients(file) {
-  try {
-    await Backend.addClients(file);
-    uploadSuccess.value = true;
-    await refreshClients();
-  } catch (error) {
-    uploadFailure.value = true;
-    console.error(error);
-  }
-}
-
-function showClientNote(client: Client) {
-  selectedClient.value = client;
-  annotating.value = true;
-}
-
-function openClientInfo(client) {
-  router.push({ name: "client", query: { id: client.id } });
-}
-
-async function editClient(client: Client) {
-  selectedClient.value = client;
-  editing.value = true;
-}
-
-async function getRequests() {
-  try {
-    await Backend.getAllRequests();
-  } catch (error) {
-    failure.value = true;
-    console.error(error);
-  }
 }
 
 function updateFilterURL() {
@@ -262,8 +190,44 @@ function updateFilterURL() {
 
   router.push({ query: query });
 }
+// END FIXME:
 
-function upload() {
+async function importClients(file: File) {
+  const response = await clientStore.importClients(file);
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: IMPORT_TITLE,
+      detail: "Clientes importados com sucesso",
+      life: 10000,
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: IMPORT_TITLE,
+      detail: "Ocorreu um erro ao carregar o ficheiro de clientes",
+      life: 10000,
+    });
+    console.error(response);
+  }
+}
+
+function showClientNote(client: Client) {
+  selectedClient.value = client;
+  annotating.value = true;
+}
+
+function openClientInfo(client: Client) {
+  router.push({ name: "client", query: { id: client.id } });
+}
+
+async function editClient(client: Client) {
+  selectedClient.value = client;
+  manageMode.value = ManageMode.Edit;
+}
+
+function showUpload() {
   uploading.value = true;
 }
 </script>

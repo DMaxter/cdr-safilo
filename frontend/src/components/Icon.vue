@@ -1,9 +1,9 @@
 <template>
-  <span class="material-symbols" :style="style">{{ icon }}</span>
+  <span class="material-symbols" :style="style" @click="emits('click')">{{ icon }}</span>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 
 import "@styles/fonts.css";
 
@@ -11,6 +11,10 @@ const props = defineProps<{
   icon: string
   size?: number
 }>();
+
+const emits = defineEmits(["click"]);
+
+const attrs = useAttrs();
 
 const aliases = {
   addImage: "add_photo_alternate",
@@ -60,6 +64,7 @@ const aliases = {
   warning: "priority_high",
 };
 
+
 const icon = computed<string>(() => {
   if (aliases[props.icon]) {
     return aliases[props.icon];
@@ -69,6 +74,7 @@ const icon = computed<string>(() => {
 });
 
 const style = computed(() => ({
-  "font-size": `${props.size ? props.size : 24}px`
+  "font-size": `${props.size ? props.size : 24}px`,
+  "cursor": (attrs.onClick ? "pointer" : "default")
 }));
 </script>
