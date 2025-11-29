@@ -1,6 +1,7 @@
 import { createApp, h } from "vue";
 import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
+import Tooltip from 'primevue/tooltip';
 import ToastService from 'primevue/toastservice';
 import { definePreset } from '@primeuix/themes';
 import Aura from "@primeuix/themes/aura";
@@ -43,20 +44,24 @@ app.use(PrimeVue, {
 });
 
 app.use(router);
+app.directive("tooltip", Tooltip);
 
 // PrimeVue Components
 import Button from "primevue/button";
 import Card from "primevue/card";
-import Column from 'primevue/column';
+import Column from "primevue/column";
 import DataTable from "primevue/datatable";
 import Dialog from "primevue/dialog";
+import PFileUpload from "primevue/fileupload";
 import FloatLabel from "primevue/floatlabel";
 import { Form, FormField } from "@primevue/forms";
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
+import IconField from "primevue/iconfield";
+import InputIcon from "primevue/inputicon";
 import InputText from "primevue/inputtext";
-import Menubar from 'primevue/menubar';
+import ListBox from "primevue/listbox";
+import Menubar from "primevue/menubar";
 import MultiSelect from "primevue/multiselect";
+import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
 
 app.component("P-Button", Button);
@@ -64,28 +69,31 @@ app.component("P-Card", Card);
 app.component("P-Column", Column);
 app.component("P-DataTable", DataTable);
 app.component("P-Dialog", Dialog);
+app.component("P-FileUpload", PFileUpload);
 app.component("P-FloatLabel", FloatLabel);
 app.component("P-Form", Form);
 app.component("P-FormField", FormField);
 app.component("P-IconField", IconField);
 app.component("P-InputIcon", InputIcon);
 app.component("P-InputText", InputText);
+app.component("P-ListBox", ListBox);
 app.component("P-Menubar", Menubar);
 app.component("P-MultiSelect", MultiSelect);
+app.component("P-Textarea", Textarea);
 app.component("P-Toast", Toast);
 
 
 // Custom Components
-// import AddClient from "@components/AddClient.vue";
 // import CancelRequest from "@components/CancelRequest.vue";
 import Circle from "@components/Circle.vue";
-// import ClientNote from "@components/ClientNote.vue";
+import ClientNote from "@components/ClientNote.vue";
 import Container from "@components/Container.vue";
+import ClientManagement from "@components/ClientManagement.vue";
 // import DownloadWaybill from "@components/DownloadWaybill.vue";
-// import EditClient from "@components/EditClient.vue";
-// import FileUpload from "@components/FileUpload.vue";
+import FileUpload from "@components/FileUpload.vue";
 import Icon from "@components/Icon.vue";
-// import ImageManagement from "@components/ImageManagement.vue";
+import ImageManagement from "@components/ImageManagement.vue";
+import ItemGroup from "@components/ItemGroup.vue";
 import Menu from "@components/Menu.vue";
 // import Message from "@components/Message.vue";
 // import OpenWaybill from "@components/OpenWaybill.vue";
@@ -97,17 +105,17 @@ import RecoveryCode from "@components/RecoveryCode.vue";
 // import RequestSummary from "@components/RequestSummary.vue";
 // import TableFilter from "@components/TableFilter.vue";
 // import Waybill from "@components/Waybill.vue";
-// 
-// app.component("AddClient", AddClient);
+
 // app.component("CancelRequest", CancelRequest);
 app.component("Circle", Circle);
-// app.component("ClientNote", ClientNote);
+app.component("ClientManagement", ClientManagement);
+app.component("ClientNote", ClientNote);
 app.component("Container", Container);
 // app.component("DownloadWaybill", DownloadWaybill);
-// app.component("EditClient", EditClient);
-// app.component("FileUpload", FileUpload);
+app.component("FileUpload", FileUpload);
 app.component("Icon", Icon);
-// app.component("ImageManagement", ImageManagement);
+app.component("ImageManagement", ImageManagement);
+app.component("ItemGroup", ItemGroup);
 app.component("Menu", Menu);
 // app.component("Message", Message);
 // app.component("OpenWaybill", OpenWaybill);
