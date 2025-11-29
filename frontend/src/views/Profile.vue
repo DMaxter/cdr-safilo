@@ -4,7 +4,7 @@
       <Circle :size="100">
         <Icon icon="account_circle" :size="80" />
       </Circle>
-      {{ authStore.logged.name }}
+      {{ authStore.logged!!.name }}
     </div>
     <div class="my-[30px] flex justify-around">
       <div class="flex justify-start items-center">
@@ -19,7 +19,7 @@
         </div>
         <div class="ml-[10px]">
           <template v-if="hasPlafond">
-            <PlafondDetail v-model="plafondDetail" :credits="authStore.logged.credits" />
+            <PlafondDetail v-model="plafondDetail" :credits="authStore.logged!!.credits" />
             <Circle
               class="cursor-pointer"
               :size="30"
@@ -37,7 +37,7 @@
         <div class="ml-[10px]">
           Email
           <div class="field">
-            {{ authStore.logged.email }}
+            {{ authStore.logged!!.email }}
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@ import { useAuthStore } from "@stores/auth";
 const authStore = useAuthStore();
 
 const router = useRouter();
-const credits = authStore.logged
+const credits = authStore.logged!!
   .credits!!.map((element) => element.amount)
   .reduce((sum, e) => sum + e, 0)
   .toFixed(2);

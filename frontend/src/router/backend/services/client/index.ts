@@ -16,16 +16,25 @@ export async function createClient(client: Client): Promise<AxiosResponse<Client
   return await http.post("/client", client);
 }
 
-export async function editClient(client: Client): Promise<AxiosResponse<Client | Error>> {
+export async function editClient(client: Client): Promise<AxiosResponse<null| Error>> {
   return await http.put("/client", client);
 }
 
-export async function editClientNote(id: number, note: string): Promise<AxiosResponse<Client | Error>> {
+export async function editClientNote(id: number, note: string): Promise<AxiosResponse<null | Error>> {
   return await http.put(`/client/${id}`, note);
 }
 
 export async function importClients(file: string): Promise<AxiosResponse<null | Error>> {
-  console.error("TODO");
+  let form = new FormData();
+
+  form.append("file", file);
+
+  return await http.post("/client/import", form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    timeout: 300000,
+  });
 }
 
 export async function getBannerClients(banner: string): Promise<AxiosResponse<Client[] | Error>> {

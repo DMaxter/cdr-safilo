@@ -45,7 +45,6 @@
         <Icon icon="next" />
       </P-Button>
     </template>
-    <!--<Message v-model="success" message="A palavra-passe foi alterada com sucesso" />-->
   </P-Dialog>
 </template>
 
@@ -57,8 +56,6 @@ import { useAuthStore } from "@stores/auth";
 import { checkAllRefsValid, required } from "@/rules";
 
 const enabled = defineModel<boolean>();
-const success = ref(false);
-const failure = ref(false);
 
 const TITLE = "Alteração de palavra-passe";
 
@@ -96,7 +93,8 @@ async function changePassword() {
           toast.add({
             severity: "success",
             summary: TITLE,
-            detail: "A palavra-passe foi alterada com sucesso"
+            detail: "A palavra-passe foi alterada com sucesso",
+            life: 10000
           });
         } else {
           toast.add({
