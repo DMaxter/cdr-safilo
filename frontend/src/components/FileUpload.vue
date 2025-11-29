@@ -1,60 +1,39 @@
 <template>
-  <v-dialog v-model="enabled" max-width="500px">
-    <v-row class="d-flex justify-center">
-      <v-card tile>
-        <v-card-title>{{ props.title }}</v-card-title>
-        <v-card-text>
-          <v-file-upload
-            clearable
-            v-model="selectedFiles"
-            :accept="props.accept"
-            :multiple="props.multiple"
-          ></v-file-upload>
-        </v-card-text>
-        <v-card-actions class="justify-end">
-          <v-btn @click="close">Voltar</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            v-if="isSelected"
-            @click="emit('upload', selectedFiles)"
-          >
-            Adicionar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-row>
-  </v-dialog>
+  <P-Dialog modal class="max-w-95/100 w-[500px]" v-model:visible="enabled">
+    <template #header>{{ props.title }}</template>
+    <P-FileUpload
+      customUpload
+      :accept="props.accept"
+      :multiple="props.multiple"
+      :fileLimit="props.maxFiles"
+      :showCancelButton="false"
+      @uploader="handleUpload"
+    />
+    <template #footer>
+      <P-Button text @click="close">Voltar</P-Button>
+    </template>
+  </P-Dialog>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from "vue";
+import type { FileUploadUploaderEvent } from "primevue/fileupload";
 
-const props = defineProps({
-  title: {
-    required: true,
-    type: String,
-  },
-  multiple: {
-    required: true,
-    type: Boolean,
-  },
-  accept: {
-    required: true,
-    type: String,
-  },
-});
+const props = defineProps<{
+  title: string,
+  multiple: boolean,
+  accept: string,
+  maxFiles?: number,
+  uploader: (f: File | File[]) => Promise<void>,
+}>();
 
 const enabled = defineModel<boolean>();
 
-const emit = defineEmits(["upload"]);
-
-const selectedFiles = ref([]);
-const isSelected = computed(() => selectedFiles.value.length != 0);
+async function handleUpload(event: FileUploadUploaderEvent) {
+  await props.uploader(event.files);
+}
 
 function close() {
-  selectedFiles.value.length = 0;
-
   enabled.value = false;
 }
 </script>
