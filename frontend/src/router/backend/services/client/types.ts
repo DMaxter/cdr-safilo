@@ -1,7 +1,7 @@
 import { Image } from "@router/backend/services/image/types";
 
 export class Client {
-  id: number = 0;
+  id: number | string = "";
   banner: string = "";
   name: string = "";
   fiscalNumber: string = "";
