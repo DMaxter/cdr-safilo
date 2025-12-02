@@ -20,6 +20,7 @@
       <P-Button v-if="canManageImages" @click="openImageManagement()">Imagens</P-Button>
       <P-Button @click="router.push({ name: 'search', query: { client: client.id } })">Histórico</P-Button>
       <ImageManagement
+        multiple
         v-model="managing"
         :uploadAction="addImages"
         :deleteAction="deleteImages"
@@ -66,7 +67,7 @@ if (route.query.id) {
       throw Error();
     }
 
-    let response = await clientStore.getClient(id.valueOf())!;
+    const response = await clientStore.getClient(id.valueOf())!;
     if (response.success) {
       client.value = response.content;
     } else {
@@ -95,7 +96,11 @@ if (route.query.id) {
 
 async function addImages(files: File[]) {
   try {
-    await clientStore.uploadImages(client.value.id, files);
+    const response = await clientStore.uploadImages(client.value.id, files);
+    if (!response.success) {
+      throw Error(response.content);
+    }
+
     toast.add({
       severity: "success",
       summary: IMAGE_TITLE,
@@ -115,7 +120,10 @@ async function addImages(files: File[]) {
 
 async function deleteImages(images: Image[]) {
   try {
-    await clientStore.deleteImages(client.value.id, images.map((i) => i.id));
+    const response = await clientStore.deleteImages(client.value.id, images.map((i) => i.id));
+    if (!response.success) {
+      throw Error(response.content);
+    }
     toast.add({
       severity: "success",
       summary: IMAGE_TITLE,

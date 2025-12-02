@@ -140,35 +140,17 @@ const routes = [
   //  meta: { title: "Informação de Loja | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
   //  component: () => import('@views/SafiloClientSpecificStore.vue')
   //},
-  //{
-  //  path: '/Configure',
-  //  name: 'configure',
-  //  meta: { title: "Configurar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-  //  component: () => import('@views/SafiloConfigure.vue')
-  //},
-  //{
-  //  path: '/ImageUpload',
-  //  name: 'imageUpload',
-  //  meta: { title: "Adicionar Imagem | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-  //  component: () => import('@views/SafiloImageUpload.vue')
-  //},
-  //{
-  //  path: '/PlafondChange',
-  //  name: 'plafondChange',
-  //  meta: { title: "Atribuir Plafond | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-  //  component: () => import('@views/SafiloPlafondChange.vue')
-  //},
+  {
+    path: '/configure',
+    name: 'configure',
+    meta: { title: "Configurar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+    component: () => import('@views/Configure.vue')
+  }
   //{
   //  path: '/Materiais',
   //  name: 'materiais',
   //  meta: { title: "Materiais | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
   //  component: () => import('@views/CdrMaterials.vue')
-  //},
-  //{
-  //  path: '/brandChange',
-  //  name: 'brandChange',
-  //  meta: { title: "Marcas | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-  //  component: () => import('@views/SafiloBrandChanges.vue')
   //},
   //{
   //  path: '/clientHistory',
