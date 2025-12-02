@@ -117,9 +117,3 @@ function close() {
   enabled.value = false;
 }
 </script>
-
-<style lang="scss" scoped>
-.field {
-  margin-top: 10px;
-}
-</style>

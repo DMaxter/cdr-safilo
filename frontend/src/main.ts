@@ -49,6 +49,7 @@ app.directive("tooltip", Tooltip);
 // PrimeVue Components
 import Button from "primevue/button";
 import Card from "primevue/card";
+import Chip from "primevue/chip";
 import Column from "primevue/column";
 import DataTable from "primevue/datatable";
 import Dialog from "primevue/dialog";
@@ -66,6 +67,7 @@ import Toast from "primevue/toast";
 
 app.component("P-Button", Button);
 app.component("P-Card", Card);
+app.component("P-Chip", Chip);
 app.component("P-Column", Column);
 app.component("P-DataTable", DataTable);
 app.component("P-Dialog", Dialog);
@@ -84,6 +86,7 @@ app.component("P-Toast", Toast);
 
 
 // Custom Components
+import BrandList from "@components/BrandList.vue";
 // import CancelRequest from "@components/CancelRequest.vue";
 import Circle from "@components/Circle.vue";
 import ClientNote from "@components/ClientNote.vue";
@@ -99,13 +102,14 @@ import Menu from "@components/Menu.vue";
 // import OpenWaybill from "@components/OpenWaybill.vue";
 import PasswordChange from "@components/PasswordChange.vue";
 import PlafondDetail from "@components/PlafondDetail.vue";
+import PlafondManagement from "@components/PlafondManagement.vue";
 // import PrintRequest from "@components/PrintRequest.vue";
 // import PrintSlot from "@components/PrintSlot.vue";
 import RecoveryCode from "@components/RecoveryCode.vue";
 // import RequestSummary from "@components/RequestSummary.vue";
-// import TableFilter from "@components/TableFilter.vue";
 // import Waybill from "@components/Waybill.vue";
 
+app.component("BrandList", BrandList);
 // app.component("CancelRequest", CancelRequest);
 app.component("Circle", Circle);
 app.component("ClientManagement", ClientManagement);
@@ -121,11 +125,11 @@ app.component("Menu", Menu);
 // app.component("OpenWaybill", OpenWaybill);
 app.component("PasswordChange", PasswordChange);
 app.component("PlafondDetail", PlafondDetail);
+app.component("PlafondManagement", PlafondManagement);
 // app.component("PrintRequest", PrintRequest);
 // app.component("PrintSlot", PrintSlot);
 app.component("RecoveryCode", RecoveryCode);
 // app.component("RequestSummary", RequestSummary);
-// app.component("TableFilter", TableFilter);
 // app.component("Waybill", Waybill);
 
 app.mount("#app");

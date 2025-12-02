@@ -1,102 +1,122 @@
 <template>
   <Container>
-    <v-row justify="center" align="center" class="d-flex flex-column mt-2">
-      <v-data-table-virtual
-        :headers="headers"
-        :items="filteredRequests"
-        fixed-header
-        hover
-        item-key="id"
-        items-per-page-text="Pedidos por página:"
-        no-data-text="Não existem pedidos registados"
-        height="500"
-        items-per-page="50"
-        style="max-width: 98%"
-        class="elevation-1 my-header-style mt-5"
-      >
-        <template
-          v-for="(header, i) in headers"
-          v-slot:[`header.${header.key}`]="{ column, getSortIcon, toggleSort }"
-        >
-          <div class="v-data-table-header__content">
-            <span>{{ header.title }}</span>
-            <TableFilter
-              v-if="header.searchable"
-              :type="header.type ? header.type : undefined"
-              :items="header.items ? header.items : undefined"
-              :itemTitle="header.itemTitle ? header.itemTitle : undefined"
-              :itemValue="header.itemValue ? header.itemValue : undefined"
-              v-model="searchFilter[header.filterKey as keyof SearchViewFilter]"
-              @filter="updateFilterURL"
-            />
-            <v-icon class="v-data-table-header__sort-icon" :icon="getSortIcon(column)"></v-icon>
-          </div>
+    <P-DataTable
+      :value="filteredRequests"
+      dataKey="id"
+      paginator
+      scrollable
+      removableSort
+      scrollHeight="500px"
+      :rows="50"
+      :rowsPerPageOptions="[10, 20, 50, 100]"
+      style="max-width: 98%"
+      class="mt-5"
+      filterDisplay="row"
+      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+      currentPageReportTemplate="{first} to {last} of {totalRecords}"
+    >
+      <template #empty>Não existem pedidos registados</template>
+
+      <P-Column sortable field="id" header="ID">
+        <template #filter>
+          <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="ID" />
         </template>
-        <template v-slot:item.status="{ value }">
-          <v-chip
-            variant="elevated"
-            :prepend-icon="getStatusIcon(value)"
-            :color="getStatusColor(value)"
-            >{{ value }}</v-chip
-          >
+      </P-Column>
+      <P-Column field="status" header="Estado" sortable>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-MultiSelect filter v-model="filterModel.value" @input="filterCallback()" :options="states" placeholder="Estado" />
         </template>
-        <template v-slot:item.created="{ value }">
+        <template #body="{ data }">
+          <P-Chip
+            :icon="getStatusIcon(data.status)"
+            :severity="getStatusColor(data.status)"
+            :value="data.status"
+          ></P-Chip>
+        </template>
+      </P-Column>
+      <P-Column field="client.name" header="Cliente" sortable>
+        <template #filter>
+          <TableFilter
+            :items="clients"
+            itemTitle="name"
+            itemValue="id"
+            v-model="searchFilter['client']"
+            @filter="updateFilterURL"
+          />
+        </template>
+      </P-Column>
+      <P-Column field="user" header="Comercial" sortable>
+        <template #filter>
+          <TableFilter
+            :items="commercials"
+            v-model="searchFilter['commercial']"
+            @filter="updateFilterURL"
+          />
+        </template>
+      </P-Column>
+      <P-Column field="created" header="Data de Criação" sortable>
+        <template #filter>
+          <TableFilter
+            type="date"
+            v-model="searchFilter['creationDate']"
+            @filter="updateFilterURL"
+          />
+        </template>
+        <template #body="{ data }">
           <span>
-            {{ date.format(value, "keyboardDateTime") }}
+            {{ new Date(data.created).toLocaleString() }}
           </span>
         </template>
-        <template v-slot:item.actions="{ item }">
-          <v-icon @click="showSummary(item)" v-tooltip="'Ver resumo'">$view</v-icon>
-          <v-icon @click="console.error('TODO')" v-tooltip="'Ver detalhes'">$open</v-icon>
-          <!-- TODO: Implement edit -->
-          <v-icon
-            v-if="
-              (canManipulate || (user.isCommercial() && item.user == user.user.name)) &&
-              item.status!! === Status.Ordered
-            "
-            @click="editRequest(item)"
-            v-tooltip="'Editar'"
-            >$edit</v-icon
-          >
-          <v-icon
-            v-if="
-              (canManipulate || (user.isCommercial() && item.user == user.user.name)) &&
-              item.status!! === Status.Ordered
-            "
-            @click="showCancel(item)"
-            v-tooltip="'Cancelar'"
-            >$cancel</v-icon
-          >
+      </P-Column>
+      <P-Column field="cost" header="Custo" sortable>
+        <template #body="{ data }">
+          {{ data.cost.toFixed(2) }}
         </template>
-      </v-data-table-virtual>
-      <RequestSummary v-model="showing" :request="toSummarize" @updated="refreshRequests" />
-      <CancelRequest v-model="cancelling" :request="toCancel" @cancelled="refreshRequests" />
-    </v-row>
+      </P-Column>
+      <P-Column>
+        <template #body="{ data }">
+          <Icon icon="visibility" @click="showSummary(data)" v-tooltip="'Ver resumo'" />
+          <Icon icon="open_in_new" @click="console.error('TODO')" v-tooltip="'Ver detalhes'" />
+          <!-- TODO: Implement edit -->
+          <Icon
+            v-if="
+              (canManipulate || (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
+              data.status!! === Status.Ordered
+            "
+            icon="edit"
+            @click="editRequest(data)"
+            v-tooltip="'Editar'"
+          />
+          <Icon
+            v-if="
+              (canManipulate || (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
+              data.status!! === Status.Ordered
+            "
+            icon="cancel"
+            @click="showCancel(data)"
+            v-tooltip="'Cancelar'"
+          />
+        </template>
+      </P-Column>
+    </P-DataTable>
+    <RequestSummary v-model="showing" :request="toSummarize" @updated="refreshRequests" />
+    <CancelRequest v-model="cancelling" :request="toCancel" @cancelled="refreshRequests" />
   </Container>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
-import { useDate } from "vuetify";
 
 import { statusItems } from "@/maps";
-import { useUserStore } from "@stores/user";
-import RequestDto from "@models/dto/RequestDto";
-import { Status } from "@models/dto/RequestStatus";
-import CustomHeader from "@models/CustomHeader";
-import SearchViewFilter from "@models/SearchViewFilter";
-import SimpleClient from "@models/simple/Client";
-import Backend from "@/router/backend_old";
+import { useAuthStore } from "@stores/auth";
 
-const user = useUserStore();
-await user.init();
+const authStore = useAuthStore();
 
-const canManipulate = user.isSafilo() || user.isCdr() || user.isAdmin();
+const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
 const route = useRoute();
 const router = useRouter();
-const date = useDate();
 
 const requests: RequestDto[] = reactive([]);
 const commercials: String[] = reactive([]);
@@ -130,93 +150,24 @@ const filteredRequests = computed(() =>
       !searchFilter["commercial"].includes(r.user!!)
     ) {
       include = false;
-    } else if (
-      searchFilter["creationDate"].length > 0 &&
-      !date.isWithinRange(r.created, [
-        date.setMinutes(date.setHours(searchFilter["creationDate"][0], 0), 0),
-        date.setMinutes(
-          date.setHours(searchFilter["creationDate"][searchFilter["creationDate"].length - 1], 23),
-          59,
-        ),
-      ])
-    ) {
-      include = false;
+    } else if (searchFilter["creationDate"].length > 0) {
+      const createdDate = new Date(r.created);
+      const startDate = new Date(searchFilter["creationDate"][0]);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(
+        searchFilter["creationDate"][searchFilter["creationDate"].length - 1],
+      );
+      endDate.setHours(23, 59, 59, 999);
+
+      if (createdDate < startDate || createdDate > endDate) {
+        include = false;
+      }
     }
 
     return include;
   }),
 );
-
-const headers: CustomHeader[] = [
-  {
-    title: "ID",
-    align: "center",
-    key: "id",
-    value: "id",
-    sortable: true,
-    searchable: true,
-    items: ids,
-    filterKey: "id",
-    order: "desc",
-  },
-  {
-    title: "Estado",
-    align: "center",
-    key: "status",
-    value: "status",
-    searchable: true,
-    sortable: true,
-    items: statusItems,
-    itemTitle: "name",
-    itemValue: "value",
-    filterKey: "status",
-  },
-  {
-    title: "Cliente",
-    align: "center",
-    value: "client.name",
-    key: "client",
-    searchable: true,
-    sortable: true,
-    items: clients,
-    itemTitle: "name",
-    itemValue: "id",
-    filterKey: "client",
-  },
-  {
-    title: "Comercial",
-    align: "center",
-    key: "user",
-    value: "user",
-    searchable: true,
-    sortable: true,
-    items: commercials,
-    filterKey: "commercial",
-  },
-  {
-    title: "Data de Criação",
-    align: "center",
-    key: "created",
-    value: "created",
-    searchable: true,
-    type: "date",
-    sortable: true,
-    filterKey: "creationDate",
-  },
-  {
-    title: "Custo",
-    align: "center",
-    key: "cost",
-    value: (value: RequestDto) => value.cost.toFixed(2),
-    searchable: false,
-    sortable: true,
-  },
-  {
-    value: "actions",
-    sortable: false,
-    searchable: false,
-  },
-];
 
 // Search filters
 const searchFilter: SearchViewFilter = reactive({
@@ -330,6 +281,7 @@ function getStatusColor(value: Status) {
   }
 }
 
+// FIXME: Update
 function updateFilterURL() {
   let query: LocationQueryRaw = {};
 
@@ -351,6 +303,7 @@ function updateFilterURL() {
 
   router.push({ query: query });
 }
+// END FIXME:
 
 /***/
 // TODO: Implement
