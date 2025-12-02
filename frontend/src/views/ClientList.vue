@@ -1,6 +1,6 @@
 <template>
   <Container>
-    <div style="height: 90%">
+    <div class="h-85/100">
       <P-DataTable
         paginator
         scrollable
@@ -47,7 +47,7 @@
           </template>
         </P-Column>
         <P-Column>
-          <template #body = "{ data }">
+          <template #body="{ data }">
             <Icon icon="visibility" @click="openClientInfo(data)" v-tooltip="'Ver cliente'" />
             <Icon v-if="canManage" icon="edit" @click="editClient(data)" v-tooltip="'Editar cliente'" />
             <Icon v-if="canAnnotate" icon="sticky_note_2" @click="showClientNote(data)" v-tooltip="'Nota do cliente'" />
@@ -81,11 +81,10 @@ import { useToast } from "primevue/usetoast";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { Client } from "@router/backend/services/client/types";
 import { useAuthStore } from "@stores/auth";
 import { useClientStore } from "@stores/clients";
 import { ManageMode } from "@/utils";
-
-import { Client } from "@router/backend/services/client/types";
 
 const route = useRoute();
 const router = useRouter();
