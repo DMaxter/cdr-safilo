@@ -22,7 +22,7 @@ export const useClientStore = defineStore("clientStore", () => {
 
     if (index === -1) {
       console.error(`Client ${client.id} not in store`);
-      return
+      return;
     }
 
     clients.value[index] = client;
@@ -33,7 +33,7 @@ export const useClientStore = defineStore("clientStore", () => {
 
     if (index === -1) {
       console.error(`Client ${id} not in store`);
-      return
+      return;
     }
 
     clients.value[index].note = note;
@@ -44,7 +44,7 @@ export const useClientStore = defineStore("clientStore", () => {
 
     if (index === -1) {
       console.error(`Client ${id} not in store`);
-      return
+      return;
     }
 
     clients.value.splice(index, 1);
@@ -222,7 +222,10 @@ export const useClientStore = defineStore("clientStore", () => {
     }
   }
 
-  async function uploadImages(clientId: number, images: File[]): Promise<APIResponse<string | null>> {
+  async function uploadImages(
+    clientId: number,
+    images: File[],
+  ): Promise<APIResponse<string | null>> {
     try {
       const { status, data } = await API.images.uploadClientImages(clientId, images);
 
@@ -259,7 +262,10 @@ export const useClientStore = defineStore("clientStore", () => {
     }
   }
 
-  async function deleteImages(clientId: number, imageIds: number[]): Promise<APIResponse<string | null>> {
+  async function deleteImages(
+    clientId: number,
+    imageIds: number[],
+  ): Promise<APIResponse<string | null>> {
     try {
       const { status, data } = await API.images.deleteClientImages(imageIds);
 
@@ -301,6 +307,6 @@ export const useClientStore = defineStore("clientStore", () => {
     getClients,
     importClients,
     uploadImages,
-    deleteImages
+    deleteImages,
   };
 });

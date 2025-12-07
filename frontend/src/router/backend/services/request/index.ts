@@ -20,7 +20,10 @@ export async function getAllRequests(): Promise<AxiosResponse<Request[] | Error>
   return await http.get("/request");
 }
 
-export async function finishRequest(id: number, code: number): Promise<AxiosResponse<null | Error>> {
+export async function finishRequest(
+  id: number,
+  code: number,
+): Promise<AxiosResponse<null | Error>> {
   return await http.put(`/request/finish/${id}/${code}`);
 }
 
@@ -28,10 +31,13 @@ export async function cancelRequest(id: number): Promise<AxiosResponse<null | Er
   return await http.put(`/request/cancel/${id}`);
 }
 
-export async function editRequest(id: number, request: Request): Promise<AxiosResponse<null | Error>> {
+export async function editRequest(
+  id: number,
+  request: Request,
+): Promise<AxiosResponse<null | Error>> {
   return await http.put(`/request/${id}`, request);
 }
 
 export async function exportRequests(): Promise<AxiosResponse<Blob | Error>> {
-  return await http.get("/request/export", { responseType: 'blob' });
+  return await http.get("/request/export", { responseType: "blob" });
 }
