@@ -10,7 +10,7 @@ export async function makeImageObsolete(id: number): Promise<AxiosResponse<null 
 
 export async function uploadClientImages(
   clientId: number,
-  images: File[]
+  images: File[],
 ): Promise<AxiosResponse<Image[] | Error>> {
   const form = new FormData();
 

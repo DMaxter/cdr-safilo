@@ -2,12 +2,7 @@
   <P-Dialog modal v-model:visible="enabled" class="w-3/10">
     <template #header>Recuperar palavra-passe</template>
     <P-FloatLabel variant="on" class="mt-[10px]">
-      <P-InputText
-        fluid
-        id="email"
-        type="text"
-        v-model="email"
-      />
+      <P-InputText fluid id="email" type="text" v-model="email" />
       <label for="email">Email</label>
     </P-FloatLabel>
     <template #footer>
@@ -42,15 +37,15 @@ async function recover() {
       severity: "success",
       summary: TITLE,
       detail: `Foi enviado um email para ${email.value} com um link para alterar a palavra-passe`,
-      life: 10000
+      life: 10000,
     });
   } else {
     toast.add({
       severity: "error",
       summary: TITLE,
       detail: "Ocorreu um erro ao pedir para alterar a palavra-passe",
-      life: 10000
-    })
+      life: 10000,
+    });
     console.log(response);
   }
 }

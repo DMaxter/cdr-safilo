@@ -8,8 +8,8 @@ import { computed, useAttrs } from "vue";
 import "@styles/fonts.css";
 
 const props = defineProps<{
-  icon: string
-  size?: number
+  icon: string;
+  size?: number;
 }>();
 
 const emits = defineEmits(["click"]);
@@ -64,7 +64,6 @@ const aliases = {
   warning: "priority_high",
 };
 
-
 const icon = computed<string>(() => {
   if (aliases[props.icon]) {
     return aliases[props.icon];
@@ -75,6 +74,6 @@ const icon = computed<string>(() => {
 
 const style = computed(() => ({
   "font-size": `${props.size ? props.size : 24}px`,
-  "cursor": (attrs.onClick ? "pointer" : "default")
+  cursor: attrs.onClick ? "pointer" : "default",
 }));
 </script>

@@ -28,12 +28,22 @@
 
         <P-Column sortable field="id" header="Código">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Código" />
+            <P-InputText
+              v-model="filterModel.value"
+              @input="filterCallback()"
+              placeholder="Código"
+            />
           </template>
         </P-Column>
         <P-Column sortable field="banner" header="Banner">
           <template #filter="{ filterModel, filterCallback }">
-            <P-MultiSelect filter v-model="filterModel.value" @change="filterCallback()" :options="banners" placeholder="Banner" />
+            <P-MultiSelect
+              filter
+              v-model="filterModel.value"
+              @change="filterCallback()"
+              :options="banners"
+              placeholder="Banner"
+            />
           </template>
         </P-Column>
         <P-Column sortable field="name" header="Nome">
@@ -43,14 +53,28 @@
         </P-Column>
         <P-Column sortable field="city" header="Cidade">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Cidade" />
+            <P-InputText
+              v-model="filterModel.value"
+              @input="filterCallback()"
+              placeholder="Cidade"
+            />
           </template>
         </P-Column>
         <P-Column>
           <template #body="{ data }">
             <Icon icon="visibility" @click="openClientInfo(data)" v-tooltip="'Ver cliente'" />
-            <Icon v-if="canManage" icon="edit" @click="editClient(data)" v-tooltip="'Editar cliente'" />
-            <Icon v-if="canAnnotate" icon="sticky_note_2" @click="showClientNote(data)" v-tooltip="'Nota do cliente'" />
+            <Icon
+              v-if="canManage"
+              icon="edit"
+              @click="editClient(data)"
+              v-tooltip="'Editar cliente'"
+            />
+            <Icon
+              v-if="canAnnotate"
+              icon="sticky_note_2"
+              @click="showClientNote(data)"
+              v-tooltip="'Nota do cliente'"
+            />
           </template>
         </P-Column>
       </P-DataTable>
@@ -136,7 +160,7 @@ const filters = ref({
   id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   banner: { value: null, matchMode: FilterMatchMode.IN },
   name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  city: { value: null, matchMode: FilterMatchMode.STARTS_WITH }
+  city: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 
 async function addClient() {

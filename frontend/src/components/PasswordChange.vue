@@ -2,23 +2,11 @@
   <P-Dialog modal class="max-w-95/100" v-model:visible="enabled">
     <template #header>Alterar Palavra-passe</template>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText
-        fluid
-        id="current"
-        type="password"
-        ref="current"
-        v-model="currentPassword"
-      />
+      <P-InputText fluid id="current" type="password" ref="current" v-model="currentPassword" />
       <label for="current">Palavra-passe atual</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText
-        fluid
-        id="new"
-        type="password"
-        ref="new"
-        v-model="newPassword"
-      />
+      <P-InputText fluid id="new" type="password" ref="new" v-model="newPassword" />
       <label for="new">Nova palavra-passe</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
@@ -37,9 +25,7 @@
         <Icon icon="prev" />
         Voltar
       </P-Button>
-      <P-Button
-        class="flex flex-row"
-        @click="changePassword">
+      <P-Button class="flex flex-row" @click="changePassword">
         <!--:disabled="!canChangePassword"-->
         Confirmar
         <Icon icon="next" />
@@ -94,14 +80,14 @@ async function changePassword() {
             severity: "success",
             summary: TITLE,
             detail: "A palavra-passe foi alterada com sucesso",
-            life: 10000
+            life: 10000,
           });
         } else {
           toast.add({
             severity: "error",
             summary: TITLE,
             detail: "Não foi possível alterar a palavra-passe",
-            life: 10000
+            life: 10000,
           });
           console.error(response);
         }

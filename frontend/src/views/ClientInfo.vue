@@ -18,7 +18,9 @@
     </div>
     <template #actions>
       <P-Button v-if="canManageImages" @click="openImageManagement()">Imagens</P-Button>
-      <P-Button @click="router.push({ name: 'search', query: { client: client.id } })">Histórico</P-Button>
+      <P-Button @click="router.push({ name: 'search', query: { client: client.id } })"
+        >Histórico</P-Button
+      >
       <ImageManagement
         multiple
         v-model="managing"
@@ -56,7 +58,6 @@ const canManageImages = authStore.isSafilo() || authStore.isAdmin();
 
 const toast = useToast();
 
-
 const client = ref<Client>(new Client());
 
 if (route.query.id) {
@@ -74,7 +75,7 @@ if (route.query.id) {
       toast.add({
         severity: "error",
         summary: TITLE,
-        detail: ((response.status === 404) ? "Cliente não existente" : response.content),
+        detail: response.status === 404 ? "Cliente não existente" : response.content,
         life: 10000,
       });
       router.push("clients");
@@ -93,7 +94,6 @@ if (route.query.id) {
   router.push("clients");
 }
 
-
 async function addImages(files: File[]) {
   try {
     const response = await clientStore.uploadImages(client.value.id, files);
@@ -104,39 +104,42 @@ async function addImages(files: File[]) {
     toast.add({
       severity: "success",
       summary: IMAGE_TITLE,
-      detail: `${(files.length > 1) ? 'Imagens carregadas' : 'Imagem carregada'} com sucesso`,
-      life: 10000
+      detail: `${files.length > 1 ? "Imagens carregadas" : "Imagem carregada"} com sucesso`,
+      life: 10000,
     });
   } catch (error) {
     console.log(error);
     toast.add({
       severity: "error",
       summary: IMAGE_TITLE,
-      detail: `Ocorreu um erro ao carregar ${(files.length > 1) ? 'as imagens' : 'a imagem'}`,
-      life: 10000
+      detail: `Ocorreu um erro ao carregar ${files.length > 1 ? "as imagens" : "a imagem"}`,
+      life: 10000,
     });
   }
 }
 
 async function deleteImages(images: Image[]) {
   try {
-    const response = await clientStore.deleteImages(client.value.id, images.map((i) => i.id));
+    const response = await clientStore.deleteImages(
+      client.value.id,
+      images.map((i) => i.id),
+    );
     if (!response.success) {
       throw Error(response.content);
     }
     toast.add({
       severity: "success",
       summary: IMAGE_TITLE,
-      detail: `${(images.length > 1) ? 'Imagens eliminadas' : 'Imagem eliminada'} com sucesso`,
-      life: 10000
+      detail: `${images.length > 1 ? "Imagens eliminadas" : "Imagem eliminada"} com sucesso`,
+      life: 10000,
     });
   } catch (error) {
     console.error(error);
     toast.add({
       severity: "error",
       summary: IMAGE_TITLE,
-      detail: `Ocorreu um erro ao eliminar ${(images.length > 1) ? 'as imagens' : 'a imagem'}`,
-      life: 10000
+      detail: `Ocorreu um erro ao eliminar ${images.length > 1 ? "as imagens" : "a imagem"}`,
+      life: 10000,
     });
   }
 }

@@ -20,11 +20,7 @@
         <div class="ml-[10px]">
           <template v-if="hasPlafond">
             <PlafondDetail v-model="plafondDetail" :credits="authStore.logged!!.credits" />
-            <Circle
-              class="cursor-pointer"
-              :size="30"
-              @click="showPlafondDetail()"
-            >
+            <Circle class="cursor-pointer" :size="30" @click="showPlafondDetail()">
               <Icon icon="help_outline" :size="20" />
             </Circle>
           </template>
@@ -47,14 +43,9 @@
         </Circle>
         <div class="ml-[10px]">
           Password
-          <div class="field">
-            **********
-          </div>
+          <div class="field">**********</div>
         </div>
-        <P-Button
-          class="ml-[10px]"
-          @click="showPasswordChange()"
-        >
+        <P-Button class="ml-[10px]" @click="showPasswordChange()">
           Alterar
           <Icon icon="settings" :size="15" />
         </P-Button>
@@ -73,8 +64,8 @@ import { useAuthStore } from "@stores/auth";
 const authStore = useAuthStore();
 
 const router = useRouter();
-const credits = authStore.logged!!
-  .credits!!.map((element) => element.amount)
+const credits = authStore
+  .logged!!.credits!!.map((element) => element.amount)
   .reduce((sum, e) => sum + e, 0)
   .toFixed(2);
 

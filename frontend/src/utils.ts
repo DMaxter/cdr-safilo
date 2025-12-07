@@ -1,10 +1,10 @@
 export type EnumEntry = {
-  name: string,
-  value: string,
+  name: string;
+  value: string;
 };
 
 export function getEnumList(enumObj: object): EnumEntry[] {
-  return Object.entries(enumObj).map(([key, value]) => ({"name": value, "value": key}));
+  return Object.entries(enumObj).map(([key, value]) => ({ name: value, value: key }));
 }
 
 export function getEnumKeyByValue(enumObj: object, value: string): string | undefined {
@@ -19,5 +19,5 @@ export function getEnumKeyByValue(enumObj: object, value: string): string | unde
 export enum ManageMode {
   Add = "ADD",
   Edit = "EDIT",
-  None = "NONE"
-};
+  None = "NONE",
+}

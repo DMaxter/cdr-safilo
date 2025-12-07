@@ -2,7 +2,12 @@
   <P-Menubar :model="items">
     <template #item="{ item, props }">
       <Router-Link v-slot="{ href, navigate }" :to="item.route" custom>
-        <a :href="href" v-bind="props.action" @click="navigate" v-if="item.display !== undefined ? item.display! : true">
+        <a
+          :href="href"
+          v-bind="props.action"
+          @click="navigate"
+          v-if="item.display !== undefined ? item.display! : true"
+        >
           <Icon :icon="item.icon" />
           <span>{{ item.label }}</span>
         </a>
@@ -48,14 +53,14 @@ const items = ref([
     label: "Configurar",
     icon: "settings",
     route: "configure",
-    display: computed(() => authStore.isSafilo() || authStore.isAdmin())
+    display: computed(() => authStore.isSafilo() || authStore.isAdmin()),
   },
   {
     label: "Novo Pedido",
     icon: "playlist_add",
     route: "order",
-    display: computed(() => authStore.isCommercial() || authStore.isAdmin())
-  }
+    display: computed(() => authStore.isCommercial() || authStore.isAdmin()),
+  },
 ]);
 
 async function logout() {

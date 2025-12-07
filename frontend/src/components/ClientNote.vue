@@ -1,7 +1,7 @@
 <template>
   <P-Dialog modal class="max-w-95/100 w-[500px]" v-model:visible="enabled">
     <template #header>Nota do cliente</template>
-      <P-Textarea autoResize fluid v-model="props.client.note" />
+    <P-Textarea autoResize fluid v-model="props.client.note" />
     <template #footer>
       <P-Button text @click="close()">Voltar</P-Button>
       <P-Button text @click="edit()">Editar</P-Button>
@@ -18,7 +18,7 @@ import { useClientStore } from "@stores/clients";
 const enabled = defineModel<boolean>();
 
 const props = defineProps<{
-  client: Client,
+  client: Client;
 }>();
 
 const TITLE = "Edição de nota de cliente";
@@ -34,14 +34,14 @@ async function edit() {
       severity: "success",
       summary: TITLE,
       detail: "Nota editada com sucesso",
-      life: 10000
+      life: 10000,
     });
   } else {
     toast.add({
       severity: "error",
       summary: TITLE,
       detail: "Ocorreu um erro a editar a nota",
-      life: 10000
+      life: 10000,
     });
     console.error(response);
   }

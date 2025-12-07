@@ -20,11 +20,11 @@ import { computed, ref } from "vue";
 import type { FileUploadUploaderEvent } from "primevue/fileupload";
 
 const props = defineProps<{
-  title: string,
-  multiple: boolean,
-  accept: string,
-  maxFiles?: number,
-  uploader: (f: File | File[]) => Promise<void>,
+  title: string;
+  multiple: boolean;
+  accept: string;
+  maxFiles?: number;
+  uploader: (f: File | File[]) => Promise<void>;
 }>();
 
 const enabled = defineModel<boolean>();
