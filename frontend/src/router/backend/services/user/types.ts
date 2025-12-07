@@ -4,7 +4,7 @@ export enum Role {
   CDR = "CDR",
   MANAGER = "Manager",
   ADMIN = "Admin",
-};
+}
 
 import { getEnumKeyByValue, getEnumList } from "@/utils";
 
@@ -13,14 +13,14 @@ export function getRole(value: string): Role | undefined {
   return getEnumKeyByValue(Role, value) as Role;
 }
 
-export type Plafond = {
-  brand: string;
-  amount: number;
-};
+export class Plafond {
+  brand: string = "";
+  amount: number = 0;
+}
 
 export class User {
   email: string = "";
   name: string = "";
   roles: Role[] = [];
   credits: Plafond[] = [];
-};
+}

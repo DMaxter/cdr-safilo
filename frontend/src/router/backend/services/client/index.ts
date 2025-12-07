@@ -16,11 +16,14 @@ export async function createClient(client: Client): Promise<AxiosResponse<Client
   return await http.post("/client", client);
 }
 
-export async function editClient(client: Client): Promise<AxiosResponse<null| Error>> {
+export async function editClient(client: Client): Promise<AxiosResponse<null | Error>> {
   return await http.put("/client", client);
 }
 
-export async function editClientNote(id: number, note: string): Promise<AxiosResponse<null | Error>> {
+export async function editClientNote(
+  id: number,
+  note: string,
+): Promise<AxiosResponse<null | Error>> {
   return await http.put(`/client/${id}`, note);
 }
 

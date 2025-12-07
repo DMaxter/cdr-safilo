@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center rounded-full customGradient" :style=style>
+  <div class="flex justify-center items-center rounded-full customGradient" :style="style">
     <slot />
   </div>
 </template>
@@ -8,11 +8,11 @@
 import { computed } from "vue";
 
 const props = defineProps<{
-  size: number
+  size: number;
 }>();
 
 const style = computed(() => ({
-  "height": `${props.size}px`,
-  "width": `${props.size}px`
+  height: `${props.size}px`,
+  width: `${props.size}px`,
 }));
 </script>

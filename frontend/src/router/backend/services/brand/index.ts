@@ -21,7 +21,10 @@ export async function deleteBrand(id: number): Promise<AxiosResponse<null | Erro
   return await http.delete(`/brand/${id}`);
 }
 
-export async function addBrandImage(id: number, image: string): Promise<AxiosResponse<Image | Error>> {
+export async function addBrandImage(
+  id: number,
+  image: string,
+): Promise<AxiosResponse<Image | Error>> {
   return await http.post(`/brand/image/${id}`, image, {
     headers: { "Content-Type": "text/plain" },
   });

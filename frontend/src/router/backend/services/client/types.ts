@@ -13,4 +13,4 @@ export class Client {
   country: string = "";
   note: string = "";
   images: Image[] = [];
-};
+}

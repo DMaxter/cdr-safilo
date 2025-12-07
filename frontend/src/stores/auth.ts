@@ -23,7 +23,7 @@ export const useAuthStore = defineStore("authStore", () => {
       const { status, data } = await API.users.getUserInfo();
 
       if (status === 200) {
-        logged.value = (data as User);
+        logged.value = data as User;
 
         return true;
       }
@@ -55,7 +55,7 @@ export const useAuthStore = defineStore("authStore", () => {
       const { status, data } = await API.auth.login(request);
 
       if (status === 200) {
-        logged.value = (data as User);
+        logged.value = data as User;
 
         return {
           success: true,
@@ -135,7 +135,10 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function changePassword(old: string, password: string): Promise<APIResponse<null | string>> {
+  async function changePassword(
+    old: string,
+    password: string,
+  ): Promise<APIResponse<null | string>> {
     try {
       const { status, data } = await API.users.changePassword(old, password);
 
@@ -162,5 +165,16 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  return { logged, changePassword, login, logout, isLoggedIn, isAdmin, isCdr, isCommercial, isSafilo, sendRecoveryEmail };
+  return {
+    logged,
+    changePassword,
+    login,
+    logout,
+    isLoggedIn,
+    isAdmin,
+    isCdr,
+    isCommercial,
+    isSafilo,
+    sendRecoveryEmail,
+  };
 });

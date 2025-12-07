@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col items-center justify-center max-h-97/100 h-full">
-    <P-Card class="max-w-9/10 w-[1500px] max-h-9/10" >
+    <P-Card class="max-w-9/10 w-[1500px] max-h-9/10">
       <template #content>
         <div class="h-9/10">
-          <Menu class="mb-[10px]"/>
+          <Menu class="mb-[10px]" />
           <slot />
         </div>
       </template>
