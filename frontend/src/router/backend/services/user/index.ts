@@ -12,10 +12,17 @@ export async function getUserInfo(): Promise<AxiosResponse<User | Error>> {
   return await http.get("/user");
 }
 
-export async function changePassword(old: string, password: string): Promise<AxiosResponse<undefined | Error>> {
+export async function changePassword(
+  old: string,
+  password: string,
+): Promise<AxiosResponse<undefined | Error>> {
   return await http.put(`/user/password/${encodeURI(old)}/${encodeURI(password)}`);
 }
 
-export async function changePlafond(user: string, brand: number, amount: number): Promise<AxiosResponse<undefined | Error>> {
+export async function changePlafond(
+  user: string,
+  brand: number,
+  amount: number,
+): Promise<AxiosResponse<User | Error>> {
   return await http.put(`/user/plafond/${encodeURI(user)}/${brand}/${amount}`);
 }

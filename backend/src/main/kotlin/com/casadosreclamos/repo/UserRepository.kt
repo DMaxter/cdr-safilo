@@ -11,12 +11,12 @@ import javax.enterprise.context.ApplicationScoped
 class UserRepository : PanacheRepository<User> {
     fun findByEmailWithCredits(user: String): Uni<User> {
         return find(
-            "FROM User u LEFT JOIN FETCH u.credits WHERE u.email = :user", Parameters.with("user", user).map()
+            "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.credits WHERE u.email = :user", Parameters.with("user", user).map()
         ).firstResult()
     }
 
     fun streamAllWithCredits(): Multi<User> {
-        return stream("FROM User u LEFT JOIN FETCH u.credits")
+        return stream("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.credits")
     }
 
     fun exists(user: String): Uni<Boolean> {

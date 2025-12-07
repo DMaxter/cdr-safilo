@@ -6,32 +6,18 @@
       <template #content>
         <P-Form @submit="login" class="flex flex-col">
           <P-FloatLabel variant="on" class="mt-[10px]">
-            <P-InputText
-              fluid
-              size="large"
-              id="email"
-              type="text"
-              v-model="auth.email"
-            />
+            <P-InputText fluid size="large" id="email" type="text" v-model="auth.email" />
             <label for="email">Email</label>
           </P-FloatLabel>
           <P-FloatLabel variant="on" class="mt-[10px]">
-            <P-InputText
-              fluid
-              size="large"
-              id="password"
-              type="password"
-              v-model="auth.password"
-            />
+            <P-InputText fluid size="large" id="password" type="password" v-model="auth.password" />
             <label for="password">Palavra-passe</label>
           </P-FloatLabel>
           <P-Button text @click="showRecover()" class="mt-[30px]">
             Esqueci-me da palavra-passe
           </P-Button>
 
-          <P-Button width="33%" class="my-[10px]" type="submit"
-            >Entrar
-          </P-Button>
+          <P-Button width="33%" class="my-[10px]" type="submit">Entrar </P-Button>
         </P-Form>
       </template>
     </P-Card>
@@ -66,7 +52,7 @@ async function login() {
       severity: "error",
       summary: "Erro de autenticação",
       detail: "O nome de utilizador ou a palavra-passe estão incorretos",
-      life: 10000
+      life: 10000,
     });
     console.error(response);
   }

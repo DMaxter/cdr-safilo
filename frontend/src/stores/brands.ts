@@ -82,7 +82,7 @@ export const useBrandStore = defineStore("brandStore", () => {
     }
   }
 
-  async function createBrand(name: string): Promise<APIResponse<Brand | string>> {
+  async function addBrand(name: string): Promise<APIResponse<Brand | string>> {
     try {
       const { status, data } = await API.brands.createBrand(name);
 
@@ -262,7 +262,7 @@ export const useBrandStore = defineStore("brandStore", () => {
   return {
     brands,
     getBrands,
-    createBrand,
+    addBrand,
     editBrand,
     deleteBrand,
     addBrandImage,

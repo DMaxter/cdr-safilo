@@ -21,8 +21,14 @@ export async function sendToken(username: string): Promise<AxiosResponse<undefin
   return await http.post(`/auth/forgot/${encodeURI(username)}`);
 }
 
-export async function changePassword(username: string, password: string, token: string): Promise<AxiosResponse<undefined | Error>> {
-  return await http.post(`/auth/forgot/${encodeURI(username)}/${encodeURI(password)}/${encodeURI(token)}`);
+export async function changePassword(
+  username: string,
+  password: string,
+  token: string,
+): Promise<AxiosResponse<undefined | Error>> {
+  return await http.post(
+    `/auth/forgot/${encodeURI(username)}/${encodeURI(password)}/${encodeURI(token)}`,
+  );
 }
 
 export async function isLogged(): Promise<AxiosResponse<boolean | Error>> {
