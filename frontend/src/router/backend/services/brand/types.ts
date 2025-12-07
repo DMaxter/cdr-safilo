@@ -4,4 +4,4 @@ export class Brand {
   id: number | null = null;
   name: string = "";
   images: Image[] = [];
-};
+}

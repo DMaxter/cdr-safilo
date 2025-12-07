@@ -11,7 +11,7 @@ const routes = [
     component: () => import("@views/Login.vue"),
     meta: {
       title: BASE_TITLE,
-      requiresAuth: false 
+      requiresAuth: false,
     },
   },
   {
@@ -19,7 +19,7 @@ const routes = [
     name: "profile",
     meta: {
       title: `Perfil | ${BASE_TITLE}`,
-      requiresAuth: true
+      requiresAuth: true,
     },
     component: () => import("@views/Profile.vue"),
   },
@@ -141,11 +141,11 @@ const routes = [
   //  component: () => import('@views/SafiloClientSpecificStore.vue')
   //},
   {
-    path: '/configure',
-    name: 'configure',
+    path: "/configure",
+    name: "configure",
     meta: { title: "Configurar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
-    component: () => import('@views/Configure.vue')
-  }
+    component: () => import("@views/Configure.vue"),
+  },
   //{
   //  path: '/Materiais',
   //  name: 'materiais',

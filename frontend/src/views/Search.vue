@@ -24,7 +24,13 @@
       </P-Column>
       <P-Column field="status" header="Estado" sortable>
         <template #filter="{ filterModel, filterCallback }">
-          <P-MultiSelect filter v-model="filterModel.value" @input="filterCallback()" :options="states" placeholder="Estado" />
+          <P-MultiSelect
+            filter
+            v-model="filterModel.value"
+            @input="filterCallback()"
+            :options="states"
+            placeholder="Estado"
+          />
         </template>
         <template #body="{ data }">
           <P-Chip
@@ -80,7 +86,8 @@
           <!-- TODO: Implement edit -->
           <Icon
             v-if="
-              (canManipulate || (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
+              (canManipulate ||
+                (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
               data.status!! === Status.Ordered
             "
             icon="edit"
@@ -89,7 +96,8 @@
           />
           <Icon
             v-if="
-              (canManipulate || (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
+              (canManipulate ||
+                (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
               data.status!! === Status.Ordered
             "
             icon="cancel"
