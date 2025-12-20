@@ -1,85 +1,106 @@
 <template>
   <Container>
     <P-DataTable
-      :value="filteredRequests"
-      dataKey="id"
       paginator
       scrollable
       removableSort
-      scrollHeight="500px"
-      :rows="50"
-      :rowsPerPageOptions="[10, 20, 50, 100]"
-      style="max-width: 98%"
-      class="mt-5"
+      class="request-data-table"
+      scrollHeight="flex"
       filterDisplay="row"
-      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-      currentPageReportTemplate="{first} to {last} of {totalRecords}"
+      sortField="id"
+      :sortOrder="-1"
+      :value="requestStore.requests"
+      :rows="25"
+      :rowsPerPageOptions="[10, 25, 50, 100]"
+      v-model:filters="filters"
+      tableStyle="table-layout: fixed; width: 100%"
+      responsiveLayout="scroll"
     >
       <template #empty>Não existem pedidos registados</template>
 
-      <P-Column sortable field="id" header="ID">
-        <template #filter>
-          <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="ID" />
+      <P-Column class="w-[10rem]" sortable field="id" header="ID" filter>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-InputText fluid v-model="filterModel.value" type="number" @input="filterCallback()" placeholder="ID" />
+        </template>
+        <template #body="{ data }">
+          <div class="text-right">{{ data.id }}</div>
         </template>
       </P-Column>
-      <P-Column field="status" header="Estado" sortable>
+      <P-Column class="w-[10rem]" field="status" header="Estado" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
             filter
+            fluid
             v-model="filterModel.value"
-            @input="filterCallback()"
+            @change="filterCallback()"
             :options="states"
             placeholder="Estado"
+            optionLabel="name"
+            optionValue="value"
           />
         </template>
         <template #body="{ data }">
-          <P-Chip
-            :icon="getStatusIcon(data.status)"
-            :severity="getStatusColor(data.status)"
-            :value="data.status"
-          ></P-Chip>
+          <P-Tag rounded :class="getStatusClass(data.status)">
+            <Icon :icon="getStatusIcon(data.status)" />
+            <span>{{ states.find(s => s.value === data.status)?.name }}</span>
+          </P-Tag>
         </template>
-      </P-Column>
-      <P-Column field="client.name" header="Cliente" sortable>
-        <template #filter>
-          <TableFilter
-            :items="clients"
-            itemTitle="name"
-            itemValue="id"
-            v-model="searchFilter['client']"
-            @filter="updateFilterURL"
+       </P-Column>
+      <P-Column class="w-[15rem]" field="client.name" header="Cliente" sortable filter>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-MultiSelect
+            filter
+            fluid
+            v-model="filterModel.value"
+            @change="filterCallback()"
+            :options="clients"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Cliente"
           />
         </template>
       </P-Column>
-      <P-Column field="user" header="Comercial" sortable>
-        <template #filter>
-          <TableFilter
-            :items="commercials"
-            v-model="searchFilter['commercial']"
-            @filter="updateFilterURL"
+      <P-Column class="w-[10rem]" field="user" header="Comercial" sortable filter>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-MultiSelect
+            filter
+            fluid
+            v-model="filterModel.value"
+            @change="filterCallback()"
+            :options="commercialsFilterOptions"
+            placeholder="Comercial"
           />
         </template>
       </P-Column>
-      <P-Column field="created" header="Data de Criação" sortable>
-        <template #filter>
-          <TableFilter
-            type="date"
-            v-model="searchFilter['creationDate']"
-            @filter="updateFilterURL"
+      <P-Column class="w-[15rem]" field="created" header="Data de Criação" sortable filter>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-DatePicker
+            fluid
+            v-model="filterModel.value"
+            @date-select="filterCallback()"
+            @hide="filterCallback()"
+            selectionMode="range"
+            :manualInput="false"
+            dateFormat="dd/mm/yy"
+            placeholder="Data de Criação"
+            :showButtonBar="true"
           />
         </template>
         <template #body="{ data }">
           <span>
-            {{ new Date(data.created).toLocaleString() }}
+            {{ new Date(data.created).toLocaleString('pt-PT') }}
           </span>
         </template>
-      </P-Column>
-      <P-Column field="cost" header="Custo" sortable>
+       </P-Column>
+      <P-Column class="w-[10rem]" field="cost" header="Custo" sortable filter>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-InputText fluid v-model="filterModel.value" type="number" @input="filterCallback()" placeholder="Custo" />
+        </template>
         <template #body="{ data }">
-          {{ data.cost.toFixed(2) }}
+          <div class="text-right">{{ data.cost.toFixed(2) }}</div>
         </template>
       </P-Column>
-      <P-Column>
+      <P-Column class="w-[10rem]">
         <template #body="{ data }">
           <Icon icon="visibility" @click="showSummary(data)" v-tooltip="'Ver resumo'" />
           <Icon icon="open_in_new" @click="console.error('TODO')" v-tooltip="'Ver detalhes'" />
@@ -107,241 +128,175 @@
         </template>
       </P-Column>
     </P-DataTable>
-    <RequestSummary v-model="showing" :request="toSummarize" @updated="refreshRequests" />
-    <CancelRequest v-model="cancelling" :request="toCancel" @cancelled="refreshRequests" />
+    <!--<RequestSummary v-model="summary" :request="toSummarize" @updated="refreshRequests" />
+    <CancelRequest v-model="cancelling" :request="toCancel" @cancelled="refreshRequests" />-->
   </Container>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, type Ref } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
+import { FilterMatchMode } from "@primevue/core/api";
 
 import { statusItems } from "@/maps";
-import { useAuthStore } from "@stores/auth";
+import { useAuthStore } from "@/stores/auth";
+import { useRequestStore } from "@/stores/requests";
+import { Client } from "@/router/backend/services/client/types";
+import { Request, Status } from "@/router/backend/services/request/types";
 
 const authStore = useAuthStore();
 
+const requestStore = useRequestStore();
 const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
 const route = useRoute();
 const router = useRouter();
 
-const requests: RequestDto[] = reactive([]);
-const commercials: String[] = reactive([]);
-const clients: SimpleClient[] = reactive([]);
-const ids: Number[] = reactive([]);
+const clients: Ref<Client[]> = ref([]); // New ref for client options
+const commercialsFilterOptions: Ref<string[]> = ref([]); // New ref for commercial options
 
 onMounted(async () => {
   await refreshRequests();
 });
 
 // Request summary
-const toSummarize = ref(new RequestDto());
-const showing = ref(false);
+const toSummarize = ref(new Request());
+const summary = ref(false);
 
 // Cancel request
-const toCancel = ref(0);
-const cancelling = ref(false);
+const toCancel = ref(0); // ID of the request to cancel
+const cancelling = ref(false); // Toggle for cancel modal
 
-const filteredRequests = computed(() =>
-  requests.filter((r) => {
-    let include = true;
+const states = statusItems;
 
-    if (searchFilter["id"].length > 0 && !searchFilter["id"].includes(r.id)) {
-      include = false;
-    } else if (searchFilter["status"].length > 0 && !searchFilter["status"].includes(r.status)) {
-      include = false;
-    } else if (searchFilter["client"].length > 0 && !searchFilter["client"].includes(r.client.id)) {
-      include = false;
-    } else if (
-      searchFilter["commercial"].length > 0 &&
-      !searchFilter["commercial"].includes(r.user!!)
-    ) {
-      include = false;
-    } else if (searchFilter["creationDate"].length > 0) {
-      const createdDate = new Date(r.created);
-      const startDate = new Date(searchFilter["creationDate"][0]);
-      startDate.setHours(0, 0, 0, 0);
-
-      const endDate = new Date(
-        searchFilter["creationDate"][searchFilter["creationDate"].length - 1],
-      );
-      endDate.setHours(23, 59, 59, 999);
-
-      if (createdDate < startDate || createdDate > endDate) {
-        include = false;
-      }
-    }
-
-    return include;
-  }),
-);
-
-// Search filters
-const searchFilter: SearchViewFilter = reactive({
-  id: [],
-  status: [],
-  client: [],
-  commercial: [],
-  creationDate: [],
+// Define PrimeVue filters
+const filters = ref({
+  id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  status: { value: null, matchMode: FilterMatchMode.IN },
+  'client.name': { value: null, matchMode: FilterMatchMode.IN },
+  user: { value: null, matchMode: FilterMatchMode.IN },
+  created: { value: null, matchMode: FilterMatchMode.DATE_BETWEEN },
+  cost: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-// Parse route path
+// Parse route path and initialize filters
 if (route.query.id) {
-  searchFilter["id"] = [route.query.id!!].flat().map((id) => {
-    try {
-      return Number(id);
-    } catch (e) {
-      console.error("Invalid request id");
-    }
-  });
+  // Assuming a single ID for P-InputText filter, taking the first if multiple are present
+  filters.value.id.value = Array.isArray(route.query.id) ? Number(route.query.id[0]) : Number(route.query.id);
 }
 if (route.query.status) {
-  searchFilter["status"] = [route.query.status!!].flat();
+  filters.value.status.value = ([route.query.status].flat() as string[]).filter(s => Object.values(Status).includes(s as Status));
 }
 if (route.query.client) {
-  searchFilter["client"] = [route.query.client!!].flat().map((id) => {
-    try {
-      return Number(id);
-    } catch (e) {
-      console.error("Invalid client id");
-    }
-  });
+  filters.value['client.name'].value = ([route.query.client].flat() as string[]).map(Number);
 }
 if (route.query.commercial) {
-  searchFilter["commercial"] = [route.query.commercial!!].flat();
+  filters.value.user.value = [route.query.commercial].flat() as string[];
 }
 if (route.query.creationDate) {
-  searchFilter["creationDate"] = [route.query.creationDate!!].flat().map((date: string) => {
-    try {
-      return Date.parse(date);
-    } catch (e) {
-      console.error("Invalid creation date");
-    }
-  });
+  // Expects an array of two ISO strings for range, or single string. Convert to Date objects
+  const dates = ([route.query.creationDate].flat() as string[]).map(d => new Date(d));
+  if (dates.every(d => !isNaN(d.getTime()))) {
+    filters.value.created.value = dates;
+  }
+}
+if (route.query.cost) {
+  // Assuming a single cost value for P-InputText filter
+  filters.value.cost.value = Array.isArray(route.query.cost) ? Number(route.query.cost[0]) : Number(route.query.cost);
 }
 
 async function refreshRequests() {
-  requests.length = 0;
-  commercials.length = 0;
-  clients.length = 0;
-  ids.length = 0;
+  commercialsFilterOptions.value = [];
+  clients.value = [];
 
-  let retrieved: RequestDto[] = await Backend.getRequests();
+  const response = await requestStore.getAllRequests();
+  if (!response.success) {
+    console.error("Failed to retrieve requests:", response.content);
+    return;
+  }
 
-  requests.unshift(...retrieved);
+  const currentRequests = requestStore.requests;
 
-  const clientIds: Set<Number> = new Set();
+  // Populate commercial filter options
+  const uniqueCommercials = new Set(currentRequests.map((r) => r.user!!));
+  commercialsFilterOptions.value = Array.from(uniqueCommercials);
 
-  clients.unshift(
-    ...requests
-      .filter((r) => {
-        const seen = clientIds.has(r.client!!.id!!);
-        clientIds.add(r.client!!.id!!);
-
-        return !seen;
-      })
-      .map(
-        (r) =>
-          new SimpleClient({
-            id: r.client!!.id!!,
-            name: `${r.client!!.id} - ${r.client!!.name} - ${r.client!!.city}`,
-          }),
-      ),
-  );
-
-  commercials.unshift(...new Set(requests.map((r) => r.user!!)));
-  ids.unshift(...retrieved.map((r) => r.id!!));
+  // Populate client filter options
+  const uniqueClients = new Map<number | string, Client>();
+  currentRequests.forEach(r => {
+    if (r.client?.id && !uniqueClients.has(r.client.id)) {
+      uniqueClients.set(r.client.id, r.client);
+    }
+  });
+  clients.value = Array.from(uniqueClients.values());
 }
 
-function showSummary(item: RequestDto) {
+function showSummary(item: Request) {
   toSummarize.value = item;
-  showing.value = true;
+  summary.value = true;
 }
 
-function showCancel(item: RequestDto) {
+function showCancel(item: Request) {
   cancelling.value = true;
-  toCancel.value = item.id!!;
+  toCancel.value = item.id!;
 }
 
 // Visual stuff
 function getStatusIcon(value: Status) {
-  if (value == Status.Cancelled) {
+  if (value === Status.Cancelled) {
     return "cancel";
-  } else if (value == Status.Ordered) {
+  } else if (value === Status.Ordered) {
     return "package_2";
-  } else if (value == Status.Done) {
+  } else if (value === Status.Done) {
     return "check";
   } else {
     return "question_mark";
   }
 }
 
-function getStatusColor(value: Status) {
-  if (value == Status.Cancelled) {
-    return "red";
-  } else if (value == Status.Ordered) {
-    return "yellow";
-  } else if (value == Status.Done) {
-    return "green";
+function getStatusClass(value: Status): string {
+  let classes = "!text-white ";
+  if (value === Status.Cancelled) {
+    classes += "!bg-red-500";
+  } else if (value === Status.Ordered) {
+    classes += "!bg-orange-500";
+  } else if (value === Status.Done) {
+    classes += "!bg-green-500";
   } else {
-    return "grey";
+    classes += "!bg-gray-500";
   }
+
+  return classes
 }
 
-// FIXME: Update
 function updateFilterURL() {
   let query: LocationQueryRaw = {};
 
-  if (searchFilter["id"]) {
-    query["id"] = searchFilter["id"];
+  for (const key in filters.value) {
+    const filter = filters.value[key];
+    if (filter.value !== null && filter.value !== '' && (!Array.isArray(filter.value) || filter.value.length > 0)) {
+      if (key === 'created' && Array.isArray(filter.value)) {
+        // filter.value will be an array of two Dates [startDate, endDate]
+        // Convert to ISO string for URL
+        query[key] = filter.value.map(d => d.toISOString());
+      } else if (key === 'status' && Array.isArray(filter.value)) {
+         query[key] = filter.value.map((s: Status) => s.toString());
+      } else {
+        query[key] = filter.value;
+      }
+    }
   }
-  if (searchFilter["status"]) {
-    query["status"] = searchFilter["status"].map((s) => s.toString());
-  }
-  if (searchFilter["client"]) {
-    query["client"] = searchFilter["client"];
-  }
-  if (searchFilter["commercial"]) {
-    query["commercial"] = searchFilter["commercial"];
-  }
-  if (searchFilter["creationDate"]) {
-    query["creationDate"] = searchFilter["creationDate"].map((d) => d.toString());
-  }
-
   router.push({ query: query });
 }
-// END FIXME:
 
-/***/
 // TODO: Implement
-function editRequest(item: RequestDto) {}
-//function editRequest(item) {
-//  store.currentRequest = item;
-//  store.isEditing = true;
-//  if (item.type.type == "OneFace") {
-//    store.isActive1 = true;
-//    $router.push({ name: "order2" });
-//  } else if (item.type.type == "TwoFaces") {
-//    store.isActive1 = true;
-//    $router.push({ name: "order2" });
-//  } else if (item.type.type == "SimpleShowcase") {
-//    store.isActive4 = true;
-//    $router.push({ name: "ABC" });
-//  } else if (item.type.type == "RightShowcase") {
-//    store.isActive2 = true;
-//    $router.push({ name: "ABC" });
-//  } else if (item.type.type == "LeftShowcase") {
-//    store.isActive3 = true;
-//    $router.push({ name: "ABC" });
-//  }
-//}
-//
-//function openRequestNewTab(item) {
-//  let route = $router.resolve({ name: "details", query: { id: item.id } });
-//  window.open(route.href, "_blank");
-//}
-/***/
+function editRequest(item: Request) {}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.request-data-table {
+  max-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+</style>

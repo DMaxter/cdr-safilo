@@ -51,10 +51,10 @@ app.directive("tooltip", Tooltip);
 // PrimeVue Components
 import Button from "primevue/button";
 import Card from "primevue/card";
-import Chip from "primevue/chip";
 import Column from "primevue/column";
 import ConfirmDialog from "primevue/confirmdialog";
 import DataTable from "primevue/datatable";
+import DatePicker from "primevue/datepicker";
 import Dialog from "primevue/dialog";
 import PFileUpload from "primevue/fileupload";
 import FloatLabel from "primevue/floatlabel";
@@ -67,15 +67,16 @@ import ListBox from "primevue/listbox";
 import Menubar from "primevue/menubar";
 import MultiSelect from "primevue/multiselect";
 import Select from "primevue/select";
+import Tag from "primevue/tag";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
 
 app.component("P-Button", Button);
 app.component("P-Card", Card);
-app.component("P-Chip", Chip);
 app.component("P-Column", Column);
 app.component("P-ConfirmDialog", ConfirmDialog);
 app.component("P-DataTable", DataTable);
+app.component("P-DatePicker", DatePicker);
 app.component("P-Dialog", Dialog);
 app.component("P-FileUpload", PFileUpload);
 app.component("P-FloatLabel", FloatLabel);
@@ -89,6 +90,7 @@ app.component("P-ListBox", ListBox);
 app.component("P-Menubar", Menubar);
 app.component("P-MultiSelect", MultiSelect);
 app.component("P-Select", Select);
+app.component("P-Tag", Tag);
 app.component("P-Textarea", Textarea);
 app.component("P-Toast", Toast);
 

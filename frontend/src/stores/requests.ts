@@ -4,7 +4,7 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
-import { NewRequest, Request } from "@router/backend/services/request/types";
+import { Request, Status } from "@router/backend/services/request/types";
 
 export const useRequestStore = defineStore("requestStore", () => {
   const requests = ref<Request[]>([]);
@@ -55,7 +55,7 @@ export const useRequestStore = defineStore("requestStore", () => {
     }
   }
 
-  async function addRequest(request: NewRequest): Promise<APIResponse<Request | string>> {
+  async function addRequest(request: Request): Promise<APIResponse<Request | string>> {
     try {
       const { status, data } = await API.requests.addRequest(request);
 
@@ -83,7 +83,7 @@ export const useRequestStore = defineStore("requestStore", () => {
     }
   }
 
-  async function editRequest(id: number, request: NewRequest): Promise<APIResponse<string | null>> {
+  async function editRequest(id: number, request: Request): Promise<APIResponse<string | null>> {
     try {
       const { status, data } = await API.requests.editRequest(id, request);
 
@@ -115,7 +115,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       const { status, data } = await API.requests.requestToProduction(id);
 
       if (status === 200) {
-        _update(id, { status: "IN_PRODUCTION" });
+        _update(id, { status: Status.InProduction });
         return {
           success: true,
           content: null,
@@ -142,7 +142,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       const { status, data } = await API.requests.finishRequest(id, code);
 
       if (status === 200) {
-        _update(id, { status: "DONE", trackingCode: code });
+        _update(id, { status: Status.Done, trackingCode: code });
         return {
           success: true,
           content: null,
@@ -169,7 +169,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       const { status, data } = await API.requests.cancelRequest(id);
 
       if (status === 200) {
-        _update(id, { status: "CANCELLED" });
+        _update(id, { status: Status.Cancelled });
         return {
           success: true,
           content: null,
@@ -191,7 +191,7 @@ export const useRequestStore = defineStore("requestStore", () => {
     }
   }
 
-  async function checkPrice(request: NewRequest): Promise<APIResponse<number | string>> {
+  async function checkPrice(request: Request): Promise<APIResponse<number | string>> {
     try {
       const { status, data } = await API.requests.checkPrice(request);
 
