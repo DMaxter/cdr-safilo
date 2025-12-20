@@ -165,6 +165,37 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
+  async function changePasswordWithToken(
+    username: string,
+    password: string,
+    token: string,
+  ): Promise<APIResponse<null | string>> {
+    try {
+      const { status, data } = await API.auth.changePassword(username, password, token);
+
+      if (status === 200) {
+        return {
+          success: true,
+          content: null,
+        };
+      } else {
+        return {
+          success: false,
+          content: data as string,
+          status: status,
+        };
+      }
+    } catch (error) {
+      const _error = error as AxiosError<string>;
+
+      return {
+        success: false,
+        status: _error.response?.status,
+        content: _error.response?.message,
+      };
+    }
+  }
+
   return {
     logged,
     changePassword,
@@ -176,5 +207,6 @@ export const useAuthStore = defineStore("authStore", () => {
     isCommercial,
     isSafilo,
     sendRecoveryEmail,
+    changePasswordWithToken,
   };
 });
