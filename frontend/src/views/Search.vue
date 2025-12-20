@@ -122,35 +122,42 @@
               data.status!! === Status.Ordered
             "
             icon="cancel"
-            @click="showCancel(data)"
+            @click="confirmCancel(data)"
             v-tooltip="'Cancelar'"
           />
         </template>
       </P-Column>
     </P-DataTable>
-    <!--<RequestSummary v-model="summary" :request="toSummarize" @updated="refreshRequests" />
-    <CancelRequest v-model="cancelling" :request="toCancel" @cancelled="refreshRequests" />-->
+    <!--<RequestSummary v-model="summary" :request="toSummarize" @updated="refreshRequests" />-->
+    <P-ConfirmDialog />
   </Container>
 </template>
 
 <script lang="ts" setup>
+import { FilterMatchMode } from "@primevue/core/api";
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
 import { computed, onMounted, reactive, ref, type Ref } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
-import { FilterMatchMode } from "@primevue/core/api";
 
 import { statusItems } from "@/maps";
 import { useAuthStore } from "@/stores/auth";
 import { useRequestStore } from "@/stores/requests";
-import { Client } from "@/router/backend/services/client/types";
-import { Request, Status } from "@/router/backend/services/request/types";
+import { Client } from "@router/backend/services/client/types";
+import { Request, Status } from "@router/backend/services/request/types";
+
+const confirm = useConfirm();
+const toast = useToast();
 
 const authStore = useAuthStore();
-
 const requestStore = useRequestStore();
-const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
 const route = useRoute();
 const router = useRouter();
+
+const TITLE = "Cancelamento de Pedido";
+
+const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
 const clients: Ref<Client[]> = ref([]); // New ref for client options
 const commercialsFilterOptions: Ref<string[]> = ref([]); // New ref for commercial options
@@ -159,13 +166,11 @@ onMounted(async () => {
   await refreshRequests();
 });
 
+const selectedRequest = ref<Request>(new Request());
+
 // Request summary
 const toSummarize = ref(new Request());
 const summary = ref(false);
-
-// Cancel request
-const toCancel = ref(0); // ID of the request to cancel
-const cancelling = ref(false); // Toggle for cancel modal
 
 const states = statusItems;
 
@@ -236,9 +241,44 @@ function showSummary(item: Request) {
   summary.value = true;
 }
 
-function showCancel(item: Request) {
-  cancelling.value = true;
-  toCancel.value = item.id!;
+async function cancelRequest() {
+  const response = await requestStore.cancelRequest(selectedRequest.value.id);
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: TITLE,
+      detail: "Pedido cancelado com sucesso",
+      life: 10000
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Ocorreu um erro ao cancelar o pedido",
+      life: 10000
+    });
+    console.error(response);
+  }
+}
+
+function confirmCancel(request: Request) {
+  selectedRequest.value = request;
+
+  confirm.require({
+    message: `Tem a certeza que pretende cancelar o pedido ${selectedRequest.value.id} efetuado por ${selectedRequest.value.user} para o cliente ${selectedRequest.value.client.name}?`,
+    header: "Confirmar cancelamento de pedido",
+    rejectProps: {
+      label: "Abortar cancelamento",
+      severity: "secondary",
+      outline: true,
+    },
+    acceptProps: {
+      label: "Confirmar cancelamento",
+      severity: "danger"
+    },
+    accept: cancelRequest,
+  });
 }
 
 // Visual stuff
@@ -269,6 +309,7 @@ function getStatusClass(value: Status): string {
   return classes
 }
 
+// TODO: FIXME
 function updateFilterURL() {
   let query: LocationQueryRaw = {};
 
