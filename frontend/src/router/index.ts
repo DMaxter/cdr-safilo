@@ -7,7 +7,7 @@ const BASE_TITLE = "Casa dos Reclamos";
 const routes = [
   {
     path: "/",
-    name: "home",
+    name: "login",
     component: () => import("@views/Login.vue"),
     meta: {
       title: BASE_TITLE,
