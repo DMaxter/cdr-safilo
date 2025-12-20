@@ -1,93 +1,115 @@
 <template>
-  <v-container fluid class="d-flex flex-column align-center justify-center fill-height">
-    <v-row justify="center" align="center">
-      <v-img :src="CDRLogo" contain width="350px"></v-img>
-    </v-row>
-    <v-row justify="center" align="center">
-      <v-col cols="auto">
-        <v-card elevation="12" outlined height="400" width="450" style="border-radius: 15px">
-          <v-card-title>Redefinir Palavra Passe</v-card-title>
-          <v-form @submit.prevent="changePassword">
-            <v-card-text>
-              <v-text-field
-                ref="passwordRef"
-                class="mt-8"
-                label="Nova Palavra Passe"
-                type="password"
-                :rules="[required]"
-                rounded
-                variant="outlined"
-                v-model="password"
-              ></v-text-field>
-              <v-text-field
-                ref="repeatPasswordRef"
-                class="mt-8"
-                label="Confirmar Palavra Passe"
-                type="password"
-                :rules="repeatPasswordRules"
-                rounded
-                variant="outlined"
-                v-model="repeatPassword"
-              ></v-text-field>
-            </v-card-text>
-          </v-form>
-          <v-card-actions class="justify-center">
-            <v-btn
-              :disabled="!canChange"
-              width="33%"
-              class="customGradient"
-              type="submit"
-              @click="changePassword()"
-            >
-              Confirmar
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <Message v-model="success" message="Palavra-passe alterada com sucesso!" />
-    <Message v-model="failure" message="Ocorreu um erro ao alterar a palavra-passe" />
-  </v-container>
+  <div class="flex flex-col justify-around items-center h-full">
+    <img :src="CDRLogo" class="object-contain m-w-[350px]" />
+    <P-Card class="max-w-[500px] w-1/2 max-h-[300px]">
+      <template #title>Redefinir Palavra Passe</template>
+      <template #content>
+        <P-Form @submit="changePassword" class="flex flex-col">
+          <P-FloatLabel variant="on" class="mt-[10px]">
+            <P-Password
+              fluid
+              inputId="password"
+              v-model="password"
+              :feedback="false"
+            />
+            <label for="password">Nova Palavra Passe</label>
+          </P-FloatLabel>
+
+          <P-FloatLabel variant="on" class="mt-[10px]">
+            <P-Password
+              fluid
+              inputId="repeatPassword"
+              v-model="repeatPassword"
+              :feedback="false"
+            />
+            <label for="repeatPassword">Confirmar Palavra Passe</label>
+          </P-FloatLabel>
+
+          <P-Button :disabled="!passwordsMatch" fluid class="mt-[30px] mb-[10px]" type="submit">
+            Confirmar
+          </P-Button>
+        </P-Form>
+      </template>
+    </P-Card>
+    <P-Toast />
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { computed, ref, useTemplateRef } from "vue";
-import { useRoute, useRouter } from "vue-router";
+<!-- TODO: Validations -->
 
-import Backend from "@/router/backend_old";
+<script lang="ts" setup>
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
+
+import { useAuthStore } from "@stores/auth";
 import CDRLogo from "@/assets/logo.png";
-import { checkAllRefsValid, required } from "@/rules";
 
 const router = useRouter();
 const route = useRoute();
+const toast = useToast();
+const authStore = useAuthStore();
+
+const TITLE = "Recuperação de Palavra Passe"
 
 const password = ref("");
 const repeatPassword = ref("");
 
-const success = ref(false);
-const failure = ref(false);
+const passwordsMatch = computed(() => password.value === repeatPassword.value);
 
-const repeatPasswordRules = [
-  required,
-  (value) => value == password.value || "Palavras-passe não são iguais!",
-];
+if (!route.query.email) {
+  toast.add({
+    severity: "error",
+    summary: TITLE,
+    detail: "Email não definido",
+    life: 10000,
+  });
+  router.push({name: "login"});
+}
 
-const passwordRef = useTemplateRef("passwordRef");
-const repeatPasswordRef = useTemplateRef("repeatPasswordRef");
-
-const canChange = computed(() => checkAllRefsValid([passwordRef, repeatPasswordRef]));
+if (!route.query.token) {
+  toast.add({
+    severity: "error",
+    summary: TITLE,
+    detail: "Token não definido",
+    life: 10000,
+  });
+  router.push({name: "login"});
+}
 
 async function changePassword() {
-  if (password.value === repeatPassword.value) {
+  if (passwordsMatch.value) {
     try {
-      await Backend.changePasswordWithToken(route.query.email, password.value, route.query.token);
-      setTimeout(() => router.push({ name: "profile" }), 4000);
-      success.value = true;
-    } catch (error) {
-      failure.value = true;
-      console.log(error);
-      throw Error(error);
+      await authStore.changePasswordWithToken(
+        route.query.email,
+        password.value,
+        route.query.token
+      );
+
+      toast.add({
+        severity: "success",
+        summary: TITLE,
+        detail: "Palavra-passe alterada com sucesso!",
+        life: 10000,
+      });
+
+      setTimeout(() => router.push({ name: "login" }), 3000);
+    } catch (error: any) {
+      toast.add({
+        severity: "error",
+        summary: TITLE,
+        detail: "Ocorreu um erro ao alterar a palavra-passe",
+        life: 10000,
+      });
+      console.error(error);
     }
+  } else {
+    toast.add({
+      severity: "warn",
+      summary: TITLE,
+      detail: "As palavras-passe não coincidem.",
+      life: 10000,
+    });
   }
 }
 </script>
