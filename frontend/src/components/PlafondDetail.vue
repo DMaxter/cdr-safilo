@@ -25,7 +25,7 @@
     v-if="manageSafilo"
     v-model="managePlafond"
     :plafond="selectedPlafond"
-    :user="props.user"
+    :user="props.user!"
   />
 </template>
 

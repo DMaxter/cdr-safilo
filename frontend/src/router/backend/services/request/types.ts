@@ -8,11 +8,18 @@ export class Request {
   created: Date | null = null;
   lastUpdate: Date | null = null;
   trackingCode: number | null = null;
-  status: string = "";
+  status: Status = Status.Ordered;
   type: any | null = null;
   cost: number | null = null;
   observations: string | null = null;
   application: boolean | null = null;
   brand: Brand | null = null;
   amount: number | null = null;
+}
+
+export enum Status {
+  Ordered = "ORDERED",
+  InProduction = "IN_PRODUCTION",
+  Done = "DONE",
+  Cancelled = "CANCELLED",
 }
