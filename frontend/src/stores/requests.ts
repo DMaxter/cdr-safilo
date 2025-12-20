@@ -110,60 +110,6 @@ export const useRequestStore = defineStore("requestStore", () => {
     }
   }
 
-  async function requestToProduction(id: number): Promise<APIResponse<string | null>> {
-    try {
-      const { status, data } = await API.requests.requestToProduction(id);
-
-      if (status === 200) {
-        _update(id, { status: Status.InProduction });
-        return {
-          success: true,
-          content: null,
-        };
-      } else {
-        return {
-          success: false,
-          content: (data as Error).message,
-          status: status,
-        };
-      }
-    } catch (error) {
-      const _error = error as AxiosError<Error>;
-      return {
-        success: false,
-        status: _error.response?.status,
-        content: _error.response?.data?.message,
-      };
-    }
-  }
-
-  async function finishRequest(id: number, code: number): Promise<APIResponse<string | null>> {
-    try {
-      const { status, data } = await API.requests.finishRequest(id, code);
-
-      if (status === 200) {
-        _update(id, { status: Status.Done, trackingCode: code });
-        return {
-          success: true,
-          content: null,
-        };
-      } else {
-        return {
-          success: false,
-          content: (data as Error).message,
-          status: status,
-        };
-      }
-    } catch (error) {
-      const _error = error as AxiosError<Error>;
-      return {
-        success: false,
-        status: _error.response?.status,
-        content: _error.response?.data?.message,
-      };
-    }
-  }
-
   async function cancelRequest(id: number): Promise<APIResponse<string | null>> {
     try {
       const { status, data } = await API.requests.cancelRequest(id);
@@ -248,8 +194,6 @@ export const useRequestStore = defineStore("requestStore", () => {
     getAllRequests,
     addRequest,
     editRequest,
-    requestToProduction,
-    finishRequest,
     cancelRequest,
     checkPrice,
     exportRequests,
