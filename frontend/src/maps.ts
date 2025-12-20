@@ -1,4 +1,4 @@
-import { Status } from "@models/dto/RequestStatus";
+import { Status } from "@router/backend/services/request/types";
 
 export const statusItems = [
   { name: "Encomendado", value: Status.Ordered },
