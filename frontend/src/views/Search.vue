@@ -20,7 +20,13 @@
 
       <P-Column class="w-[10rem]" sortable field="id" header="ID" filter>
         <template #filter="{ filterModel, filterCallback }">
-          <P-InputText fluid v-model="filterModel.value" type="number" @input="filterCallback()" placeholder="ID" />
+          <P-InputText
+            fluid
+            v-model="filterModel.value"
+            type="number"
+            @input="filterCallback()"
+            placeholder="ID"
+          />
         </template>
         <template #body="{ data }">
           <div class="text-right">{{ data.id }}</div>
@@ -42,10 +48,10 @@
         <template #body="{ data }">
           <P-Tag rounded :class="getStatusClass(data.status)">
             <Icon :icon="getStatusIcon(data.status)" />
-            <span>{{ states.find(s => s.value === data.status)?.name }}</span>
+            <span>{{ states.find((s) => s.value === data.status)?.name }}</span>
           </P-Tag>
         </template>
-       </P-Column>
+      </P-Column>
       <P-Column class="w-[15rem]" field="client.name" header="Cliente" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
@@ -88,13 +94,19 @@
         </template>
         <template #body="{ data }">
           <span>
-            {{ new Date(data.created).toLocaleString('pt-PT') }}
+            {{ new Date(data.created).toLocaleString("pt-PT") }}
           </span>
         </template>
-       </P-Column>
+      </P-Column>
       <P-Column class="w-[10rem]" field="cost" header="Custo" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
-          <P-InputText fluid v-model="filterModel.value" type="number" @input="filterCallback()" placeholder="Custo" />
+          <P-InputText
+            fluid
+            v-model="filterModel.value"
+            type="number"
+            @input="filterCallback()"
+            placeholder="Custo"
+          />
         </template>
         <template #body="{ data }">
           <div class="text-right">{{ data.cost.toFixed(2) }}</div>
@@ -128,7 +140,7 @@
         </template>
       </P-Column>
     </P-DataTable>
-    <!--<RequestSummary v-model="summary" :request="toSummarize" @updated="refreshRequests" />-->
+    <RequestSummary v-model="summary" :request="selectedRequest" />
     <P-ConfirmDialog />
   </Container>
 </template>
@@ -141,10 +153,11 @@ import { computed, onMounted, reactive, ref, type Ref } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 
 import { statusItems } from "@/maps";
-import { useAuthStore } from "@/stores/auth";
-import { useRequestStore } from "@/stores/requests";
+import { useAuthStore } from "@stores/auth";
+import { useRequestStore } from "@stores/requests";
 import { Client } from "@router/backend/services/client/types";
 import { Request, Status } from "@router/backend/services/request/types";
+import { getStatusIcon, getStatusClass } from "@/utils";
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -159,8 +172,8 @@ const TITLE = "Cancelamento de Pedido";
 
 const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
-const clients: Ref<Client[]> = ref([]); // New ref for client options
-const commercialsFilterOptions: Ref<string[]> = ref([]); // New ref for commercial options
+const clients: Ref<Client[]> = ref([]);
+const commercialsFilterOptions: Ref<string[]> = ref([]);
 
 onMounted(async () => {
   await refreshRequests();
@@ -168,47 +181,49 @@ onMounted(async () => {
 
 const selectedRequest = ref<Request>(new Request());
 
-// Request summary
-const toSummarize = ref(new Request());
 const summary = ref(false);
 
 const states = statusItems;
 
-// Define PrimeVue filters
 const filters = ref({
   id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   status: { value: null, matchMode: FilterMatchMode.IN },
-  'client.name': { value: null, matchMode: FilterMatchMode.IN },
+  "client.name": { value: null, matchMode: FilterMatchMode.IN },
   user: { value: null, matchMode: FilterMatchMode.IN },
   created: { value: null, matchMode: FilterMatchMode.DATE_BETWEEN },
   cost: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
+// FIXME:
 // Parse route path and initialize filters
 if (route.query.id) {
-  // Assuming a single ID for P-InputText filter, taking the first if multiple are present
-  filters.value.id.value = Array.isArray(route.query.id) ? Number(route.query.id[0]) : Number(route.query.id);
+  filters.value.id.value = Array.isArray(route.query.id)
+    ? Number(route.query.id[0])
+    : Number(route.query.id);
 }
 if (route.query.status) {
-  filters.value.status.value = ([route.query.status].flat() as string[]).filter(s => Object.values(Status).includes(s as Status));
+  filters.value.status.value = ([route.query.status].flat() as string[]).filter((s) =>
+    Object.values(Status).includes(s as Status),
+  );
 }
 if (route.query.client) {
-  filters.value['client.name'].value = ([route.query.client].flat() as string[]).map(Number);
+  filters.value["client.name"].value = ([route.query.client].flat() as string[]).map(Number);
 }
 if (route.query.commercial) {
   filters.value.user.value = [route.query.commercial].flat() as string[];
 }
 if (route.query.creationDate) {
-  // Expects an array of two ISO strings for range, or single string. Convert to Date objects
-  const dates = ([route.query.creationDate].flat() as string[]).map(d => new Date(d));
-  if (dates.every(d => !isNaN(d.getTime()))) {
+  const dates = ([route.query.creationDate].flat() as string[]).map((d) => new Date(d));
+  if (dates.every((d) => !isNaN(d.getTime()))) {
     filters.value.created.value = dates;
   }
 }
 if (route.query.cost) {
-  // Assuming a single cost value for P-InputText filter
-  filters.value.cost.value = Array.isArray(route.query.cost) ? Number(route.query.cost[0]) : Number(route.query.cost);
+  filters.value.cost.value = Array.isArray(route.query.cost)
+    ? Number(route.query.cost[0])
+    : Number(route.query.cost);
 }
+// END FIXME:
 
 async function refreshRequests() {
   commercialsFilterOptions.value = [];
@@ -228,7 +243,7 @@ async function refreshRequests() {
 
   // Populate client filter options
   const uniqueClients = new Map<number | string, Client>();
-  currentRequests.forEach(r => {
+  currentRequests.forEach((r) => {
     if (r.client?.id && !uniqueClients.has(r.client.id)) {
       uniqueClients.set(r.client.id, r.client);
     }
@@ -237,7 +252,7 @@ async function refreshRequests() {
 }
 
 function showSummary(item: Request) {
-  toSummarize.value = item;
+  selectedRequest.value = item;
   summary.value = true;
 }
 
@@ -249,14 +264,14 @@ async function cancelRequest() {
       severity: "success",
       summary: TITLE,
       detail: "Pedido cancelado com sucesso",
-      life: 10000
+      life: 10000,
     });
   } else {
     toast.add({
       severity: "error",
       summary: TITLE,
       detail: "Ocorreu um erro ao cancelar o pedido",
-      life: 10000
+      life: 10000,
     });
     console.error(response);
   }
@@ -275,38 +290,10 @@ function confirmCancel(request: Request) {
     },
     acceptProps: {
       label: "Confirmar cancelamento",
-      severity: "danger"
+      severity: "danger",
     },
     accept: cancelRequest,
   });
-}
-
-// Visual stuff
-function getStatusIcon(value: Status) {
-  if (value === Status.Cancelled) {
-    return "cancel";
-  } else if (value === Status.Ordered) {
-    return "package_2";
-  } else if (value === Status.Done) {
-    return "check";
-  } else {
-    return "question_mark";
-  }
-}
-
-function getStatusClass(value: Status): string {
-  let classes = "!text-white ";
-  if (value === Status.Cancelled) {
-    classes += "!bg-red-500";
-  } else if (value === Status.Ordered) {
-    classes += "!bg-orange-500";
-  } else if (value === Status.Done) {
-    classes += "!bg-green-500";
-  } else {
-    classes += "!bg-gray-500";
-  }
-
-  return classes
 }
 
 // TODO: FIXME
@@ -315,13 +302,17 @@ function updateFilterURL() {
 
   for (const key in filters.value) {
     const filter = filters.value[key];
-    if (filter.value !== null && filter.value !== '' && (!Array.isArray(filter.value) || filter.value.length > 0)) {
-      if (key === 'created' && Array.isArray(filter.value)) {
+    if (
+      filter.value !== null &&
+      filter.value !== "" &&
+      (!Array.isArray(filter.value) || filter.value.length > 0)
+    ) {
+      if (key === "created" && Array.isArray(filter.value)) {
         // filter.value will be an array of two Dates [startDate, endDate]
         // Convert to ISO string for URL
-        query[key] = filter.value.map(d => d.toISOString());
-      } else if (key === 'status' && Array.isArray(filter.value)) {
-         query[key] = filter.value.map((s: Status) => s.toString());
+        query[key] = filter.value.map((d) => d.toISOString());
+      } else if (key === "status" && Array.isArray(filter.value)) {
+        query[key] = filter.value.map((s: Status) => s.toString());
       } else {
         query[key] = filter.value;
       }
