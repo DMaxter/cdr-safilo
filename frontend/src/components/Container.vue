@@ -4,7 +4,9 @@
       <template #content>
         <div class="h-9/10">
           <Menu class="mb-[10px]" />
-          <slot />
+          <div class="overflow-hidden">
+            <slot />
+          </div>
         </div>
       </template>
       <template #footer v-if="slots.actions">
@@ -13,9 +15,9 @@
         </div>
       </template>
     </P-Card>
-    <div class="absolute bottom-0 right-0">
-      <img :src="CDRLogo" class="object-contain h-[180px] w-[180px]" />
-    </div>
+  </div>
+  <div class="absolute bottom-0 right-0">
+    <img :src="CDRLogo" class="object-contain h-[180px] w-[180px]" />
   </div>
 </template>
 

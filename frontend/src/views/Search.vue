@@ -327,7 +327,7 @@ function editRequest(item: Request) {}
 
 <style lang="scss" scoped>
 .request-data-table {
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 300px);
   display: flex;
   flex-direction: column;
 }
