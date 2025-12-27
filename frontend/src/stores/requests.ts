@@ -9,8 +9,8 @@ import { Request, Status } from "@router/backend/services/request/types";
 export const useRequestStore = defineStore("requestStore", () => {
   const requests = ref<Request[]>([]);
 
-  function init(data: Request[]) {
-    requests.value = data;
+  function init(data: any[]) {
+    requests.value = data.map((item) => new Request(item));
   }
 
   function add(request: Request) {
@@ -33,7 +33,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       const { status, data } = await API.requests.getAllRequests();
 
       if (status === 200) {
-        init(data as Request[]);
+        init(data as any[]);
         return {
           success: true,
           content: null,
