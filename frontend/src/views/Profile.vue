@@ -19,7 +19,11 @@
         </div>
         <div class="ml-[10px]">
           <template v-if="hasPlafond">
-            <PlafondDetail v-model="plafondDetail" :credits="authStore.logged!!.credits" />
+            <PlafondDetail
+              v-model="plafondDetail"
+              :user="authStore.logged!!.email"
+              :credits="authStore.logged!!.credits"
+            />
             <Circle class="cursor-pointer" :size="30" @click="showPlafondDetail()">
               <Icon icon="help_outline" :size="20" />
             </Circle>
