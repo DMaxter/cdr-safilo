@@ -1,36 +1,30 @@
 <template>
-  <v-container ref="printable">
-    <p v-if="Status.Cancelled === props.request.status!!" align="center" class="bg-red">
-      <b class="text-h2 text-white">PEDIDO CANCELADO</b><br />
-    </p>
-    <p v-if="Status.Done === props.request.status!!" align="center" class="bg-red">
-      <b class="text-h2 text-white">PEDIDO FINALIZADO</b><br />
-    </p>
-    <p align="center">
-      <b class="text-h5">Pedido {{ props.request.id }} - {{ props.request.type!!.type }}</b>
-    </p>
-    <p>Cliente: {{ props.request.client!!.name }}</p>
-    <p>Morada: {{ props.request.client!!.address }}</p>
+  <div ref="printable">
+    <p v-if="Status.Cancelled === props.request.status!!" class="bg-red-500 text-center font-bold text-8xl text-white">PEDIDO CANCELADO</p>
+    <p v-if="Status.Done === props.request.status!!" class="bg-green-500 text-center font-bold text-8xl text-white">PEDIDO FINALIZADO</p>
+    <p class="text-center text-xl font-bold">Pedido {{ props.request.id }} - {{ requestTypes.find((type) => type.name === props.request.type!!.type)?.value || "Tipo desconhecido" }}</p>
+    <p><b>Cliente:</b> {{ props.request.client!!.name }}</p>
+    <p><b>Morada:</b> {{ props.request.client!!.address }}</p>
     <p>
-      Observações: {{ props.request.observations ? props.request.observations : "Sem observações" }}
+      <b>Observações:</b> {{ props.request.observations ? props.request.observations : "Sem observações" }}
     </p>
-    <p>Quantidade: {{ props.request.amount }}</p>
-    <p>Data do pedido: {{ props.request.created!!.toLocaleString("pt-PT") }}</p>
-    <p>Data de última modificação: {{ props.request.lastUpdate!!.toLocaleString("pt-PT") }}</p>
-    <p>Marca: {{ props.request.brand!!.name }}</p>
+    <p><b>Quantidade:</b> {{ props.request.amount }}</p>
+    <p><b>Data do pedido:</b> {{ props.request.created!!.toLocaleString("pt-PT") }}</p>
+    <p><b>Data da última modificação:</b> {{ props.request.lastUpdate!!.toLocaleString("pt-PT") }}</p>
+    <p><b>Marca:</b> {{ props.request.brand!!.name }}</p>
     <PrintSlot
-      v-if="[RequestType.OneFace, RequestType.TwoFaces].includes(props.request.type!!.type!!)"
+      v-if="['OneFace', 'TwoFaces'].includes(props.request.type!!.type!!)"
       :slot="(props.request.type!! as OneFace).cover"
       name="Frente"
     />
     <PrintSlot
-      v-if="props.request.type!!.type === RequestType.TwoFaces"
+      v-if="props.request.type!!.type === 'TwoFaces'"
       :slot="(props.request.type!! as TwoFaces).back"
       name="Verso"
     />
     <PrintSlot
       v-if="
-        [RequestType.SimpleShowcase, RequestType.LeftShowcase, RequestType.RightShowcase].includes(
+        ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(
           props.request.type!!.type!!,
         )
       "
@@ -39,7 +33,7 @@
     />
     <PrintSlot
       v-if="
-        [RequestType.SimpleShowcase, RequestType.LeftShowcase, RequestType.RightShowcase].includes(
+        ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(
           props.request.type!!.type!!,
         )
       "
@@ -48,7 +42,7 @@
     />
     <PrintSlot
       v-if="
-        [RequestType.SimpleShowcase, RequestType.LeftShowcase, RequestType.RightShowcase].includes(
+        ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(
           props.request.type!!.type!!,
         )
       "
@@ -57,7 +51,7 @@
     />
     <PrintSlot
       v-if="
-        [RequestType.SimpleShowcase, RequestType.LeftShowcase, RequestType.RightShowcase].includes(
+        ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(
           props.request.type!!.type!!,
         )
       "
@@ -66,35 +60,32 @@
     />
     <PrintSlot
       v-if="
-        [RequestType.LeftShowcase, RequestType.RightShowcase].includes(props.request.type!!.type!!)
+        ['LeftShowcase', 'RightShowcase'].includes(props.request.type!!.type!!)
       "
       :slot="(props.request.type!! as LeftShowcase).side"
       name="Lateral"
     />
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { useVueToPrint } from "vue-to-print";
 import { useTemplateRef, type ShallowRef } from "vue";
 
-import RequestDto from "@models/dto/RequestDto";
-import { RequestType } from "@models/dto/RequestType";
+import { requestTypes } from "@/maps";
 import {
-  OneFace,
-  TwoFaces,
-  SimpleShowcase,
   LeftShowcase,
+  OneFace,
+  Request,
   RightShowcase,
-} from "@models/dto/RequestTypeDto";
-import { Status } from "@models/dto/RequestStatus";
+  SimpleShowcase,
+  Status,
+  TwoFaces,
+} from "@router/backend/services/request/types";
 
-const props = defineProps({
-  request: {
-    type: RequestDto,
-    required: true,
-  },
-});
+const props = defineProps<{
+  request: Request,
+}>();
 
 const printable = useTemplateRef<HTMLElement>("printable");
 
