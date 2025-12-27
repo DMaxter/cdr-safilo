@@ -5,7 +5,7 @@
         paginator
         scrollable
         removableSort
-        class="max-w-98/100"
+        class="client-data-table"
         scrollHeight="flex"
         filterDisplay="row"
         :value="clientStore.clients"
@@ -255,4 +255,10 @@ function showUpload() {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.client-data-table {
+  max-height: calc(100vh - 300px);
+  display: flex;
+  flex-direction: column;
+}
+</style>

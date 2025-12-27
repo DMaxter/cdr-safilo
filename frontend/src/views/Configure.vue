@@ -5,9 +5,11 @@
         >Plafond</P-Button
       >
       <P-Button v-if="manageSafilo" class="h-[60px]" @click="openBrandList">Marcas</P-Button>
+      <!--TODO: -->
       <P-Button v-if="manageSafilo" class="h-[60px]" @click="">Utilizadores</P-Button>
       <P-Button v-if="manageCdr" class="h-[60px]" @click="">Materiais</P-Button>
       <P-Button v-if="manageCdr" class="h-[60px]" @click="">Preços</P-Button>
+      <!-- END TODO: -->
     </div>
     <BrandList v-model="brandList" />
     <PlafondList v-if="manageSafilo" v-model="managePlafond" />
