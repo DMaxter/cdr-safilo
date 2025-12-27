@@ -104,7 +104,10 @@ export class Showcase extends RequestType {
     result = result.union(this.bottom.getFinishings());
     result = result.union(this.left.getFinishings());
     result = result.union(this.right.getFinishings());
-    result = result.union(this.side?.getFinishings() || []);
+
+    if (this.side !== null) {
+      result = result.union(this.side.getFinishings());
+    }
 
     return Array.from(result);
   }
@@ -127,13 +130,13 @@ export class Showcase extends RequestType {
   getMeasurements(): number[][] {
     let result = [];
 
-    result.add(this.top.getMeasurements());
-    result.add(this.bottom.getMeasurements());
-    result.add(this.left.getMeasurements());
-    result.add(this.right.getMeasurements());
+    result.push(this.top.getMeasurements());
+    result.push(this.bottom.getMeasurements());
+    result.push(this.left.getMeasurements());
+    result.push(this.right.getMeasurements());
 
     if (this.side) {
-      result.add(this.side.getMeasurements());
+      result.push(this.side.getMeasurements());
     }
 
     return result;
