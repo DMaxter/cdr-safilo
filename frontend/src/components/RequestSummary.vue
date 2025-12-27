@@ -129,7 +129,7 @@
         label="Carta de Porte"
         @click="openWaybillDialog()"
         class="p-button-secondary mr-2"
-        v-if="isCdr"
+        v-if="isCdr && props.request.status !== Status.Cancelled"
       ><template #icon><Icon icon="delivery_truck_speed" /></template></P-Button>
       <P-Button
         label="Ver pedido"
@@ -137,7 +137,7 @@
         class="p-button-primary"
       ></P-Button>
 
-      <!--<PrintRequest class="only-print" ref="printer" :request="props.request" />-->
+      <PrintRequest class="only-print" ref="printer" :request="props.request" />
       <!--Waybill v-model="waybill" :request="props.request" />-->
     </template>
   </P-Dialog>
