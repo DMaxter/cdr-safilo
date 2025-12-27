@@ -1,13 +1,13 @@
 <template>
-  <div class="bg-black" style="height: 3x; width: 100%"></div>
-  <p class="text-h6" align="center">{{ props.name }}</p>
-  <div class="d-flex justify-space-evenly">
-    <v-img
+  <div class="bg-black h-[3px] w-full"></div>
+  <p class="text-center font-bold text-xl">{{ props.name }}</p>
+  <div class="flex justify-evenly">
+    <img
+      class="max-w-3/10 border-[2px] border-solid border-black mb-[5px]"
       :src="props.slot.image.link!!"
-      max-width="30%"
       style="border: 2px solid black; margin-bottom: 5px"
-    ></v-img>
-    <div class="d-flex flex-column align-start justify-center">
+    />
+    <div class="flex flex-col items-start justify-center">
       <p><b>Material: </b>{{ props.slot.material.name }}</p>
       <p><b>Acabamentos: </b></p>
       <ul
@@ -25,16 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-import RequestSlot from "@models/dto/RequestSlotDto";
+import { RequestSlot } from "@router/backend/services/request/types";
 
-const props = defineProps({
-  slot: {
-    type: RequestSlot,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-});
+const props = defineProps<{
+  slot: RequestSlot,
+  name: string,
+}>();
 </script>
