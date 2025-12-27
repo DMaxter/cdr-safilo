@@ -6,22 +6,12 @@
       <template #content>
         <P-Form @submit="changePassword" class="flex flex-col">
           <P-FloatLabel variant="on" class="mt-[10px]">
-            <P-Password
-              fluid
-              inputId="password"
-              v-model="password"
-              :feedback="false"
-            />
+            <P-Password fluid inputId="password" v-model="password" :feedback="false" />
             <label for="password">Nova Palavra Passe</label>
           </P-FloatLabel>
 
           <P-FloatLabel variant="on" class="mt-[10px]">
-            <P-Password
-              fluid
-              inputId="repeatPassword"
-              v-model="repeatPassword"
-              :feedback="false"
-            />
+            <P-Password fluid inputId="repeatPassword" v-model="repeatPassword" :feedback="false" />
             <label for="repeatPassword">Confirmar Palavra Passe</label>
           </P-FloatLabel>
 
@@ -50,7 +40,7 @@ const route = useRoute();
 const toast = useToast();
 const authStore = useAuthStore();
 
-const TITLE = "Recuperação de Palavra Passe"
+const TITLE = "Recuperação de Palavra Passe";
 
 const password = ref("");
 const repeatPassword = ref("");
@@ -64,7 +54,7 @@ if (!route.query.email) {
     detail: "Email não definido",
     life: 10000,
   });
-  router.push({name: "login"});
+  router.push({ name: "login" });
 }
 
 if (!route.query.token) {
@@ -74,17 +64,13 @@ if (!route.query.token) {
     detail: "Token não definido",
     life: 10000,
   });
-  router.push({name: "login"});
+  router.push({ name: "login" });
 }
 
 async function changePassword() {
   if (passwordsMatch.value) {
     try {
-      await authStore.changePasswordWithToken(
-        route.query.email,
-        password.value,
-        route.query.token
-      );
+      await authStore.changePasswordWithToken(route.query.email, password.value, route.query.token);
 
       toast.add({
         severity: "success",

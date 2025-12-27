@@ -1,98 +1,194 @@
 <template>
-  <v-dialog v-model="enabled" transition="dialog-bottom-transition" max-width="50%">
-    <v-card :title="`Pedido ${props.request.id}`">
-      <v-card-text>
-        <p><b>Tipo: </b>{{ props.request.type!!.type }}</p>
-        <p><b>Marca: </b>{{ props.request.brand!!.name }}</p>
-        <p><b>Estado: </b>{{ props.request.status }}</p>
-        <p><b>Cliente: </b>{{ props.request.client!!.name }}</p>
-        <!-- TODO: Add link to client details -->
-        <p>
-          <b>Morada: </b>{{ props.request.client!!.address }}, {{ props.request.client!!.city }}
-        </p>
-        <p><b>Comercial: </b>{{ props.request.user }}</p>
-        <p><b>Data de criação: </b>{{ props.request.created!!.toLocaleString("pt-PT") }}</p>
-        <p><b>Última atualização: </b>{{ props.request.lastUpdate!!.toLocaleString("pt-PT") }}</p>
-        <p><b>Custo: </b>{{ props.request.cost!!.toFixed(2) }} Créditos</p>
-        <p><b>Materiais: </b>{{ processArray(props.request.getMaterials()) }}</p>
-        <p><b>Acabamentos: </b>{{ finishings ? finishings : "Sem acabamentos" }}</p>
-        <p>
-          <b>Medidas (altura x largura - cm): </b
-          >{{ processMeasurements(props.request.getMeasurements()) }}
-        </p>
-        <p>
-          <b>Observações: </b
-          >{{ props.request.observations ? props.request.observations : "Sem observações" }}
-        </p>
-      </v-card-text>
-      <v-card-actions class="justify-end">
-        <v-btn @click="close()">Voltar </v-btn>
-        <v-btn
-          v-if="
-            (canManipulate || (user.isCommercial() && request.user == user.user.name)) &&
-            request.status == Status.Ordered
-          "
-          @click="cancel()"
-          color="red"
-          >Cancelar</v-btn
-        >
-        <v-btn @click="print()" color="blue">Imprimir</v-btn>
-        <v-btn v-if="user.isCdr() || user.isAdmin()" @click="openWaybillDialog()"
-          >Carta de Porte</v-btn
-        >
-        <v-btn @click="openDetails()">Ver pedido</v-btn>
-      </v-card-actions>
-      <CancelRequest
-        v-model="cancelling"
-        :request="props.request.id"
-        @cancelled="
-          emit('updated');
-          close();
+  <P-Dialog
+    v-model:visible="enabled"
+    modal
+    header="Detalhes do Pedido"
+    :style="{ width: '50vw' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+  >
+    <template #header>
+      <b>Pedido {{ props.request.id }}</b>
+    </template>
+    <div class="grid p-fluid">
+      <div class="col-12 md:col-4">
+        <label>Tipo:</label>
+        <div class="font-bold">
+          {{
+            requestTypes.find((type) => type.name === props.request.type!!.type)?.value ||
+            "Tipo desconhecido"
+          }}
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Marca:</label>
+        <div class="font-bold">{{ props.request.brand!!.name }}</div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Estado:</label>
+        <br />
+        <P-Tag rounded :class="getStatusClass(props.request.status)">
+          <Icon :icon="getStatusIcon(props.request.status)" />
+          <span>{{ states.find((s) => s.value === props.request.status)?.name }}</span>
+        </P-Tag>
+      </div>
+      <div class="col-12 md:col-8" v-if="isCdr && props.request.status !== Status.Cancelled">
+        <label>Carta de Porte:</label>
+        <div class="font-bold">
+          {{ (props.request.trackingCode !== null) ? props.request.trackingCode : "Não existe" }}
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Cliente:</label>
+        <div class="font-bold">
+          <router-link :to="{ name: 'client', query: { id: props.request.client!!.id } }">{{
+            props.request.client!!.name
+          }}<Icon icon="open_in_new" /></router-link>
+        </div>
+      </div>
+      <div class="col-12 md:col-8">
+        <label>Morada:</label>
+        <div class="font-bold">
+          {{ props.request.client!!.address }}, {{ props.request.client!!.city }}
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Comercial:</label>
+        <div class="font-bold">{{ props.request.user }}</div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Data de criação:</label>
+        <div class="font-bold">{{ new Date(props.request.created!!).toLocaleString("pt-PT") }}</div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Última atualização:</label>
+        <div class="font-bold">
+          {{ new Date(props.request.lastUpdate!!).toLocaleString("pt-PT") }}
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Custo:</label>
+        <div class="font-bold">{{ props.request.cost!!.toFixed(2) }} Créditos</div>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Materiais:</label>
+        <br>
+        <P-Chip
+          v-for="material in materials"
+          :label="material"
+          :pt="{
+            label: { style: 'font-weight: bold' }
+          }"
+        />
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Acabamentos:</label>
+        <br>
+        <P-Chip
+          v-if="finishings.length > 0"
+          v-for="finishing in finishings"
+          :label="finishing"
+          :pt="{
+            label: { style: 'font-weight: bold' }
+          }"
+        />
+        <b v-if="finishings.length === 0">Não existem acabamentos</b>
+      </div>
+      <div class="col-12 md:col-4">
+        <label>Medidas (altura x largura - cm):</label>
+        <div class="font-bold">{{ processMeasurements(props.request.getMeasurements()) }}</div>
+      </div>
+      <div class="col-12">
+        <label>Observações:</label>
+        <div class="font-bold">
+          {{ props.request.observations ? props.request.observations : "Sem observações" }}
+        </div>
+      </div>
+    </div>
+
+    <template #footer>
+      <P-Button
+        label="Cancelar"
+        @click="confirmCancel()"
+        class="p-button-danger mr-2"
+        v-if="
+          (canManipulate || (user.isCommercial() && request.user == user.user.name)) &&
+          props.request.status == Status.Ordered
         "
-      />
-      <PrintRequest class="only-print" ref="printer" :request="props.request" />
-      <Waybill v-model="waybill" :request="props.request" />
-    </v-card>
-  </v-dialog>
+      ></P-Button>
+      <P-Button
+        label="Voltar"
+        @click="close()"
+        class="p-button-secondary mr-2"
+      ></P-Button>
+      <P-Button
+        @click="print()"
+        label="Imprimir"
+        class="p-button-info mr-2"
+      ><template #icon><Icon icon="print" /></template></P-Button>
+      <P-Button
+        label="Carta de Porte"
+        @click="openWaybillDialog()"
+        class="p-button-secondary mr-2"
+        v-if="isCdr"
+      ><template #icon><Icon icon="delivery_truck_speed" /></template></P-Button>
+      <P-Button
+        label="Ver pedido"
+        @click="openDetails()"
+        class="p-button-primary"
+      ></P-Button>
+
+      <!--<PrintRequest class="only-print" ref="printer" :request="props.request" />-->
+      <!--Waybill v-model="waybill" :request="props.request" />-->
+    </template>
+  </P-Dialog>
 </template>
 
 <script lang="ts" setup>
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
 import { onUpdated, ref, useTemplateRef } from "vue";
 import { useRouter } from "vue-router";
 
-import { useUserStore } from "@stores/user";
+import { useAuthStore } from "@stores/auth";
+import { useRequestStore } from "@stores/requests";
+import { Status } from "@router/backend/services/request/types";
+import type { Request } from "@router/backend/services/request/types";
 import PrintRequestComponent from "@components/PrintRequest.vue";
-import RequestDto from "@models/dto/RequestDto";
-import { Status } from "@models/dto/RequestStatus";
+import { requestTypes, statusItems } from "@/maps";
+import { getStatusClass, getStatusIcon } from "@/utils";
+
+const confirm = useConfirm();
+const toast = useToast();
+
+const TITLE = "Cancelamento de Pedido";
 
 const router = useRouter();
 
-const emit = defineEmits(["updated"]);
-
-const props = defineProps({
-  request: {
-    type: RequestDto,
-    required: true,
-  },
-});
+const props = defineProps<{
+  request: Request;
+}>();
 
 const enabled = defineModel<boolean>();
 
-const finishings = ref("");
+const authStore = useAuthStore();
+const requestStore = useRequestStore();
 
-const user = useUserStore();
-await user.init();
-
-const canManipulate = user.isSafilo() || user.isCdr() || user.isAdmin();
-const cancelling = ref(false);
+const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
+const isCdr = authStore.isCdr() || authStore.isAdmin();
 
 const printer = useTemplateRef<typeof PrintRequestComponent>("printer");
 
 const waybill = ref(false);
 
+const states = statusItems;
+
+const finishings = ref<string[]>([]);
+const materials = ref<string[]>([]);
+
 onUpdated(() => {
-  finishings.value = processArray(props.request.getFinishings().flat());
-});
+  finishings.value = props.request.getFinishings();
+  materials.value = props.request.getMaterials();
+})
 
 function cancel() {
   cancelling.value = true;
@@ -114,28 +210,47 @@ function close() {
   enabled.value = false;
 }
 
+function confirmCancel() {
+  confirm.require({
+    message: `Tem a certeza que pretende cancelar o pedido ${props.request.id} efetuado por ${props.request.user} para o cliente ${props.request.client.name}?`,
+    header: "Confirmar cancelamento de pedido",
+    rejectProps: {
+      label: "Abortar cancelamento",
+      severity: "secondary",
+      outline: true,
+    },
+    acceptProps: {
+      label: "Confirmar cancelamento",
+      severity: "danger",
+    },
+    accept: cancelRequest,
+  });
+}
+
+async function cancelRequest() {
+  const response = await requestStore.cancelRequest(props.request.id);
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: TITLE,
+      detail: "Pedido cancelado com sucesso",
+      life: 10000,
+    });
+    close();
+  } else {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Ocorreu um erro ao cancelar o pedido",
+      life: 10000,
+    });
+    console.error(response);
+  }
+}
+
 // Helper functions
 function processMeasurements(measurements: number[][]) {
   return measurements.map((m) => m.join("x")).join(", ");
-}
-
-function processArray(arr: string[]) {
-  return Object.entries(countElems(arr))
-    .map(([key, val]) => {
-      if (val > 1) {
-        return `${key} (${val}x)`;
-      } else {
-        return key;
-      }
-    })
-    .join(", ");
-}
-
-function countElems(arr: string[]): Map<string, number> {
-  return arr.reduce((acc, cur) => {
-    acc.set(cur, (acc.get(cur) || 0) + 1);
-
-    return acc;
-  }, new Map<string, number>());
 }
 </script>

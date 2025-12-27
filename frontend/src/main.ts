@@ -51,6 +51,7 @@ app.directive("tooltip", Tooltip);
 // PrimeVue Components
 import Button from "primevue/button";
 import Card from "primevue/card";
+import Chip from "primevue/chip";
 import Column from "primevue/column";
 import ConfirmDialog from "primevue/confirmdialog";
 import DataTable from "primevue/datatable";
@@ -74,6 +75,7 @@ import Toast from "primevue/toast";
 
 app.component("P-Button", Button);
 app.component("P-Card", Card);
+app.component("P-Chip", Chip);
 app.component("P-Column", Column);
 app.component("P-ConfirmDialog", ConfirmDialog);
 app.component("P-DataTable", DataTable);
@@ -99,7 +101,6 @@ app.component("P-Toast", Toast);
 // Custom Components
 import BrandList from "@components/BrandList.vue";
 import BrandManagement from "@components/BrandManagement.vue";
-// import CancelRequest from "@components/CancelRequest.vue";
 import Circle from "@components/Circle.vue";
 import ClientNote from "@components/ClientNote.vue";
 import Container from "@components/Container.vue";
@@ -118,12 +119,11 @@ import PlafondManagement from "@components/PlafondManagement.vue";
 // import PrintRequest from "@components/PrintRequest.vue";
 // import PrintSlot from "@components/PrintSlot.vue";
 import RecoveryCode from "@components/RecoveryCode.vue";
-// import RequestSummary from "@components/RequestSummary.vue";
+import RequestSummary from "@components/RequestSummary.vue";
 // import Waybill from "@components/Waybill.vue";
 
 app.component("BrandList", BrandList);
 app.component("BrandManagement", BrandManagement);
-// app.component("CancelRequest", CancelRequest);
 app.component("Circle", Circle);
 app.component("ClientManagement", ClientManagement);
 app.component("ClientNote", ClientNote);
@@ -142,7 +142,7 @@ app.component("PlafondManagement", PlafondManagement);
 // app.component("PrintRequest", PrintRequest);
 // app.component("PrintSlot", PrintSlot);
 app.component("RecoveryCode", RecoveryCode);
-// app.component("RequestSummary", RequestSummary);
+app.component("RequestSummary", RequestSummary);
 // app.component("Waybill", Waybill);
 
 app.mount("#app");
