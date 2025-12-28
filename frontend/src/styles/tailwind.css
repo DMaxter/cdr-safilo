@@ -1,2 +1,18 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui";
+
+.status-cancelled {
+  @apply !bg-red-600 !text-white;
+}
+
+.status-ordered {
+  @apply !bg-orange-500 !text-white;
+}
+
+.status-done {
+  @apply !bg-green-600 !text-white;
+}
+
+.status-unknown {
+  @apply !bg-gray-500 !text-white;
+}

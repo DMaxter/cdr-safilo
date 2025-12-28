@@ -36,19 +36,14 @@ export function getStatusIcon(value: Status) {
   }
 }
 
-export function getStatusColor(value: Status): string {
-  if (value === Status.Cancelled) {
-    return "red-500";
-  } else if (value === Status.Ordered) {
-    return "orange-500";
-  } else if (value === Status.Done) {
-    return "green-500";
-  } else {
-    console.error(`Unknown status ${value}`);
-    return "gray-500";
-  }
-}
-
 export function getStatusClass(value: Status): string {
-  return `!text-white !bg-${getStatusColor(value)}`;
+  if (value === Status.Cancelled) {
+    return "status-cancelled";
+  } else if (value === Status.Ordered) {
+    return "status-ordered";
+  } else if (value === Status.Done) {
+    return "status-done";
+  } else {
+    return "status-unknown";
+  }
 }
