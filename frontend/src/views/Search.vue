@@ -140,8 +140,7 @@
         </template>
       </P-Column>
     </P-DataTable>
-    <RequestSummary v-model="summary" :request="selectedRequest" />
-    <P-ConfirmDialog />
+    <RequestSummary v-model="summary" :request="selectedRequest" @opened="onWaybillOpened" />
   </Container>
 </template>
 
@@ -179,7 +178,10 @@ onMounted(async () => {
   await refreshRequests();
 });
 
-const selectedRequest = ref<Request>(new Request());
+const selectedRequestId = ref<number>(0);
+const selectedRequest = computed(() => {
+  return requestStore.requests.find((r) => r.id === selectedRequestId.value) || new Request();
+});
 
 const summary = ref(false);
 
@@ -252,8 +254,12 @@ async function refreshRequests() {
 }
 
 function showSummary(item: Request) {
-  selectedRequest.value = item;
+  selectedRequestId.value = item.id;
   summary.value = true;
+}
+
+async function onWaybillOpened() {
+  await requestStore.getAllRequests();
 }
 
 async function cancelRequest() {
@@ -278,7 +284,7 @@ async function cancelRequest() {
 }
 
 function confirmCancel(request: Request) {
-  selectedRequest.value = request;
+  selectedRequestId.value = request.id;
 
   confirm.require({
     message: `Tem a certeza que pretende cancelar o pedido ${selectedRequest.value.id} efetuado por ${selectedRequest.value.user} para o cliente ${selectedRequest.value.client.name}?`,

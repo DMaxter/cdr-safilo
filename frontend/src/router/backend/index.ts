@@ -4,6 +4,7 @@ import * as clientController from "@router/backend/services/client";
 import * as imageController from "@router/backend/services/image";
 import * as requestController from "@router/backend/services/request";
 import * as userController from "@router/backend/services/user";
+import * as waybillController from "@router/backend/services/waybill";
 
 export const API = {
   auth: authController,
@@ -12,4 +13,5 @@ export const API = {
   images: imageController,
   requests: requestController,
   users: userController,
+  waybill: waybillController,
 };

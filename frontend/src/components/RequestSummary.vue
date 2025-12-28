@@ -1,11 +1,5 @@
 <template>
-  <P-Dialog
-    v-model:visible="enabled"
-    modal
-    header="Detalhes do Pedido"
-    :style="{ width: '50vw' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-  >
+  <P-Dialog v-model:visible="enabled" modal :style="{ width: '50vw' }">
     <template #header>
       <b>Pedido {{ props.request.id }}</b>
     </template>
@@ -26,23 +20,23 @@
       <div class="col-12 md:col-4">
         <label>Estado:</label>
         <br />
-        <P-Tag rounded :class="getStatusClass(props.request.status)">
-          <Icon :icon="getStatusIcon(props.request.status)" />
-          <span>{{ states.find((s) => s.value === props.request.status)?.name }}</span>
+        <P-Tag rounded :class="statusColorClass">
+          <Icon :icon="statusIcon" />
+          <span>{{ statusLabel }}</span>
         </P-Tag>
       </div>
       <div class="col-12 md:col-8" v-if="isCdr && props.request.status !== Status.Cancelled">
         <label>Carta de Porte:</label>
         <div class="font-bold">
-          {{ (props.request.trackingCode !== null) ? props.request.trackingCode : "Não existe" }}
+          {{ props.request.trackingCode !== null ? props.request.trackingCode : "Não existe" }}
         </div>
       </div>
       <div class="col-12 md:col-4">
         <label>Cliente:</label>
         <div class="font-bold">
-          <router-link :to="{ name: 'client', query: { id: props.request.client!!.id } }">{{
-            props.request.client!!.name
-          }}<Icon icon="open_in_new" /></router-link>
+          <router-link :to="{ name: 'client', query: { id: props.request.client!!.id } }"
+            >{{ props.request.client!!.name }}<Icon icon="open_in_new"
+          /></router-link>
         </div>
       </div>
       <div class="col-12 md:col-8">
@@ -71,24 +65,24 @@
       </div>
       <div class="col-12 md:col-4">
         <label>Materiais:</label>
-        <br>
+        <br />
         <P-Chip
           v-for="material in materials"
           :label="material"
           :pt="{
-            label: { style: 'font-weight: bold' }
+            label: { style: 'font-weight: bold' },
           }"
         />
       </div>
       <div class="col-12 md:col-4">
         <label>Acabamentos:</label>
-        <br>
+        <br />
         <P-Chip
           v-if="finishings.length > 0"
           v-for="finishing in finishings"
           :label="finishing"
           :pt="{
-            label: { style: 'font-weight: bold' }
+            label: { style: 'font-weight: bold' },
           }"
         />
         <b v-if="finishings.length === 0">Não existem acabamentos</b>
@@ -115,30 +109,21 @@
           props.request.status == Status.Ordered
         "
       ></P-Button>
-      <P-Button
-        label="Voltar"
-        @click="close()"
-        class="p-button-secondary mr-2"
+      <P-Button label="Voltar" @click="close()" class="p-button-secondary mr-2"></P-Button>
+      <P-Button @click="print()" label="Imprimir" class="p-button-info mr-2"
+        ><template #icon><Icon icon="print" /></template
       ></P-Button>
-      <P-Button
-        @click="print()"
-        label="Imprimir"
-        class="p-button-info mr-2"
-      ><template #icon><Icon icon="print" /></template></P-Button>
       <P-Button
         label="Carta de Porte"
         @click="openWaybillDialog()"
         class="p-button-secondary mr-2"
         v-if="isCdr && props.request.status !== Status.Cancelled"
-      ><template #icon><Icon icon="delivery_truck_speed" /></template></P-Button>
-      <P-Button
-        label="Ver pedido"
-        @click="openDetails()"
-        class="p-button-primary"
+        ><template #icon><Icon icon="delivery_truck_speed" /></template
       ></P-Button>
+      <P-Button label="Ver pedido" @click="openDetails()" class="p-button-primary"></P-Button>
 
       <PrintRequest class="only-print" ref="printer" :request="props.request" />
-      <!--Waybill v-model="waybill" :request="props.request" />-->
+      <Waybill v-model="waybill" :request="props.request" @opened="refreshRequest" />
     </template>
   </P-Dialog>
 </template>
@@ -146,7 +131,7 @@
 <script lang="ts" setup>
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-import { onUpdated, ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import { useRouter } from "vue-router";
 
 import { useAuthStore } from "@stores/auth";
@@ -168,6 +153,10 @@ const props = defineProps<{
   request: Request;
 }>();
 
+const emit = defineEmits<{
+  (e: "opened"): void;
+}>();
+
 const enabled = defineModel<boolean>();
 
 const authStore = useAuthStore();
@@ -182,16 +171,17 @@ const waybill = ref(false);
 
 const states = statusItems;
 
-const finishings = ref<string[]>([]);
-const materials = ref<string[]>([]);
+const finishings = computed(() => props.request.getFinishings());
+const materials = computed(() => props.request.getMaterials());
 
-onUpdated(() => {
-  finishings.value = props.request.getFinishings();
-  materials.value = props.request.getMaterials();
-})
+const statusIcon = computed(() => getStatusIcon(props.request.status));
+const statusColorClass = computed(() => getStatusClass(props.request.status));
+const statusLabel = computed(
+  () => states.find((s) => s.value === props.request.status)?.name || "Tipo desconhecido",
+);
 
-function cancel() {
-  cancelling.value = true;
+function refreshRequest() {
+  emit("opened");
 }
 
 function print() {
@@ -237,7 +227,7 @@ async function cancelRequest() {
       detail: "Pedido cancelado com sucesso",
       life: 10000,
     });
-    close();
+    emit("opened");
   } else {
     toast.add({
       severity: "error",
