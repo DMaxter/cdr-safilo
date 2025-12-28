@@ -44,7 +44,6 @@
       <P-Button text @click="close">Voltar</P-Button>
     </template>
   </P-Dialog>
-  <P-ConfirmDialog />
   <BrandManagement v-model="manageMode" :brand="selectedBrand" />
   <ImageManagement
     v-model="manageImages"

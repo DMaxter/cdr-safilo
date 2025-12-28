@@ -13,7 +13,6 @@
         :rowsPerPageOptions="[5, 10, 20, 50, 100]"
         v-model:filters="filters"
       >
-        <!--FIXME: More than 10 items makes actions go off the page -->
         <template #empty>Não existem clientes registados</template>
         <template #header>
           <div class="flex justify-end">

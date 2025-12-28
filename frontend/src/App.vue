@@ -8,6 +8,7 @@
     >
   </div>
   <P-Toast />
+  <P-ConfirmDialog />
 </template>
 
 <script setup lang="ts">

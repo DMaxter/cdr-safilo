@@ -49,6 +49,10 @@ app.use(router);
 app.directive("tooltip", Tooltip);
 
 // PrimeVue Components
+import Accordion from "primevue/accordion";
+import AccordionContent from "primevue/accordioncontent";
+import AccordionHeader from "primevue/accordionheader";
+import AccordionPanel from "primevue/accordionpanel";
 import Button from "primevue/button";
 import Card from "primevue/card";
 import Chip from "primevue/chip";
@@ -73,6 +77,10 @@ import Tag from "primevue/tag";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
 
+app.component("P-Accordion", Accordion);
+app.component("P-AccordionContent", AccordionContent);
+app.component("P-AccordionHeader", AccordionHeader);
+app.component("P-AccordionPanel", AccordionPanel);
 app.component("P-Button", Button);
 app.component("P-Card", Card);
 app.component("P-Chip", Chip);
@@ -120,7 +128,7 @@ import PrintRequest from "@components/PrintRequest.vue";
 import PrintSlot from "@components/PrintSlot.vue";
 import RecoveryCode from "@components/RecoveryCode.vue";
 import RequestSummary from "@components/RequestSummary.vue";
-// import Waybill from "@components/Waybill.vue";
+import Waybill from "@components/Waybill.vue";
 
 app.component("BrandList", BrandList);
 app.component("BrandManagement", BrandManagement);
@@ -143,6 +151,6 @@ app.component("PrintRequest", PrintRequest);
 app.component("PrintSlot", PrintSlot);
 app.component("RecoveryCode", RecoveryCode);
 app.component("RequestSummary", RequestSummary);
-// app.component("Waybill", Waybill);
+app.component("Waybill", Waybill);
 
 app.mount("#app");
