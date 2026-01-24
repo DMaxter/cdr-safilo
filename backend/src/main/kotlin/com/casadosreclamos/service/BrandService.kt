@@ -18,11 +18,14 @@ import org.jboss.logging.Logger
 
 @ApplicationScoped
 class BrandService {
-    @Inject lateinit var logger: Logger
+    @Inject
+    lateinit var logger: Logger
 
-    @Inject lateinit var brandRepository: BrandRepository
+    @Inject
+    lateinit var brandRepository: BrandRepository
 
-    @Inject lateinit var imageRepository: ImageRepository
+    @Inject
+    lateinit var imageRepository: ImageRepository
 
     fun getAll(): Multi<BrandDto> {
         return brandRepository.streamAllWithImages().map { BrandDto(it) }
@@ -48,11 +51,11 @@ class BrandService {
                     throw AlreadyExistsException("Marca")
                 } else {
                     brandRepository
-                            .persist(brand)
-                            .onItem()
-                            .invoke { _ -> logger.info("Successfully registered brand") }
-                            .onFailure()
-                            .invoke { e -> logger.error("Couldn't register brand: $e") }
+                        .persist(brand)
+                        .onItem()
+                        .invoke { _ -> logger.info("Successfully registered brand") }
+                        .onFailure()
+                        .invoke { e -> logger.error("Couldn't register brand: $e") }
                 }
             }
         }
@@ -77,11 +80,11 @@ class BrandService {
                 logger.info("Added image to brand")
 
                 imageRepository
-                        .persist(image)
-                        .onItem()
-                        .invoke { _ -> logger.info("Successfully added image") }
-                        .onFailure()
-                        .invoke { e -> logger.error("Couldn't save image: $e") }
+                    .persist(image)
+                    .onItem()
+                    .invoke { _ -> logger.info("Successfully added image") }
+                    .onFailure()
+                    .invoke { e -> logger.error("Couldn't save image: $e") }
             }
         }
     }
@@ -125,18 +128,18 @@ class BrandService {
     @Throws(InvalidIdException::class)
     fun delete(id: Long): Uni<Response> {
         return Panache.withTransaction { brandRepository.deleteById(id) }
-                .onItem()
-                .transform {
-                    logger.info("Successfully deleted brand")
+            .onItem()
+            .transform {
+                logger.info("Successfully deleted brand")
 
-                    Response.ok().build()
-                }
-                .onFailure()
-                .transform { e ->
-                    logger.error("Couldn't delete brand: $e")
+                Response.ok().build()
+            }
+            .onFailure()
+            .transform { e ->
+                logger.error("Couldn't delete brand: $e")
 
-                    InvalidIdException("marca")
-                }
+                InvalidIdException("marca")
+            }
     }
 
     fun deleteImage(id: Long): Uni<Response> {
@@ -149,23 +152,71 @@ class BrandService {
                 }
 
                 Uni.join()
-                        .all(
-                                brandRepository
-                                        .findByIdWithImages(image.brand!!.id)
-                                        .onItem()
-                                        .transform { brand -> brand.images.remove(image) },
-                                imageRepository.deleteById(id)
-                        )
-                        .andFailFast()
-                        .onItem()
-                        .transform {
-                            logger.info("Successfully deleted image")
+                    .all(
+                        brandRepository
+                            .findByIdWithImages(image.brand!!.id)
+                            .onItem()
+                            .transform { brand -> brand.images.remove(image) },
+                        imageRepository.deleteById(id)
+                    )
+                    .andFailFast()
+                    .onItem()
+                    .transform {
+                        logger.info("Successfully deleted image")
 
-                            Response.ok().build()
-                        }
-                        .onFailure()
-                        .invoke { e -> logger.error("Couldn't delete image: $e") }
+                        Response.ok().build()
+                    }
+                    .onFailure()
+                    .invoke { e -> logger.error("Couldn't delete image: $e") }
             }
+        }
+    }
+
+    @Throws(InvalidIdException::class)
+    fun makeObsolete(id: Long): Uni<Void> {
+        return Panache.withTransaction {
+            brandRepository
+                .findById(id)
+                .onItem()
+                .transformToUni { brand ->
+                    if (brand == null) {
+                        logger.error("Brand with ID $id is not registered")
+
+                        throw InvalidIdException("Brand")
+                    }
+
+                    brand.obsolete = true
+
+                    logger.info("Successfully marked brand as obsolete")
+
+                    return@transformToUni Uni.createFrom().voidItem()
+                }
+                .onFailure()
+                .invoke { e -> logger.error("Couldn't mark brand as obsolete: $e") }
+        }
+    }
+
+    @Throws(InvalidIdException::class)
+    fun makeActive(id: Long): Uni<Void> {
+        return Panache.withTransaction {
+            brandRepository
+                .findById(id)
+                .onItem()
+                .transformToUni { brand ->
+                    if (brand == null) {
+                        logger.error("Brand with ID $id is not registered")
+
+                        throw InvalidIdException("Brand")
+                    }
+
+                    brand.obsolete = false
+
+                    logger.info("Successfully activated brand")
+
+                    return@transformToUni Uni.createFrom().voidItem()
+                }
+                .onFailure()
+                .invoke { e -> logger.error("Couldn't activate brand: $e") }
         }
     }
 }

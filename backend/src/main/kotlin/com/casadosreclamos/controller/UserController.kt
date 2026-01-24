@@ -102,4 +102,41 @@ class UserController {
             userService.setPlafond(user, brand, amount).onItem().transform { UserDto(it) }
         }
     }
+    @PUT
+    @Path("/disable/{user}")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Disable a user")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun disableUser(@PathParam("user") user: String): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is disabling user $user ")
+
+            return@transformToUni userService.disableUser(user).onItem().transform { _ ->
+                Response.ok().build()
+            }
+        }
+    }
+
+    @PUT
+    @Path("/enable/{user}")
+    @RolesAllowed(MANAGER_ROLE, ADMIN_ROLE)
+    @Operation(summary = "Enable a user")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Successful operation"),
+        APIResponse(responseCode = "401", description = "User is not logged in"),
+        APIResponse(responseCode = "403", description = "Insufficient privileges")
+    )
+    fun enableUser(@PathParam("user") user: String): Uni<Response> {
+        return identity.deferredIdentity.onItem().transformToUni { id ->
+            logger.info("User ${id.principal.name} is enabling user $user ")
+
+            return@transformToUni userService.enableUser(user).onItem().transform { _ ->
+                Response.ok().build()
+            }
+        }
+    }
 }

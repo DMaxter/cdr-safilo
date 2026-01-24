@@ -3,11 +3,12 @@ package com.casadosreclamos.dto
 import com.casadosreclamos.model.Role
 import com.casadosreclamos.model.User
 
-data class UserDto(val email: String?, val name: String?, val roles: MutableSet<Role>, val credits: MutableSet<PlafondDto>?) {
+data class UserDto(val email: String?, val name: String?, val roles: MutableSet<Role>, val credits: MutableSet<PlafondDto>?, val disabled: Boolean?) {
     constructor(user: User) : this(
         user.email,
         user.name,
         user.roles,
-        user.credits.stream().map { PlafondDto(it) }.toList().toMutableSet()
+        user.credits.stream().map { PlafondDto(it) }.toList().toMutableSet(),
+        user.disabled
     )
 }

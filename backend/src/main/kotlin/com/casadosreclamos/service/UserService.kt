@@ -8,6 +8,7 @@ import com.casadosreclamos.model.Plafond
 import com.casadosreclamos.model.PlafondId
 import com.casadosreclamos.model.User
 import com.casadosreclamos.model.request.Brand
+import com.casadosreclamos.model.Role
 import com.casadosreclamos.repo.BrandRepository
 import com.casadosreclamos.repo.PlafondRepository
 import com.casadosreclamos.repo.UserRepository
@@ -146,6 +147,56 @@ class UserService {
 
                         user
                     }
+        }
+    }
+
+    @Throws(InvalidIdException::class)
+    fun disableUser(email: String): Uni<Void>{
+        return Panache.withTransaction{
+            userRepository
+                .findByEmail(email)
+                .onItem()
+                .transformToUni{ user ->
+                    if (user == null) {
+                        logger.error("User with email $email is not registered")
+
+                        throw InvalidIdException("user")
+                    }
+                    if(!user.roles.contains(Role.COMMERCIAL)){
+                        logger.error("User with email $email is not a Commercial")
+                        throw InvalidIdException("user")
+                    }
+                    user.disabled = true
+
+                    logger.info("Successfully disabled user")
+
+                    return@transformToUni Uni.createFrom().voidItem()
+                }
+                .onFailure()
+                .invoke {e -> logger.error("Couldn't disable user: $e")}
+        }
+    }
+
+    @Throws(InvalidIdException::class)
+    fun enableUser(email: String): Uni<Void>{
+        return Panache.withTransaction{
+            userRepository
+                .findByEmail(email)
+                .onItem()
+                .transformToUni{ user ->
+                    if (user == null) {
+                        logger.error("User with email $email is not registered")
+
+                        throw InvalidIdException("user")
+                    }
+                    user.disabled = false
+
+                    logger.info("Successfully enable user")
+
+                    return@transformToUni Uni.createFrom().voidItem()
+                }
+                .onFailure()
+                .invoke {e -> logger.error("Couldn't enable user: $e")}
         }
     }
 }
