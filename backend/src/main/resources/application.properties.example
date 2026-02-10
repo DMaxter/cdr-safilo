@@ -41,3 +41,4 @@ cdr.email=<CDR EMAIL>
 
 # File upload
 quarkus.http.body.uploads-directory=<UPLOAD DIR>
+quarkus.rest-client.fema-expeditions.url=<URL>
