@@ -1,0 +1,12 @@
+[project]
+name = "fema-mock-server"
+version = "0.1.0"
+description = "Mock server for FEMA SOAP API"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+]
+
+[dependency-groups]
+dev = []
