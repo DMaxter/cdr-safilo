@@ -381,7 +381,7 @@ export default {
   getMaterials: async function () {
       try {
         this.allMaterials = await Backend.getMaterials()
-        this.allMaterials.forEach(element => {
+        this.allMaterials.filter(m => !m.obsolete).forEach(element => {
           this.materials.push(element.name)
         });
         console.log(this.materials)
@@ -459,7 +459,7 @@ export default {
         this.height = store.dimensions[0].height
         this.allMaterials = await Backend.getMaterials()
         var mataux = null
-        this.allMaterials.forEach(element => {
+        this.allMaterials.filter(m => !m.obsolete).forEach(element => {
           if(element.id == store.selectedMaterial[0]){
             this.material = element.name
             mataux = element
@@ -486,7 +486,7 @@ export default {
         this.height = store.currentRequest.type.cover.measurements.height
         this.allMaterials = await Backend.getMaterials()
         var mataux2 = null
-        this.allMaterials.forEach(element => {
+        this.allMaterials.filter(m => !m.obsolete).forEach(element => {
           if(element.id == store.currentRequest.type.cover.material.id){
             this.material = element.name
             mataux2 = element

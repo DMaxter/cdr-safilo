@@ -11,6 +11,8 @@ open class Material {
     @Column(unique = true)
     open lateinit var name: String
 
+    open var obsolete: Boolean = false
+
     @ManyToMany(fetch = FetchType.EAGER)
     open var additionalFinishings: MutableSet<Finishing> = mutableSetOf()
 

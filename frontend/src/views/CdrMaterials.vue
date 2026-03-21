@@ -206,23 +206,29 @@
                   v-model = mandatoryFinishGroups
                 ></v-select>
                 </v-col>
-              <v-col
-                cols="8"
-                v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
-              >
-              <v-select
-                  :items=availableFinishes
-                  label="Acabamentos adicionais"
-                  required
-                  multiple
-                  v-model = mandatoryFinishes
-                ></v-select>
+                <v-col
+                  cols="8"
+                  v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
+                >
+                <v-select
+                    :items=availableFinishes
+                    label="Acabamentos adicionais"
+                    required
+                    multiple
+                    v-model = mandatoryFinishes
+                  ></v-select>
                 </v-col>
-              <v-col
-                cols="8"
-                v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
-              >
-                <v-btn
+                <v-col
+                  cols="8"
+                  v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
+                >
+                  <v-checkbox label="Obsoleto?" v-model="materialObsolete"></v-checkbox>
+                </v-col>
+                <v-col
+                  cols="8"
+                  v-show="selected && !added2 && !failed2 && !toDelete && !toDelete2"
+                >
+                  <v-btn
                   class="mx-2 customGradient"
                   fab
                   dark
@@ -241,7 +247,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog1 = false; selected = false; picked = null; toDelete = false, toDelete2 = false;"
+            @click="dialog1 = false; selected = false; picked = null; toDelete = false, toDelete2 = false; materialObsolete = false;"
           >
             Voltar
           </v-btn>
@@ -967,6 +973,7 @@ data () {
         pickedFinishes: [],
         mandatoryFinishes: [],
         mandatoryFinishGroups: [],
+        materialObsolete: false,
       }
     },
 
@@ -1043,6 +1050,7 @@ methods: {
       })
       this.mandatoryFinishes = lista
       this.newMaterialName = this.picked
+      this.materialObsolete = materi.obsolete
       console.log(this.mandatoryFinishGroups)
     },
 
@@ -1250,7 +1258,7 @@ methods: {
           if(this.mandatoryFinishGroups.includes(finish.name))
           finishGroupToUse.push({id: finish.id})
         })
-        var matToAdd = {id: id, name: this.newMaterialName, mandatoryFinishings: finishGroupToUse, additionalFinishings: finishToUse}
+        var matToAdd = {id: id, name: this.newMaterialName, obsolete: this.materialObsolete, mandatoryFinishings: finishGroupToUse, additionalFinishings: finishToUse}
         console.log(matToAdd)
         await Backend.updateMaterial(matToAdd)
         this.added2 = true

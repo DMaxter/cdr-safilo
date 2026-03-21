@@ -43,6 +43,7 @@ class MaterialService {
 
         val material = Material()
         material.name = materialDto.name!!
+        material.obsolete = materialDto.obsolete ?: false
 
         val materialExistsUni = materialRepository.exists(material.name)
         val finishingGroupUni =
@@ -198,6 +199,7 @@ class MaterialService {
                                     }
 
                                     material.name = materialDto.name!!
+                                    material.obsolete = materialDto.obsolete ?: false
                                     material.mandatoryFinishings = groups
                                     material.additionalFinishings = finishings
 

@@ -376,7 +376,7 @@ export default {
   getMaterials: async function () {
       try {
         this.allMaterials = await Backend.getMaterials()
-        this.allMaterials.forEach(element => {
+        this.allMaterials.filter(m => !m.obsolete).forEach(element => {
           this.materials.push(element.name)
         });
         console.log(this.materials)

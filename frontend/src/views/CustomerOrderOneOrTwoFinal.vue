@@ -305,7 +305,7 @@ export default {
       this.oneFace = false
     }
     this.allMaterials = await Backend.getMaterials()
-    this.allMaterials.forEach(material => {
+    this.allMaterials.filter(m => !m.obsolete).forEach(material => {
       if(material.id == this.request.type.cover.material.id){
         this.materiales.push(material.name)
       }

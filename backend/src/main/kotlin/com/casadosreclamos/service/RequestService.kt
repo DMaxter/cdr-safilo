@@ -780,6 +780,10 @@ class RequestService {
                         )
 
                         throw InvalidIdException("material")
+                    } else if (material.obsolete) {
+                        logger.error("Material with ID ${slotDto.material!!.id!!} is obsolete")
+
+                        throw ObsoleteObjectException("material")
                     } else if ((slotDto.finishings != null &&
                                     slotDto.finishings!!.isNotEmpty() &&
                                     finishings.isNullOrEmpty()) || price == null

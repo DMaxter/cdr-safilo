@@ -281,7 +281,7 @@ export default {
   }),
   async created () {
     this.allMaterials = await Backend.getMaterials()
-        this.allMaterials.forEach(element => {
+        this.allMaterials.filter(m => !m.obsolete).forEach(element => {
           this.items2.push(element.name)
         });
     var profile = await Backend.getProfile()

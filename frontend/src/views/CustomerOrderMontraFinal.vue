@@ -513,7 +513,7 @@ export default {
     await this.getRequestPrice()
     console.log(this.store)
     console.log(this.totalPrice)
-    this.allMaterials = await Backend.getMaterials()
+    this.allMaterials = (await Backend.getMaterials()).filter(m => !m.obsolete)
     var cena = store.isActive4 ? 4 : 5
     for (var j = 0; j < cena; j++){
       var a = this.allMaterials.filter(y => y.id == store.selectedMaterial[j])[0].name
