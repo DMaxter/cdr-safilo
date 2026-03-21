@@ -1,9 +1,9 @@
-FROM openjdk:17-jdk-slim AS build-stage
+FROM eclipse-temurin:17-jdk AS build-stage
 WORKDIR /app
 COPY . ./
 RUN ./gradlew quarkusBuild --no-daemon
 
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jre
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=build-stage /app/build/quarkus-app /app/
