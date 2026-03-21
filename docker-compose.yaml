@@ -40,7 +40,7 @@ services:
       - app-network
 
   database:
-    image: mysql:latest
+    image: mysql:8
     environment:
       MYSQL_DATABASE: db
       MYSQL_USER: user
