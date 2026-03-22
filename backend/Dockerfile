@@ -10,6 +10,7 @@ COPY --from=build-stage /app/build/quarkus-app /app/
 RUN openssl genrsa -out /app/priv.pem 8192 \
     && openssl rsa -in /app/priv.pem -pubout -out /app/pub.pem
 ENV SMALLRYE_JWT_SIGN_KEY_LOCATION=/app/priv.pem
+RUN mkdir /safilo
 EXPOSE 8080
 CMD ["java", "-jar", "quarkus-run.jar"]
 

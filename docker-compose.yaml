@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile
     environment:
       DOMAIN_NAME: localhost
-      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://database:3306/db
+      QUARKUS_DATASOURCE_REACTIVE_URL: mysql://database:3306/safilo
       QUARKUS_DATASOURCE_USERNAME: root
       QUARKUS_DATASOURCE_PASSWORD: test
       SMALLRYE_JWT_SIGN_KEY_LOCATION: /app/priv.pem
@@ -29,6 +29,13 @@ services:
       QUARKUS_MAILER_FROM: cdr@gmail.com
       CDR_EMAILS: cdr@gmail.com
       CDR_CANCEL_EMAILS: cdr@gmail.com
+      # Fema
+      QUARKUS_REST_CLIENT_FEMA_EXPEDITIONS_URL: http://fema-mock:9091/FemaMock
+      QUARKUS_SCHEDULER_CRON_TYPE: unix
+      FEMA_REPORT_CRON: "00 19 * * 1-5"
+      FEMA_REPORT_EMAILS: reports-safilo@test.com
+      FEMA_USERNAME: TESTUSER
+      FEMA_PASSWORD: TESTPASS
     ports:
       - "8080:8080"
     depends_on:
@@ -42,9 +49,7 @@ services:
   database:
     image: mysql:8
     environment:
-      MYSQL_DATABASE: db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: safilo
       MYSQL_ROOT_PASSWORD: test
     volumes:
       - db_data:/var/lib/mysql
@@ -61,6 +66,12 @@ services:
      - "8025:8025"
     networks:
      - app-network
+  fema-mock:
+    build:
+      context: ./mock-fema
+      dockerfile: Dockerfile
+    networks:
+      - app-network
 networks:
   app-network:
 
