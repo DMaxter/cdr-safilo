@@ -150,7 +150,7 @@
                   <v-dialog v-model="dialog2" persistent content-class="rounded-0" max-width="500px">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn height="50" width="150" class="mt-11 customGradient" dark tile v-bind="attrs" v-on="on"
-                        @click="added = false; failed = false"> <span style="font-size: 11px;">Carregar Clientes
+                        @click="added = false; failed = false; errorMsg = ''"> <span style="font-size: 11px;">Carregar Clientes
                         </span></v-btn>
                     </template>
                     <v-card tile>
@@ -159,7 +159,7 @@
                       </v-card-title>
                       <div align="center">
                         <span class="text-h5" v-show="added"> Clientes carregados com sucesso! </span>
-                        <span class="text-h5" v-show="failed"> Ocorreu um erro a carregar os Clientes </span>
+                        <span class="text-h5" v-show="failed"> Ocorreu um erro a carregar os Clientes:<br>{{ errorMsg }}</span>
                         <v-img :src="myImage2" v-show="!added && !failed" contain height="60px" width="60px"
                           class="mb-6 mt-3" style="cursor:pointer;" @click.stop="handleFileImport"></v-img>
                         <input ref="uploader" class="d-none" type="file" name="file" @change="onFileChanged">
@@ -173,7 +173,7 @@
 
                       <v-card-actions class="justify-center">
                         <v-btn color="blue darken-1" text
-                          @click="dialog2 = false; fileSelected = false; changeSelectedFile()">
+                          @click="dialog2 = false; fileSelected = false; changeSelectedFile(); errorMsg = ''">
                           Voltar
                         </v-btn>
                         <v-btn color="blue darken-1" text v-show="fileSelected && !added && !failed"
@@ -193,7 +193,7 @@
                   <v-dialog v-model="dialog1" persistent content-class="rounded-0" max-width="500px">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn height="50" width="145" class="mb-3 mt-11 ml-3 customGradient" dark tile v-bind="attrs"
-                        v-on="on" @click="added = false; failed = false;"> <span style="font-size: 11px;">Adicionar
+                        v-on="on" @click="added = false; failed = false; errorMsg = '';"> <span style="font-size: 11px;">Adicionar
                           Cliente </span></v-btn>
                     </template>
                     <v-card tile>
@@ -204,7 +204,7 @@
                         <v-container>
                           <v-row justify="center">
                             <span class="text-h5" v-show="added"> Cliente adicionada com sucesso! </span>
-                            <span class="text-h5" v-show="failed"> Ocorreu um erro a adicionar o Cliente </span>
+                            <span class="text-h5" v-show="failed"> Ocorreu um erro a adicionar o Cliente:<br>{{ errorMsg }}</span>
                             <v-col cols="6" v-show="!added && !failed" class="pb-0">
                               <v-text-field label="Código do cliente" required v-model="clientCode"></v-text-field>
                             </v-col>
@@ -243,7 +243,7 @@
                         </v-container>
                       </v-card-text>
                       <v-card-actions class="justify-center">
-                        <v-btn hide-details color="blue darken-1" text @click="dialog1 = false; clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null">
+                        <v-btn hide-details color="blue darken-1" text @click="dialog1 = false; clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null; errorMsg = ''">
                           Voltar
                         </v-btn>
                         <v-btn hide-details color="blue darken-1" text v-show="!added && !failed" @click="addClient();  clientCode = null; clientName = null; clientAddress = null; clientEmail = null; clientNIF = null; clientBanner = null; clientPhone = null; clientPostalCode = null; clientCity = null; clientCountry = null;">
@@ -310,6 +310,7 @@ export default {
       fileSelected: false,
       added: false,
       failed: false,
+      errorMsg: '',
       dessertFilterValue: '',
       file: null,
       store,
@@ -403,11 +404,11 @@ export default {
         this.added = true
       } catch (error) {
         this.failed = true
-        // TODO: Show something
+        this.errorMsg = error.message
         console.error(error)
       }
     },
-  
+
     getSpecificClient(item) {
       this.allClients.forEach(element => {
         if (item.name == element.name) {
@@ -424,7 +425,7 @@ export default {
         this.added = true
       } catch (error) {
         this.failed = true
-        // TODO: Show something
+        this.errorMsg = error.message
         console.error(error)
       }
     },
@@ -434,7 +435,7 @@ export default {
         this.added = true
       } catch (error) {
         this.failed = true
-        // TODO: Show something
+        this.errorMsg = error.message
         console.error(error)
       }
     }

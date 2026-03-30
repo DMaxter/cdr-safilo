@@ -27,4 +27,8 @@ class ClientRepository : PanacheRepository<Client> {
     override fun streamAll(): Multi<Client> {
         return stream("SELECT DISTINCT c FROM Client c LEFT JOIN FETCH c.images")
     }
+
+    fun exists(id: Long): Uni<Boolean> {
+        return count("id = ?1", id).onItem().transform { count -> count > 0 }
+    }
 }

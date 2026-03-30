@@ -47,7 +47,8 @@ class ClientService {
             InvalidFiscalNumberException::class,
             InvalidPhoneException::class,
             InvalidAddressException::class,
-            InvalidPostalCodeException::class
+            InvalidPostalCodeException::class,
+            AlreadyExistsException::class
     )
     fun add(clientDto: ClientDto): Uni<Client> {
         logger.info("Registering client $clientDto")
@@ -120,12 +121,20 @@ class ClientService {
             client.banner = banner
 
             Panache.withTransaction {
-                clientRepository
-                        .persist(client)
-                        .onItem()
-                        .invoke { _ -> logger.info("Successfully registered client") }
-                        .onFailure()
-                        .invoke { e -> logger.error("Couldn't create client: $e") }
+                clientRepository.exists(clientDto.id!!).onItem().transformToUni { exists ->
+                    return@transformToUni if (exists) {
+                        logger.error("A client with ID ${clientDto.id} is already registered")
+
+                        throw AlreadyExistsException("Cliente")
+                    } else {
+                        clientRepository
+                                .persist(client)
+                                .onItem()
+                                .invoke { _ -> logger.info("Successfully registered client") }
+                                .onFailure()
+                                .invoke { e -> logger.error("Couldn't create client: $e") }
+                    }
+                }
             }
         }
     }
