@@ -39,7 +39,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Backend Build"
+          GITHUB_JOB_NAME: "Backend build starting"
           GITHUB_JOB_STATUS: ${{ job.status }}
 
       - name: "Download repository"
@@ -78,7 +78,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Backend Build Failure"
+          GITHUB_JOB_NAME: "Backend build failed"
           GITHUB_JOB_STATUS: ${{ job.status }}
 
   build_frontend:
@@ -94,7 +94,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Frontend Build"
+          GITHUB_JOB_NAME: "Frontend build starting"
           GITHUB_JOB_STATUS: ${{ job.status }}
 
       - name: "Download repository"
@@ -130,7 +130,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Frontend Build Failure"
+          GITHUB_JOB_NAME: "Frontend build failed"
           GITHUB_JOB_STATUS: ${{ job.status }}
   proxy:
     runs-on: ubuntu-latest
@@ -188,7 +188,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Start Deploy"
+          GITHUB_JOB_NAME: "Deployment started"
           GITHUB_JOB_STATUS: ${{ job.status }}
 
       - name: Download artifacts
@@ -214,7 +214,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Deploy Failed"
+          GITHUB_JOB_NAME: "Deployment failed"
           GITHUB_JOB_STATUS: ${{ job.status }}
 
       - name: "Notify Discord - Deploy Success"
@@ -223,6 +223,6 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Deploy Success"
+          GITHUB_JOB_NAME: "Deployment successful"
           GITHUB_JOB_STATUS: ${{ job.status }}
 
