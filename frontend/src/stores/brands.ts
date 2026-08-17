@@ -77,7 +77,7 @@ export const useBrandStore = defineStore("brandStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -105,7 +105,7 @@ export const useBrandStore = defineStore("brandStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -133,7 +133,7 @@ export const useBrandStore = defineStore("brandStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -160,7 +160,7 @@ export const useBrandStore = defineStore("brandStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -188,7 +188,7 @@ export const useBrandStore = defineStore("brandStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -215,7 +215,7 @@ export const useBrandStore = defineStore("brandStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -254,7 +254,7 @@ export const useBrandStore = defineStore("brandStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }

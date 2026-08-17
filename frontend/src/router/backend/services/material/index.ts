@@ -19,3 +19,7 @@ export async function updateMaterial(material: Material): Promise<AxiosResponse<
 export async function deleteMaterial(id: number): Promise<AxiosResponse<null | Error>> {
   return await http.delete(`/material/${id}`);
 }
+
+export async function makeObsolete(id: number): Promise<AxiosResponse<null | Error>> {
+  return await http.put(`/material/obsolete/${id}`);
+}

@@ -63,6 +63,7 @@ const managingPlafond = ref(false);
 const selectedUser = ref<User>(new User());
 
 const userStore = useUserStore();
+const toast = useToast();
 
 const filters = ref({
   name: { value: null, matchMode: FilterMatchMode.CONTAINS },

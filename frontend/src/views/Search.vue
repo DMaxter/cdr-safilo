@@ -187,12 +187,12 @@ const summary = ref(false);
 
 const states = statusItems;
 
-const filters = ref({
+const filters = ref<Record<string, { value: unknown; matchMode: string }>>({
   id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   status: { value: null, matchMode: FilterMatchMode.IN },
   "client.name": { value: null, matchMode: FilterMatchMode.IN },
   user: { value: null, matchMode: FilterMatchMode.IN },
-  created: { value: null, matchMode: FilterMatchMode.DATE_BETWEEN },
+  created: { value: null, matchMode: "between" },
   cost: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
@@ -287,7 +287,7 @@ function confirmCancel(request: Request) {
   selectedRequestId.value = request.id;
 
   confirm.require({
-    message: `Tem a certeza que pretende cancelar o pedido ${selectedRequest.value.id} efetuado por ${selectedRequest.value.user} para o cliente ${selectedRequest.value.client.name}?`,
+    message: `Tem a certeza que pretende cancelar o pedido ${selectedRequest.value.id} efetuado por ${selectedRequest.value.user} para o cliente ${selectedRequest.value.client?.name ?? "Desconhecido"}?`,
     header: "Confirmar cancelamento de pedido",
     rejectProps: {
       label: "Abortar cancelamento",
@@ -307,7 +307,7 @@ function updateFilterURL() {
   let query: LocationQueryRaw = {};
 
   for (const key in filters.value) {
-    const filter = filters.value[key];
+    const filter = (filters.value as Record<string, { value: unknown; matchMode: string }>)[key];
     if (
       filter.value !== null &&
       filter.value !== "" &&
@@ -320,7 +320,7 @@ function updateFilterURL() {
       } else if (key === "status" && Array.isArray(filter.value)) {
         query[key] = filter.value.map((s: Status) => s.toString());
       } else {
-        query[key] = filter.value;
+        query[key] = String(filter.value);
       }
     }
   }

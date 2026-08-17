@@ -10,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Image } from "@router/backend/services/image/types";
+
 const props = defineProps<{
   options?: any;
   multiple?: boolean;

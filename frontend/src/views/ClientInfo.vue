@@ -62,15 +62,15 @@ const client = ref<Client>(new Client());
 
 if (route.query.id) {
   try {
-    let id = new Number(route.query.id);
+    let id = Number(route.query.id);
 
     if (isNaN(id)) {
       throw Error();
     }
 
-    const response = await clientStore.getClient(id.valueOf())!;
+    const response = await clientStore.getClient(id);
     if (response.success) {
-      client.value = response.content;
+      client.value = response.content as Client;
     } else {
       toast.add({
         severity: "error",
@@ -96,9 +96,9 @@ if (route.query.id) {
 
 async function addImages(files: File[]) {
   try {
-    const response = await clientStore.uploadImages(client.value.id, files);
+    const response = await clientStore.uploadImages(client.value.id as number, files);
     if (!response.success) {
-      throw Error(response.content);
+      throw Error(response.content as string);
     }
 
     toast.add({
@@ -121,11 +121,11 @@ async function addImages(files: File[]) {
 async function deleteImages(images: Image[]) {
   try {
     const response = await clientStore.deleteImages(
-      client.value.id,
+      client.value.id as number,
       images.map((i) => i.id),
     );
     if (!response.success) {
-      throw Error(response.content);
+      throw Error(response.content as string);
     }
     toast.add({
       severity: "success",

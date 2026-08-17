@@ -50,10 +50,8 @@ const props = defineProps<{
 const manageSafilo = authStore.isSafilo() || authStore.isAdmin();
 
 const credits = computed(() =>
-  props.credits.map((c) => {
-    c.plafond = c.amount.toFixed(2);
-
-    return c;
+  (props.credits ?? []).map((c) => {
+    return { ...c, plafond: c.amount.toFixed(2) };
   }),
 );
 

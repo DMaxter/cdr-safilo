@@ -27,7 +27,7 @@ const clientStore = useClientStore();
 const toast = useToast();
 
 async function edit() {
-  const response = await clientStore.editNote(props.client.id, props.client.note);
+  const response = await clientStore.editNote(props.client.id as number, props.client.note);
 
   if (response.success) {
     toast.add({
