@@ -82,7 +82,7 @@
       <P-Button @click="refresh">Atualizar</P-Button>
       <P-Button v-if="canManage" @click="addClient">Adicionar Cliente</P-Button>
       <P-Button v-if="canManage" @click="showUpload">Carregar Clientes</P-Button>
-      <P-Button @click="getRequests()">Descarregar pedidos</P-Button>
+      <P-Button @click="refresh()">Descarregar pedidos</P-Button>
       <FileUpload
         v-if="canManage"
         v-model="uploading"
@@ -102,7 +102,7 @@
 import { FilterMatchMode } from "@primevue/core/api";
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, reactive, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 
 import { Client } from "@router/backend/services/client/types";
 import { useAuthStore } from "@stores/auth";
@@ -120,9 +120,9 @@ const authStore = useAuthStore();
 const clientStore = useClientStore();
 const toast = useToast();
 
-const ids = reactive([]); // TODO: REMOVE
+const ids: unknown[] = reactive([]); // TODO: REMOVE
 const banners = computed(() => [...new Set(clientStore.clients.map((c) => c.banner))]);
-const cities = reactive([]); // TODO: REMOVE
+const cities: unknown[] = reactive([]); // TODO: REMOVE
 
 const searchValue = ref(""); // TODO: REMOVE
 
@@ -168,7 +168,7 @@ async function addClient() {
 }
 
 // FIXME: UPDATE TO USE NEW VALUES
-const searchFilter = reactive({
+const searchFilter = reactive<Record<string, unknown[]>>({
   id: [],
   banner: [],
   name: [],
@@ -181,36 +181,37 @@ if (route.query.id) {
       return Number(id);
     } catch (e) {
       console.error("Invalid request id");
+      return undefined;
     }
-  });
+  }).filter((id): id is number => id !== undefined);
 }
 if (route.query.banner) {
-  searchFilter["banner"] = [route.query.banner].flat();
+  searchFilter["banner"] = [route.query.banner].flat().filter((v): v is string => v !== null);
 }
 if (route.query.name) {
-  searchFilter["name"] = [route.query.name].flat();
+  searchFilter["name"] = [route.query.name].flat().filter((v): v is string => v !== null);
 }
 if (route.query.city) {
-  searchFilter["city"] = [route.query.city].flat();
+  searchFilter["city"] = [route.query.city].flat().filter((v): v is string => v !== null);
 }
 
 function updateFilterURL() {
-  let query = {};
+  let query: Record<string, unknown> = {};
 
-  if (searchFilter["id"]) {
+  if (searchFilter["id"]?.length) {
     query["id"] = searchFilter["id"];
   }
-  if (searchFilter["banner"]) {
+  if (searchFilter["banner"]?.length) {
     query["banner"] = searchFilter["banner"];
   }
-  if (searchFilter["name"]) {
+  if (searchFilter["name"]?.length) {
     query["name"] = searchFilter["name"];
   }
-  if (searchFilter["city"]) {
+  if (searchFilter["city"]?.length) {
     query["city"] = searchFilter["city"];
   }
 
-  router.push({ query: query });
+  router.push({ query: query as LocationQueryRaw });
 }
 // END FIXME:
 

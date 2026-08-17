@@ -161,7 +161,7 @@
               </div>
               <div class="col-span-6">
                 <P-FloatLabel class="field" variant="on">
-                  <P-InputText fluid id="address" v-model="waybill.destination.address.address" />
+                  <P-InputText fluid id="address" v-model="waybill.destination.address.street" />
                   <label for="address">Morada</label>
                 </P-FloatLabel>
               </div>
@@ -261,7 +261,7 @@ async function loadServices() {
     try {
       const { status, data } = await API.waybill.getShippingServices(props.request.id);
       if (status === 200) {
-        services.value = data;
+        services.value = data as Service[];
       } else {
         toast.add({
           severity: "error",

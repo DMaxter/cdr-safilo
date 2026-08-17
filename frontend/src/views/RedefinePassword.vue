@@ -70,7 +70,7 @@ if (!route.query.token) {
 async function changePassword() {
   if (passwordsMatch.value) {
     try {
-      await authStore.changePasswordWithToken(route.query.email, password.value, route.query.token);
+      await authStore.changePasswordWithToken(route.query.email as string, password.value, route.query.token as string);
 
       toast.add({
         severity: "success",

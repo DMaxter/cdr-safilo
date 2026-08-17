@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { API } from "@router/backend";
-import type { APIResponse } from "@router/backend/types";
+import type { Error, APIResponse } from "@router/backend/types";
 import { User } from "@router/backend/services/user/types";
 
 export const useUserStore = defineStore("userStore", () => {
@@ -27,17 +27,17 @@ export const useUserStore = defineStore("userStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -58,21 +58,22 @@ export const useUserStore = defineStore("userStore", () => {
         }
         return {
           success: true,
+          content: null,
         };
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }

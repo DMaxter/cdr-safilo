@@ -104,7 +104,7 @@ async function addImage(link: string) {
 
     const response = await brandStore.addBrandImage(selectedBrand.value.id, final_link);
     if (!response.success) {
-      throw Error(response.content);
+      throw Error(response.content as string);
     }
 
     toast.add({
@@ -129,7 +129,7 @@ async function obsoleteImage(image: Image) {
   try {
     const response = await brandStore.makeImageObsolete(image.id);
     if (!response.success) {
-      throw Error(response.content);
+      throw Error(response.content as string);
     }
 
     toast.add({

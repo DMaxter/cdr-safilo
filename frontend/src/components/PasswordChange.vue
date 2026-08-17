@@ -63,9 +63,9 @@ const repeatPasswordRules = [
   (value: string) => value == newPassword.value || "Palavras-passe não são iguais!",
 ];
 
-const currentRef = useTemplateRef<string>("current");
-const newRef = useTemplateRef<string>("new");
-const repeatRef = useTemplateRef<string>("repeat");
+const currentRef = useTemplateRef<{ value: { isValid: boolean } }>("current");
+const newRef = useTemplateRef<{ value: { isValid: boolean } }>("new");
+const repeatRef = useTemplateRef<{ value: { isValid: boolean } }>("repeat");
 
 const canChangePassword = computed(() => checkAllRefsValid([currentRef, newRef, repeatRef]));
 

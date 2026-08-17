@@ -4,59 +4,40 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
-import { Login } from "@router/backend/services/auth/types";
-import { getRole, Role, User } from "@router/backend/services/user/types";
+import { Material } from "@router/backend/services/material/types";
 
-export const useAuthStore = defineStore("authStore", () => {
-  const logged = ref<User | null>(null);
+export const useMaterialStore = defineStore("materialStore", () => {
+  const materials = ref<Material[]>([]);
 
-  function hasRole(role: string): boolean {
-    if (logged.value) {
-      return logged.value!.roles.includes(getRole(role) as Role);
-    } else {
-      return false;
-    }
+  function init(data: Material[]) {
+    materials.value = data;
   }
 
-  async function isLoggedIn(): Promise<boolean> {
+  function add(material: Material) {
+    materials.value.push(material);
+  }
+
+  function _update(material: Material) {
+    const index = materials.value.findIndex((m) => m.id === material.id);
+
+    if (index === -1) {
+      console.error(`Material ${material.id} not in store`);
+      return;
+    }
+
+    materials.value[index] = material;
+  }
+
+  function remove(id: number) {
+    materials.value = materials.value.filter((m) => m.id !== id);
+  }
+
+  async function getMaterials(): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.users.getUserInfo();
+      const { status, data } = await API.materials.getAllMaterials();
 
       if (status === 200) {
-        logged.value = data as unknown as User;
-
-        return true;
-      }
-
-      return false;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  function isSafilo(): boolean {
-    return hasRole(Role.MANAGER);
-  }
-
-  function isAdmin(): boolean {
-    return hasRole(Role.ADMIN);
-  }
-
-  function isCdr(): boolean {
-    return hasRole(Role.CDR);
-  }
-
-  function isCommercial(): boolean {
-    return hasRole(Role.COMMERCIAL);
-  }
-
-  async function login(request: Login): Promise<APIResponse<null | string>> {
-    try {
-      const { status, data } = await API.auth.login(request);
-
-      if (status === 200) {
-        logged.value = data as unknown as User;
-
+        init(data as Material[]);
         return {
           success: true,
           content: null,
@@ -64,13 +45,12 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -79,27 +59,26 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function logout(): Promise<APIResponse<null | string>> {
+  async function addMaterial(material: Material): Promise<APIResponse<Material | string>> {
     try {
-      const { status, data } = await API.auth.logout();
+      const { status, data } = await API.materials.addMaterial(material);
 
       if (status === 200) {
-        logged.value = null;
-
+        const newMaterial = new Material(data as Material);
+        add(newMaterial);
         return {
           success: true,
-          content: null,
+          content: newMaterial,
         };
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -108,25 +87,26 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function sendRecoveryEmail(email: string): Promise<APIResponse<null | string>> {
+  async function editMaterial(material: Material): Promise<APIResponse<Material | string>> {
     try {
-      const { status, data } = await API.auth.sendToken(email);
+      const { status, data } = await API.materials.updateMaterial(material);
 
       if (status === 200) {
+        const updatedMaterial = new Material(data as Material);
+        _update(updatedMaterial);
         return {
           success: true,
-          content: null,
+          content: updatedMaterial,
         };
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -135,14 +115,12 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function changePassword(
-    old: string,
-    password: string,
-  ): Promise<APIResponse<null | string>> {
+  async function deleteMaterial(id: number): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.users.changePassword(old, password);
+      const { status, data } = await API.materials.deleteMaterial(id);
 
       if (status === 200) {
+        remove(id);
         return {
           success: true,
           content: null,
@@ -150,13 +128,12 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -165,15 +142,18 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function changePasswordWithToken(
-    username: string,
-    password: string,
-    token: string,
-  ): Promise<APIResponse<null | string>> {
+  async function makeMaterialObsolete(id: number): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.auth.changePassword(username, password, token);
+      const { status, data } = await API.materials.makeObsolete(id);
 
       if (status === 200) {
+        const material = materials.value.find((m) => m.id === id);
+        if (material) {
+          material.obsolete = true;
+        } else {
+          console.error(`Material ${id} not found in store`);
+        }
+
         return {
           success: true,
           content: null,
@@ -181,13 +161,12 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -197,16 +176,11 @@ export const useAuthStore = defineStore("authStore", () => {
   }
 
   return {
-    logged,
-    changePassword,
-    login,
-    logout,
-    isLoggedIn,
-    isAdmin,
-    isCdr,
-    isCommercial,
-    isSafilo,
-    sendRecoveryEmail,
-    changePasswordWithToken,
+    materials,
+    getMaterials,
+    addMaterial,
+    editMaterial,
+    deleteMaterial,
+    makeMaterialObsolete,
   };
 });

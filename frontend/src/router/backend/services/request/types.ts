@@ -51,15 +51,15 @@ export class Request {
   }
 
   getFinishings(): string[] {
-    return this.type.getFinishings();
+    return this.type?.getFinishings() ?? [];
   }
 
   getMaterials(): string[] {
-    return this.type.getMaterials();
+    return this.type?.getMaterials() ?? [];
   }
 
   getMeasurements(): number[][] {
-    return this.type.getMeasurements();
+    return this.type?.getMeasurements() ?? [];
   }
 }
 
@@ -100,13 +100,20 @@ export class Showcase extends RequestType {
   getFinishings(): string[] {
     let result: Set<string> = new Set();
 
-    result = result.union(this.top.getFinishings());
-    result = result.union(this.bottom.getFinishings());
-    result = result.union(this.left.getFinishings());
-    result = result.union(this.right.getFinishings());
-
-    if (this.side !== null) {
-      result = result.union(this.side.getFinishings());
+    if (this.top) {
+      for (const f of this.top.getFinishings()) result.add(f);
+    }
+    if (this.bottom) {
+      for (const f of this.bottom.getFinishings()) result.add(f);
+    }
+    if (this.left) {
+      for (const f of this.left.getFinishings()) result.add(f);
+    }
+    if (this.right) {
+      for (const f of this.right.getFinishings()) result.add(f);
+    }
+    if (this.side) {
+      for (const f of this.side.getFinishings()) result.add(f);
     }
 
     return Array.from(result);
@@ -115,29 +122,23 @@ export class Showcase extends RequestType {
   getMaterials(): string[] {
     let result: Set<string> = new Set();
 
-    result.add(this.top.getMaterial());
-    result.add(this.bottom.getMaterial());
-    result.add(this.left.getMaterial());
-    result.add(this.right.getMaterial());
-
-    if (this.side) {
-      result.add(this.side.getMaterial());
-    }
+    if (this.top) result.add(this.top.getMaterial());
+    if (this.bottom) result.add(this.bottom.getMaterial());
+    if (this.left) result.add(this.left.getMaterial());
+    if (this.right) result.add(this.right.getMaterial());
+    if (this.side) result.add(this.side.getMaterial());
 
     return Array.from(result);
   }
 
   getMeasurements(): number[][] {
-    let result = [];
+    let result: number[][] = [];
 
-    result.push(this.top.getMeasurements());
-    result.push(this.bottom.getMeasurements());
-    result.push(this.left.getMeasurements());
-    result.push(this.right.getMeasurements());
-
-    if (this.side) {
-      result.push(this.side.getMeasurements());
-    }
+    if (this.top) result.push(this.top.getMeasurements());
+    if (this.bottom) result.push(this.bottom.getMeasurements());
+    if (this.left) result.push(this.left.getMeasurements());
+    if (this.right) result.push(this.right.getMeasurements());
+    if (this.side) result.push(this.side.getMeasurements());
 
     return result;
   }
@@ -154,15 +155,15 @@ export class OneFace extends RequestType {
   }
 
   getFinishings(): string[] {
-    return Array.from(this.cover.getFinishings());
+    return this.cover ? Array.from(this.cover.getFinishings()) : [];
   }
 
   getMaterials(): string[] {
-    return [this.cover.getMaterial()];
+    return this.cover ? [this.cover.getMaterial()] : [];
   }
 
   getMeasurements(): number[][] {
-    return [this.cover.getMeasurements()];
+    return this.cover ? [this.cover.getMeasurements()] : [];
   }
 }
 
@@ -181,8 +182,12 @@ export class TwoFaces extends RequestType {
   getFinishings(): string[] {
     let result: Set<string> = new Set();
 
-    result = result.union(this.cover.getFinishings());
-    result = result.union(this.back.getFinishings());
+    if (this.cover) {
+      for (const f of this.cover.getFinishings()) result.add(f);
+    }
+    if (this.back) {
+      for (const f of this.back.getFinishings()) result.add(f);
+    }
 
     return Array.from(result);
   }
@@ -190,14 +195,17 @@ export class TwoFaces extends RequestType {
   getMaterials(): string[] {
     let result: Set<string> = new Set();
 
-    result.add(this.cover.getMaterial());
-    result.add(this.back.getMaterial());
+    if (this.cover) result.add(this.cover.getMaterial());
+    if (this.back) result.add(this.back.getMaterial());
 
     return Array.from(result);
   }
 
   getMeasurements(): number[][] {
-    return [this.cover.getMeasurements(), this.back.getMeasurements()];
+    const result: number[][] = [];
+    if (this.cover) result.push(this.cover.getMeasurements());
+    if (this.back) result.push(this.back.getMeasurements());
+    return result;
   }
 }
 
@@ -233,11 +241,11 @@ export class RequestSlot {
   }
 
   getMaterial(): string {
-    return this.material.name;
+    return this.material?.name ?? "";
   }
 
   getMeasurements(): number[] {
-    return [this.measurements.height, this.measurements.width];
+    return [this.measurements?.height ?? 0, this.measurements?.width ?? 0];
   }
 }
 

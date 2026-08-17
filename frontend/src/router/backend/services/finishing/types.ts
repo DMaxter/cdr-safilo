@@ -5,9 +5,9 @@ export class Finishing {
 
   constructor(obj?: Finishing) {
     if (obj) {
-      this.id = obj.id || null;
+      this.id = obj.id || 0;
       this.name = obj.name || "";
-      this.obsolete = obj.obsolete || null;
+      this.obsolete = obj.obsolete || false;
     }
   }
 }
