@@ -49,7 +49,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
-import type Image from "@router/backend/services/image/types";
+import { Image } from "@router/backend/services/image/types";
 
 const enabled = defineModel<boolean>();
 
@@ -62,7 +62,7 @@ const props = defineProps<{
   addAction?: (link: string) => void;
 }>();
 
-const selected = ref(undefined);
+const selected = ref<Image | undefined>(undefined);
 const isSelected = computed(() => selected.value !== undefined);
 
 const uploading = ref(false);
@@ -79,22 +79,30 @@ async function add() {
 }
 
 async function del() {
-  await props.deleteAction(selected.value);
+  if (props.deleteAction && selected.value) {
+    await props.deleteAction([selected.value]);
+  }
   selected.value = undefined;
 }
 
 async function obsolete() {
-  await props.obsoleteAction(selected.value);
+  if (props.obsoleteAction && selected.value) {
+    await props.obsoleteAction([selected.value]);
+  }
   selected.value = undefined;
 }
 
 async function handleAdd() {
-  await props.addAction(imageLink.value);
+  if (props.addAction) {
+    await props.addAction(imageLink.value);
+  }
   imageLink.value = "";
 }
 
 async function handleUpload(files: File[]) {
-  await props.uploadAction(files);
+  if (props.uploadAction) {
+    await props.uploadAction(files);
+  }
 }
 
 function close() {

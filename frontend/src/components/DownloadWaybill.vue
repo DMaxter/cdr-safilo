@@ -26,9 +26,9 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef } from "vue";
 
-import Backend from "@/router/backend";
+import { API } from "@/router/backend";
 import { checkAllRefsValid, required } from "@/rules";
-import LabelFormat from "@models/dto/fema/LabelFormat";
+import type { LabelFormat } from "@router/backend/services/waybill/types";
 
 const props = defineProps({
   request: {
@@ -37,10 +37,10 @@ const props = defineProps({
   },
 });
 
-const labels = await Backend.getLabelFormats();
+const labels = await API.waybill.getLabelFormats();
 
 const format = ref("");
-const formatRef = useTemplateRef<LabelFormat>("formatRef");
+const formatRef = useTemplateRef<{ value: { isValid: boolean } } | null>("formatRef");
 
 const enabled = defineModel<boolean>();
 
@@ -50,7 +50,7 @@ const canDownload = computed(() => checkAllRefsValid([formatRef]));
 
 async function download() {
   try {
-    await Backend.downloadWaybill(props.request, format.value);
+    await API.waybill.getWaybill(props.request, format.value as LabelFormat);
   } catch (error: any) {
     downloadFailure.value = true;
     console.log(error);

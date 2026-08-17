@@ -16,8 +16,9 @@ const emits = defineEmits(["click"]);
 
 const attrs = useAttrs();
 
-const aliases = {
+const aliases: Record<string, string> = {
   addImage: "add_photo_alternate",
+  archive: "archive",
   calendar: "event",
   cancel: "cancel",
   checkboxIndeterminate: "indeterminate_check_box",

@@ -7,9 +7,9 @@ export class FinishingGroup {
 
   constructor(obj?: FinishingGroup) {
     if (obj) {
-      this.id = obj.id || null;
+      this.id = obj.id || 0;
       this.name = obj.name || "";
-      this.finishings = obj.finishings ? obj.finishings.map((f) => new Finishing(f)) : null;
+      this.finishings = obj.finishings ? obj.finishings.map((f) => new Finishing(f)) : [];
     }
   }
 }

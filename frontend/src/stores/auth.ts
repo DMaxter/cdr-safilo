@@ -12,7 +12,7 @@ export const useAuthStore = defineStore("authStore", () => {
 
   function hasRole(role: string): boolean {
     if (logged.value) {
-      return logged.value!.roles.includes(getRole(role));
+      return logged.value!.roles.includes(getRole(role) as Role);
     } else {
       return false;
     }
@@ -23,7 +23,7 @@ export const useAuthStore = defineStore("authStore", () => {
       const { status, data } = await API.users.getUserInfo();
 
       if (status === 200) {
-        logged.value = data as User;
+        logged.value = data as unknown as User;
 
         return true;
       }
@@ -55,7 +55,7 @@ export const useAuthStore = defineStore("authStore", () => {
       const { status, data } = await API.auth.login(request);
 
       if (status === 200) {
-        logged.value = data as User;
+        logged.value = data as unknown as User;
 
         return {
           success: true,
@@ -64,17 +64,17 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as unknown as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -93,17 +93,17 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as unknown as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -120,17 +120,17 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as unknown as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -150,17 +150,17 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as unknown as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -181,17 +181,17 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as unknown as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }

@@ -53,7 +53,7 @@ const items = ref([
     label: "Configurar",
     icon: "settings",
     route: "configure",
-    display: computed(() => authStore.isSafilo() || authStore.isAdmin()),
+    display: computed(() => authStore.isSafilo() || authStore.isAdmin() || authStore.isCdr()),
   },
   {
     label: "Novo Pedido",
