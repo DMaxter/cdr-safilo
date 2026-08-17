@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
+import { Client } from "@router/backend/services/client/types";
 import { Image } from "@router/backend/services/image/types";
 
 export const useClientStore = defineStore("clientStore", () => {
@@ -28,11 +29,11 @@ export const useClientStore = defineStore("clientStore", () => {
     clients.value[index] = client;
   }
 
-  function _editNote(client: number, note: string) {
-    const index = clients.value.findIndex((c) => c.id === client);
+  function _editNote(clientId: number, note: string) {
+    const index = clients.value.findIndex((c) => c.id === clientId);
 
     if (index === -1) {
-      console.error(`Client ${id} not in store`);
+      console.error(`Client ${clientId} not in store`);
       return;
     }
 
@@ -64,17 +65,17 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -93,17 +94,17 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -122,17 +123,17 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -151,41 +152,41 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
 
   async function importClients(file: File): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.clients.importClients(file);
+      const { status, data } = await API.clients.importClients(file as unknown as string);
 
       if (status === 200) {
         return await getClients();
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -196,7 +197,7 @@ export const useClientStore = defineStore("clientStore", () => {
     if (index === -1) {
       let response = await getClients();
 
-      if (response.status === false) {
+      if (!response.success) {
         return response;
       }
 
@@ -247,17 +248,17 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -283,17 +284,17 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: data as string,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
-      const _error = error as AxiosError<string>;
+      const _error = error as AxiosError<Error>;
 
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }

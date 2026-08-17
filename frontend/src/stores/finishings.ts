@@ -4,59 +4,21 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
-import { Login } from "@router/backend/services/auth/types";
-import { getRole, Role, User } from "@router/backend/services/user/types";
+import { Finishing } from "@router/backend/services/finishing/types";
 
-export const useAuthStore = defineStore("authStore", () => {
-  const logged = ref<User | null>(null);
+export const useFinishingStore = defineStore("finishingStore", () => {
+  const finishings = ref<Finishing[]>([]);
 
-  function hasRole(role: string): boolean {
-    if (logged.value) {
-      return logged.value!.roles.includes(getRole(role) as Role);
-    } else {
-      return false;
-    }
+  function init(data: Finishing[]) {
+    finishings.value = data;
   }
 
-  async function isLoggedIn(): Promise<boolean> {
+  async function getFinishings(): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.users.getUserInfo();
+      const { status, data } = await API.finishings.getAllFinishings();
 
       if (status === 200) {
-        logged.value = data as unknown as User;
-
-        return true;
-      }
-
-      return false;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  function isSafilo(): boolean {
-    return hasRole(Role.MANAGER);
-  }
-
-  function isAdmin(): boolean {
-    return hasRole(Role.ADMIN);
-  }
-
-  function isCdr(): boolean {
-    return hasRole(Role.CDR);
-  }
-
-  function isCommercial(): boolean {
-    return hasRole(Role.COMMERCIAL);
-  }
-
-  async function login(request: Login): Promise<APIResponse<null | string>> {
-    try {
-      const { status, data } = await API.auth.login(request);
-
-      if (status === 200) {
-        logged.value = data as unknown as User;
-
+        init(data as Finishing[]);
         return {
           success: true,
           content: null,
@@ -64,13 +26,12 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -79,27 +40,26 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function logout(): Promise<APIResponse<null | string>> {
+  async function addFinishing(finishing: Finishing): Promise<APIResponse<Finishing | string>> {
     try {
-      const { status, data } = await API.auth.logout();
+      const { status, data } = await API.finishings.addFinishing(finishing);
 
       if (status === 200) {
-        logged.value = null;
-
+        const newFinishing = new Finishing(data as Finishing);
+        finishings.value.push(newFinishing);
         return {
           success: true,
-          content: null,
+          content: newFinishing,
         };
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -108,25 +68,29 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function sendRecoveryEmail(email: string): Promise<APIResponse<null | string>> {
+  async function editFinishing(finishing: Finishing): Promise<APIResponse<Finishing | string>> {
     try {
-      const { status, data } = await API.auth.sendToken(email);
+      const { status, data } = await API.finishings.updateFinishing(finishing);
 
       if (status === 200) {
+        const updatedFinishing = new Finishing(data as Finishing);
+        const index = finishings.value.findIndex((f) => f.id === updatedFinishing.id);
+        if (index !== -1) {
+          finishings.value[index] = updatedFinishing;
+        }
         return {
           success: true,
-          content: null,
+          content: updatedFinishing,
         };
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -135,14 +99,12 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function changePassword(
-    old: string,
-    password: string,
-  ): Promise<APIResponse<null | string>> {
+  async function deleteFinishing(id: number): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.users.changePassword(old, password);
+      const { status, data } = await API.finishings.deleteFinishing(id);
 
       if (status === 200) {
+        finishings.value = finishings.value.filter((f) => f.id !== id);
         return {
           success: true,
           content: null,
@@ -150,13 +112,12 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -165,15 +126,18 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function changePasswordWithToken(
-    username: string,
-    password: string,
-    token: string,
-  ): Promise<APIResponse<null | string>> {
+  async function makeFinishingObsolete(id: number): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.auth.changePassword(username, password, token);
+      const { status, data } = await API.finishings.makeObsolete(id);
 
       if (status === 200) {
+        const finishing = finishings.value.find((f) => f.id === id);
+        if (finishing) {
+          finishing.obsolete = true;
+        } else {
+          console.error(`Finishing ${id} not found in store`);
+        }
+
         return {
           success: true,
           content: null,
@@ -181,13 +145,12 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: (data as Error).message,
           status: status,
         };
       }
     } catch (error) {
       const _error = error as AxiosError<Error>;
-
       return {
         success: false,
         status: _error.response?.status,
@@ -197,16 +160,11 @@ export const useAuthStore = defineStore("authStore", () => {
   }
 
   return {
-    logged,
-    changePassword,
-    login,
-    logout,
-    isLoggedIn,
-    isAdmin,
-    isCdr,
-    isCommercial,
-    isSafilo,
-    sendRecoveryEmail,
-    changePasswordWithToken,
+    finishings,
+    getFinishings,
+    addFinishing,
+    editFinishing,
+    deleteFinishing,
+    makeFinishingObsolete,
   };
 });

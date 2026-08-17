@@ -12,16 +12,16 @@ export class Waybill {
 
   constructor(obj?: Waybill) {
     if (obj) {
-      this.reference = obj.reference || undefined;
-      this.service = obj.service ? new Service(obj.service) : undefined;
-      this.source = obj.source ? new Contact(obj.source) : undefined;
-      this.destination = obj.destination ? new Contact(obj.destination) : undefined;
-      this.items = obj.items || undefined;
-      this.packaging = obj.packaging ? new PackageType(obj.packaging) : undefined;
-      this.totalWeight = obj.totalWeight || undefined;
-      this.description = obj.description || undefined;
-      this.labelFormat = obj.labelFormat || undefined;
-      this.dimensions = obj.dimensions ? new Dimensions(obj.dimensions) : undefined;
+      this.reference = obj.reference || "";
+      this.service = obj.service ? new Service(obj.service) : null;
+      this.source = obj.source ? new Contact(obj.source) : null;
+      this.destination = obj.destination ? new Contact(obj.destination) : new Contact();
+      this.items = obj.items || 0;
+      this.packaging = obj.packaging ? new PackageType(obj.packaging) : null;
+      this.totalWeight = obj.totalWeight || 0;
+      this.description = obj.description || "";
+      this.labelFormat = obj.labelFormat || null;
+      this.dimensions = obj.dimensions ? new Dimensions(obj.dimensions) : new Dimensions();
     }
   }
 }
@@ -33,9 +33,9 @@ export class Contact {
 
   constructor(obj?: Contact) {
     if (obj) {
-      this.name = obj.name || undefined;
-      this.address = obj.address ? new Address(obj.address) : undefined;
-      this.phone = obj.phone || undefined;
+      this.name = obj.name || "";
+      this.address = obj.address ? new Address(obj.address) : new Address();
+      this.phone = obj.phone || "";
     }
   }
 }
@@ -49,11 +49,11 @@ export class Address {
 
   constructor(obj?: Address) {
     if (obj) {
-      this.street = obj.street || undefined;
-      this.city = obj.city || undefined;
-      this.state = obj.state || undefined;
-      this.postalCode = obj.postalCode || undefined;
-      this.country = obj.country || undefined;
+      this.street = obj.street || "";
+      this.city = obj.city || "";
+      this.state = obj.state || "";
+      this.postalCode = obj.postalCode || "";
+      this.country = obj.country || "";
     }
   }
 }
@@ -65,9 +65,9 @@ export class Dimensions {
 
   constructor(obj?: Dimensions) {
     if (obj) {
-      this.height = obj.height || undefined;
-      this.width = obj.width || undefined;
-      this.length = obj.length || undefined;
+      this.height = obj.height || 0;
+      this.width = obj.width || 0;
+      this.length = obj.length || 0;
     }
   }
 }

@@ -228,6 +228,29 @@ class MaterialService {
                 }
     }
 
+    fun makeObsolete(id: Long): Uni<Void> {
+        return Panache.withTransaction {
+            materialRepository
+                    .findById(id)
+                    .onItem()
+                    .transformToUni { material ->
+                        if (material == null) {
+                            logger.error("Material with ID $id is not registered")
+
+                            throw InvalidIdException("material")
+                        }
+
+                        material.obsolete = true
+
+                        logger.info("Successfully marked material as obsolete")
+
+                        return@transformToUni Uni.createFrom().voidItem()
+                    }
+                    .onFailure()
+                    .invoke { e -> logger.error("Couldn't mark material as obsolete: $e") }
+        }
+    }
+
     fun find(id: Long): Uni<Material> {
         return materialRepository.findById(id)
     }

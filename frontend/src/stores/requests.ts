@@ -9,7 +9,7 @@ import { Request, Status } from "@router/backend/services/request/types";
 export const useRequestStore = defineStore("requestStore", () => {
   const requests = ref<Request[]>([]);
 
-  function init(data: any[]) {
+  function init(data: Request[]) {
     requests.value = data.map((item) => new Request(item));
   }
 
@@ -33,7 +33,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       const { status, data } = await API.requests.getAllRequests();
 
       if (status === 200) {
-        init(data as any[]);
+        init(data as Request[]);
         return {
           success: true,
           content: null,
@@ -50,7 +50,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -78,7 +78,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -105,7 +105,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -132,7 +132,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -158,7 +158,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }
@@ -184,7 +184,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message,
+        content: _error.response?.data?.message ?? "Erro desconhecido",
       };
     }
   }

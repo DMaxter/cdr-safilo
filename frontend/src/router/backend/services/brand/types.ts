@@ -8,7 +8,7 @@ export class Brand {
   constructor(obj?: Brand) {
     if (obj) {
       this.name = obj.name || "";
-      this.images = obj.images ? obj.images.map((i) => new Image(i)) : null;
+      this.images = obj.images ? obj.images.map((i) => new Image(i)) : [];
     }
   }
 }

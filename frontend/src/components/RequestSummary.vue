@@ -105,7 +105,7 @@
         @click="confirmCancel()"
         class="p-button-danger mr-2"
         v-if="
-          (canManipulate || (user.isCommercial() && request.user == user.user.name)) &&
+          (canManipulate || (authStore.isCommercial() && request.user == authStore.logged?.name)) &&
           props.request.status == Status.Ordered
         "
       ></P-Button>
@@ -202,7 +202,7 @@ function close() {
 
 function confirmCancel() {
   confirm.require({
-    message: `Tem a certeza que pretende cancelar o pedido ${props.request.id} efetuado por ${props.request.user} para o cliente ${props.request.client.name}?`,
+    message: `Tem a certeza que pretende cancelar o pedido ${props.request.id} efetuado por ${props.request.user} para o cliente ${props.request.client?.name ?? "Desconhecido"}?`,
     header: "Confirmar cancelamento de pedido",
     rejectProps: {
       label: "Abortar cancelamento",
