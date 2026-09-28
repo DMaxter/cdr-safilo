@@ -28,7 +28,7 @@
 import { RequestSlot } from "@router/backend/services/request/types";
 
 const props = defineProps<{
-  slot: RequestSlot,
-  name: string,
+  slot: RequestSlot;
+  name: string;
 }>();
 </script>

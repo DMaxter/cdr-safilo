@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
+import { getErrorMessage } from "@router/backend/errors";
 import { Finishing } from "@router/backend/services/finishing/types";
 
 export const useFinishingStore = defineStore("finishingStore", () => {
@@ -26,7 +27,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -35,7 +36,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -54,7 +55,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -63,7 +64,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -85,7 +86,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -94,7 +95,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -112,7 +113,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -121,7 +122,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -145,7 +146,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -154,7 +155,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
