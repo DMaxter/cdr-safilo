@@ -2,24 +2,24 @@
   <P-Dialog modal v-model:visible="enabled" class="w-8/10 max-w-[1000px]" fluid>
     <template #header>Materiais</template>
     <div class="h-85/100">
-    <P-DataTable
-      paginator
-      removableSort
-      filterDisplay="row"
-      :value="materialStore.materials"
-      :rows="10"
-      :rowsPerPageOptions="[5, 10, 20, 50, 100]"
-      v-model:filters="filters"
-    >
-      <template #empty>Não existem materiais registados</template>
+      <P-DataTable
+        paginator
+        removableSort
+        filterDisplay="row"
+        :value="materialStore.materials"
+        :rows="10"
+        :rowsPerPageOptions="[5, 10, 20, 50, 100]"
+        v-model:filters="filters"
+      >
+        <template #empty>Não existem materiais registados</template>
 
-      <P-Column sortable field="id" header="ID" style="width: 60px" />
-      <P-Column sortable field="name" header="Nome">
-        <template #filter="{ filterModel, filterCallback }">
-          <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
-        </template>
-      </P-Column>
-      <P-Column sortable field="obsolete" header="Estado" style="width: 120px">
+        <P-Column sortable field="id" header="ID" style="width: 60px" />
+        <P-Column sortable field="name" header="Nome">
+          <template #filter="{ filterModel, filterCallback }">
+            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
+          </template>
+        </P-Column>
+        <P-Column sortable field="obsolete" header="Estado" style="width: 120px">
           <template #body="{ data }">
             <P-Tag v-if="data.obsolete" severity="danger" value="Obsoleto" />
             <P-Tag v-else severity="success" value="Ativo" />
@@ -33,14 +33,20 @@
               @click="confirmObsolete(data)"
               v-tooltip="'Marcar como obsoleto'"
             />
-            <Icon icon="edit" @click="openMaterialManagement(data, ManageMode.Edit)" v-tooltip="'Editar material'" />
+            <Icon
+              icon="edit"
+              @click="openMaterialManagement(data, ManageMode.Edit)"
+              v-tooltip="'Editar material'"
+            />
             <Icon icon="delete" @click="confirmDeletion(data)" v-tooltip="'Eliminar material'" />
           </template>
         </P-Column>
-    </P-DataTable>
+      </P-DataTable>
     </div>
     <template #footer>
-      <P-Button text @click="openMaterialManagement(new Material(), ManageMode.Add)">Adicionar</P-Button>
+      <P-Button text @click="openMaterialManagement(new Material(), ManageMode.Add)"
+        >Adicionar</P-Button
+      >
       <P-Button text @click="close">Voltar</P-Button>
     </template>
   </P-Dialog>

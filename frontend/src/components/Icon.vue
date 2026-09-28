@@ -1,5 +1,5 @@
 <template>
-  <span class="material-symbols" :style="style" @click="emits('click')">{{ icon }}</span>
+  <span class="material-symbols" :style="style" @click="emits('click', $event)">{{ icon }}</span>
 </template>
 
 <script setup lang="ts">

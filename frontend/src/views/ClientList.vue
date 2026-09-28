@@ -176,14 +176,17 @@ const searchFilter = reactive<Record<string, unknown[]>>({
 });
 
 if (route.query.id) {
-  searchFilter["id"] = [route.query.id].flat().map((id) => {
-    try {
-      return Number(id);
-    } catch (e) {
-      console.error("Invalid request id");
-      return undefined;
-    }
-  }).filter((id): id is number => id !== undefined);
+  searchFilter["id"] = [route.query.id]
+    .flat()
+    .map((id) => {
+      try {
+        return Number(id);
+      } catch (e) {
+        console.error("Invalid request id");
+        return undefined;
+      }
+    })
+    .filter((id): id is number => id !== undefined);
 }
 if (route.query.banner) {
   searchFilter["banner"] = [route.query.banner].flat().filter((v): v is string => v !== null);

@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
+import { getErrorMessage } from "@router/backend/errors";
 import { FinishingGroup } from "@router/backend/services/finishingGroup/types";
 import { Finishing } from "@router/backend/services/finishing/types";
 
@@ -27,7 +28,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -36,7 +37,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -58,7 +59,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -67,7 +68,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -89,7 +90,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -98,7 +99,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -116,7 +117,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -125,7 +126,7 @@ export const useFinishingGroupStore = defineStore("finishingGroupStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
