@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
+import { getErrorMessage } from "@router/backend/errors";
 import { Login } from "@router/backend/services/auth/types";
 import { getRole, Role, User } from "@router/backend/services/user/types";
 
@@ -64,7 +65,7 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -74,7 +75,7 @@ export const useAuthStore = defineStore("authStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -93,7 +94,7 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -103,7 +104,7 @@ export const useAuthStore = defineStore("authStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -120,7 +121,7 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -130,7 +131,7 @@ export const useAuthStore = defineStore("authStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -150,7 +151,7 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -160,7 +161,7 @@ export const useAuthStore = defineStore("authStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -181,7 +182,7 @@ export const useAuthStore = defineStore("authStore", () => {
       } else {
         return {
           success: false,
-          content: (data as unknown as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -191,7 +192,7 @@ export const useAuthStore = defineStore("authStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }

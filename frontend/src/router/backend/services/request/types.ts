@@ -145,6 +145,7 @@ export class Showcase extends RequestType {
 }
 
 export class OneFace extends RequestType {
+  type = "OneFace";
   cover: RequestSlot | null = null;
 
   constructor(obj?: OneFace) {
@@ -168,6 +169,7 @@ export class OneFace extends RequestType {
 }
 
 export class TwoFaces extends RequestType {
+  type = "TwoFaces";
   cover: RequestSlot | null = null;
   back: RequestSlot | null = null;
 
@@ -209,11 +211,17 @@ export class TwoFaces extends RequestType {
   }
 }
 
-export class SimpleShowcase extends Showcase {}
+export class SimpleShowcase extends Showcase {
+  type = "SimpleShowcase";
+}
 
-export class LeftShowcase extends Showcase {}
+export class LeftShowcase extends Showcase {
+  type = "LeftShowcase";
+}
 
-export class RightShowcase extends Showcase {}
+export class RightShowcase extends Showcase {
+  type = "RightShowcase";
+}
 
 export class RequestSlot {
   id: number = 0;

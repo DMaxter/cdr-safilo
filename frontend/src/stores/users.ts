@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
+import { getErrorMessage } from "@router/backend/errors";
 import { User } from "@router/backend/services/user/types";
 
 export const useUserStore = defineStore("userStore", () => {
@@ -27,7 +28,7 @@ export const useUserStore = defineStore("userStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -37,7 +38,7 @@ export const useUserStore = defineStore("userStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -63,7 +64,7 @@ export const useUserStore = defineStore("userStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -73,7 +74,7 @@ export const useUserStore = defineStore("userStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
