@@ -27,6 +27,15 @@ html::-webkit-scrollbar {
   height: 0;
 }
 
+.v-data-table--fixed-header > .v-data-table__wrapper {
+  padding-right: 15px;
+}
+
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
+  overflow-wrap: anywhere;
+}
+
 nav {
   padding: 30px;
 
