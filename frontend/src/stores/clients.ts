@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
+import { getErrorMessage } from "@router/backend/errors";
 import { Client } from "@router/backend/services/client/types";
 import { Image } from "@router/backend/services/image/types";
 
@@ -65,7 +66,7 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -75,7 +76,7 @@ export const useClientStore = defineStore("clientStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -94,7 +95,7 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -104,7 +105,7 @@ export const useClientStore = defineStore("clientStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -123,7 +124,7 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -133,7 +134,7 @@ export const useClientStore = defineStore("clientStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -152,7 +153,7 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -162,7 +163,7 @@ export const useClientStore = defineStore("clientStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -176,7 +177,7 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -186,7 +187,7 @@ export const useClientStore = defineStore("clientStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -248,7 +249,7 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -258,7 +259,7 @@ export const useClientStore = defineStore("clientStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -284,7 +285,7 @@ export const useClientStore = defineStore("clientStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -294,7 +295,7 @@ export const useClientStore = defineStore("clientStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }

@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { API } from "@router/backend";
+import { getErrorMessage } from "@router/backend/errors";
 import type { Error, APIResponse } from "@router/backend/types";
 import { Request, Status } from "@router/backend/services/request/types";
 
@@ -41,7 +42,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -50,7 +51,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -69,7 +70,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -78,7 +79,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -96,7 +97,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -105,7 +106,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -123,7 +124,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -132,7 +133,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -149,7 +150,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -158,7 +159,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }
@@ -175,7 +176,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       } else {
         return {
           success: false,
-          content: (data as Error).message,
+          content: getErrorMessage(data),
           status: status,
         };
       }
@@ -184,7 +185,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: _error.response?.data?.message ?? "Erro desconhecido",
+        content: getErrorMessage(_error.response?.data),
       };
     }
   }

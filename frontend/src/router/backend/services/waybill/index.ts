@@ -3,7 +3,9 @@ import { http } from "@router/backend/api";
 import type { Error } from "@router/backend/types";
 import type { Waybill, Service, PackageType, LabelFormat } from "./types";
 
-export async function getShippingServices(requestId: number): Promise<AxiosResponse<Service[] | Error>> {
+export async function getShippingServices(
+  requestId: number,
+): Promise<AxiosResponse<Service[] | Error>> {
   return await http.get(`/waybill/services/${requestId}`);
 }
 
@@ -17,19 +19,19 @@ export async function getLabelFormats(): Promise<AxiosResponse<LabelFormat[] | E
 
 export async function openWaybill(
   requestId: number,
-  waybill: Waybill
+  waybill: Waybill,
 ): Promise<AxiosResponse<File | Error>> {
   return await http.post(`/waybill/${requestId}`, waybill, {
-    responseType: "blob"
+    responseType: "blob",
   });
 }
 
 export async function getWaybill(
   requestId: number,
-  labelFormat: LabelFormat
+  labelFormat: LabelFormat,
 ): Promise<AxiosResponse<File | Error>> {
   return await http.get(`/waybill/${requestId}/${labelFormat}`, {
-    responseType: "blob"
+    responseType: "blob",
   });
 }
 
