@@ -39,6 +39,15 @@ const routes = [
     component: () => import("@views/RedefinePassword.vue"),
   },
   {
+    path: "/request/:id",
+    name: "request",
+    meta: {
+      title: "Detalhe do Pedido | " + import.meta.env.VUE_APP_NAME,
+      requiresAuth: true,
+    },
+    component: () => import("@views/RequestInfo.vue"),
+  },
+  {
     path: "/search",
     name: "search",
     meta: { title: "Pesquisa | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },

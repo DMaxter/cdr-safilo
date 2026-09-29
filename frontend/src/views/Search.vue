@@ -115,7 +115,7 @@
       <P-Column class="w-[10rem]">
         <template #body="{ data }">
           <Icon icon="visibility" @click="showSummary(data)" v-tooltip="'Ver resumo'" />
-          <Icon icon="open_in_new" @click="console.error('TODO')" v-tooltip="'Ver detalhes'" />
+          <Icon icon="open_in_new" @click="openDetails(data)" v-tooltip="'Ver detalhes'" />
           <!-- TODO: Implement edit -->
           <Icon
             v-if="
@@ -256,6 +256,10 @@ async function refreshRequests() {
 function showSummary(item: Request) {
   selectedRequestId.value = item.id;
   summary.value = true;
+}
+
+function openDetails(item: Request) {
+  router.push({ name: "request", params: { id: item.id } });
 }
 
 async function onWaybillOpened() {
