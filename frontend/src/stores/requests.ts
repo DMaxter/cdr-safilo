@@ -26,7 +26,9 @@ export const useRequestStore = defineStore("requestStore", () => {
       return;
     }
 
-    requests.value[index] = { ...requests.value[index], ...request };
+    const updated = { ...requests.value[index], ...request };
+
+    requests.value[index] = new Request(updated as unknown as Request);
   }
 
   async function getAllRequests(): Promise<APIResponse<string | null>> {
