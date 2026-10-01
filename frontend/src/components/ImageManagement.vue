@@ -62,8 +62,17 @@ const props = defineProps<{
   addAction?: (link: string) => void;
 }>();
 
-const selected = ref<Image | undefined>(undefined);
-const isSelected = computed(() => selected.value !== undefined);
+const selected = ref<Image | Image[] | undefined>(undefined);
+
+const selectedImages = computed<Image[]>(() => {
+  if (!selected.value) {
+    return [];
+  }
+
+  return Array.isArray(selected.value) ? selected.value : [selected.value];
+});
+
+const isSelected = computed(() => selectedImages.value.length > 0);
 
 const uploading = ref(false);
 const adding = ref(false);
@@ -79,15 +88,15 @@ async function add() {
 }
 
 async function del() {
-  if (props.deleteAction && selected.value) {
-    await props.deleteAction([selected.value]);
+  if (props.deleteAction && isSelected.value) {
+    await props.deleteAction(selectedImages.value);
   }
   selected.value = undefined;
 }
 
 async function obsolete() {
-  if (props.obsoleteAction && selected.value) {
-    await props.obsoleteAction([selected.value]);
+  if (props.obsoleteAction && isSelected.value) {
+    await props.obsoleteAction(selectedImages.value);
   }
   selected.value = undefined;
 }
