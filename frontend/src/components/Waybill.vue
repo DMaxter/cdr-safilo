@@ -161,7 +161,7 @@
               </div>
               <div class="col-span-6">
                 <P-FloatLabel class="field" variant="on">
-                  <P-InputText fluid id="address" v-model="waybill.destination.address.street" />
+                  <P-InputText fluid id="address" v-model="waybill.destination.address.address" />
                   <label for="address">Morada</label>
                 </P-FloatLabel>
               </div>
@@ -217,7 +217,13 @@ import { computed, ref, watch } from "vue";
 
 import { API } from "@router/backend";
 import type { Request } from "@router/backend/services/request/types";
-import { Waybill, Service, type LabelFormat } from "@router/backend/services/waybill/types";
+import {
+  Waybill,
+  Contact,
+  Address,
+  Service,
+  type LabelFormat,
+} from "@router/backend/services/waybill/types";
 
 // TODO: Implement all validations
 
@@ -255,6 +261,7 @@ watch(
   () => enabled.value,
   async (newVal) => {
     if (newVal) {
+      prefillDestination();
       if (props.request.id !== 0) {
         await loadServices();
       } else {
@@ -264,6 +271,30 @@ watch(
   },
   { immediate: true },
 );
+
+function prefillDestination() {
+  const client = props.request.client;
+
+  if (!client) {
+    return;
+  }
+
+  waybill.value.destination = new Contact({
+    name: client.name,
+    phone: client.phone,
+    address: new Address({
+      address: client.address,
+      city: client.city,
+      postalCode: client.postalCode,
+      country: client.country,
+    }),
+  });
+}
+
+function orNull(value: string | null): string | null {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
 
 function confirmCancel() {
   confirm.require({
@@ -394,9 +425,26 @@ async function cancelWaybill() {
   }
 }
 
+function buildPayload(): Waybill {
+  const payload = new Waybill(waybill.value);
+
+  payload.destination = new Contact({
+    name: orNull(waybill.value.destination.name),
+    phone: orNull(waybill.value.destination.phone),
+    address: new Address({
+      address: orNull(waybill.value.destination.address.address),
+      city: orNull(waybill.value.destination.address.city),
+      postalCode: orNull(waybill.value.destination.address.postalCode),
+      country: orNull(waybill.value.destination.address.country),
+    }),
+  });
+
+  return payload;
+}
+
 async function createWaybill() {
   try {
-    const { status, data } = await API.waybill.openWaybill(props.request.id, waybill.value);
+    const { status, data } = await API.waybill.openWaybill(props.request.id, buildPayload());
 
     if (status === 200 || status === 201) {
       const blob = data as Blob;
