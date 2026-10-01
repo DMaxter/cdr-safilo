@@ -9,6 +9,10 @@
   @apply !bg-orange-500 !text-white;
 }
 
+.status-in-production {
+  @apply !bg-blue-600 !text-white;
+}
+
 .status-done {
   @apply !bg-green-600 !text-white;
 }
