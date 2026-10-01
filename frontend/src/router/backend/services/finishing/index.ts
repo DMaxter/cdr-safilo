@@ -2,10 +2,10 @@ import type { AxiosResponse } from "axios";
 
 import { http } from "@router/backend/api";
 import type { Error } from "@router/backend/types";
-import { Finishing } from "@router/backend/services/finishing/types";
+import { Finishing, NewFinishing } from "@router/backend/services/finishing/types";
 
 export async function addFinishing(
-  finishing: Finishing,
+  finishing: NewFinishing,
 ): Promise<AxiosResponse<Finishing | Error>> {
   return await http.post("/finishing", finishing);
 }
