@@ -11,6 +11,14 @@ import javax.enterprise.context.ApplicationScoped
 class PriceRepository : PanacheRepository<Price> {
     override fun streamAll(): Multi<Price> {
         return stream("FROM Price p LEFT JOIN FETCH p.finishings")
+                .collect()
+                .asList()
+                .onItem()
+                .transformToMulti { prices ->
+                    // The fetch join yields one row per (price, finishing) pair, so a price
+                    // arrives once per finishing. Collapse them back to one per price.
+                    Multi.createFrom().iterable(prices.distinctBy { it.id })
+                }
     }
 
     fun stream(material: Long): Multi<Price> {
