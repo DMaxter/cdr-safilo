@@ -52,7 +52,14 @@
           </P-Tag>
         </template>
       </P-Column>
-      <P-Column class="w-[15rem]" field="client.name" header="Cliente" sortable filter>
+      <P-Column
+        class="w-[15rem]"
+        field="client.name"
+        filterField="client.id"
+        header="Cliente"
+        sortable
+        filter
+      >
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
             filter
@@ -190,7 +197,7 @@ const states = statusItems;
 const filters = ref<Record<string, { value: unknown; matchMode: string }>>({
   id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   status: { value: null, matchMode: FilterMatchMode.IN },
-  "client.name": { value: null, matchMode: FilterMatchMode.IN },
+  "client.id": { value: null, matchMode: FilterMatchMode.IN },
   user: { value: null, matchMode: FilterMatchMode.IN },
   created: { value: null, matchMode: "between" },
   cost: { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -209,7 +216,7 @@ if (route.query.status) {
   );
 }
 if (route.query.client) {
-  filters.value["client.name"].value = ([route.query.client].flat() as string[]).map(Number);
+  filters.value["client.id"].value = ([route.query.client].flat() as string[]).map(Number);
 }
 if (route.query.commercial) {
   filters.value.user.value = [route.query.commercial].flat() as string[];
