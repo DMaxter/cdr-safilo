@@ -36,6 +36,10 @@ const added = ref(false);
 const failed = ref(false);
 
 async function addComercial() {
+  if (password1.value !== password2.value) {
+    failed.value = true;
+    return;
+  }
   try {
     const { status } = await API.auth.register({
       email: comercialEmail.value,
