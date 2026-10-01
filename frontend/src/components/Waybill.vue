@@ -197,6 +197,15 @@
         @click="showDownload()"
         ><template #icon><Icon icon="download" /></template
       ></P-Button>
+      <P-Button
+        v-if="!openWaybill"
+        label="Cancelar Carta de Porte"
+        severity="danger"
+        outlined
+        :loading="cancelling"
+        @click="confirmCancel()"
+        ><template #icon><Icon icon="cancel" /></template
+      ></P-Button>
     </template>
   </P-Dialog>
 </template>
@@ -218,6 +227,7 @@ const toast = useToast();
 const SERVICES_TITLE = "Serviços de Carta de Porte";
 const PACKAGES_TITLE = "Tipos de Embalagem";
 const LABELS_TITLE = "Tamanhos de Etiqueta";
+const WAYBILL_TITLE = "Carta de Porte";
 
 const props = defineProps<{
   request: Request;
@@ -231,6 +241,7 @@ const enabled = defineModel<boolean>();
 
 const waybill = ref<Waybill>(new Waybill());
 const downloading = ref(false);
+const cancelling = ref(false);
 const selectedDownloadFormat = ref<LabelFormat | null>(null);
 
 const openWaybill = computed(() => props.request.trackingCode === null);
@@ -254,7 +265,22 @@ watch(
   { immediate: true },
 );
 
-function confirmCancel() {}
+function confirmCancel() {
+  confirm.require({
+    message: `Tem a certeza que pretende cancelar a carta de porte do pedido ${props.request.id}?`,
+    header: "Confirmar cancelamento de carta de porte",
+    rejectProps: {
+      label: "Voltar",
+      severity: "secondary",
+      outline: true,
+    },
+    acceptProps: {
+      label: "Cancelar carta de porte",
+      severity: "danger",
+    },
+    accept: cancelWaybill,
+  });
+}
 
 async function loadServices() {
   if (props.request.id !== 0) {
@@ -332,14 +358,39 @@ async function getLabels() {
   }
 }
 
-async function cancel() {
+async function cancelWaybill() {
+  cancelling.value = true;
+
   try {
-    // TODO:
-    return (
-      "Tem a certeza que pretende cancelar a carta de porte do pedido " + props.request.id + "?"
-    );
+    const { status } = await API.waybill.cancelWaybill(props.request.id);
+
+    if (status === 200 || status === 204) {
+      toast.add({
+        severity: "success",
+        summary: WAYBILL_TITLE,
+        detail: "Carta de porte cancelada com sucesso",
+        life: 5000,
+      });
+      close();
+      emit("opened");
+    } else {
+      toast.add({
+        severity: "error",
+        summary: WAYBILL_TITLE,
+        detail: "Ocorreu um erro ao cancelar a carta de porte",
+        life: 10000,
+      });
+    }
   } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: WAYBILL_TITLE,
+      detail: "Ocorreu um erro ao cancelar a carta de porte",
+      life: 10000,
+    });
     console.error(error);
+  } finally {
+    cancelling.value = false;
   }
 }
 
@@ -358,7 +409,7 @@ async function createWaybill() {
 
       toast.add({
         severity: "success",
-        summary: "Carta de Porte",
+        summary: WAYBILL_TITLE,
         detail: "Carta de porte aberta com sucesso",
         life: 5000,
       });
@@ -382,8 +433,6 @@ async function createWaybill() {
     console.error(error);
   }
 }
-
-function cancelMessage() {}
 
 async function showDownload() {
   if (!selectedDownloadFormat.value) {
