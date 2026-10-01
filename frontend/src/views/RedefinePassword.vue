@@ -68,38 +68,39 @@ if (!route.query.token) {
 }
 
 async function changePassword() {
-  if (passwordsMatch.value) {
-    try {
-      await authStore.changePasswordWithToken(
-        route.query.email as string,
-        password.value,
-        route.query.token as string,
-      );
-
-      toast.add({
-        severity: "success",
-        summary: TITLE,
-        detail: "Palavra-passe alterada com sucesso!",
-        life: 10000,
-      });
-
-      setTimeout(() => router.push({ name: "login" }), 3000);
-    } catch (error: any) {
-      toast.add({
-        severity: "error",
-        summary: TITLE,
-        detail: "Ocorreu um erro ao alterar a palavra-passe",
-        life: 10000,
-      });
-      console.error(error);
-    }
-  } else {
+  if (!passwordsMatch.value) {
     toast.add({
       severity: "warn",
       summary: TITLE,
       detail: "As palavras-passe não coincidem.",
       life: 10000,
     });
+    return;
+  }
+
+  const response = await authStore.changePasswordWithToken(
+    route.query.email as string,
+    password.value,
+    route.query.token as string,
+  );
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: TITLE,
+      detail: "Palavra-passe alterada com sucesso!",
+      life: 10000,
+    });
+
+    setTimeout(() => router.push({ name: "login" }), 3000);
+  } else {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: (response.content as string) || "Ocorreu um erro ao alterar a palavra-passe",
+      life: 10000,
+    });
+    console.error(response.content);
   }
 }
 </script>
