@@ -119,11 +119,14 @@ async function addImages(files: File[]) {
 }
 
 async function deleteImages(images: Image[]) {
+  const imageIds = images.map((i) => i.id).filter((id) => typeof id === "number" && id > 0);
+
+  if (imageIds.length === 0) {
+    return;
+  }
+
   try {
-    const response = await clientStore.deleteImages(
-      client.value.id as number,
-      images.map((i) => i.id),
-    );
+    const response = await clientStore.deleteImages(client.value.id as number, imageIds);
     if (!response.success) {
       throw Error(response.content as string);
     }
