@@ -14,9 +14,18 @@
         <template #empty>Não existem preços registados</template>
 
         <P-Column sortable field="id" header="ID" style="width: 60px" />
-        <P-Column sortable field="material" header="Material">
+        <P-Column
+          sortable
+          field="material"
+          header="Material"
+          :filterMatchMode="materialFilterMatchMode"
+        >
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="ID" />
+            <P-InputText
+              v-model="filterModel.value"
+              @input="filterCallback()"
+              placeholder="Material"
+            />
           </template>
           <template #body="{ data }">
             {{ materialName(data.material) }}
@@ -89,6 +98,13 @@ const filters = ref({
   id: { value: null, matchMode: FilterMatchMode.CONTAINS },
   material: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
+
+const materialFilterMatchMode = (value: any, filter: string) => {
+  if (!filter) return true;
+  const materialId = value;
+  const name = materialStore.materials.find((m) => m.id === materialId)?.name ?? "";
+  return name.toLowerCase().includes(filter.toLowerCase());
+};
 
 onMounted(async () => {
   await refresh();
