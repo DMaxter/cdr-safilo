@@ -17,7 +17,7 @@ const props = defineProps<{
   multiple?: boolean;
 }>();
 
-const model = defineModel<Image>();
+const model = defineModel<Image | Image[]>();
 
 const ptOptions = {
   list: {
