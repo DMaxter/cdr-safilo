@@ -51,7 +51,7 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 
 import { Brand } from "@router/backend/services/brand/types";
 import { useBrandStore } from "@stores/brands";
@@ -77,14 +77,20 @@ const TITLE = computed(() => (editing.value ? "Edição de plafond" : "Criação
 const changeAmount = ref(0);
 const selectedBrandId = ref<number | null>(null);
 
-// This is to automatically select brand when editing
-// as to be preselected it needs a name but the value
-// passed in props is the ID so a mapping is needed
+async function loadBrandsIfNeeded() {
+  if (brandStore.brands.length === 0) {
+    await brandStore.getBrands();
+  }
+}
+
 watch(
   mode,
-  (newMode) => {
+  async (newMode) => {
+    if (enabled.value) {
+      await loadBrandsIfNeeded();
+    }
+
     if (editing.value && props.plafond.brand) {
-      console.log("RUNNING");
       const brand = brandStore.brands.find((b: Brand) => b.name === props.plafond.brand);
       if (brand) {
         selectedBrandId.value = brand.id;
@@ -97,6 +103,19 @@ watch(
   },
   { immediate: true },
 );
+
+watch(
+  enabled,
+  async (isEnabled) => {
+    if (isEnabled) {
+      await loadBrandsIfNeeded();
+    }
+  },
+);
+
+onMounted(async () => {
+  await loadBrandsIfNeeded();
+});
 
 function increasePlafond() {
   props.plafond.amount += changeAmount.value;
