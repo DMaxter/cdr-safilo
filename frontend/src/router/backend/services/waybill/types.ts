@@ -27,33 +27,31 @@ export class Waybill {
 }
 
 export class Contact {
-  name: string = "";
+  name: string | null = null;
   address: Address = new Address();
-  phone: string = "";
+  phone: string | null = null;
 
   constructor(obj?: Contact) {
     if (obj) {
-      this.name = obj.name || "";
+      this.name = obj.name ?? null;
       this.address = obj.address ? new Address(obj.address) : new Address();
-      this.phone = obj.phone || "";
+      this.phone = obj.phone ?? null;
     }
   }
 }
 
 export class Address {
-  street: string = "";
-  city: string = "";
-  state: string = "";
-  postalCode: string = "";
-  country: string = "";
+  address: string | null = null;
+  city: string | null = null;
+  postalCode: string | null = null;
+  country: string | null = null;
 
   constructor(obj?: Address) {
     if (obj) {
-      this.street = obj.street || "";
-      this.city = obj.city || "";
-      this.state = obj.state || "";
-      this.postalCode = obj.postalCode || "";
-      this.country = obj.country || "";
+      this.address = obj.address ?? null;
+      this.city = obj.city ?? null;
+      this.postalCode = obj.postalCode ?? null;
+      this.country = obj.country ?? null;
     }
   }
 }

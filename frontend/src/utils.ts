@@ -29,6 +29,8 @@ export function getStatusIcon(value: Status) {
     return "cancel";
   } else if (value === Status.Ordered) {
     return "package_2";
+  } else if (value === Status.InProduction) {
+    return "manufacturing";
   } else if (value === Status.Done) {
     return "check";
   } else {
@@ -41,6 +43,8 @@ export function getStatusClass(value: Status): string {
     return "status-cancelled";
   } else if (value === Status.Ordered) {
     return "status-ordered";
+  } else if (value === Status.InProduction) {
+    return "status-in-production";
   } else if (value === Status.Done) {
     return "status-done";
   } else {
