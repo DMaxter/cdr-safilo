@@ -2,31 +2,44 @@
   <P-Dialog modal class="max-w-95/100" v-model:visible="enabled">
     <template #header>Alterar Palavra-passe</template>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText fluid id="current" type="password" ref="current" v-model="currentPassword" />
+      <P-InputText
+        fluid
+        id="current"
+        type="password"
+        v-model="currentPassword"
+        :invalid="!!errors.current"
+      />
       <label for="current">Palavra-passe atual</label>
     </P-FloatLabel>
+    <P-Message v-if="errors.current" severity="error" size="small" variant="simple">
+      {{ errors.current }}
+    </P-Message>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText fluid id="new" type="password" ref="new" v-model="newPassword" />
+      <P-InputText fluid id="new" type="password" v-model="newPassword" :invalid="!!errors.new" />
       <label for="new">Nova palavra-passe</label>
     </P-FloatLabel>
+    <P-Message v-if="errors.new" severity="error" size="small" variant="simple">
+      {{ errors.new }}
+    </P-Message>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         fluid
         id="repeat"
-        label="Repetir nova palavra-passe"
         type="password"
-        ref="repeat"
         v-model="repeatNewPassword"
+        :invalid="!!errors.repeat"
       />
       <label for="repeat">Repetir nova palavra-passe</label>
     </P-FloatLabel>
+    <P-Message v-if="errors.repeat" severity="error" size="small" variant="simple">
+      {{ errors.repeat }}
+    </P-Message>
     <template #footer>
       <P-Button class="flex flex-row" @click="close">
         <Icon icon="prev" />
         Voltar
       </P-Button>
       <P-Button class="flex flex-row" @click="changePassword">
-        <!--:disabled="!canChangePassword"-->
         Confirmar
         <Icon icon="next" />
       </P-Button>
@@ -36,10 +49,10 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, ref } from "vue";
 
 import { useAuthStore } from "@stores/auth";
-import { checkAllRefsValid, required } from "@/rules";
+import { required, validateField } from "@/rules";
 
 const enabled = defineModel<boolean>();
 
@@ -48,51 +61,61 @@ const TITLE = "Alteração de palavra-passe";
 const authStore = useAuthStore();
 const toast = useToast();
 
-// TODO: Validation rules
 const currentPassword = ref("");
 const newPassword = ref("");
 const repeatNewPassword = ref("");
+
+const currentRules = [required];
 
 const newPasswordRules = [
   required,
   (value: string) =>
     value != currentPassword.value || "Palavra-passe atual e a nova têm de ser diferentes",
 ];
+
 const repeatPasswordRules = [
   required,
-  (value: string) => value == newPassword.value || "Palavras-passe não são iguais!",
+  (value: string) => value == newPassword.value || "Palavras-passe não coincidem!",
 ];
 
-const currentRef = useTemplateRef<{ value: { isValid: boolean } }>("current");
-const newRef = useTemplateRef<{ value: { isValid: boolean } }>("new");
-const repeatRef = useTemplateRef<{ value: { isValid: boolean } }>("repeat");
+const errors = computed(() => ({
+  current: validateField(currentPassword.value, currentRules),
+  new: validateField(newPassword.value, newPasswordRules),
+  repeat: validateField(repeatNewPassword.value, repeatPasswordRules),
+}));
 
-const canChangePassword = computed(() => checkAllRefsValid([currentRef, newRef, repeatRef]));
+const canChangePassword = computed(() => Object.values(errors.value).every((e) => e === null));
 
 async function changePassword() {
-  if (canChangePassword) {
-    if (newPassword.value != "" && repeatNewPassword.value != "") {
-      if (newPassword.value == repeatNewPassword.value) {
-        const response = await authStore.changePassword(currentPassword.value, newPassword.value);
+  if (!canChangePassword.value) {
+    toast.add({
+      severity: "warn",
+      summary: TITLE,
+      detail: Object.values(errors.value).find((e) => e !== null) ?? "Verifique os campos.",
+      life: 10000,
+    });
+    return;
+  }
 
-        if (response.success) {
-          toast.add({
-            severity: "success",
-            summary: TITLE,
-            detail: "A palavra-passe foi alterada com sucesso",
-            life: 10000,
-          });
-        } else {
-          toast.add({
-            severity: "error",
-            summary: TITLE,
-            detail: "Não foi possível alterar a palavra-passe",
-            life: 10000,
-          });
-          console.error(response);
-        }
-      }
-    }
+  const response = await authStore.changePassword(currentPassword.value, newPassword.value);
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: TITLE,
+      detail: "A palavra-passe foi alterada com sucesso",
+      life: 10000,
+    });
+
+    close();
+  } else {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: (response.content as string) || "Não foi possível alterar a palavra-passe",
+      life: 10000,
+    });
+    console.error(response.content);
   }
 }
 
