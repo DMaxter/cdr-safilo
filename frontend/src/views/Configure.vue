@@ -9,15 +9,17 @@
         >Utilizadores</P-Button
       >
       <P-Button v-if="manageCdr" class="h-[60px]" @click="openMaterialList">Materiais</P-Button>
-      <P-Button v-if="manageCdr" class="h-[60px]" @click="openPriceList">Preços</P-Button>
+      <P-Button v-if="manageCdr" class="h-[60px]" @click="openFinishingList">Acabamentos</P-Button>
       <P-Button v-if="manageCdr" class="h-[60px]" @click="openFinishingGroupList"
         >Grupos de acabamentos</P-Button
       >
+      <P-Button v-if="manageCdr" class="h-[60px]" @click="openPriceList">Preços</P-Button>
     </div>
     <BrandList v-model="brandList" />
     <MaterialList v-model="materialList" />
-    <PriceList v-if="manageCdr" v-model="priceList" />
+    <FinishingList v-if="manageCdr" v-model="finishingList" />
     <FinishingGroupList v-if="manageCdr" v-model="finishingGroupList" />
+    <PriceList v-if="manageCdr" v-model="priceList" />
     <PlafondList v-if="manageSafilo" v-model="managePlafond" />
     <UserManagement v-if="manageSafilo" v-model="userManagement" />
   </Container>
@@ -37,8 +39,9 @@ const managePlafond = ref(false);
 
 const brandList = ref(false);
 const materialList = ref(false);
-const priceList = ref(false);
+const finishingList = ref(false);
 const finishingGroupList = ref(false);
+const priceList = ref(false);
 const userManagement = ref(false);
 
 function openBrandList() {
@@ -49,12 +52,16 @@ function openMaterialList() {
   materialList.value = true;
 }
 
-function openPriceList() {
-  priceList.value = true;
+function openFinishingList() {
+  finishingList.value = true;
 }
 
 function openFinishingGroupList() {
   finishingGroupList.value = true;
+}
+
+function openPriceList() {
+  priceList.value = true;
 }
 
 function openPlafondManagement() {

@@ -5,7 +5,7 @@ import { ref } from "vue";
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
 import { getErrorMessage } from "@router/backend/errors";
-import { Finishing } from "@router/backend/services/finishing/types";
+import { Finishing, NewFinishing } from "@router/backend/services/finishing/types";
 
 export const useFinishingStore = defineStore("finishingStore", () => {
   const finishings = ref<Finishing[]>([]);
@@ -41,7 +41,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
     }
   }
 
-  async function addFinishing(finishing: Finishing): Promise<APIResponse<Finishing | string>> {
+  async function addFinishing(finishing: NewFinishing): Promise<APIResponse<Finishing | string>> {
     try {
       const { status, data } = await API.finishings.addFinishing(finishing);
 
