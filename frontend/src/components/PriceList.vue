@@ -34,7 +34,7 @@
         </P-Column>
         <P-Column field="finishings" header="Acabamentos">
           <template #body="{ data }">
-            <span v-if="data.finishings.length === 0">Todos</span>
+            <span v-if="data.finishings.length === 0">Sem acabamentos</span>
             <div v-else class="flex flex-wrap gap-1">
               <P-Tag v-for="finishing in data.finishings" :key="finishing.id" severity="secondary">
                 {{ finishing.name }}
