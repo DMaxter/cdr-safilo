@@ -8,11 +8,12 @@
       <!--TODO: -->
       <P-Button v-if="manageSafilo" class="h-[60px]" @click="">Utilizadores</P-Button>
       <P-Button v-if="manageCdr" class="h-[60px]" @click="openMaterialList">Materiais</P-Button>
-      <P-Button v-if="manageCdr" class="h-[60px]" @click="">Preços</P-Button>
+      <P-Button v-if="manageCdr" class="h-[60px]" @click="openPriceList">Preços</P-Button>
       <!-- END TODO: -->
     </div>
     <BrandList v-model="brandList" />
     <MaterialList v-model="materialList" />
+    <PriceList v-if="manageCdr" v-model="priceList" />
     <PlafondList v-if="manageSafilo" v-model="managePlafond" />
   </Container>
 </template>
@@ -31,6 +32,7 @@ const managePlafond = ref(false);
 
 const brandList = ref(false);
 const materialList = ref(false);
+const priceList = ref(false);
 
 function openBrandList() {
   brandList.value = true;
@@ -38,6 +40,10 @@ function openBrandList() {
 
 function openMaterialList() {
   materialList.value = true;
+}
+
+function openPriceList() {
+  priceList.value = true;
 }
 
 function openPlafondManagement() {
