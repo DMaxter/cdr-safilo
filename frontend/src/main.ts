@@ -148,6 +148,7 @@ import PrintSlot from "@components/PrintSlot.vue";
 import RecoveryCode from "@components/RecoveryCode.vue";
 import RequestSummary from "@components/RequestSummary.vue";
 import SlotForm from "@components/orders/SlotForm.vue";
+import UserManagement from "@components/UserManagement.vue";
 import Waybill from "@components/Waybill.vue";
 
 app.component("BrandList", BrandList);
@@ -177,6 +178,7 @@ app.component("PrintSlot", PrintSlot);
 app.component("RecoveryCode", RecoveryCode);
 app.component("RequestSummary", RequestSummary);
 app.component("SlotForm", SlotForm);
+app.component("UserManagement", UserManagement);
 app.component("Waybill", Waybill);
 
 app.mount("#app");

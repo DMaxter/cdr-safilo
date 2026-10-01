@@ -5,8 +5,7 @@
         >Plafond</P-Button
       >
       <P-Button v-if="manageSafilo" class="h-[60px]" @click="openBrandList">Marcas</P-Button>
-      <!--TODO: -->
-      <P-Button v-if="manageSafilo" class="h-[60px]" @click="">Utilizadores</P-Button>
+      <P-Button v-if="manageSafilo" class="h-[60px]" @click="openUserManagement">Utilizadores</P-Button>
       <P-Button v-if="manageCdr" class="h-[60px]" @click="openMaterialList">Materiais</P-Button>
       <P-Button v-if="manageCdr" class="h-[60px]" @click="openPriceList">Preços</P-Button>
       <!-- END TODO: -->
@@ -15,6 +14,7 @@
     <MaterialList v-model="materialList" />
     <PriceList v-if="manageCdr" v-model="priceList" />
     <PlafondList v-if="manageSafilo" v-model="managePlafond" />
+    <UserManagement v-if="manageSafilo" v-model="userManagement" />
   </Container>
 </template>
 
@@ -33,6 +33,7 @@ const managePlafond = ref(false);
 const brandList = ref(false);
 const materialList = ref(false);
 const priceList = ref(false);
+const userManagement = ref(false);
 
 function openBrandList() {
   brandList.value = true;
@@ -48,5 +49,9 @@ function openPriceList() {
 
 function openPlafondManagement() {
   managePlafond.value = true;
+}
+
+function openUserManagement() {
+  userManagement.value = true;
 }
 </script>
