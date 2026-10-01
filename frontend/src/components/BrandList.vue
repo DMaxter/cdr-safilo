@@ -49,6 +49,7 @@
     v-model="manageImages"
     :addAction="addImage"
     :obsoleteAction="obsoleteImage"
+    :deleteAction="confirmImageDeletion"
     :images="selectedBrand.images"
   />
 </template>
@@ -73,6 +74,7 @@ const confirm = useConfirm();
 const toast = useToast();
 
 const selectedBrand = ref<Brand>(new Brand());
+const selectedImage = ref<Image>(new Image());
 
 const manageMode = ref<ManageMode>(ManageMode.None);
 const manageImages = ref(false);
@@ -125,7 +127,13 @@ async function addImage(link: string) {
 }
 
 // TODO: Support multiple images
-async function obsoleteImage(image: Image) {
+async function obsoleteImage(images: Image[]) {
+  const image = images[0];
+
+  if (!image) {
+    return;
+  }
+
   try {
     const response = await brandStore.makeImageObsolete(image.id);
     if (!response.success) {
@@ -144,6 +152,30 @@ async function obsoleteImage(image: Image) {
       severity: "error",
       summary: IMAGE_TITLE,
       detail: "Ocorreu um erro ao marcar a imagem como obsoleta",
+      life: 10000,
+    });
+  }
+}
+
+async function deleteImage() {
+  try {
+    const response = await brandStore.deleteBrandImage(selectedImage.value.id);
+    if (!response.success) {
+      throw Error(response.content as string);
+    }
+
+    toast.add({
+      severity: "success",
+      summary: IMAGE_TITLE,
+      detail: "Imagem apagada com sucesso",
+      life: 10000,
+    });
+  } catch (error) {
+    console.error(error);
+    toast.add({
+      severity: "error",
+      summary: IMAGE_TITLE,
+      detail: "Ocorreu um erro ao apagar a imagem",
       life: 10000,
     });
   }
@@ -191,6 +223,31 @@ function openBrandManagement(brand: Brand, mode: ManageMode) {
 function openImageManagement(brand: Brand) {
   manageImages.value = true;
   selectedBrand.value = brand;
+}
+
+function confirmImageDeletion(images: Image[]) {
+  const image = images[0];
+
+  if (!image) {
+    return;
+  }
+
+  selectedImage.value = image;
+
+  confirm.require({
+    message: `Tem a certeza que pretende apagar a imagem da marca '${selectedBrand.value.name}'?`,
+    header: "Confirmar remoção de imagem",
+    rejectProps: {
+      label: "Cancelar",
+      severity: "secondary",
+      outline: true,
+    },
+    acceptProps: {
+      label: "Apagar",
+      severity: "danger",
+    },
+    accept: deleteImage,
+  });
 }
 
 function confirmDeletion(brand: Brand) {
