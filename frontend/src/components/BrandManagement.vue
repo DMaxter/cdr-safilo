@@ -2,11 +2,11 @@
   <P-Dialog modal v-model:visible="enabled">
     <template #header>{{ editing ? "Editar Marca" : "Adicionar Marca" }}</template>
     <P-FloatLabel v-if="editing" class="field" variant="on">
-      <P-InputText id="id" fluid disabled v-model="props.brand.id" />
+      <P-InputText id="id" fluid disabled v-model="draft.id" />
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" required fluid v-model="props.brand.name" />
+      <P-InputText id="name" required fluid v-model="draft.name" />
       <label for="name">Nome</label>
     </P-FloatLabel>
     <template #footer>
@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { Brand } from "@router/backend/services/brand/types";
 import { useBrandStore } from "@stores/brands";
@@ -34,6 +34,16 @@ const props = defineProps<{
 
 const TITLE = computed(() => (editing.value ? "Edição de marca" : "Criação de marca"));
 
+// Work on a copy so edits don't leak into the store until save.
+const draft = ref<Brand>(new Brand());
+watch(
+  () => [props.brand, mode.value] as const,
+  () => {
+    draft.value = new Brand(props.brand);
+  },
+  { immediate: true },
+);
+
 const brandStore = useBrandStore();
 const toast = useToast();
 
@@ -46,7 +56,7 @@ async function action() {
 }
 
 async function createBrand() {
-  const response = await brandStore.addBrand(props.brand.name);
+  const response = await brandStore.addBrand(draft.value.name);
 
   if (response.success) {
     toast.add({
@@ -67,7 +77,7 @@ async function createBrand() {
 }
 
 async function updateBrand() {
-  const response = await brandStore.editBrand(props.brand.id, props.brand.name);
+  const response = await brandStore.editBrand(draft.value.id, draft.value.name);
 
   if (response.success) {
     toast.add({

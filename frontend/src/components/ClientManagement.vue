@@ -3,43 +3,43 @@
   <P-Dialog modal class="max-w-95/100 w-[400px]" v-model:visible="enabled">
     <template #header>{{ editing ? "Editar Cliente" : "Adicionar Cliente" }}</template>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="id" :disabled="editing" fluid v-model="props.client.id" />
+      <P-InputText id="id" :disabled="editing" fluid v-model="draft.id" />
       <label for="id">Código do cliente</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" required fluid v-model="props.client.name" />
+      <P-InputText id="name" required fluid v-model="draft.name" />
       <label for="name">Nome</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="email" required fluid v-model="props.client.email" />
+      <P-InputText id="email" required fluid v-model="draft.email" />
       <label for="email">Email</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="fiscal" required fluid v-model="props.client.fiscalNumber" />
+      <P-InputText id="fiscal" required fluid v-model="draft.fiscalNumber" />
       <label for="fiscal">NIF</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="phone" required fluid v-model="props.client.phone" />
+      <P-InputText id="phone" required fluid v-model="draft.phone" />
       <label for="phone">Número de telefone</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="address" required fluid v-model="props.client.address" />
+      <P-InputText id="address" required fluid v-model="draft.address" />
       <label for="address">Endereço</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="postal" required fluid v-model="props.client.postalCode" />
+      <P-InputText id="postal" required fluid v-model="draft.postalCode" />
       <label for="postal">Código postal</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="banner" fluid v-model="props.client.banner" />
+      <P-InputText id="banner" fluid v-model="draft.banner" />
       <label for="banner">Banner</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="city" required fluid v-model="props.client.city" />
+      <P-InputText id="city" required fluid v-model="draft.city" />
       <label for="city">Cidade</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="country" required fluid v-model="client.country" />
+      <P-InputText id="country" required fluid v-model="draft.country" />
       <label for="country">País</label>
     </P-FloatLabel>
     <template #footer>
@@ -51,7 +51,7 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { Client } from "@router/backend/services/client/types";
 import { useClientStore } from "@stores/clients";
@@ -67,6 +67,16 @@ const props = defineProps<{
 
 const TITLE = computed(() => (editing.value ? "Edição de cliente" : "Criação de cliente"));
 
+// Work on a copy so edits don't leak into the store until save.
+const draft = ref<Client>(new Client());
+watch(
+  () => [props.client, mode.value] as const,
+  () => {
+    draft.value = new Client(props.client);
+  },
+  { immediate: true },
+);
+
 const clientStore = useClientStore();
 const toast = useToast();
 
@@ -79,7 +89,7 @@ async function action() {
 }
 
 async function createClient() {
-  const response = await clientStore.addClient(props.client);
+  const response = await clientStore.addClient(draft.value);
 
   if (response.success) {
     toast.add({
@@ -100,7 +110,7 @@ async function createClient() {
 }
 
 async function updateClient() {
-  const response = await clientStore.editClient(props.client);
+  const response = await clientStore.editClient(draft.value);
 
   if (response.success) {
     toast.add({
