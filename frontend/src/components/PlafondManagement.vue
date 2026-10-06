@@ -14,13 +14,7 @@
     </P-FloatLabel>
 
     <P-FloatLabel class="field" variant="on">
-      <P-InputNumber
-        fluid
-        id="amount"
-        v-model="props.plafond.amount"
-        :min="0"
-        :maxFractionDigits="2"
-      />
+      <P-InputNumber fluid id="amount" v-model="draftAmount" :min="0" :maxFractionDigits="2" />
       <label for="amount">Plafond</label>
     </P-FloatLabel>
 
@@ -77,6 +71,9 @@ const TITLE = computed(() => (editing.value ? "Edição de plafond" : "Criação
 const changeAmount = ref(0);
 const selectedBrandId = ref<number | null>(null);
 
+// Work on a copy so edits don't leak into the store until save.
+const draftAmount = ref(0);
+
 async function loadBrandsIfNeeded() {
   if (brandStore.brands.length === 0) {
     await brandStore.getBrands();
@@ -89,6 +86,8 @@ watch(
     if (enabled.value) {
       await loadBrandsIfNeeded();
     }
+
+    draftAmount.value = props.plafond.amount;
 
     if (editing.value && props.plafond.brand) {
       const brand = brandStore.brands.find((b: Brand) => b.name === props.plafond.brand);
@@ -104,27 +103,24 @@ watch(
   { immediate: true },
 );
 
-watch(
-  enabled,
-  async (isEnabled) => {
-    if (isEnabled) {
-      await loadBrandsIfNeeded();
-    }
-  },
-);
+watch(enabled, async (isEnabled) => {
+  if (isEnabled) {
+    await loadBrandsIfNeeded();
+  }
+});
 
 onMounted(async () => {
   await loadBrandsIfNeeded();
 });
 
 function increasePlafond() {
-  props.plafond.amount += changeAmount.value;
+  draftAmount.value += changeAmount.value;
 }
 
 function decreasePlafond() {
-  props.plafond.amount -= changeAmount.value;
-  if (props.plafond.amount < 0) {
-    props.plafond.amount = 0;
+  draftAmount.value -= changeAmount.value;
+  if (draftAmount.value < 0) {
+    draftAmount.value = 0;
   }
 }
 
@@ -142,7 +138,7 @@ async function action() {
   const response = await userStore.changePlafond(
     props.user,
     selectedBrandId.value,
-    props.plafond.amount,
+    draftAmount.value,
   );
 
   if (response.success) {
