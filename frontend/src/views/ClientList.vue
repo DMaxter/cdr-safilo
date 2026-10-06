@@ -82,7 +82,13 @@
       <P-Button @click="refresh">Atualizar</P-Button>
       <P-Button v-if="canManage" @click="addClient">Adicionar Cliente</P-Button>
       <P-Button v-if="canManage" @click="showUpload">Carregar Clientes</P-Button>
-      <P-Button @click="refresh()">Descarregar pedidos</P-Button>
+      <P-Button
+        v-if="canManage"
+        :loading="exporting"
+        :disabled="exporting"
+        @click="downloadRequests"
+        >Descarregar pedidos</P-Button
+      >
       <FileUpload
         v-if="canManage"
         v-model="uploading"
@@ -107,6 +113,7 @@ import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 import { Client } from "@router/backend/services/client/types";
 import { useAuthStore } from "@stores/auth";
 import { useClientStore } from "@stores/clients";
+import { useRequestStore } from "@stores/requests";
 import { ManageMode } from "@/utils";
 
 const route = useRoute();
@@ -115,9 +122,11 @@ const failure = ref(false);
 
 const TITLE = "Lista de Clientes";
 const IMPORT_TITLE = "Importação de Clientes";
+const EXPORT_TITLE = "Exportação de Pedidos";
 
 const authStore = useAuthStore();
 const clientStore = useClientStore();
+const requestStore = useRequestStore();
 const toast = useToast();
 
 const ids: unknown[] = reactive([]); // TODO: REMOVE
@@ -134,6 +143,7 @@ const manageMode = ref<ManageMode>(ManageMode.None);
 const annotating = ref(false);
 
 const uploading = ref(false);
+const exporting = ref(false);
 
 const selectedClient = ref<Client>(new Client());
 
@@ -151,6 +161,36 @@ async function refresh() {
       detail: "Não foi possível obter a lista de clientes",
       life: 10000,
     });
+  }
+}
+
+async function downloadRequests() {
+  exporting.value = true;
+  const response = await requestStore.exportRequests();
+  exporting.value = false;
+
+  if (response.success) {
+    const url = window.URL.createObjectURL(response.content as Blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "pedidos.csv";
+    link.click();
+    window.URL.revokeObjectURL(url);
+
+    toast.add({
+      severity: "success",
+      summary: EXPORT_TITLE,
+      detail: "Pedidos descarregados com sucesso",
+      life: 5000,
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: EXPORT_TITLE,
+      detail: response.content as string,
+      life: 10000,
+    });
+    console.error(response);
   }
 }
 

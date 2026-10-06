@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { API } from "@router/backend";
-import { getErrorMessage } from "@router/backend/errors";
+import { getBlobErrorMessage, getErrorMessage } from "@router/backend/errors";
 import type { Error, APIResponse } from "@router/backend/types";
 import { Request, Status } from "@router/backend/services/request/types";
 
@@ -166,6 +166,18 @@ export const useRequestStore = defineStore("requestStore", () => {
     }
   }
 
+  // Auth failures return an empty body, so answer them by status.
+  async function exportErrorMessage(status: number | undefined, data: unknown): Promise<string> {
+    if (status === 401) {
+      return "Sessão expirada. Volte a entrar.";
+    }
+    if (status === 403) {
+      return "Não tem permissões para descarregar os pedidos.";
+    }
+
+    return await getBlobErrorMessage(data);
+  }
+
   async function exportRequests(): Promise<APIResponse<Blob | string>> {
     try {
       const { status, data } = await API.requests.exportRequests();
@@ -178,7 +190,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       } else {
         return {
           success: false,
-          content: getErrorMessage(data),
+          content: await exportErrorMessage(status, data),
           status: status,
         };
       }
@@ -187,7 +199,10 @@ export const useRequestStore = defineStore("requestStore", () => {
       return {
         success: false,
         status: _error.response?.status,
-        content: getErrorMessage(_error.response?.data),
+        // No response body (timeout / network failure)
+        content: _error.response
+          ? await exportErrorMessage(_error.response.status, _error.response.data)
+          : "Tempo de espera esgotado. Tente novamente mais tarde.",
       };
     }
   }
