@@ -300,6 +300,46 @@ export const useClientStore = defineStore("clientStore", () => {
     }
   }
 
+  async function makeImageObsolete(
+    clientId: number,
+    imageId: number,
+  ): Promise<APIResponse<string | null>> {
+    try {
+      const { status, data } = await API.images.makeImageObsolete(imageId);
+
+      if (status === 200) {
+        const image = clients.value
+          .find((c) => c.id === clientId)
+          ?.images.find((i) => i.id === imageId);
+
+        if (image) {
+          image.obsolete = true;
+        } else {
+          console.error(`Image ${imageId} not found in store`);
+        }
+
+        return {
+          success: true,
+          content: null,
+        };
+      } else {
+        return {
+          success: false,
+          content: getErrorMessage(data),
+          status: status,
+        };
+      }
+    } catch (error) {
+      const _error = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        status: _error.response?.status,
+        content: getErrorMessage(_error.response?.data),
+      };
+    }
+  }
+
   return {
     clients,
     addClient,
@@ -310,5 +350,6 @@ export const useClientStore = defineStore("clientStore", () => {
     importClients,
     uploadImages,
     deleteImages,
+    makeImageObsolete,
   };
 });
