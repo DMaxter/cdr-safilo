@@ -73,6 +73,36 @@
           />
         </template>
       </P-Column>
+      <P-Column class="w-[10rem]" field="brand.name" header="Marca" sortable filter>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-MultiSelect
+            filter
+            fluid
+            v-model="filterModel.value"
+            @change="filterCallback()"
+            :options="brands"
+            placeholder="Marca"
+          />
+        </template>
+        <template #body="{ data }">
+          <span>{{ data.brand?.name }}</span>
+        </template>
+      </P-Column>
+      <P-Column class="w-[12rem]" field="materialNames" header="Material" filter>
+        <template #filter="{ filterModel, filterCallback }">
+          <P-MultiSelect
+            filter
+            fluid
+            v-model="filterModel.value"
+            @change="filterCallback()"
+            :options="materials"
+            placeholder="Material"
+          />
+        </template>
+        <template #body="{ data }">
+          <span>{{ data.materialNames.join(", ") }}</span>
+        </template>
+      </P-Column>
       <P-Column class="w-[10rem]" field="user" header="Comercial" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
@@ -103,20 +133,6 @@
           <span>
             {{ new Date(data.created).toLocaleString("pt-PT") }}
           </span>
-        </template>
-      </P-Column>
-      <P-Column class="w-[10rem]" field="cost" header="Custo" sortable filter>
-        <template #filter="{ filterModel, filterCallback }">
-          <P-InputText
-            fluid
-            v-model="filterModel.value"
-            type="number"
-            @input="filterCallback()"
-            placeholder="Custo"
-          />
-        </template>
-        <template #body="{ data }">
-          <div class="text-right">{{ data.cost.toFixed(2) }}</div>
         </template>
       </P-Column>
       <P-Column class="w-[10rem]">
@@ -151,7 +167,7 @@
 </template>
 
 <script lang="ts" setup>
-import { FilterMatchMode } from "@primevue/core/api";
+import { FilterMatchMode, FilterService } from "@primevue/core/api";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, ref, watch, type Ref } from "vue";
@@ -163,6 +179,12 @@ import { useRequestStore } from "@stores/requests";
 import { Client } from "@router/backend/services/client/types";
 import { Request, Status } from "@router/backend/services/request/types";
 import { getStatusIcon, getStatusClass } from "@/utils";
+
+// Custom match mode: a request matches when any of its slot materials is selected.
+FilterService.register("materialIn", (value: string[] | undefined, filter: string[] | null) => {
+  if (!filter || filter.length === 0) return true;
+  return filter.some((name) => value?.includes(name));
+});
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -179,6 +201,8 @@ const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isA
 
 const clients: Ref<Client[]> = ref([]);
 const commercialsFilterOptions: Ref<string[]> = ref([]);
+const brands: Ref<string[]> = ref([]);
+const materials: Ref<string[]> = ref([]);
 
 onMounted(async () => {
   await refreshRequests();
@@ -199,10 +223,11 @@ const filters = ref<Record<string, { value: unknown; matchMode: string }>>({
   "client.id": { value: null, matchMode: FilterMatchMode.IN },
   user: { value: null, matchMode: FilterMatchMode.IN },
   created: { value: null, matchMode: "between" },
-  cost: { value: null, matchMode: FilterMatchMode.EQUALS },
+  "brand.name": { value: null, matchMode: FilterMatchMode.IN },
+  materialNames: { value: null, matchMode: "materialIn" },
 });
 
-// Initialize filters from the URL (?id=, ?status=, ?client=, ?commercial=, ?creationDate=, ?cost=)
+// Initialize filters from the URL (?id=, ?status=, ?client=, ?commercial=, ?creationDate=, ?brand=, ?material=)
 if (route.query.id) {
   filters.value.id.value = Array.isArray(route.query.id)
     ? Number(route.query.id[0])
@@ -225,15 +250,18 @@ if (route.query.creationDate) {
     filters.value.created.value = dates;
   }
 }
-if (route.query.cost) {
-  filters.value.cost.value = Array.isArray(route.query.cost)
-    ? Number(route.query.cost[0])
-    : Number(route.query.cost);
+if (route.query.brand) {
+  filters.value["brand.name"].value = [route.query.brand].flat() as string[];
+}
+if (route.query.material) {
+  filters.value["materialNames"].value = [route.query.material].flat() as string[];
 }
 
 async function refreshRequests() {
   commercialsFilterOptions.value = [];
   clients.value = [];
+  brands.value = [];
+  materials.value = [];
 
   const response = await requestStore.getAllRequests();
   if (!response.success) {
@@ -255,6 +283,20 @@ async function refreshRequests() {
     }
   });
   clients.value = Array.from(uniqueClients.values());
+
+  // Populate brand filter options
+  brands.value = Array.from(new Set(currentRequests.map((r) => r.brand?.name ?? ""))).filter(
+    (b) => b !== "",
+  );
+
+  // Populate material filter options
+  const uniqueMaterials = new Set<string>();
+  currentRequests.forEach((r) => {
+    r.getMaterials().forEach((m) => {
+      if (m) uniqueMaterials.add(m);
+    });
+  });
+  materials.value = Array.from(uniqueMaterials);
 }
 
 function showSummary(item: Request) {
@@ -317,7 +359,8 @@ const URL_KEYS: Record<string, string> = {
   "client.id": "client",
   user: "commercial",
   created: "creationDate",
-  cost: "cost",
+  "brand.name": "brand",
+  materialNames: "material",
 };
 
 function updateFilterURL() {
