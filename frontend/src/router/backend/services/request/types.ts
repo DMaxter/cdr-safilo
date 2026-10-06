@@ -61,6 +61,10 @@ export class Request {
   getMeasurements(): number[][] {
     return this.type?.getMeasurements() ?? [];
   }
+
+  get materialNames(): string[] {
+    return this.getMaterials();
+  }
 }
 
 export abstract class RequestType {
