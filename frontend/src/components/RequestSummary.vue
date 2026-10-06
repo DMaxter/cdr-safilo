@@ -47,21 +47,23 @@
       </div>
       <div class="col-12 md:col-4">
         <label>Comercial:</label>
-        <div class="font-bold">{{ props.request.user }}</div>
+        <div class="font-bold">{{ props.request.user ?? "—" }}</div>
       </div>
       <div class="col-12 md:col-4">
         <label>Data de criação:</label>
-        <div class="font-bold">{{ new Date(props.request.created!!).toLocaleString("pt-PT") }}</div>
+        <div class="font-bold">
+          {{ props.request.created?.toLocaleString("pt-PT") ?? "—" }}
+        </div>
       </div>
       <div class="col-12 md:col-4">
         <label>Última atualização:</label>
         <div class="font-bold">
-          {{ new Date(props.request.lastUpdate!!).toLocaleString("pt-PT") }}
+          {{ props.request.lastUpdate?.toLocaleString("pt-PT") ?? "—" }}
         </div>
       </div>
       <div class="col-12 md:col-4">
         <label>Custo:</label>
-        <div class="font-bold">{{ props.request.cost!!.toFixed(2) }} Créditos</div>
+        <div class="font-bold">{{ props.request.cost?.toFixed(2) ?? "—" }} Créditos</div>
       </div>
       <div class="col-12 md:col-4">
         <label>Materiais:</label>
@@ -202,7 +204,7 @@ function close() {
 
 function confirmCancel() {
   confirm.require({
-    message: `Tem a certeza que pretende cancelar o pedido ${props.request.id} efetuado por ${props.request.user} para o cliente ${props.request.client?.name ?? "Desconhecido"}?`,
+    message: `Tem a certeza que pretende cancelar o pedido ${props.request.id} efetuado por ${props.request.user ?? "Desconhecido"} para o cliente ${props.request.client?.name ?? "Desconhecido"}?`,
     header: "Confirmar cancelamento de pedido",
     rejectProps: {
       label: "Abortar cancelamento",
