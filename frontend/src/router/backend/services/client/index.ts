@@ -27,7 +27,7 @@ export async function editClientNote(
   return await http.put(`/client/${id}`, note);
 }
 
-export async function importClients(file: string): Promise<AxiosResponse<null | Error>> {
+export async function importClients(file: File | Blob): Promise<AxiosResponse<null | Error>> {
   let form = new FormData();
 
   form.append("file", file);
