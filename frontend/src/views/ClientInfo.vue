@@ -26,6 +26,7 @@
         v-model="managing"
         :uploadAction="addImages"
         :deleteAction="deleteImages"
+        :obsoleteAction="obsoleteImages"
         :images="client.images"
       />
     </template>
@@ -144,6 +145,41 @@ async function deleteImages(images: Image[]) {
       detail: `Ocorreu um erro ao eliminar ${images.length > 1 ? "as imagens" : "a imagem"}`,
       life: 10000,
     });
+  }
+}
+
+async function obsoleteImages(images: Image[]) {
+  const imageIds = images.map((i) => i.id).filter((id) => typeof id === "number" && id > 0);
+
+  if (imageIds.length === 0) {
+    return;
+  }
+
+  const plural = imageIds.length > 1;
+  const errors: string[] = [];
+
+  for (const imageId of imageIds) {
+    const response = await clientStore.makeImageObsolete(client.value.id as number, imageId);
+    if (!response.success) {
+      errors.push(response.content ?? "Erro desconhecido");
+    }
+  }
+
+  if (errors.length === 0) {
+    toast.add({
+      severity: "success",
+      summary: IMAGE_TITLE,
+      detail: `${plural ? "Imagens marcadas como obsoletas" : "Imagem marcada como obsoleta"} com sucesso`,
+      life: 10000,
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: IMAGE_TITLE,
+      detail: `Ocorreu um erro ao marcar ${plural ? "as imagens" : "a imagem"} como ${plural ? "obsoletas" : "obsoleta"}`,
+      life: 10000,
+    });
+    console.error(errors);
   }
 }
 
