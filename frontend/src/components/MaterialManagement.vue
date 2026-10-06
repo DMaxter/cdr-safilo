@@ -2,18 +2,18 @@
   <P-Dialog modal v-model:visible="enabled">
     <template #header>{{ editing ? "Editar Material" : "Adicionar Material" }}</template>
     <P-FloatLabel v-if="editing" class="field" variant="on">
-      <P-InputText id="id" fluid disabled v-model="props.material.id" />
+      <P-InputText id="id" fluid disabled v-model="draft.id" />
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" required fluid v-model="props.material.name" />
+      <P-InputText id="name" required fluid v-model="draft.name" />
       <label for="name">Nome</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-MultiSelect
         id="mandatoryFinishings"
         fluid
-        v-model="props.material.mandatoryFinishings"
+        v-model="draft.mandatoryFinishings"
         :options="finishingGroupStore.finishingGroups"
         optionLabel="name"
         placeholder="Grupos de acabamentos obrigatórios"
@@ -24,7 +24,7 @@
       <P-MultiSelect
         id="additionalFinishings"
         fluid
-        v-model="props.material.additionalFinishings"
+        v-model="draft.additionalFinishings"
         :options="finishingStore.finishings"
         optionLabel="name"
         placeholder="Acabamentos adicionais"
@@ -32,7 +32,7 @@
       <label for="additionalFinishings">Acabamentos adicionais</label>
     </P-FloatLabel>
     <div v-if="editing" class="field flex items-center gap-2">
-      <P-ToggleSwitch id="obsolete" v-model="props.material.obsolete" />
+      <P-ToggleSwitch id="obsolete" v-model="draft.obsolete" />
       <label for="obsolete">Obsoleto</label>
     </div>
     <template #footer>
@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import { Material } from "@router/backend/services/material/types";
 import { useMaterialStore } from "@stores/materials";
@@ -61,6 +61,16 @@ const props = defineProps<{
 }>();
 
 const TITLE = computed(() => (editing.value ? "Edição de material" : "Criação de material"));
+
+// Work on a copy so edits don't leak into the store until save.
+const draft = ref<Material>(new Material());
+watch(
+  () => [props.material, mode.value] as const,
+  () => {
+    draft.value = new Material(props.material);
+  },
+  { immediate: true },
+);
 
 const materialStore = useMaterialStore();
 const finishingStore = useFinishingStore();
@@ -81,7 +91,7 @@ async function action() {
 }
 
 async function createMaterial() {
-  const response = await materialStore.addMaterial(props.material);
+  const response = await materialStore.addMaterial(draft.value);
 
   if (response.success) {
     toast.add({
@@ -102,7 +112,7 @@ async function createMaterial() {
 }
 
 async function updateMaterial() {
-  const response = await materialStore.editMaterial(props.material);
+  const response = await materialStore.editMaterial(draft.value);
 
   if (response.success) {
     toast.add({
