@@ -170,7 +170,7 @@ export const useClientStore = defineStore("clientStore", () => {
 
   async function importClients(file: File): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.clients.importClients(file as unknown as string);
+      const { status, data } = await API.clients.importClients(file);
 
       if (status === 200) {
         return await getClients();
