@@ -24,3 +24,19 @@ export function getErrorMessage(data: unknown): string {
 
   return "Erro desconhecido";
 }
+
+/** Unwrap the JSON error body carried by a blob response. */
+export async function getBlobErrorMessage(data: unknown): Promise<string> {
+  if (data instanceof Blob) {
+    const text = await data.text().catch(() => "");
+    if (!text) return "Erro desconhecido";
+
+    try {
+      return getErrorMessage(JSON.parse(text));
+    } catch {
+      return getErrorMessage(text);
+    }
+  }
+
+  return getErrorMessage(data);
+}
