@@ -26,9 +26,10 @@
       {{ props.request.observations ? props.request.observations : "Sem observações" }}
     </p>
     <p><b>Quantidade:</b> {{ props.request.amount }}</p>
-    <p><b>Data do pedido:</b> {{ props.request.created!!.toLocaleString("pt-PT") }}</p>
+    <p><b>Data do pedido:</b> {{ props.request.created?.toLocaleString("pt-PT") ?? "—" }}</p>
     <p>
-      <b>Data da última modificação:</b> {{ props.request.lastUpdate!!.toLocaleString("pt-PT") }}
+      <b>Data da última modificação:</b>
+      {{ props.request.lastUpdate?.toLocaleString("pt-PT") ?? "—" }}
     </p>
     <p><b>Marca:</b> {{ props.request.brand!!.name }}</p>
     <PrintSlot

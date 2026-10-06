@@ -35,11 +35,11 @@
 
         <div>
           <label>Custo:</label>
-          <div class="font-bold">{{ request.cost.toFixed(2) }} Créditos</div>
+          <div class="font-bold">{{ request.cost?.toFixed(2) ?? "—" }} Créditos</div>
         </div>
         <div>
           <label>Comercial:</label>
-          <div class="font-bold">{{ request.user }}</div>
+          <div class="font-bold">{{ request.user ?? "—" }}</div>
         </div>
         <div>
           <label>Data de criação:</label>
@@ -241,7 +241,7 @@ function confirmCancel() {
   const current = request.value;
 
   confirm.require({
-    message: `Tem a certeza que pretende cancelar o pedido ${current.id} efetuado por ${current.user} para o cliente ${current.client?.name ?? "Desconhecido"}?`,
+    message: `Tem a certeza que pretende cancelar o pedido ${current.id} efetuado por ${current.user ?? "Desconhecido"} para o cliente ${current.client?.name ?? "Desconhecido"}?`,
     header: "Confirmar cancelamento de pedido",
     rejectProps: {
       label: "Abortar cancelamento",
