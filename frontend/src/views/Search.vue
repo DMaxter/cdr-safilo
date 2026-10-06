@@ -154,7 +154,7 @@
 import { FilterMatchMode } from "@primevue/core/api";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-import { computed, onMounted, reactive, ref, type Ref } from "vue";
+import { computed, onMounted, ref, watch, type Ref } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 
 import { statusItems } from "@/maps";
@@ -202,8 +202,7 @@ const filters = ref<Record<string, { value: unknown; matchMode: string }>>({
   cost: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-// FIXME:
-// Parse route path and initialize filters
+// Initialize filters from the URL (?id=, ?status=, ?client=, ?commercial=, ?creationDate=, ?cost=)
 if (route.query.id) {
   filters.value.id.value = Array.isArray(route.query.id)
     ? Number(route.query.id[0])
@@ -231,7 +230,6 @@ if (route.query.cost) {
     ? Number(route.query.cost[0])
     : Number(route.query.cost);
 }
-// END FIXME:
 
 async function refreshRequests() {
   commercialsFilterOptions.value = [];
@@ -312,7 +310,16 @@ function confirmCancel(request: Request) {
   });
 }
 
-// TODO: FIXME
+// Map filter keys to the URL query params the parse block above expects.
+const URL_KEYS: Record<string, string> = {
+  id: "id",
+  status: "status",
+  "client.id": "client",
+  user: "commercial",
+  created: "creationDate",
+  cost: "cost",
+};
+
 function updateFilterURL() {
   let query: LocationQueryRaw = {};
 
@@ -324,18 +331,20 @@ function updateFilterURL() {
       (!Array.isArray(filter.value) || filter.value.length > 0)
     ) {
       if (key === "created" && Array.isArray(filter.value)) {
-        // filter.value will be an array of two Dates [startDate, endDate]
-        // Convert to ISO string for URL
-        query[key] = filter.value.map((d) => d.toISOString());
-      } else if (key === "status" && Array.isArray(filter.value)) {
-        query[key] = filter.value.map((s: Status) => s.toString());
+        // filter.value is an array of two Dates [startDate, endDate] — send ISO strings.
+        query[URL_KEYS[key]] = (filter.value as Date[]).map((d) => d.toISOString());
+      } else if (Array.isArray(filter.value)) {
+        query[URL_KEYS[key]] = filter.value.map(String);
       } else {
-        query[key] = String(filter.value);
+        query[URL_KEYS[key]] = String(filter.value);
       }
     }
   }
-  router.push({ query: query });
+
+  router.replace({ query: query });
 }
+
+watch(filters, () => updateFilterURL(), { deep: true });
 
 function editRequest(item: Request) {
   router.push({ name: "order", query: { id: item.id } });
