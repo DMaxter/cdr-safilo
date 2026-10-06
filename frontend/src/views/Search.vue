@@ -123,7 +123,6 @@
         <template #body="{ data }">
           <Icon icon="visibility" @click="showSummary(data)" v-tooltip="'Ver resumo'" />
           <Icon icon="open_in_new" @click="openDetails(data)" v-tooltip="'Ver detalhes'" />
-          <!-- TODO: Implement edit -->
           <Icon
             v-if="
               (canManipulate ||
@@ -338,8 +337,9 @@ function updateFilterURL() {
   router.push({ query: query });
 }
 
-// TODO: Implement
-function editRequest(item: Request) {}
+function editRequest(item: Request) {
+  router.push({ name: "order", query: { id: item.id } });
+}
 </script>
 
 <style lang="scss" scoped>
