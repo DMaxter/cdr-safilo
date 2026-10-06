@@ -107,7 +107,7 @@
 <script lang="ts" setup>
 import { FilterMatchMode } from "@primevue/core/api";
 import { useToast } from "primevue/usetoast";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 
 import { Client } from "@router/backend/services/client/types";
@@ -129,11 +129,7 @@ const clientStore = useClientStore();
 const requestStore = useRequestStore();
 const toast = useToast();
 
-const ids: unknown[] = reactive([]); // TODO: REMOVE
 const banners = computed(() => [...new Set(clientStore.clients.map((c) => c.banner))]);
-const cities: unknown[] = reactive([]); // TODO: REMOVE
-
-const searchValue = ref(""); // TODO: REMOVE
 
 const canAnnotate = authStore.isCdr() || authStore.isAdmin();
 
@@ -195,11 +191,11 @@ async function downloadRequests() {
 }
 
 const filters = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  banner: { value: null, matchMode: FilterMatchMode.IN },
-  name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  city: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS },
+  id: { value: null as string | null, matchMode: FilterMatchMode.STARTS_WITH },
+  banner: { value: null as string[] | null, matchMode: FilterMatchMode.IN },
+  name: { value: null as string | null, matchMode: FilterMatchMode.STARTS_WITH },
+  city: { value: null as string | null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 
 async function addClient() {
@@ -207,56 +203,39 @@ async function addClient() {
   manageMode.value = ManageMode.Add;
 }
 
-// FIXME: UPDATE TO USE NEW VALUES
-const searchFilter = reactive<Record<string, unknown[]>>({
-  id: [],
-  banner: [],
-  name: [],
-  city: [],
-});
-
+// Initialize table filters from the URL (?id=, ?banner=, ?name=, ?city=)
 if (route.query.id) {
-  searchFilter["id"] = [route.query.id]
-    .flat()
-    .map((id) => {
-      try {
-        return Number(id);
-      } catch (e) {
-        console.error("Invalid request id");
-        return undefined;
-      }
-    })
-    .filter((id): id is number => id !== undefined);
+  filters.value.id.value = [route.query.id].flat()[0];
 }
 if (route.query.banner) {
-  searchFilter["banner"] = [route.query.banner].flat().filter((v): v is string => v !== null);
+  filters.value.banner.value = [route.query.banner].flat().filter((v): v is string => v !== null);
 }
 if (route.query.name) {
-  searchFilter["name"] = [route.query.name].flat().filter((v): v is string => v !== null);
+  filters.value.name.value = [route.query.name].flat()[0];
 }
 if (route.query.city) {
-  searchFilter["city"] = [route.query.city].flat().filter((v): v is string => v !== null);
+  filters.value.city.value = [route.query.city].flat()[0];
 }
 
 function updateFilterURL() {
-  let query: Record<string, unknown> = {};
+  let query: LocationQueryRaw = {};
 
-  if (searchFilter["id"]?.length) {
-    query["id"] = searchFilter["id"];
-  }
-  if (searchFilter["banner"]?.length) {
-    query["banner"] = searchFilter["banner"];
-  }
-  if (searchFilter["name"]?.length) {
-    query["name"] = searchFilter["name"];
-  }
-  if (searchFilter["city"]?.length) {
-    query["city"] = searchFilter["city"];
+  const entries: Array<[string, string | string[] | null]> = [
+    ["id", filters.value.id.value],
+    ["banner", filters.value.banner.value],
+    ["name", filters.value.name.value],
+    ["city", filters.value.city.value],
+  ];
+
+  for (const [key, value] of entries) {
+    if (value === null || value === "" || (Array.isArray(value) && value.length === 0)) continue;
+    query[key] = Array.isArray(value) ? value : String(value);
   }
 
-  router.push({ query: query as LocationQueryRaw });
+  router.replace({ query: query });
 }
-// END FIXME:
+
+watch(filters, () => updateFilterURL(), { deep: true });
 
 async function importClients(file: File) {
   const response = await clientStore.importClients(file);
