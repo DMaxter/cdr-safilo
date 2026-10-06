@@ -74,5 +74,6 @@ export async function editRequest(
 }
 
 export async function exportRequests(): Promise<AxiosResponse<Blob | Error>> {
-  return await http.get("/request/export", { responseType: "blob" });
+  // Server-side export can exceed the global 10 s timeout.
+  return await http.get("/request/export", { responseType: "blob", timeout: 30000 });
 }
