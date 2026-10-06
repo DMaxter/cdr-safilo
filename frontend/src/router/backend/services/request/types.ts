@@ -6,14 +6,14 @@ import { Finishing } from "@router/backend/services/finishing/types";
 
 export class Request {
   id: number = 0;
-  user: string = "";
+  user: string | null = null;
   client: Client | null = null;
   created: Date | null = null;
   lastUpdate: Date | null = null;
   trackingCode: number | null = null;
   status: Status = Status.Ordered;
   type: RequestType | null = null;
-  cost: number = 0;
+  cost: number | null = null;
   observations: string = "";
   application: boolean = false;
   brand: Brand | null = null;

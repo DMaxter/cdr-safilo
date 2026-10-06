@@ -328,7 +328,7 @@ function confirmCancel(request: Request) {
   selectedRequestId.value = request.id;
 
   confirm.require({
-    message: `Tem a certeza que pretende cancelar o pedido ${selectedRequest.value.id} efetuado por ${selectedRequest.value.user} para o cliente ${selectedRequest.value.client?.name ?? "Desconhecido"}?`,
+    message: `Tem a certeza que pretende cancelar o pedido ${selectedRequest.value.id} efetuado por ${selectedRequest.value.user ?? "Desconhecido"} para o cliente ${selectedRequest.value.client?.name ?? "Desconhecido"}?`,
     header: "Confirmar cancelamento de pedido",
     rejectProps: {
       label: "Abortar cancelamento",
