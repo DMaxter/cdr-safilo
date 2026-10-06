@@ -9,9 +9,13 @@ import { Request, Status } from "@router/backend/services/request/types";
 
 export const useRequestStore = defineStore("requestStore", () => {
   const requests = ref<Request[]>([]);
+  // Tracks whether the request list has been fetched at least once, so returning
+  // to screens like Search reuses the cached data instead of re-hitting the backend.
+  const loaded = ref(false);
 
   function init(data: Request[]) {
     requests.value = data.map((item) => new Request(item));
+    loaded.value = true;
   }
 
   function add(request: Request) {
@@ -31,7 +35,11 @@ export const useRequestStore = defineStore("requestStore", () => {
     requests.value[index] = new Request(updated as unknown as Request);
   }
 
-  async function getAllRequests(): Promise<APIResponse<string | null>> {
+  async function getAllRequests(force = false): Promise<APIResponse<string | null>> {
+    if (!force && loaded.value) {
+      return { success: true, content: null, status: 200 };
+    }
+
     try {
       const { status, data } = await API.requests.getAllRequests();
 
@@ -209,6 +217,7 @@ export const useRequestStore = defineStore("requestStore", () => {
 
   return {
     requests,
+    loaded,
     getAllRequests,
     addRequest,
     editRequest,
