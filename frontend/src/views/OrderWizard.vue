@@ -253,6 +253,7 @@
                   <template v-if="estimatedPrice !== null"
                     >{{ estimatedPrice.toFixed(2) }} Créditos</template
                   >
+                  <template v-else-if="!canEstimatePrice">—</template>
                   <template v-else>A calcular...</template>
                 </div>
               </div>
@@ -302,7 +303,7 @@
         <p>O pedido foi submetido com sucesso.</p>
       </div>
       <template #footer>
-        <P-Button label="Ir para o perfil" @click="router.push('profile')" />
+        <P-Button :label="successButtonLabel" @click="onSuccessContinue" />
       </template>
     </P-Dialog>
   </Container>
@@ -342,10 +343,24 @@ const finishingStore = useFinishingStore();
 const requestStore = useRequestStore();
 const wizard = useOrderWizardStore();
 
+const submitTitle = computed(() => (wizard.isEditing ? "Editar Pedido" : TITLE));
+
+// Mirrors @RolesAllowed(COMMERCIAL, ADMIN) on POST /request/price
+const canEstimatePrice = computed(() => authStore.isCommercial() || authStore.isAdmin());
+
 const selectedClient = ref<Client | null>(null);
 const successDialog = ref(false);
 const estimatedPrice = ref<number | null>(null);
 const slotStep = ref(1);
+
+const successButtonLabel = computed(() =>
+  wizard.isEditing ? "Voltar à pesquisa" : "Ir para o perfil",
+);
+
+function onSuccessContinue() {
+  successDialog.value = false;
+  router.push({ name: wizard.isEditing ? "search" : "profile" });
+}
 
 const TYPE_ICONS: Record<RequestTypeName, string> = {
   OneFace: "crop_portrait",
@@ -473,12 +488,17 @@ function goToStep(target: number) {
 }
 
 async function estimatePrice() {
+  estimatedPrice.value = null;
+
+  // POST /request/price is restricted to COMMERCIAL/ADMIN — CDR and MANAGER reach
+  // the wizard through the edit action, so skip the call instead of getting a 403.
+  if (!canEstimatePrice.value) return;
+
   const request = wizard.buildRequest();
   const response = await requestStore.checkPrice(request);
   if (response.success) {
     estimatedPrice.value = response.content as number;
   } else {
-    estimatedPrice.value = null;
     toast.add({
       severity: "warn",
       summary: TITLE,
@@ -504,7 +524,7 @@ async function submit() {
   if (response.success) {
     toast.add({
       severity: "success",
-      summary: TITLE,
+      summary: submitTitle.value,
       detail: wizard.isEditing ? "Pedido editado com sucesso" : "Pedido criado com sucesso",
       life: 10000,
     });
@@ -512,7 +532,7 @@ async function submit() {
   } else {
     toast.add({
       severity: "error",
-      summary: TITLE,
+      summary: submitTitle.value,
       detail: (response.content as string) || "Ocorreu um erro ao submeter o pedido",
       life: 10000,
     });
