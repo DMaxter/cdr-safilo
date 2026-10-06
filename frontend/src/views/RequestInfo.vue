@@ -230,7 +230,7 @@ function print() {
 }
 
 function refreshRequest() {
-  requestStore.getAllRequests();
+  requestStore.getAllRequests(true);
 }
 
 function confirmCancel() {
@@ -292,7 +292,7 @@ onMounted(async () => {
     return;
   }
 
-  const response = await requestStore.getAllRequests();
+  const response = await requestStore.getAllRequests(true);
 
   if (!response.success) {
     toast.add({

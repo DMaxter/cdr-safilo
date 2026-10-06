@@ -170,7 +170,7 @@
 import { FilterMatchMode, FilterService } from "@primevue/core/api";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-import { computed, onMounted, ref, watch, type Ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 
 import { statusItems } from "@/maps";
@@ -199,10 +199,34 @@ const TITLE = "Cancelamento de Pedido";
 
 const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
-const clients: Ref<Client[]> = ref([]);
-const commercialsFilterOptions: Ref<string[]> = ref([]);
-const brands: Ref<string[]> = ref([]);
-const materials: Ref<string[]> = ref([]);
+// Filter options are derived straight from the loaded requests (like ClientList's
+// banner options), so they are never empty when returning to this screen.
+const commercialsFilterOptions = computed(() =>
+  Array.from(new Set(requestStore.requests.map((r) => r.user!!))),
+);
+const clients = computed(() => {
+  const uniqueClients = new Map<number | string, Client>();
+  requestStore.requests.forEach((r) => {
+    if (r.client?.id && !uniqueClients.has(r.client.id)) {
+      uniqueClients.set(r.client.id, r.client);
+    }
+  });
+  return Array.from(uniqueClients.values());
+});
+const brands = computed(() =>
+  Array.from(new Set(requestStore.requests.map((r) => r.brand?.name ?? ""))).filter(
+    (b) => b !== "",
+  ),
+);
+const materials = computed(() => {
+  const names = new Set<string>();
+  requestStore.requests.forEach((r) => {
+    r.getMaterials().forEach((m) => {
+      if (m) names.add(m);
+    });
+  });
+  return Array.from(names);
+});
 
 onMounted(async () => {
   await refreshRequests();
@@ -258,45 +282,11 @@ if (route.query.material) {
 }
 
 async function refreshRequests() {
-  commercialsFilterOptions.value = [];
-  clients.value = [];
-  brands.value = [];
-  materials.value = [];
-
+  // Skips the backend call when the store already holds the requests.
   const response = await requestStore.getAllRequests();
   if (!response.success) {
     console.error("Failed to retrieve requests:", response.content);
-    return;
   }
-
-  const currentRequests = requestStore.requests;
-
-  // Populate commercial filter options
-  const uniqueCommercials = new Set(currentRequests.map((r) => r.user!!));
-  commercialsFilterOptions.value = Array.from(uniqueCommercials);
-
-  // Populate client filter options
-  const uniqueClients = new Map<number | string, Client>();
-  currentRequests.forEach((r) => {
-    if (r.client?.id && !uniqueClients.has(r.client.id)) {
-      uniqueClients.set(r.client.id, r.client);
-    }
-  });
-  clients.value = Array.from(uniqueClients.values());
-
-  // Populate brand filter options
-  brands.value = Array.from(new Set(currentRequests.map((r) => r.brand?.name ?? ""))).filter(
-    (b) => b !== "",
-  );
-
-  // Populate material filter options
-  const uniqueMaterials = new Set<string>();
-  currentRequests.forEach((r) => {
-    r.getMaterials().forEach((m) => {
-      if (m) uniqueMaterials.add(m);
-    });
-  });
-  materials.value = Array.from(uniqueMaterials);
 }
 
 function showSummary(item: Request) {
@@ -309,7 +299,8 @@ function openDetails(item: Request) {
 }
 
 async function onWaybillOpened() {
-  await requestStore.getAllRequests();
+  // Waybill/cancel actions change the request server-side, so force a re-sync.
+  await requestStore.getAllRequests(true);
 }
 
 async function cancelRequest() {
