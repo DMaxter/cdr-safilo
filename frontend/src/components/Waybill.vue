@@ -15,15 +15,43 @@
               :options="services"
               optionLabel="name"
               v-model="waybill.service"
+              @blur="touch('service')"
+              :invalid="touched.service && !!errors.service"
             />
             <label for="service">Serviço</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.service && errors.service"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.service }}
+          </P-Message>
         </div>
         <div class="col-span-6">
           <P-FloatLabel class="field" variant="on">
-            <P-InputNumber fluid id="amount" ref="amount" :min="1" v-model="waybill.items" />
+            <P-InputNumber
+              fluid
+              id="amount"
+              ref="amount"
+              :min="1"
+              v-model="waybill.items"
+              @blur="touch('items')"
+              :invalid="touched.items && !!errors.items"
+            />
             <label for="amount">Número de pacotes</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.items && errors.items"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.items }}
+          </P-Message>
         </div>
       </div>
       <!-- Row 2: 2 fields -->
@@ -37,9 +65,20 @@
               :options="packages"
               optionLabel="name"
               v-model="waybill.packaging"
+              @blur="touch('packaging')"
+              :invalid="touched.packaging && !!errors.packaging"
             />
             <label for="package">Tipo de Encomenda</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.packaging && errors.packaging"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.packaging }}
+          </P-Message>
         </div>
         <div class="col-span-6">
           <P-FloatLabel class="field" variant="on">
@@ -50,18 +89,45 @@
               :min="0"
               :step="0.01"
               v-model="waybill.totalWeight"
+              @blur="touch('totalWeight')"
+              :invalid="touched.totalWeight && !!errors.totalWeight"
             />
             <label for="weight">Peso Total (kg)</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.totalWeight && errors.totalWeight"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.totalWeight }}
+          </P-Message>
         </div>
       </div>
       <!-- Row 3: 1 field -->
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12">
           <P-FloatLabel class="field" variant="on">
-            <P-InputText fluid id="description" ref="description" v-model="waybill.description" />
+            <P-InputText
+              fluid
+              id="description"
+              ref="description"
+              v-model="waybill.description"
+              @blur="touch('description')"
+              :invalid="touched.description && !!errors.description"
+            />
             <label for="description">Descrição</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.description && errors.description"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.description }}
+          </P-Message>
         </div>
       </div>
       <!-- Row 4: 4 fields -->
@@ -74,9 +140,20 @@
               ref="format"
               :options="labels"
               v-model="waybill.labelFormat"
+              @blur="touch('labelFormat')"
+              :invalid="touched.labelFormat && !!errors.labelFormat"
             />
             <label for="format">Formato</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.labelFormat && errors.labelFormat"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.labelFormat }}
+          </P-Message>
         </div>
         <div class="col-span-3">
           <P-FloatLabel class="field" variant="on">
@@ -87,9 +164,20 @@
               :min="0"
               :step="0.01"
               v-model="waybill.dimensions.height"
+              @blur="touch('height')"
+              :invalid="touched.height && !!errors.height"
             />
             <label for="height">Altura (m)</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.height && errors.height"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.height }}
+          </P-Message>
         </div>
         <div class="col-span-3">
           <P-FloatLabel class="field" variant="on">
@@ -100,9 +188,20 @@
               :min="0"
               :step="0.01"
               v-model="waybill.dimensions.width"
+              @blur="touch('width')"
+              :invalid="touched.width && !!errors.width"
             />
             <label for="width">Largura (m)</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.width && errors.width"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.width }}
+          </P-Message>
         </div>
         <div class="col-span-3">
           <P-FloatLabel class="field" variant="on">
@@ -110,13 +209,23 @@
               fluid
               id="length"
               ref="length"
-              label="Comprimento (m)*"
               :min="0"
               :step="0.01"
               v-model="waybill.dimensions.length"
+              @blur="touch('length')"
+              :invalid="touched.length && !!errors.length"
             />
             <label for="length">Comprimento (m)</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.length && errors.length"
+            class="mt-2"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.length }}
+          </P-Message>
         </div>
       </div>
       <P-Accordion>
@@ -217,6 +326,7 @@ import { computed, ref, watch } from "vue";
 
 import { API } from "@router/backend";
 import type { Request } from "@router/backend/services/request/types";
+import { required, validateField } from "@/rules";
 import {
   Waybill,
   Contact,
@@ -224,8 +334,6 @@ import {
   Service,
   type LabelFormat,
 } from "@router/backend/services/waybill/types";
-
-// TODO: Implement all validations
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -290,6 +398,31 @@ function prefillDestination() {
     }),
   });
 }
+
+const touched = ref<Record<string, boolean>>({});
+
+function touch(field: string) {
+  touched.value[field] = true;
+}
+
+const positive = (value: number) => value > 0 || "O valor tem de ser maior que zero";
+
+const errors = computed(() => ({
+  service: waybill.value.service ? null : "Selecione um serviço",
+  packaging: waybill.value.packaging ? null : "Selecione um tipo de encomenda",
+  items: validateField(waybill.value.items, [positive]),
+  totalWeight: validateField(waybill.value.totalWeight, [positive]),
+  labelFormat: waybill.value.labelFormat ? null : "Selecione um formato",
+  description: validateField(waybill.value.description.trim(), [required]),
+  height: validateField(waybill.value.dimensions.height, [positive]),
+  width: validateField(waybill.value.dimensions.width, [positive]),
+  length: validateField(waybill.value.dimensions.length, [positive]),
+}));
+
+const errorList = computed(() =>
+  Object.values(errors.value).filter((error): error is string => error !== null),
+);
+const isValid = computed(() => errorList.value.length === 0);
 
 function orNull(value: string | null): string | null {
   const trimmed = value?.trim();
@@ -443,6 +576,20 @@ function buildPayload(): Waybill {
 }
 
 async function createWaybill() {
+  for (const field of Object.keys(errors.value)) {
+    touched.value[field] = true;
+  }
+
+  if (!isValid.value) {
+    toast.add({
+      severity: "warn",
+      summary: WAYBILL_TITLE,
+      detail: errorList.value[0],
+      life: 10000,
+    });
+    return;
+  }
+
   try {
     const { status, data } = await API.waybill.openWaybill(props.request.id, buildPayload());
 
