@@ -418,7 +418,7 @@ const currentSlotConfig = computed(() => {
 
 function isSlotValid(key: string) {
   const slot = wizard.slots[key];
-  if (!slot || !slot.material) return false;
+  if (!slot || !slot.material || !slot.image) return false;
   if (slot.width <= 0 || slot.height <= 0) return false;
   return mandatoryGroupIssues(slot).length === 0;
 }
