@@ -6,9 +6,25 @@
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" required fluid v-model="draft.name" />
+      <P-InputText
+        id="name"
+        required
+        fluid
+        v-model="draft.name"
+        @blur="touched = true"
+        :invalid="touched && !!nameError"
+      />
       <label for="name">Nome</label>
     </P-FloatLabel>
+    <P-Message
+      v-if="touched && nameError"
+      class="mt-2"
+      severity="error"
+      size="small"
+      variant="simple"
+    >
+      {{ nameError }}
+    </P-Message>
     <P-FloatLabel class="field" variant="on">
       <P-MultiSelect
         id="mandatoryFinishings"
@@ -50,6 +66,7 @@ import { Material } from "@router/backend/services/material/types";
 import { useMaterialStore } from "@stores/materials";
 import { useFinishingStore } from "@stores/finishings";
 import { useFinishingGroupStore } from "@stores/finishingGroups";
+import { required, validateField } from "@/rules";
 import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
@@ -77,12 +94,27 @@ const finishingStore = useFinishingStore();
 const finishingGroupStore = useFinishingGroupStore();
 const toast = useToast();
 
+const touched = ref(false);
+const nameError = computed(() => validateField(draft.value.name.trim(), [required]));
+
 onMounted(async () => {
   await finishingStore.getFinishings();
   await finishingGroupStore.getFinishingGroups();
 });
 
 async function action() {
+  touched.value = true;
+
+  if (nameError.value) {
+    toast.add({
+      severity: "warn",
+      summary: TITLE.value,
+      detail: nameError.value,
+      life: 10000,
+    });
+    return;
+  }
+
   if (editing.value) {
     await updateMaterial();
   } else {

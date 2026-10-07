@@ -6,9 +6,25 @@
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" required fluid v-model="draft.name" />
+      <P-InputText
+        id="name"
+        required
+        fluid
+        v-model="draft.name"
+        @blur="touched = true"
+        :invalid="touched && !!nameError"
+      />
       <label for="name">Nome</label>
     </P-FloatLabel>
+    <P-Message
+      v-if="touched && nameError"
+      class="mt-2"
+      severity="error"
+      size="small"
+      variant="simple"
+    >
+      {{ nameError }}
+    </P-Message>
     <template #footer>
       <P-Button text @click="close">Voltar</P-Button>
       <P-Button text @click="action">{{ editing ? "Atualizar" : "Adicionar" }}</P-Button>
@@ -22,6 +38,7 @@ import { computed, ref, watch } from "vue";
 
 import { Brand } from "@router/backend/services/brand/types";
 import { useBrandStore } from "@stores/brands";
+import { required, validateField } from "@/rules";
 import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
@@ -47,7 +64,22 @@ watch(
 const brandStore = useBrandStore();
 const toast = useToast();
 
+const touched = ref(false);
+const nameError = computed(() => validateField(draft.value.name.trim(), [required]));
+
 async function action() {
+  touched.value = true;
+
+  if (nameError.value) {
+    toast.add({
+      severity: "warn",
+      summary: TITLE.value,
+      detail: nameError.value,
+      life: 10000,
+    });
+    return;
+  }
+
   if (editing.value) {
     await updateBrand();
   } else {
