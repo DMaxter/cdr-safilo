@@ -140,21 +140,13 @@
           <Icon icon="visibility" @click="showSummary(data)" v-tooltip="'Ver resumo'" />
           <Icon icon="open_in_new" @click="openDetails(data)" v-tooltip="'Ver detalhes'" />
           <Icon
-            v-if="
-              (canManipulate ||
-                (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
-              data.status!! === Status.Ordered
-            "
+            v-if="canCancel(data)"
             icon="edit"
             @click="editRequest(data)"
             v-tooltip="'Editar'"
           />
           <Icon
-            v-if="
-              (canManipulate ||
-                (authStore.isCommercial() && data.user == authStore.logged?.name)) &&
-              data.status!! === Status.Ordered
-            "
+            v-if="canCancel(data)"
             icon="cancel"
             @click="confirmCancel(data)"
             v-tooltip="'Cancelar'"
@@ -174,8 +166,8 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 
 import { statusItems } from "@/maps";
-import { useAuthStore } from "@stores/auth";
 import { useRequestStore } from "@stores/requests";
+import { useRequestAccess } from "@/composables/useRequestAccess";
 import { Client } from "@router/backend/services/client/types";
 import { Request, Status } from "@router/backend/services/request/types";
 import { getStatusIcon, getStatusClass } from "@/utils";
@@ -189,15 +181,13 @@ FilterService.register("materialIn", (value: string[] | undefined, filter: strin
 const confirm = useConfirm();
 const toast = useToast();
 
-const authStore = useAuthStore();
 const requestStore = useRequestStore();
+const { canCancel } = useRequestAccess();
 
 const route = useRoute();
 const router = useRouter();
 
 const TITLE = "Cancelamento de Pedido";
-
-const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
 // Filter options are derived straight from the loaded requests (like ClientList's
 // banner options), so they are never empty when returning to this screen.
