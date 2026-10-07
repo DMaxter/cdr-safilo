@@ -41,6 +41,8 @@
               v-model="filterModel.value"
               @change="filterCallback()"
               :options="banners"
+              optionLabel="label"
+              optionValue="value"
               placeholder="Banner"
             />
           </template>
@@ -105,7 +107,7 @@
 </template>
 
 <script lang="ts" setup>
-import { FilterMatchMode } from "@primevue/core/api";
+import { FilterMatchMode, FilterService } from "@primevue/core/api";
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
@@ -115,6 +117,11 @@ import { useAuthStore } from "@stores/auth";
 import { useClientStore } from "@stores/clients";
 import { useRequestStore } from "@stores/requests";
 import { ManageMode } from "@/utils";
+
+FilterService.register("bannerIn", (value: string | null | undefined, filter: string[] | null) => {
+  if (!filter || filter.length === 0) return true;
+  return filter.includes(value ?? "");
+});
 
 const route = useRoute();
 const router = useRouter();
@@ -129,7 +136,22 @@ const clientStore = useClientStore();
 const requestStore = useRequestStore();
 const toast = useToast();
 
-const banners = computed(() => [...new Set(clientStore.clients.map((c) => c.banner))]);
+const banners = computed(() => {
+  const unique = new Set(clientStore.clients.map((c) => c.banner ?? ""));
+  const options: { label: string; value: string }[] = [];
+
+  if (unique.has("")) {
+    options.push({ label: "Sem banner", value: "" });
+  }
+
+  for (const banner of unique) {
+    if (banner !== "") {
+      options.push({ label: banner, value: banner });
+    }
+  }
+
+  return options;
+});
 
 const canAnnotate = authStore.isCdr() || authStore.isAdmin();
 
@@ -193,7 +215,7 @@ async function downloadRequests() {
 const filters = ref({
   global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS },
   id: { value: null as string | null, matchMode: FilterMatchMode.STARTS_WITH },
-  banner: { value: null as string[] | null, matchMode: FilterMatchMode.IN },
+  banner: { value: null as string[] | null, matchMode: "bannerIn" },
   name: { value: null as string | null, matchMode: FilterMatchMode.STARTS_WITH },
   city: { value: null as string | null, matchMode: FilterMatchMode.STARTS_WITH },
 });
