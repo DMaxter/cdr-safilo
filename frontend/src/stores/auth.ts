@@ -56,7 +56,7 @@ export const useAuthStore = defineStore("authStore", () => {
       const { status, data } = await API.auth.login(request);
 
       if (status === 200) {
-        logged.value = data as unknown as User;
+        await isLoggedIn();
 
         return {
           success: true,
