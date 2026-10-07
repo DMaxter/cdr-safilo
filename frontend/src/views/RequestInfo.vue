@@ -270,6 +270,8 @@ async function cancelRequest() {
       detail: "Pedido cancelado com sucesso",
       life: 10000,
     });
+
+    await refreshRequest();
   } else {
     toast.add({
       severity: "error",
