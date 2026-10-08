@@ -125,7 +125,6 @@ FilterService.register("bannerIn", (value: string | null | undefined, filter: st
 
 const route = useRoute();
 const router = useRouter();
-const failure = ref(false);
 
 const TITLE = "Lista de Clientes";
 const IMPORT_TITLE = "Importação de Clientes";
