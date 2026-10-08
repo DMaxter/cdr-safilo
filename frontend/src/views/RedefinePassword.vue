@@ -6,14 +6,46 @@
       <template #content>
         <P-Form @submit="changePassword" class="flex flex-col">
           <P-FloatLabel variant="on" class="mt-[10px]">
-            <P-Password fluid inputId="password" v-model="password" :feedback="false" />
+            <P-Password
+              fluid
+              inputId="password"
+              v-model="password"
+              :feedback="false"
+              @blur="touched.password = true"
+              :invalid="touched.password && !!errors.password"
+            />
             <label for="password">Nova Palavra Passe</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.password && errors.password"
+            class="mt-[5px]"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.password }}
+          </P-Message>
 
           <P-FloatLabel variant="on" class="mt-[10px]">
-            <P-Password fluid inputId="repeatPassword" v-model="repeatPassword" :feedback="false" />
+            <P-Password
+              fluid
+              inputId="repeatPassword"
+              v-model="repeatPassword"
+              :feedback="false"
+              @blur="touched.repeat = true"
+              :invalid="touched.repeat && !!errors.repeat"
+            />
             <label for="repeatPassword">Confirmar Palavra Passe</label>
           </P-FloatLabel>
+          <P-Message
+            v-if="touched.repeat && errors.repeat"
+            class="mt-[5px]"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
+            {{ errors.repeat }}
+          </P-Message>
 
           <P-Button :disabled="!passwordsMatch" fluid class="mt-[30px] mb-[10px]" type="submit">
             Confirmar
@@ -21,17 +53,15 @@
         </P-Form>
       </template>
     </P-Card>
-    <P-Toast />
   </div>
 </template>
 
-<!-- TODO: Validations -->
-
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { reactive, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 
+import { required, validateField } from "@/rules";
 import { useAuthStore } from "@stores/auth";
 import CDRLogo from "@/assets/logo.png";
 
@@ -45,7 +75,17 @@ const TITLE = "Recuperação de Palavra Passe";
 const password = ref("");
 const repeatPassword = ref("");
 
+const touched = reactive({ password: false, repeat: false });
+
 const passwordsMatch = computed(() => password.value === repeatPassword.value);
+
+const errors = computed(() => ({
+  password: validateField(password.value, [required]),
+  repeat: validateField(repeatPassword.value, [
+    required,
+    (value) => value === password.value || "As palavras-passe não coincidem",
+  ]),
+}));
 
 if (!route.query.email) {
   toast.add({
