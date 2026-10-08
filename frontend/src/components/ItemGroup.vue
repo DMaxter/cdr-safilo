@@ -13,7 +13,7 @@
 import type { Image } from "@router/backend/services/image/types";
 
 const props = defineProps<{
-  options?: any;
+  options?: Image[];
   multiple?: boolean;
 }>();
 
