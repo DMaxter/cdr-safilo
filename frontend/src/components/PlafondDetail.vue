@@ -1,7 +1,7 @@
 <template>
-  <P-Dialog modal class="max-w-95/100 w-[500px]" v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal class="max-w-95/100 w-[500px]">
     <template #header>Plafond Detalhado</template>
-    <P-DataTable removableSort :value="credits">
+    <P-DataTable removable-sort :value="credits">
       <template #empty>Não existe plafond registado para nenhuma marca</template>
       <P-Column sortable field="brand" header="Marca" />
       <P-Column sortable field="plafond" header="Plafond" />
@@ -13,8 +13,8 @@
     </P-DataTable>
     <template #footer>
       <P-Button
-        text
         v-if="manageSafilo"
+        text
         @click="openPlafondManagement(new Plafond(), ManageMode.Add)"
         >Adicionar</P-Button
       >

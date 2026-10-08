@@ -60,16 +60,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 import { useAuthStore } from "@stores/auth";
 
 const authStore = useAuthStore();
 
-const router = useRouter();
 const credits = authStore
-  .logged!!.credits!!.map((element) => element.amount)
+  .logged!.credits!.map((element) => element.amount)
   .reduce((sum, e) => sum + e, 0)
   .toFixed(2);
 

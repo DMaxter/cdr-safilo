@@ -1,24 +1,24 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal>
     <template #header>{{
       editing ? "Editar Grupo de Acabamentos" : "Adicionar Grupo de Acabamentos"
     }}</template>
     <P-FloatLabel v-if="editing" class="field" variant="on">
-      <P-InputText id="id" fluid disabled v-model="props.group.id" />
+      <P-InputText id="id" v-model="props.group.id" fluid disabled />
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" required fluid v-model="props.group.name" />
+      <P-InputText id="name" v-model="props.group.name" required fluid />
       <label for="name">Nome</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-MultiSelect
         id="finishings"
+        v-model="props.group.finishings"
         required
         fluid
-        v-model="props.group.finishings"
         :options="availableFinishings"
-        optionLabel="name"
+        option-label="name"
         display="chip"
         placeholder="Acabamentos"
       />

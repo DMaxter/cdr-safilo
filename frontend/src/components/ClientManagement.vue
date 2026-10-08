@@ -1,18 +1,18 @@
 <template>
-  <P-Dialog modal class="max-w-95/100 w-[400px]" v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal class="max-w-95/100 w-[400px]">
     <template #header>{{ editing ? "Editar Cliente" : "Adicionar Cliente" }}</template>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="id" :disabled="editing" fluid v-model="draft.id" />
+      <P-InputText id="id" v-model="draft.id" :disabled="editing" fluid />
       <label for="id">Código do cliente</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="name"
+        v-model="draft.name"
         required
         fluid
-        v-model="draft.name"
-        @blur="touch('name')"
         :invalid="touched.name && !!errors.name"
+        @blur="touch('name')"
       />
       <label for="name">Nome</label>
     </P-FloatLabel>
@@ -28,11 +28,11 @@
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="email"
+        v-model="draft.email"
         required
         fluid
-        v-model="draft.email"
-        @blur="touch('email')"
         :invalid="touched.email && !!errors.email"
+        @blur="touch('email')"
       />
       <label for="email">Email</label>
     </P-FloatLabel>
@@ -48,11 +48,11 @@
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="fiscal"
+        v-model="draft.fiscalNumber"
         required
         fluid
-        v-model="draft.fiscalNumber"
-        @blur="touch('fiscalNumber')"
         :invalid="touched.fiscalNumber && !!errors.fiscalNumber"
+        @blur="touch('fiscalNumber')"
       />
       <label for="fiscal">NIF</label>
     </P-FloatLabel>
@@ -68,11 +68,11 @@
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="phone"
+        v-model="draft.phone"
         required
         fluid
-        v-model="draft.phone"
-        @blur="touch('phone')"
         :invalid="touched.phone && !!errors.phone"
+        @blur="touch('phone')"
       />
       <label for="phone">Número de telefone</label>
     </P-FloatLabel>
@@ -88,11 +88,11 @@
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="address"
+        v-model="draft.address"
         required
         fluid
-        v-model="draft.address"
-        @blur="touch('address')"
         :invalid="touched.address && !!errors.address"
+        @blur="touch('address')"
       />
       <label for="address">Endereço</label>
     </P-FloatLabel>
@@ -108,11 +108,11 @@
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="postal"
+        v-model="draft.postalCode"
         required
         fluid
-        v-model="draft.postalCode"
-        @blur="touch('postalCode')"
         :invalid="touched.postalCode && !!errors.postalCode"
+        @blur="touch('postalCode')"
       />
       <label for="postal">Código postal</label>
     </P-FloatLabel>
@@ -126,17 +126,17 @@
       {{ errors.postalCode }}
     </P-Message>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="banner" fluid v-model="draft.banner" />
+      <P-InputText id="banner" v-model="draft.banner" fluid />
       <label for="banner">Banner</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="city"
+        v-model="draft.city"
         required
         fluid
-        v-model="draft.city"
-        @blur="touch('city')"
         :invalid="touched.city && !!errors.city"
+        @blur="touch('city')"
       />
       <label for="city">Cidade</label>
     </P-FloatLabel>
@@ -152,11 +152,11 @@
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="country"
+        v-model="draft.country"
         required
         fluid
-        v-model="draft.country"
-        @blur="touch('country')"
         :invalid="touched.country && !!errors.country"
+        @blur="touch('country')"
       />
       <label for="country">País</label>
     </P-FloatLabel>
@@ -187,7 +187,7 @@ import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
 const enabled = computed(() => mode.value !== ManageMode.None);
-const editing = computed(() => enabled && mode.value === ManageMode.Edit);
+const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
   client: Client;

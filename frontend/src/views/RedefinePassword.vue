@@ -4,15 +4,15 @@
     <P-Card class="max-w-[500px] w-1/2 max-h-[300px]">
       <template #title>Redefinir Palavra Passe</template>
       <template #content>
-        <P-Form @submit="changePassword" class="flex flex-col">
+        <P-Form class="flex flex-col" @submit="changePassword">
           <P-FloatLabel variant="on" class="mt-[10px]">
             <P-Password
-              fluid
-              inputId="password"
               v-model="password"
+              fluid
+              input-id="password"
               :feedback="false"
-              @blur="touched.password = true"
               :invalid="touched.password && !!errors.password"
+              @blur="touched.password = true"
             />
             <label for="password">Nova Palavra Passe</label>
           </P-FloatLabel>
@@ -28,12 +28,12 @@
 
           <P-FloatLabel variant="on" class="mt-[10px]">
             <P-Password
-              fluid
-              inputId="repeatPassword"
               v-model="repeatPassword"
+              fluid
+              input-id="repeatPassword"
               :feedback="false"
-              @blur="touched.repeat = true"
               :invalid="touched.repeat && !!errors.repeat"
+              @blur="touched.repeat = true"
             />
             <label for="repeatPassword">Confirmar Palavra Passe</label>
           </P-FloatLabel>

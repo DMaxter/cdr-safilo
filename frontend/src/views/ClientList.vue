@@ -2,16 +2,16 @@
   <Container>
     <div class="h-85/100">
       <P-DataTable
+        v-model:filters="filters"
         paginator
         scrollable
-        removableSort
+        removable-sort
         class="client-data-table"
-        scrollHeight="flex"
-        filterDisplay="row"
+        scroll-height="flex"
+        filter-display="row"
         :value="clientStore.clients"
         :rows="10"
-        :rowsPerPageOptions="[5, 10, 20, 50, 100]"
-        v-model:filters="filters"
+        :rows-per-page-options="[5, 10, 20, 50, 100]"
       >
         <template #empty>Não existem clientes registados</template>
         <template #header>
@@ -29,52 +29,52 @@
           <template #filter="{ filterModel, filterCallback }">
             <P-InputText
               v-model="filterModel.value"
-              @input="filterCallback()"
               placeholder="Código"
+              @input="filterCallback()"
             />
           </template>
         </P-Column>
         <P-Column sortable field="banner" header="Banner">
           <template #filter="{ filterModel, filterCallback }">
             <P-MultiSelect
-              filter
               v-model="filterModel.value"
-              @change="filterCallback()"
+              filter
               :options="banners"
-              optionLabel="label"
-              optionValue="value"
+              option-label="label"
+              option-value="value"
               placeholder="Banner"
+              @change="filterCallback()"
             />
           </template>
         </P-Column>
         <P-Column sortable field="name" header="Nome">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
+            <P-InputText v-model="filterModel.value" placeholder="Nome" @input="filterCallback()" />
           </template>
         </P-Column>
         <P-Column sortable field="city" header="Cidade">
           <template #filter="{ filterModel, filterCallback }">
             <P-InputText
               v-model="filterModel.value"
-              @input="filterCallback()"
               placeholder="Cidade"
+              @input="filterCallback()"
             />
           </template>
         </P-Column>
         <P-Column>
           <template #body="{ data }">
-            <Icon icon="visibility" @click="openClientInfo(data)" v-tooltip="'Ver cliente'" />
+            <Icon v-tooltip="'Ver cliente'" icon="visibility" @click="openClientInfo(data)" />
             <Icon
               v-if="canManage"
+              v-tooltip="'Editar cliente'"
               icon="edit"
               @click="editClient(data)"
-              v-tooltip="'Editar cliente'"
             />
             <Icon
               v-if="canAnnotate"
+              v-tooltip="'Nota do cliente'"
               icon="sticky_note_2"
               @click="showClientNote(data)"
-              v-tooltip="'Nota do cliente'"
             />
           </template>
         </P-Column>
@@ -97,7 +97,7 @@
         accept="text/csv"
         title="Carregar Clientes"
         :multiple="false"
-        :maxFiles="1"
+        :max-files="1"
         :uploader="importClients"
       />
     </template>
@@ -239,7 +239,7 @@ if (route.query.city) {
 }
 
 function updateFilterURL() {
-  let query: LocationQueryRaw = {};
+  const query: LocationQueryRaw = {};
 
   const entries: Array<[string, string | string[] | null]> = [
     ["id", filters.value.id.value],

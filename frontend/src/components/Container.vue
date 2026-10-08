@@ -5,7 +5,7 @@
         <Menu class="mb-[10px]" />
         <slot />
       </template>
-      <template #footer v-if="slots.actions">
+      <template v-if="slots.actions" #footer>
         <div class="flex justify-around">
           <slot name="actions" />
         </div>

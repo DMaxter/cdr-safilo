@@ -3,31 +3,31 @@
     <template #header>{{ editing ? "Editar Plafond" : "Adicionar Plafond" }}</template>
     <P-FloatLabel class="field" variant="on">
       <P-Select
-        fluid
         id="brand"
         v-model="selectedBrandId"
+        fluid
         :options="brandStore.brands"
-        optionLabel="name"
-        optionValue="id"
+        option-label="name"
+        option-value="id"
       />
       <label for="brand">Marca</label>
     </P-FloatLabel>
 
     <P-FloatLabel class="field" variant="on">
-      <P-InputNumber fluid id="amount" v-model="draftAmount" :min="0" :maxFractionDigits="2" />
+      <P-InputNumber id="amount" v-model="draftAmount" fluid :min="0" :max-fraction-digits="2" />
       <label for="amount">Plafond</label>
     </P-FloatLabel>
 
     <div class="field flex items-center gap-2">
       <P-FloatLabel variant="on">
         <P-InputNumber
-          fluid
           id="change"
           v-model="changeAmount"
+          fluid
           :min="0"
           :max="10000"
           :step="100"
-          showButtons
+          show-buttons
           class="w-28"
         />
         <label for="change">Alteração</label>
@@ -55,7 +55,7 @@ import { Plafond } from "@/router/backend/services/user/types";
 
 const mode = defineModel<ManageMode>();
 const enabled = computed(() => mode.value !== ManageMode.None);
-const editing = computed(() => enabled && mode.value === ManageMode.Edit);
+const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
   plafond: Plafond;
