@@ -319,6 +319,7 @@ import { useBrandStore } from "@stores/brands";
 import { useMaterialStore } from "@stores/materials";
 import { useFinishingGroupStore } from "@stores/finishingGroups";
 import { useFinishingStore } from "@stores/finishings";
+import { useRequestAccess } from "@/composables/useRequestAccess";
 import {
   useOrderWizardStore,
   mandatoryGroupIssues,
@@ -342,6 +343,8 @@ const finishingGroupStore = useFinishingGroupStore();
 const finishingStore = useFinishingStore();
 const requestStore = useRequestStore();
 const wizard = useOrderWizardStore();
+
+const { canEdit } = useRequestAccess();
 
 const submitTitle = computed(() => (wizard.isEditing ? "Editar Pedido" : TITLE));
 
@@ -456,18 +459,29 @@ onMounted(async () => {
 async function loadForEdit(id: number) {
   await requestStore.getAllRequests();
   const existing = requestStore.requests.find((r) => r.id === id);
-  if (existing) {
-    wizard.initFromRequest(existing);
-    slotStep.value = 1;
-    selectedClient.value = existing.client;
-  } else {
+  if (!existing) {
     toast.add({
       severity: "error",
       summary: TITLE,
       detail: "Pedido não encontrado",
       life: 10000,
     });
+    return;
   }
+
+  if (!canEdit(existing)) {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Não tem permissão para editar este pedido",
+      life: 10000,
+    });
+    return;
+  }
+
+  wizard.initFromRequest(existing);
+  slotStep.value = 1;
+  selectedClient.value = existing.client;
 }
 
 function selectType(t: RequestTypeName) {

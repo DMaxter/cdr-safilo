@@ -1,5 +1,8 @@
 <template>
   <div class="flex flex-wrap items-center gap-2">
+    <P-Button v-if="canEdit(props.request)" label="Editar" severity="secondary" @click="edit()">
+      <template #icon><Icon icon="edit" /></template>
+    </P-Button>
     <P-Button
       v-if="canCancel(props.request)"
       label="Cancelar"
@@ -30,6 +33,7 @@
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import { ref, useTemplateRef } from "vue";
+import { useRouter } from "vue-router";
 
 import PrintRequestComponent from "@components/PrintRequest.vue";
 import type { Request } from "@router/backend/services/request/types";
@@ -50,11 +54,17 @@ const emit = defineEmits<{
 const confirm = useConfirm();
 const toast = useToast();
 
+const router = useRouter();
+
 const requestStore = useRequestStore();
-const { canCancel, canSeeWaybill } = useRequestAccess();
+const { canCancel, canEdit, canSeeWaybill } = useRequestAccess();
 
 const printer = useTemplateRef<typeof PrintRequestComponent>("printer");
 const waybill = ref(false);
+
+function edit() {
+  router.push({ name: "order", query: { id: props.request.id } });
+}
 
 function print() {
   printer.value?.handlePrint();
