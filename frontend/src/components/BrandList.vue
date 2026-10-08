@@ -46,6 +46,7 @@
   </P-Dialog>
   <BrandManagement v-model="manageMode" :brand="selectedBrand" />
   <ImageManagement
+    multiple
     v-model="manageImages"
     :addAction="addImage"
     :obsoleteAction="obsoleteImage"
@@ -74,7 +75,6 @@ const confirm = useConfirm();
 const toast = useToast();
 
 const selectedBrand = ref<Brand>(new Brand());
-const selectedImage = ref<Image>(new Image());
 
 const manageMode = ref<ManageMode>(ManageMode.None);
 const manageImages = ref(false);
@@ -126,58 +126,66 @@ async function addImage(link: string) {
   }
 }
 
-// TODO: Support multiple images
 async function obsoleteImage(images: Image[]) {
-  const image = images[0];
+  const imageIds = images.map((i) => i.id).filter((id) => typeof id === "number" && id > 0);
 
-  if (!image) {
+  if (imageIds.length === 0) {
     return;
   }
 
-  try {
-    const response = await brandStore.makeImageObsolete(image.id);
-    if (!response.success) {
-      throw Error(response.content as string);
-    }
+  const plural = imageIds.length > 1;
+  const errors: string[] = [];
 
+  for (const imageId of imageIds) {
+    const response = await brandStore.makeImageObsolete(imageId);
+    if (!response.success) {
+      errors.push(response.content ?? "Erro desconhecido");
+    }
+  }
+
+  if (errors.length === 0) {
     toast.add({
       severity: "success",
       summary: IMAGE_TITLE,
-      detail: "Imagem marcada como obsoleta",
+      detail: `${plural ? "Imagens marcadas como obsoletas" : "Imagem marcada como obsoleta"} com sucesso`,
       life: 10000,
     });
-  } catch (error) {
-    console.error(error);
+  } else {
     toast.add({
       severity: "error",
       summary: IMAGE_TITLE,
-      detail: "Ocorreu um erro ao marcar a imagem como obsoleta",
+      detail: `Ocorreu um erro ao marcar ${plural ? "as imagens" : "a imagem"} como ${plural ? "obsoletas" : "obsoleta"}`,
       life: 10000,
     });
+    console.error(errors);
   }
 }
 
-async function deleteImage() {
-  try {
-    const response = await brandStore.deleteBrandImage(selectedImage.value.id);
-    if (!response.success) {
-      throw Error(response.content as string);
-    }
+async function deleteImages(imageIds: number[]) {
+  const errors: string[] = [];
 
+  for (const imageId of imageIds) {
+    const response = await brandStore.deleteBrandImage(imageId);
+    if (!response.success) {
+      errors.push(response.content ?? "Erro desconhecido");
+    }
+  }
+
+  if (errors.length === 0) {
     toast.add({
       severity: "success",
       summary: IMAGE_TITLE,
-      detail: "Imagem apagada com sucesso",
+      detail: `${imageIds.length > 1 ? "Imagens apagadas" : "Imagem apagada"} com sucesso`,
       life: 10000,
     });
-  } catch (error) {
-    console.error(error);
+  } else {
     toast.add({
       severity: "error",
       summary: IMAGE_TITLE,
-      detail: "Ocorreu um erro ao apagar a imagem",
+      detail: `Ocorreu um erro ao apagar ${imageIds.length > 1 ? "as imagens" : "a imagem"}`,
       life: 10000,
     });
+    console.error(errors);
   }
 }
 
@@ -226,16 +234,16 @@ function openImageManagement(brand: Brand) {
 }
 
 function confirmImageDeletion(images: Image[]) {
-  const image = images[0];
+  const imageIds = images.map((i) => i.id).filter((id) => typeof id === "number" && id > 0);
 
-  if (!image) {
+  if (imageIds.length === 0) {
     return;
   }
 
-  selectedImage.value = image;
+  const plural = imageIds.length > 1;
 
   confirm.require({
-    message: `Tem a certeza que pretende apagar a imagem da marca '${selectedBrand.value.name}'?`,
+    message: `Tem a certeza que pretende apagar ${plural ? "as imagens" : "a imagem"} da marca '${selectedBrand.value.name}'?`,
     header: "Confirmar remoção de imagem",
     rejectProps: {
       label: "Cancelar",
@@ -246,7 +254,7 @@ function confirmImageDeletion(images: Image[]) {
       label: "Apagar",
       severity: "danger",
     },
-    accept: deleteImage,
+    accept: () => deleteImages(imageIds),
   });
 }
 
