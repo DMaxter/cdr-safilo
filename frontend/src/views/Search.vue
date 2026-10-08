@@ -139,12 +139,7 @@
         <template #body="{ data }">
           <Icon icon="visibility" @click="showSummary(data)" v-tooltip="'Ver resumo'" />
           <Icon icon="open_in_new" @click="openDetails(data)" v-tooltip="'Ver detalhes'" />
-          <Icon
-            v-if="canCancel(data)"
-            icon="edit"
-            @click="editRequest(data)"
-            v-tooltip="'Editar'"
-          />
+          <Icon v-if="canEdit(data)" icon="edit" @click="editRequest(data)" v-tooltip="'Editar'" />
           <Icon
             v-if="canCancel(data)"
             icon="cancel"
@@ -182,7 +177,7 @@ const confirm = useConfirm();
 const toast = useToast();
 
 const requestStore = useRequestStore();
-const { canCancel } = useRequestAccess();
+const { canCancel, canEdit } = useRequestAccess();
 
 const route = useRoute();
 const router = useRouter();
