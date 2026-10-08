@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export type Rule = (value: any) => boolean | string;
+export type Rule = (value: unknown) => boolean | string;
 
 export const required: Rule = (value) => !!value || "Campo obrigatório";
 
