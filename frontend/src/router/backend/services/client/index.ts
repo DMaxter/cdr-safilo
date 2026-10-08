@@ -39,7 +39,3 @@ export async function importClients(file: File | Blob): Promise<AxiosResponse<nu
     timeout: 300000,
   });
 }
-
-export async function getBannerClients(banner: string): Promise<AxiosResponse<Client[] | Error>> {
-  return await http.get(`/client/banner/${banner}`);
-}

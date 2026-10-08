@@ -23,8 +23,6 @@ const TITLE = "Recuperação de palavra-passe";
 const enabled = defineModel<boolean>();
 
 const email = ref("");
-const success = ref(false);
-const failure = ref(false);
 
 const authStore = useAuthStore();
 const toast = useToast();
