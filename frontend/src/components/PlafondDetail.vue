@@ -1,7 +1,7 @@
 <template>
   <P-Dialog modal class="max-w-95/100 w-[500px]" v-model:visible="enabled">
     <template #header>Plafond Detalhado</template>
-    <P-DataTable removeableSort :value="credits">
+    <P-DataTable removableSort :value="credits">
       <template #empty>Não existe plafond registado para nenhuma marca</template>
       <P-Column sortable field="brand" header="Marca" />
       <P-Column sortable field="plafond" header="Plafond" />

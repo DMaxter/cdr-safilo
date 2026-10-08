@@ -10,12 +10,8 @@
     <div class="flex flex-col items-start justify-center">
       <p><b>Material: </b>{{ props.slot.material?.name ?? "" }}</p>
       <p><b>Acabamentos: </b></p>
-      <ul
-        v-if="props.slot.finishings?.length != 0"
-        v-for="finishing in props.slot.finishings"
-        style="padding-left: 40px"
-      >
-        <li>{{ finishing.name }}</li>
+      <ul v-if="props.slot.finishings?.length" style="padding-left: 40px">
+        <li v-for="finishing in props.slot.finishings" :key="finishing.id">{{ finishing.name }}</li>
       </ul>
       <span v-else>Sem acabamentos</span>
       <p><b>Altura: </b>{{ props.slot.measurements?.height }} cm</p>
