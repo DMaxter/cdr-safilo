@@ -47,19 +47,8 @@ export async function checkPrice(request: Request): Promise<AxiosResponse<number
   return await http.post("/request/price", toNewRequestDto(request));
 }
 
-export async function requestToProduction(id: number): Promise<AxiosResponse<null | Error>> {
-  return await http.put(`/request/production/${id}`);
-}
-
 export async function getAllRequests(): Promise<AxiosResponse<Request[] | Error>> {
   return await http.get("/request");
-}
-
-export async function finishRequest(
-  id: number,
-  code: number,
-): Promise<AxiosResponse<null | Error>> {
-  return await http.put(`/request/finish/${id}/${code}`);
 }
 
 export async function cancelRequest(id: number): Promise<AxiosResponse<null | Error>> {

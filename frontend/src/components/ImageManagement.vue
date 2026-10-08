@@ -21,7 +21,9 @@
       <P-Button :disabled="!isSelected" v-if="props.deleteAction" text @click="del"
         >Apagar</P-Button
       >
-      <P-Button v-if="props.obsoleteAction" text @click="obsolete">Marcar obsoleta</P-Button>
+      <P-Button :disabled="!isSelected" v-if="props.obsoleteAction" text @click="obsolete"
+        >Marcar obsoleta</P-Button
+      >
       <P-Button text @click="close">Voltar</P-Button>
     </template>
     <FileUpload
