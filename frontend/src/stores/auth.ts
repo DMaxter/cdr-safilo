@@ -30,7 +30,7 @@ export const useAuthStore = defineStore("authStore", () => {
       }
 
       return false;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

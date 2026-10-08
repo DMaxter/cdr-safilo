@@ -1,19 +1,19 @@
 <template>
   <P-DataTable
+    v-model:filters="filters"
     :value="clientStore.clients"
     :loading="loading"
-    :rowClass="rowClass"
-    dataKey="id"
+    :row-class="rowClass"
+    data-key="id"
     paginator
     :rows="10"
-    :rowsPerPageOptions="[10, 25, 50]"
+    :rows-per-page-options="[10, 25, 50]"
     scrollable
-    scrollHeight="flex"
-    removableSort
-    sortField="name"
-    :sortOrder="1"
-    v-model:filters="filters"
-    tableStyle="table-layout: fixed; width: 100%"
+    scroll-height="flex"
+    removable-sort
+    sort-field="name"
+    :sort-order="1"
+    table-style="table-layout: fixed; width: 100%"
     class="client-picker-table"
     @row-click="onRowClick"
   >
@@ -63,11 +63,11 @@
     <P-Column class="w-14">
       <template #body="{ data }">
         <Icon
+          v-tooltip="isPicked(data) ? 'Cliente selecionado' : 'Selecionar cliente'"
           :icon="isPicked(data) ? 'check_circle' : 'add_circle'"
           :class="isPicked(data) ? 'text-primary' : 'text-gray-400 hover:text-primary'"
           class="cursor-pointer"
           @click.stop="select(data)"
-          v-tooltip="isPicked(data) ? 'Cliente selecionado' : 'Selecionar cliente'"
         />
       </template>
     </P-Column>

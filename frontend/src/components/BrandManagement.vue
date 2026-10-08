@@ -1,18 +1,18 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal>
     <template #header>{{ editing ? "Editar Marca" : "Adicionar Marca" }}</template>
     <P-FloatLabel v-if="editing" class="field" variant="on">
-      <P-InputText id="id" fluid disabled v-model="draft.id" />
+      <P-InputText id="id" v-model="draft.id" fluid disabled />
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="name"
+        v-model="draft.name"
         required
         fluid
-        v-model="draft.name"
-        @blur="touched = true"
         :invalid="touched && !!nameError"
+        @blur="touched = true"
       />
       <label for="name">Nome</label>
     </P-FloatLabel>
@@ -43,7 +43,7 @@ import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
 const enabled = computed(() => mode.value !== ManageMode.None);
-const editing = computed(() => enabled && mode.value === ManageMode.Edit);
+const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
   brand: Brand;

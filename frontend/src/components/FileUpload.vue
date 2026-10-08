@@ -1,21 +1,21 @@
 <template>
-  <P-Dialog modal class="max-w-95/100 w-[500px]" v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal class="max-w-95/100 w-[500px]">
     <template #header>{{ props.title }}</template>
     <P-FileUpload
       ref="fileUpload"
-      customUpload
+      custom-upload
       :accept="props.accept"
       :multiple="props.multiple"
       :disabled="busy"
-      :fileLimit="props.maxFiles"
-      :showCancelButton="false"
+      :file-limit="props.maxFiles"
+      :show-cancel-button="false"
       @uploader="handleUpload"
     />
     <P-Message v-if="busy" severity="info" size="small" variant="simple" class="mt-2">
       A carregar, aguarde...
     </P-Message>
     <template #footer>
-      <P-Button text @click="close" :disabled="busy">Voltar</P-Button>
+      <P-Button text :disabled="busy" @click="close">Voltar</P-Button>
     </template>
   </P-Dialog>
 </template>
@@ -23,7 +23,6 @@
 <script lang="ts" setup>
 import { ref, useTemplateRef } from "vue";
 import type { FileUploadUploaderEvent } from "primevue/fileupload";
-import type FileUpload from "primevue/fileupload";
 
 const props = defineProps<{
   title: string;
@@ -37,7 +36,7 @@ const enabled = defineModel<boolean>();
 
 const busy = ref(false);
 
-const fileUpload = useTemplateRef<InstanceType<typeof FileUpload>>("fileUpload");
+const fileUpload = useTemplateRef<{ clear: () => void }>("fileUpload");
 
 async function handleUpload(event: FileUploadUploaderEvent) {
   busy.value = true;

@@ -1,12 +1,12 @@
 <template>
-  <P-Dialog modal class="max-w-95/100" v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal class="max-w-95/100">
     <template #header>Alterar Palavra-passe</template>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
-        fluid
         id="current"
-        type="password"
         v-model="currentPassword"
+        fluid
+        type="password"
         :invalid="!!errors.current"
       />
       <label for="current">Palavra-passe atual</label>
@@ -15,7 +15,7 @@
       {{ errors.current }}
     </P-Message>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText fluid id="new" type="password" v-model="newPassword" :invalid="!!errors.new" />
+      <P-InputText id="new" v-model="newPassword" fluid type="password" :invalid="!!errors.new" />
       <label for="new">Nova palavra-passe</label>
     </P-FloatLabel>
     <P-Message v-if="errors.new" severity="error" size="small" variant="simple">
@@ -23,10 +23,10 @@
     </P-Message>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
-        fluid
         id="repeat"
-        type="password"
         v-model="repeatNewPassword"
+        fluid
+        type="password"
         :invalid="!!errors.repeat"
       />
       <label for="repeat">Repetir nova palavra-passe</label>

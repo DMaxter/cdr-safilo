@@ -1,31 +1,31 @@
 <template>
   <Container>
     <P-DataTable
+      v-model:filters="filters"
       paginator
       scrollable
-      removableSort
+      removable-sort
       class="request-data-table"
-      scrollHeight="flex"
-      filterDisplay="row"
-      sortField="id"
-      :sortOrder="-1"
+      scroll-height="flex"
+      filter-display="row"
+      sort-field="id"
+      :sort-order="-1"
       :value="requestStore.requests"
       :rows="25"
-      :rowsPerPageOptions="[10, 25, 50, 100]"
-      v-model:filters="filters"
-      tableStyle="table-layout: fixed; width: 100%"
-      responsiveLayout="scroll"
+      :rows-per-page-options="[10, 25, 50, 100]"
+      table-style="table-layout: fixed; width: 100%"
+      responsive-layout="scroll"
     >
       <template #empty>Não existem pedidos registados</template>
 
       <P-Column class="w-[10rem]" sortable field="id" header="ID" filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-InputText
-            fluid
             v-model="filterModel.value"
+            fluid
             type="number"
-            @input="filterCallback()"
             placeholder="ID"
+            @input="filterCallback()"
           />
         </template>
         <template #body="{ data }">
@@ -35,14 +35,14 @@
       <P-Column class="w-[10rem]" field="status" header="Estado" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
+            v-model="filterModel.value"
             filter
             fluid
-            v-model="filterModel.value"
-            @change="filterCallback()"
             :options="states"
             placeholder="Estado"
-            optionLabel="name"
-            optionValue="value"
+            option-label="name"
+            option-value="value"
+            @change="filterCallback()"
           />
         </template>
         <template #body="{ data }">
@@ -55,33 +55,33 @@
       <P-Column
         class="w-[15rem]"
         field="client.name"
-        filterField="client.id"
+        filter-field="client.id"
         header="Cliente"
         sortable
         filter
       >
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
+            v-model="filterModel.value"
             filter
             fluid
-            v-model="filterModel.value"
-            @change="filterCallback()"
             :options="clients"
-            optionLabel="name"
-            optionValue="id"
+            option-label="name"
+            option-value="id"
             placeholder="Cliente"
+            @change="filterCallback()"
           />
         </template>
       </P-Column>
       <P-Column class="w-[10rem]" field="brand.name" header="Marca" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
+            v-model="filterModel.value"
             filter
             fluid
-            v-model="filterModel.value"
-            @change="filterCallback()"
             :options="brands"
             placeholder="Marca"
+            @change="filterCallback()"
           />
         </template>
         <template #body="{ data }">
@@ -91,12 +91,12 @@
       <P-Column class="w-[12rem]" field="materialNames" header="Material" filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
+            v-model="filterModel.value"
             filter
             fluid
-            v-model="filterModel.value"
-            @change="filterCallback()"
             :options="materials"
             placeholder="Material"
+            @change="filterCallback()"
           />
         </template>
         <template #body="{ data }">
@@ -106,27 +106,27 @@
       <P-Column class="w-[10rem]" field="user" header="Comercial" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
+            v-model="filterModel.value"
             filter
             fluid
-            v-model="filterModel.value"
-            @change="filterCallback()"
             :options="commercialsFilterOptions"
             placeholder="Comercial"
+            @change="filterCallback()"
           />
         </template>
       </P-Column>
       <P-Column class="w-[15rem]" field="created" header="Data de Criação" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-DatePicker
-            fluid
             v-model="filterModel.value"
+            fluid
+            selection-mode="range"
+            :manual-input="false"
+            date-format="dd/mm/yy"
+            placeholder="Data de Criação"
+            :show-button-bar="true"
             @date-select="filterCallback()"
             @hide="filterCallback()"
-            selectionMode="range"
-            :manualInput="false"
-            dateFormat="dd/mm/yy"
-            placeholder="Data de Criação"
-            :showButtonBar="true"
           />
         </template>
         <template #body="{ data }">
@@ -137,14 +137,14 @@
       </P-Column>
       <P-Column class="w-[10rem]">
         <template #body="{ data }">
-          <Icon icon="visibility" @click="showSummary(data)" v-tooltip="'Ver resumo'" />
-          <Icon icon="open_in_new" @click="openDetails(data)" v-tooltip="'Ver detalhes'" />
-          <Icon v-if="canEdit(data)" icon="edit" @click="editRequest(data)" v-tooltip="'Editar'" />
+          <Icon v-tooltip="'Ver resumo'" icon="visibility" @click="showSummary(data)" />
+          <Icon v-tooltip="'Ver detalhes'" icon="open_in_new" @click="openDetails(data)" />
+          <Icon v-if="canEdit(data)" v-tooltip="'Editar'" icon="edit" @click="editRequest(data)" />
           <Icon
             v-if="canCancel(data)"
+            v-tooltip="'Cancelar'"
             icon="cancel"
             @click="confirmCancel(data)"
-            v-tooltip="'Cancelar'"
           />
         </template>
       </P-Column>
@@ -187,7 +187,7 @@ const TITLE = "Cancelamento de Pedido";
 // Filter options are derived straight from the loaded requests (like ClientList's
 // banner options), so they are never empty when returning to this screen.
 const commercialsFilterOptions = computed(() =>
-  Array.from(new Set(requestStore.requests.map((r) => r.user!!))),
+  Array.from(new Set(requestStore.requests.map((r) => r.user!))),
 );
 const clients = computed(() => {
   const uniqueClients = new Map<number | string, Client>();
@@ -340,7 +340,7 @@ const URL_KEYS: Record<string, string> = {
 };
 
 function updateFilterURL() {
-  let query: LocationQueryRaw = {};
+  const query: LocationQueryRaw = {};
 
   for (const key in filters.value) {
     const filter = (filters.value as Record<string, { value: unknown; matchMode: string }>)[key];
