@@ -8,11 +8,11 @@
       <b>Cliente:</b> {{ selectedClient.name }} — {{ selectedClient.address }},
       {{ selectedClient.postalCode }} {{ selectedClient.city }}
       <P-Button
+        v-tooltip="'Alterar cliente'"
         text
-        @click="selectedClient = null"
         severity="secondary"
         size="small"
-        v-tooltip="'Alterar cliente'"
+        @click="selectedClient = null"
         ><template #icon><Icon icon="edit" /></template
       ></P-Button>
     </div>
@@ -88,7 +88,7 @@
             <P-Button label="Anterior" severity="secondary" @click="selectedClient = null"
               ><template #icon><Icon icon="arrow_back" /></template
             ></P-Button>
-            <P-Button label="Próximo" @click="goToStep(2)" :disabled="!wizard.type"
+            <P-Button label="Próximo" :disabled="!wizard.type" @click="goToStep(2)"
               ><template #icon><Icon icon="arrow_forward" /></template
             ></P-Button>
           </div>
@@ -99,12 +99,12 @@
             <div v-if="!wizard.brand" class="sm:w-96">
               <P-FloatLabel variant="on" class="w-full">
                 <P-Select
-                  :modelValue="wizard.brand"
-                  @update:modelValue="onBrandSelect"
+                  :model-value="wizard.brand"
                   :options="brandStore.brands"
-                  optionLabel="name"
+                  option-label="name"
                   fluid
                   filter
+                  @update:model-value="onBrandSelect"
                 />
                 <label>Marca</label>
               </P-FloatLabel>
@@ -112,11 +112,11 @@
             <div v-else class="flex items-center gap-2">
               <b>Marca:</b> {{ wizard.brand?.name }}
               <P-Button
+                v-tooltip="'Alterar marca'"
                 text
-                @click="wizard.setBrand(null as any)"
                 severity="secondary"
                 size="small"
-                v-tooltip="'Alterar marca'"
+                @click="wizard.setBrand(null as any)"
                 ><template #icon><Icon icon="edit" /></template
               ></P-Button>
             </div>
@@ -161,8 +161,8 @@
             <SlotForm
               v-if="currentSlotConfig"
               :key="currentSlotConfig.key"
-              :slotKey="currentSlotConfig.key"
-              :slotLabel="currentSlotConfig.label"
+              :slot-key="currentSlotConfig.key"
+              :slot-label="currentSlotConfig.label"
               :draft="wizard.slots[currentSlotConfig.key]"
               :materials="nonObsoleteMaterials"
               :brand="wizard.brand"
@@ -174,7 +174,7 @@
                 <label>Quantidade</label>
               </P-FloatLabel>
               <div class="flex items-center gap-2">
-                <P-ToggleSwitch v-model="wizard.application" inputId="application" />
+                <P-ToggleSwitch v-model="wizard.application" input-id="application" />
                 <label for="application">Aplicação (+100 Créditos)</label>
               </div>
             </div>
@@ -183,7 +183,7 @@
             <P-Button label="Anterior" severity="secondary" @click="goToStep(1)"
               ><template #icon><Icon icon="arrow_back" /></template
             ></P-Button>
-            <P-Button label="Próximo" @click="goToStep(3)" :disabled="!allSlotsValid"
+            <P-Button label="Próximo" :disabled="!allSlotsValid" @click="goToStep(3)"
               ><template #icon><Icon icon="arrow_forward" /></template
             ></P-Button>
           </div>
@@ -206,9 +206,9 @@
               </div>
 
               <div
-                class="md:col-span-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 border rounded p-3"
                 v-for="slotConfig in wizard.slotConfigs"
                 :key="slotConfig.key"
+                class="md:col-span-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 border rounded p-3"
               >
                 <img
                   v-if="wizard.slots[slotConfig.key]?.image"
@@ -282,9 +282,9 @@
             ></P-Button>
             <P-Button
               :label="wizard.isEditing ? 'Editar Pedido' : 'Criar Pedido'"
-              @click="submit"
               :loading="wizard.submitting"
               :disabled="wizard.submitting"
+              @click="submit"
               ><template #icon><Icon icon="check" /></template
             ></P-Button>
           </div>
@@ -328,6 +328,7 @@ import {
 } from "@stores/orderWizard";
 import { useRequestStore } from "@stores/requests";
 import type { Client } from "@router/backend/services/client/types";
+import type { Brand } from "@router/backend/services/brand/types";
 import { requestTypes } from "@/maps";
 
 const toast = useToast();
@@ -489,7 +490,7 @@ function selectType(t: RequestTypeName) {
   slotStep.value = 1;
 }
 
-function onBrandSelect(b: any) {
+function onBrandSelect(b: Brand) {
   wizard.setBrand(b);
 }
 

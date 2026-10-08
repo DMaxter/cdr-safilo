@@ -1,22 +1,22 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled" class="w-8/10 max-w-[1000px]" fluid>
+  <P-Dialog v-model:visible="enabled" modal class="w-8/10 max-w-[1000px]" fluid>
     <template #header>Grupos de Acabamentos</template>
     <div class="h-85/100">
       <P-DataTable
+        v-model:filters="filters"
         paginator
-        removableSort
-        filterDisplay="row"
+        removable-sort
+        filter-display="row"
         :value="finishingGroupStore.finishingGroups"
         :rows="10"
-        :rowsPerPageOptions="[5, 10, 20, 50, 100]"
-        v-model:filters="filters"
+        :rows-per-page-options="[5, 10, 20, 50, 100]"
       >
         <template #empty>Não existem grupos de acabamentos registados</template>
 
         <P-Column sortable field="id" header="ID" style="width: 60px" />
         <P-Column sortable field="name" header="Nome">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
+            <P-InputText v-model="filterModel.value" placeholder="Nome" @input="filterCallback()" />
           </template>
         </P-Column>
         <P-Column field="finishings" header="Acabamentos">
@@ -32,11 +32,11 @@
         <P-Column>
           <template #body="{ data }">
             <Icon
+              v-tooltip="'Editar grupo de acabamentos'"
               icon="edit"
               @click="openFinishingGroupManagement(data, ManageMode.Edit)"
-              v-tooltip="'Editar grupo de acabamentos'"
             />
-            <Icon icon="delete" @click="confirmDeletion(data)" v-tooltip="'Eliminar grupo'" />
+            <Icon v-tooltip="'Eliminar grupo'" icon="delete" @click="confirmDeletion(data)" />
           </template>
         </P-Column>
       </P-DataTable>

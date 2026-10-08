@@ -41,17 +41,6 @@ export const useClientStore = defineStore("clientStore", () => {
     clients.value[index].note = note;
   }
 
-  function remove(id: number) {
-    const index = clients.value.findIndex((c) => c.id === id);
-
-    if (index === -1) {
-      console.error(`Client ${id} not in store`);
-      return;
-    }
-
-    clients.value.splice(index, 1);
-  }
-
   async function getClients(): Promise<APIResponse<string | null>> {
     try {
       const { status, data } = await API.clients.getClients();
@@ -196,7 +185,7 @@ export const useClientStore = defineStore("clientStore", () => {
     let index = clients.value.findIndex((c) => c.id === id);
 
     if (index === -1) {
-      let response = await getClients();
+      const response = await getClients();
 
       if (!response.success) {
         return response;

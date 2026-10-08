@@ -1,12 +1,16 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled" class="w-[700px]">
+  <P-Dialog v-model:visible="enabled" modal class="w-[700px]">
     <template #header>Imagens</template>
-    <ItemGroup :multiple="props.multiple" :options="props.images" v-model="selected">
+    <ItemGroup v-model="selected" :multiple="props.multiple" :options="props.images">
       <template #empty>Não existem imagens associadas</template>
-      <template #option="{ option, selected }">
+      <template #option="{ option, selected: selectedOption }">
         <div class="img-wrapper">
           <img
-            :class="[selected ? 'selected' : '', option.obsolete ? 'obsolete' : '', 'image-slot']"
+            :class="[
+              selectedOption ? 'selected' : '',
+              option.obsolete ? 'obsolete' : '',
+              'image-slot',
+            ]"
             :src="option.link!!"
             height="150"
             max-height="150"
@@ -18,10 +22,10 @@
     </ItemGroup>
     <template #footer>
       <P-Button text @click="add">Adicionar</P-Button>
-      <P-Button :disabled="!isSelected" v-if="props.deleteAction" text @click="del"
+      <P-Button v-if="props.deleteAction" :disabled="!isSelected" text @click="del"
         >Apagar</P-Button
       >
-      <P-Button :disabled="!isSelected" v-if="props.obsoleteAction" text @click="obsolete"
+      <P-Button v-if="props.obsoleteAction" :disabled="!isSelected" text @click="obsolete"
         >Marcar obsoleta</P-Button
       >
       <P-Button text @click="close">Voltar</P-Button>
@@ -34,10 +38,10 @@
       :multiple="true"
       :uploader="handleUpload"
     />
-    <P-Dialog modal v-model:visible="adding" class="w-[500px]">
+    <P-Dialog v-model:visible="adding" modal class="w-[500px]">
       <template #header>Adicionar Imagem</template>
       <P-FloatLabel class="field" variant="on">
-        <P-InputText fluid id="link" ref="link" v-model="imageLink" />
+        <P-InputText id="link" ref="link" v-model="imageLink" fluid />
         <label for="link">Link</label>
       </P-FloatLabel>
       <template #footer>

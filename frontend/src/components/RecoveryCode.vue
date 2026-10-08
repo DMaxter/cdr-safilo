@@ -1,8 +1,8 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled" class="w-3/10">
+  <P-Dialog v-model:visible="enabled" modal class="w-3/10">
     <template #header>Recuperar palavra-passe</template>
     <P-FloatLabel variant="on" class="mt-[10px]">
-      <P-InputText fluid id="email" type="text" v-model="email" />
+      <P-InputText id="email" v-model="email" fluid type="text" />
       <label for="email">Email</label>
     </P-FloatLabel>
     <template #footer>

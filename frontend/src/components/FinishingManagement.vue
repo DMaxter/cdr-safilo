@@ -1,37 +1,37 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal>
     <template #header>{{ editing ? "Editar Acabamento" : "Adicionar Acabamento" }}</template>
     <P-FloatLabel v-if="editing" class="field" variant="on">
-      <P-InputText id="id" fluid disabled v-model="props.finishing.id" />
+      <P-InputText id="id" v-model="props.finishing.id" fluid disabled />
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" required fluid v-model="props.finishing.name" />
+      <P-InputText id="name" v-model="props.finishing.name" required fluid />
       <label for="name">Nome</label>
     </P-FloatLabel>
     <template v-if="!editing">
       <P-FloatLabel class="field" variant="on">
         <P-InputNumber
           id="cost"
+          v-model="draft.cost"
           required
           fluid
-          v-model="draft.cost"
           mode="currency"
           currency="EUR"
           locale="pt-PT"
-          :minFractionDigits="2"
-          :maxFractionDigits="2"
+          :min-fraction-digits="2"
+          :max-fraction-digits="2"
         />
         <label for="cost">Custo</label>
       </P-FloatLabel>
       <P-FloatLabel class="field" variant="on">
         <P-MultiSelect
           id="materials"
+          v-model="draft.materials"
           required
           fluid
-          v-model="draft.materials"
           :options="availableMaterials"
-          optionLabel="name"
+          option-label="name"
           display="chip"
           placeholder="Materiais"
         />

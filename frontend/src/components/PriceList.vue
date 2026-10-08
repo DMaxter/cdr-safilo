@@ -1,15 +1,15 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled" class="w-8/10 max-w-[1000px]" fluid>
+  <P-Dialog v-model:visible="enabled" modal class="w-8/10 max-w-[1000px]" fluid>
     <template #header>Preços</template>
     <div class="h-85/100">
       <P-DataTable
+        v-model:filters="filters"
         paginator
-        removableSort
-        filterDisplay="row"
+        removable-sort
+        filter-display="row"
         :value="priceStore.prices"
         :rows="10"
-        :rowsPerPageOptions="[5, 10, 20, 50, 100]"
-        v-model:filters="filters"
+        :rows-per-page-options="[5, 10, 20, 50, 100]"
       >
         <template #empty>Não existem preços registados</template>
 
@@ -18,13 +18,13 @@
           sortable
           field="material"
           header="Material"
-          :filterMatchMode="materialFilterMatchMode"
+          :filter-match-mode="materialFilterMatchMode"
         >
           <template #filter="{ filterModel, filterCallback }">
             <P-InputText
               v-model="filterModel.value"
-              @input="filterCallback()"
               placeholder="Material"
+              @input="filterCallback()"
             />
           </template>
           <template #body="{ data }">
@@ -54,11 +54,11 @@
         <P-Column>
           <template #body="{ data }">
             <Icon
+              v-tooltip="'Editar preço'"
               icon="edit"
               @click="openPriceManagement(data, ManageMode.Edit)"
-              v-tooltip="'Editar preço'"
             />
-            <Icon icon="delete" @click="confirmDeletion(data)" v-tooltip="'Eliminar preço'" />
+            <Icon v-tooltip="'Eliminar preço'" icon="delete" @click="confirmDeletion(data)" />
           </template>
         </P-Column>
       </P-DataTable>
@@ -99,9 +99,9 @@ const filters = ref({
   material: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
-const materialFilterMatchMode = (value: any, filter: string) => {
+const materialFilterMatchMode = (value: unknown, filter: string) => {
   if (!filter) return true;
-  const materialId = value;
+  const materialId = value as number;
   const name = materialStore.materials.find((m) => m.id === materialId)?.name ?? "";
   return name.toLowerCase().includes(filter.toLowerCase());
 };

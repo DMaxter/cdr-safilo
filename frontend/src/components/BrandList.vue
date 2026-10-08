@@ -1,40 +1,40 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled" class="w-[800px]">
+  <P-Dialog v-model:visible="enabled" modal class="w-[800px]">
     <template #header>Marcas</template>
     <div class="h-85/100">
       <P-DataTable
+        v-model:filters="filters"
         paginator
         scrollable
-        removableSort
+        removable-sort
         class="max-w-98/100"
-        scrollHeight="flex"
-        filterDisplay="row"
+        scroll-height="flex"
+        filter-display="row"
         :value="brandStore.brands"
         :rows="10"
-        :rowsPerPageOptions="[5, 10, 20, 50, 100]"
-        v-model:filters="filters"
+        :rows-per-page-options="[5, 10, 20, 50, 100]"
       >
         <template #empty>Não existem marcas registadas</template>
 
         <P-Column sortable field="id" header="ID">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="ID" />
+            <P-InputText v-model="filterModel.value" placeholder="ID" @input="filterCallback()" />
           </template>
         </P-Column>
         <P-Column sortable field="name" header="Nome">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
+            <P-InputText v-model="filterModel.value" placeholder="Nome" @input="filterCallback()" />
           </template>
         </P-Column>
         <P-Column>
           <template #body="{ data }">
-            <Icon icon="image" @click="openImageManagement(data)" v-tooltip="'Editar imagens'" />
+            <Icon v-tooltip="'Editar imagens'" icon="image" @click="openImageManagement(data)" />
             <Icon
+              v-tooltip="'Editar marca'"
               icon="edit"
               @click="openBrandManagement(data, ManageMode.Edit)"
-              v-tooltip="'Editar marca'"
             />
-            <Icon icon="delete" @click="confirmDeletion(data)" v-tooltip="'Eliminar marca'" />
+            <Icon v-tooltip="'Eliminar marca'" icon="delete" @click="confirmDeletion(data)" />
           </template>
         </P-Column>
       </P-DataTable>
@@ -46,11 +46,11 @@
   </P-Dialog>
   <BrandManagement v-model="manageMode" :brand="selectedBrand" />
   <ImageManagement
-    multiple
     v-model="manageImages"
-    :addAction="addImage"
-    :obsoleteAction="obsoleteImage"
-    :deleteAction="confirmImageDeletion"
+    multiple
+    :add-action="addImage"
+    :obsolete-action="obsoleteImage"
+    :delete-action="confirmImageDeletion"
     :images="selectedBrand.images"
   />
 </template>
@@ -96,7 +96,7 @@ async function addImage(link: string) {
       link.includes("https://drive.google.com/file/d/") &&
       (link.includes("/view?usp=sharing") || link.includes("/view?usp=drive_link"))
     ) {
-      var code = link.replace("file/d/", "thumbnail?id=");
+      let code = link.replace("file/d/", "thumbnail?id=");
       code = code.replace("/view?usp=sharing", "");
       code = code.replace("/view?usp=drive_link", "");
       final_link = code + "&sz=w1080";

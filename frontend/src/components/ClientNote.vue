@@ -1,7 +1,7 @@
 <template>
-  <P-Dialog modal class="max-w-95/100 w-[500px]" v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal class="max-w-95/100 w-[500px]">
     <template #header>Nota do cliente</template>
-    <P-Textarea autoResize fluid v-model="draft" />
+    <P-Textarea v-model="draft" auto-resize fluid />
     <template #footer>
       <P-Button text @click="close()">Voltar</P-Button>
       <P-Button text @click="edit()">Editar</P-Button>

@@ -37,12 +37,12 @@
       <div class="col-span-2">
         <P-FloatLabel variant="on" class="w-full">
           <P-Select
-            :modelValue="draft.material"
+            :model-value="draft.material"
             :options="materials"
-            optionLabel="name"
+            option-label="name"
             fluid
             :invalid="!draft.material"
-            @update:modelValue="onMaterialSelect"
+            @update:model-value="onMaterialSelect"
           />
           <label>Material</label>
         </P-FloatLabel>
@@ -65,12 +65,12 @@
       <div v-for="group in mandatoryGroups" :key="group.id" class="col-span-2 flex items-end gap-2">
         <P-FloatLabel variant="on" class="w-full">
           <P-Select
-            :modelValue="groupSelection(group)"
+            :model-value="groupSelection(group)"
             :options="group.finishings"
-            optionLabel="name"
+            option-label="name"
             placeholder="Selecione"
             fluid
-            @update:modelValue="setGroupFinishing(group, $event)"
+            @update:model-value="setGroupFinishing(group, $event)"
           />
           <label>{{ group.name }}</label>
         </P-FloatLabel>
@@ -86,7 +86,7 @@
           <P-MultiSelect
             v-model="selectedAdditional"
             :options="additionalFinishings"
-            optionLabel="name"
+            option-label="name"
             placeholder="Selecione"
             fluid
           >

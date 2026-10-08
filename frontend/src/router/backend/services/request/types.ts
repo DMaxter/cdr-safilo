@@ -102,7 +102,7 @@ export class Showcase extends RequestType {
   }
 
   getFinishings(): string[] {
-    let result: Set<string> = new Set();
+    const result: Set<string> = new Set();
 
     if (this.top) {
       for (const f of this.top.getFinishings()) result.add(f);
@@ -124,7 +124,7 @@ export class Showcase extends RequestType {
   }
 
   getMaterials(): string[] {
-    let result: Set<string> = new Set();
+    const result: Set<string> = new Set();
 
     if (this.top) result.add(this.top.getMaterial());
     if (this.bottom) result.add(this.bottom.getMaterial());
@@ -136,7 +136,7 @@ export class Showcase extends RequestType {
   }
 
   getMeasurements(): number[][] {
-    let result: number[][] = [];
+    const result: number[][] = [];
 
     if (this.top) result.push(this.top.getMeasurements());
     if (this.bottom) result.push(this.bottom.getMeasurements());
@@ -186,7 +186,7 @@ export class TwoFaces extends RequestType {
   }
 
   getFinishings(): string[] {
-    let result: Set<string> = new Set();
+    const result: Set<string> = new Set();
 
     if (this.cover) {
       for (const f of this.cover.getFinishings()) result.add(f);
@@ -199,7 +199,7 @@ export class TwoFaces extends RequestType {
   }
 
   getMaterials(): string[] {
-    let result: Set<string> = new Set();
+    const result: Set<string> = new Set();
 
     if (this.cover) result.add(this.cover.getMaterial());
     if (this.back) result.add(this.back.getMaterial());
@@ -245,7 +245,7 @@ export class RequestSlot {
   }
 
   getFinishings(): Set<string> {
-    let result: Set<string> = new Set();
+    const result: Set<string> = new Set();
 
     this.finishings.forEach((f) => result.add(f.name));
 

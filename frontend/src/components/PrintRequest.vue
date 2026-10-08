@@ -34,45 +34,45 @@
     <p><b>Marca:</b> {{ props.request.brand!!.name }}</p>
     <PrintSlot
       v-if="['OneFace', 'TwoFaces'].includes(props.request.type!!.type!!)"
-      :slot="(props.request.type!! as OneFace).cover"
+      :slot-data="(props.request.type!! as OneFace).cover"
       name="Frente"
     />
     <PrintSlot
       v-if="props.request.type!!.type === 'TwoFaces'"
-      :slot="(props.request.type!! as TwoFaces).back"
+      :slot-data="(props.request.type!! as TwoFaces).back"
       name="Verso"
     />
     <PrintSlot
       v-if="
         ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(props.request.type!!.type!!)
       "
-      :slot="(props.request.type!! as SimpleShowcase).top"
+      :slot-data="(props.request.type!! as SimpleShowcase).top"
       name="Topo"
     />
     <PrintSlot
       v-if="
         ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(props.request.type!!.type!!)
       "
-      :slot="(props.request.type!! as SimpleShowcase).bottom"
+      :slot-data="(props.request.type!! as SimpleShowcase).bottom"
       name="Fundo"
     />
     <PrintSlot
       v-if="
         ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(props.request.type!!.type!!)
       "
-      :slot="(props.request.type!! as SimpleShowcase).left"
+      :slot-data="(props.request.type!! as SimpleShowcase).left"
       name="Esquerda"
     />
     <PrintSlot
       v-if="
         ['SimpleShowcase', 'LeftShowcase', 'RightShowcase'].includes(props.request.type!!.type!!)
       "
-      :slot="(props.request.type!! as SimpleShowcase).right"
+      :slot-data="(props.request.type!! as SimpleShowcase).right"
       name="Direita"
     />
     <PrintSlot
       v-if="['LeftShowcase', 'RightShowcase'].includes(props.request.type!!.type!!)"
-      :slot="(props.request.type!! as LeftShowcase).side"
+      :slot-data="(props.request.type!! as LeftShowcase).side"
       name="Lateral"
     />
   </div>
@@ -87,7 +87,6 @@ import {
   LeftShowcase,
   OneFace,
   Request,
-  RightShowcase,
   SimpleShowcase,
   Status,
   TwoFaces,

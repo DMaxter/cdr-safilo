@@ -4,16 +4,16 @@
     <P-Card class="w-1/2 max-w-[500px]">
       <template #title>Iniciar Sessão</template>
       <template #content>
-        <P-Form @submit="login" class="flex flex-col gap-3">
+        <P-Form class="flex flex-col gap-3" @submit="login">
           <P-FloatLabel variant="on">
             <P-InputText
+              id="email"
+              v-model="auth.email"
               fluid
               size="large"
-              id="email"
               type="text"
-              v-model="auth.email"
-              @blur="touched.email = true"
               :invalid="touched.email && !!errors.email"
+              @blur="touched.email = true"
             />
             <label for="email">Email</label>
           </P-FloatLabel>
@@ -28,13 +28,13 @@
 
           <P-FloatLabel variant="on">
             <P-InputText
+              id="password"
+              v-model="auth.password"
               fluid
               size="large"
-              id="password"
               type="password"
-              v-model="auth.password"
-              @blur="touched.password = true"
               :invalid="touched.password && !!errors.password"
+              @blur="touched.password = true"
             />
             <label for="password">Palavra-passe</label>
           </P-FloatLabel>

@@ -2,34 +2,34 @@
   <P-Dialog v-model:visible="enabled" modal class="w-[800px] h-[75vh]">
     <template #header>Plafonds</template>
     <P-DataTable
+      v-model:filters="filters"
       paginator
       scrollable
-      removableSort
+      removable-sort
       class="max-w-98/100"
-      scrollHeight="flex"
-      filterDisplay="row"
+      scroll-height="flex"
+      filter-display="row"
       :value="rows"
       :rows="10"
-      :rowsPerPageOptions="[5, 10, 20, 50, 100]"
-      v-model:filters="filters"
-      tableStyle="table-layout: fixed; width: 100%"
+      :rows-per-page-options="[5, 10, 20, 50, 100]"
+      table-style="table-layout: fixed; width: 100%"
     >
       <template #empty>Não existem plafonds</template>
 
       <P-Column sortable class="w-35/100" field="name" header="Nome">
         <template #filter="{ filterModel, filterCallback }">
-          <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
+          <P-InputText v-model="filterModel.value" placeholder="Nome" @input="filterCallback()" />
         </template>
       </P-Column>
       <P-Column sortable class="w-35/100" field="email" header="Email">
         <template #filter="{ filterModel, filterCallback }">
-          <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Email" />
+          <P-InputText v-model="filterModel.value" placeholder="Email" @input="filterCallback()" />
         </template>
       </P-Column>
       <P-Column sortable class="w-2/10 text-right!" field="totalPlafond" header="Plafond" />
       <P-Column style="width: 10%">
         <template #body="{ data }">
-          <Icon icon="euro" @click="openPlafondDetail(data)" v-tooltip="'Alterar Plafond'" />
+          <Icon v-tooltip="'Alterar Plafond'" icon="euro" @click="openPlafondDetail(data)" />
         </template>
       </P-Column>
     </P-DataTable>
@@ -90,7 +90,9 @@ function sumPlafonds(user: User) {
     .toFixed(2);
 }
 
-const rows = computed(() => userStore.users.map((user) => ({ ...user, totalPlafond: sumPlafonds(user) })));
+const rows = computed(() =>
+  userStore.users.map((user) => ({ ...user, totalPlafond: sumPlafonds(user) })),
+);
 
 function openPlafondDetail(user: User) {
   managingPlafond.value = true;

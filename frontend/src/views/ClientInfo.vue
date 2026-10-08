@@ -13,7 +13,7 @@
       <h3 class="font-bold text-xl">Contacto</h3>
       <p><b>Email: </b>{{ client.email }}</p>
       <p><b>Número de telefone: </b>{{ client.phone }}</p>
-      <h3 class="font-bold text-xl" v-if="canViewNote && client.note">Nota de cliente</h3>
+      <h3 v-if="canViewNote && client.note" class="font-bold text-xl">Nota de cliente</h3>
       <p v-if="canViewNote && client.note">{{ client.note }}</p>
     </div>
     <template #actions>
@@ -22,11 +22,11 @@
         >Histórico</P-Button
       >
       <ImageManagement
-        multiple
         v-model="managing"
-        :uploadAction="addImages"
-        :deleteAction="deleteImages"
-        :obsoleteAction="obsoleteImages"
+        multiple
+        :upload-action="addImages"
+        :delete-action="deleteImages"
+        :obsolete-action="obsoleteImages"
         :images="client.images"
       />
     </template>
@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { Client } from "@router/backend/services/client/types";
@@ -63,7 +63,7 @@ const client = ref<Client>(new Client());
 
 if (route.query.id) {
   try {
-    let id = Number(route.query.id);
+    const id = Number(route.query.id);
 
     if (isNaN(id)) {
       throw Error();

@@ -1,22 +1,22 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled" class="w-8/10 max-w-[1000px]" fluid>
+  <P-Dialog v-model:visible="enabled" modal class="w-8/10 max-w-[1000px]" fluid>
     <template #header>Acabamentos</template>
     <div class="h-85/100">
       <P-DataTable
+        v-model:filters="filters"
         paginator
-        removableSort
-        filterDisplay="row"
+        removable-sort
+        filter-display="row"
         :value="finishingStore.finishings"
         :rows="10"
-        :rowsPerPageOptions="[5, 10, 20, 50, 100]"
-        v-model:filters="filters"
+        :rows-per-page-options="[5, 10, 20, 50, 100]"
       >
         <template #empty>Não existem acabamentos registados</template>
 
         <P-Column sortable field="id" header="ID" style="width: 60px" />
         <P-Column sortable field="name" header="Nome">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Nome" />
+            <P-InputText v-model="filterModel.value" placeholder="Nome" @input="filterCallback()" />
           </template>
         </P-Column>
         <P-Column sortable field="obsolete" header="Estado" style="width: 120px">
@@ -29,16 +29,16 @@
           <template #body="{ data }">
             <Icon
               v-if="!data.obsolete"
+              v-tooltip="'Marcar como obsoleto'"
               icon="archive"
               @click="confirmObsolete(data)"
-              v-tooltip="'Marcar como obsoleto'"
             />
             <Icon
+              v-tooltip="'Editar acabamento'"
               icon="edit"
               @click="openFinishingManagement(data, ManageMode.Edit)"
-              v-tooltip="'Editar acabamento'"
             />
-            <Icon icon="delete" @click="confirmDeletion(data)" v-tooltip="'Eliminar acabamento'" />
+            <Icon v-tooltip="'Eliminar acabamento'" icon="delete" @click="confirmDeletion(data)" />
           </template>
         </P-Column>
       </P-DataTable>

@@ -3,10 +3,10 @@
     <template #item="{ item, props }">
       <Router-Link v-slot="{ href, navigate }" :to="item.route" custom>
         <a
+          v-if="item.display !== undefined ? item.display! : true"
           :href="href"
           v-bind="props.action"
           @click="navigate"
-          v-if="item.display !== undefined ? item.display! : true"
         >
           <Icon :icon="item.icon" />
           <span>{{ item.label }}</span>

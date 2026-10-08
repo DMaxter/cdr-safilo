@@ -1,19 +1,19 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled">
+  <P-Dialog v-model:visible="enabled" modal>
     <template #header>{{ editing ? "Editar Preço" : "Adicionar Preço" }}</template>
     <P-FloatLabel v-if="editing" class="field" variant="on">
-      <P-InputText id="id" fluid disabled v-model="props.price.id" />
+      <P-InputText id="id" v-model="props.price.id" fluid disabled />
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-Select
         id="material"
+        v-model="props.price.material"
         required
         fluid
-        v-model="props.price.material"
         :options="availableMaterials"
-        optionLabel="name"
-        optionValue="id"
+        option-label="name"
+        option-value="id"
         placeholder="Material"
       />
       <label for="material">Material</label>
@@ -21,38 +21,38 @@
     <P-FloatLabel class="field" variant="on">
       <P-InputNumber
         id="costPerSquareMeter"
+        v-model="props.price.costPerSquareMeter"
         required
         fluid
-        v-model="props.price.costPerSquareMeter"
         mode="currency"
         currency="EUR"
         locale="pt-PT"
-        :minFractionDigits="2"
-        :maxFractionDigits="2"
+        :min-fraction-digits="2"
+        :max-fraction-digits="2"
       />
       <label for="costPerSquareMeter">Preço por m²</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-InputNumber
         id="fixedCost"
+        v-model="props.price.fixedCost"
         required
         fluid
-        v-model="props.price.fixedCost"
         mode="currency"
         currency="EUR"
         locale="pt-PT"
-        :minFractionDigits="2"
-        :maxFractionDigits="2"
+        :min-fraction-digits="2"
+        :max-fraction-digits="2"
       />
       <label for="fixedCost">Custo fixo</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
       <P-MultiSelect
         id="finishings"
-        fluid
         v-model="props.price.finishings"
+        fluid
         :options="availableFinishings"
-        optionLabel="name"
+        option-label="name"
         display="chip"
         placeholder="Acabamentos"
       />

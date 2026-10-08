@@ -9,14 +9,14 @@
         <div class="col-span-6">
           <P-FloatLabel class="field" variant="on">
             <P-Select
-              fluid
               id="service"
               ref="service"
-              :options="services"
-              optionLabel="name"
               v-model="waybill.service"
-              @blur="touch('service')"
+              fluid
+              :options="services"
+              option-label="name"
               :invalid="touched.service && !!errors.service"
+              @blur="touch('service')"
             />
             <label for="service">Serviço</label>
           </P-FloatLabel>
@@ -33,13 +33,13 @@
         <div class="col-span-6">
           <P-FloatLabel class="field" variant="on">
             <P-InputNumber
-              fluid
               id="amount"
               ref="amount"
-              :min="1"
               v-model="waybill.items"
-              @blur="touch('items')"
+              fluid
+              :min="1"
               :invalid="touched.items && !!errors.items"
+              @blur="touch('items')"
             />
             <label for="amount">Número de pacotes</label>
           </P-FloatLabel>
@@ -59,14 +59,14 @@
         <div class="col-span-6">
           <P-FloatLabel class="field" variant="on">
             <P-Select
-              fluid
               id="package"
               ref="package"
-              :options="packages"
-              optionLabel="name"
               v-model="waybill.packaging"
-              @blur="touch('packaging')"
+              fluid
+              :options="packages"
+              option-label="name"
               :invalid="touched.packaging && !!errors.packaging"
+              @blur="touch('packaging')"
             />
             <label for="package">Tipo de Encomenda</label>
           </P-FloatLabel>
@@ -83,14 +83,14 @@
         <div class="col-span-6">
           <P-FloatLabel class="field" variant="on">
             <P-InputNumber
-              fluid
               id="weight"
               ref="weight"
+              v-model="waybill.totalWeight"
+              fluid
               :min="0"
               :step="0.01"
-              v-model="waybill.totalWeight"
-              @blur="touch('totalWeight')"
               :invalid="touched.totalWeight && !!errors.totalWeight"
+              @blur="touch('totalWeight')"
             />
             <label for="weight">Peso Total (kg)</label>
           </P-FloatLabel>
@@ -110,12 +110,12 @@
         <div class="col-span-12">
           <P-FloatLabel class="field" variant="on">
             <P-InputText
-              fluid
               id="description"
               ref="description"
               v-model="waybill.description"
-              @blur="touch('description')"
+              fluid
               :invalid="touched.description && !!errors.description"
+              @blur="touch('description')"
             />
             <label for="description">Descrição</label>
           </P-FloatLabel>
@@ -135,13 +135,13 @@
         <div class="col-span-3">
           <P-FloatLabel class="field" variant="on">
             <P-Select
-              fluid
               id="format"
               ref="format"
-              :options="labels"
               v-model="waybill.labelFormat"
-              @blur="touch('labelFormat')"
+              fluid
+              :options="labels"
               :invalid="touched.labelFormat && !!errors.labelFormat"
+              @blur="touch('labelFormat')"
             />
             <label for="format">Formato</label>
           </P-FloatLabel>
@@ -158,14 +158,14 @@
         <div class="col-span-3">
           <P-FloatLabel class="field" variant="on">
             <P-InputNumber
-              fluid
               id="height"
               ref="height"
+              v-model="waybill.dimensions.height"
+              fluid
               :min="0"
               :step="0.01"
-              v-model="waybill.dimensions.height"
-              @blur="touch('height')"
               :invalid="touched.height && !!errors.height"
+              @blur="touch('height')"
             />
             <label for="height">Altura (m)</label>
           </P-FloatLabel>
@@ -182,14 +182,14 @@
         <div class="col-span-3">
           <P-FloatLabel class="field" variant="on">
             <P-InputNumber
-              fluid
               id="width"
               ref="width"
+              v-model="waybill.dimensions.width"
+              fluid
               :min="0"
               :step="0.01"
-              v-model="waybill.dimensions.width"
-              @blur="touch('width')"
               :invalid="touched.width && !!errors.width"
+              @blur="touch('width')"
             />
             <label for="width">Largura (m)</label>
           </P-FloatLabel>
@@ -206,14 +206,14 @@
         <div class="col-span-3">
           <P-FloatLabel class="field" variant="on">
             <P-InputNumber
-              fluid
               id="length"
               ref="length"
+              v-model="waybill.dimensions.length"
+              fluid
               :min="0"
               :step="0.01"
-              v-model="waybill.dimensions.length"
-              @blur="touch('length')"
               :invalid="touched.length && !!errors.length"
+              @blur="touch('length')"
             />
             <label for="length">Comprimento (m)</label>
           </P-FloatLabel>
@@ -236,24 +236,24 @@
               <!-- Row 1: 3 fields -->
               <div class="col-span-4">
                 <P-FloatLabel class="field" variant="on">
-                  <P-InputText fluid id="phone" v-model="waybill.destination.phone" />
+                  <P-InputText id="phone" v-model="waybill.destination.phone" fluid />
                   <label for="phone">Número de Telefone</label>
                 </P-FloatLabel>
               </div>
               <div class="col-span-4">
                 <P-FloatLabel class="field" variant="on">
                   <P-Select
-                    fluid
                     id="country"
-                    :options="countries"
                     v-model="waybill.destination.address.country"
+                    fluid
+                    :options="countries"
                   />
                   <label for="country">País</label>
                 </P-FloatLabel>
               </div>
               <div class="col-span-4">
                 <P-FloatLabel class="field" variant="on">
-                  <P-InputText fluid id="city" v-model="waybill.destination.address.city" />
+                  <P-InputText id="city" v-model="waybill.destination.address.city" fluid />
                   <label for="city">Cidade</label>
                 </P-FloatLabel>
               </div>
@@ -261,16 +261,16 @@
               <div class="col-span-6">
                 <P-FloatLabel class="field" variant="on">
                   <P-InputText
-                    fluid
                     id="postalcode"
                     v-model="waybill.destination.address.postalCode"
+                    fluid
                   />
                   <label for="postalcode">Código Postal</label>
                 </P-FloatLabel>
               </div>
               <div class="col-span-6">
                 <P-FloatLabel class="field" variant="on">
-                  <P-InputText fluid id="address" v-model="waybill.destination.address.address" />
+                  <P-InputText id="address" v-model="waybill.destination.address.address" fluid />
                   <label for="address">Morada</label>
                 </P-FloatLabel>
               </div>
@@ -284,10 +284,10 @@
         <div class="col-span-12">
           <P-FloatLabel class="field" variant="on">
             <P-Select
-              fluid
               id="downloadFormat"
-              :options="labels"
               v-model="selectedDownloadFormat"
+              fluid
+              :options="labels"
             />
             <label for="downloadFormat">Formato para Descarregar</label>
           </P-FloatLabel>

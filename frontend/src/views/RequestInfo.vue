@@ -10,7 +10,7 @@
 
     <RequestDetails v-else :request="request" />
 
-    <template #actions v-if="request">
+    <template v-if="request" #actions>
       <RequestActions :request="request" @back="router.back()" @refresh="refreshRequest" />
     </template>
   </Container>

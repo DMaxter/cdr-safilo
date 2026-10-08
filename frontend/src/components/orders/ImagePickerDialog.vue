@@ -1,5 +1,5 @@
 <template>
-  <P-Dialog modal v-model:visible="enabled" header="Selecionar Imagem" :style="{ width: '600px' }">
+  <P-Dialog v-model:visible="enabled" modal header="Selecionar Imagem" :style="{ width: '600px' }">
     <div v-if="images.length === 0" class="text-center p-4">Não existem imagens disponíveis</div>
     <div v-else class="grid grid-cols-3 gap-3 p-2">
       <div
@@ -14,7 +14,7 @@
     </div>
     <template #footer>
       <P-Button text label="Cancelar" @click="close()" />
-      <P-Button label="Confirmar" @click="confirm()" :disabled="!selectedId" />
+      <P-Button label="Confirmar" :disabled="!selectedId" @click="confirm()" />
     </template>
   </P-Dialog>
 </template>

@@ -28,7 +28,7 @@ export async function editClientNote(
 }
 
 export async function importClients(file: File | Blob): Promise<AxiosResponse<null | Error>> {
-  let form = new FormData();
+  const form = new FormData();
 
   form.append("file", file);
 

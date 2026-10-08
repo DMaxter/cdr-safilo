@@ -24,7 +24,7 @@
 
     <slot name="extra" />
 
-    <PrintRequest class="only-print" ref="printer" :request="props.request" />
+    <PrintRequest ref="printer" class="only-print" :request="props.request" />
     <Waybill v-model="waybill" :request="props.request" @opened="emit('refresh')" />
   </div>
 </template>
