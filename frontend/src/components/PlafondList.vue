@@ -8,7 +8,7 @@
       class="max-w-98/100"
       scrollHeight="flex"
       filterDisplay="row"
-      :value="userStore.users"
+      :value="rows"
       :rows="10"
       :rowsPerPageOptions="[5, 10, 20, 50, 100]"
       v-model:filters="filters"
@@ -26,11 +26,7 @@
           <P-InputText v-model="filterModel.value" @input="filterCallback()" placeholder="Email" />
         </template>
       </P-Column>
-      <P-Column sortable class="w-2/10 text-right!" field="credits" header="Plafond">
-        <template #body="{ data }">
-          {{ sumPlafonds(data) }}
-        </template>
-      </P-Column>
+      <P-Column sortable class="w-2/10 text-right!" field="totalPlafond" header="Plafond" />
       <P-Column style="width: 10%">
         <template #body="{ data }">
           <Icon icon="euro" @click="openPlafondDetail(data)" v-tooltip="'Alterar Plafond'" />
@@ -51,7 +47,7 @@
 <script lang="ts" setup>
 import { FilterMatchMode } from "@primevue/core/api";
 import { useToast } from "primevue/usetoast";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import { User } from "@router/backend/services/user/types";
 import { useUserStore } from "@stores/users";
@@ -93,6 +89,8 @@ function sumPlafonds(user: User) {
     .reduce((acc, c) => acc + c, 0)
     .toFixed(2);
 }
+
+const rows = computed(() => userStore.users.map((user) => ({ ...user, totalPlafond: sumPlafonds(user) })));
 
 function openPlafondDetail(user: User) {
   managingPlafond.value = true;
