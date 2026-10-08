@@ -1,5 +1,4 @@
 <template>
-  <!--TODO: Dialog close button not working-->
   <P-Dialog modal class="max-w-95/100 w-[400px]" v-model:visible="enabled">
     <template #header>{{ editing ? "Editar Cliente" : "Adicionar Cliente" }}</template>
     <P-FloatLabel class="field" variant="on">
