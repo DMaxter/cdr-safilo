@@ -17,16 +17,16 @@
       <p v-if="canViewNote && client.note">{{ client.note }}</p>
     </div>
     <template #actions>
-      <P-Button v-if="canManageImages" @click="openImageManagement()">Imagens</P-Button>
+      <P-Button v-if="canViewImages" @click="openImageManagement()">Imagens</P-Button>
       <P-Button @click="router.push({ name: 'search', query: { client: client.id } })"
         >Histórico</P-Button
       >
       <ImageManagement
         v-model="managing"
         multiple
-        :upload-action="addImages"
-        :delete-action="deleteImages"
-        :obsolete-action="obsoleteImages"
+        :upload-action="canUploadImages ? addImages : undefined"
+        :delete-action="canManageImages ? deleteImages : undefined"
+        :obsolete-action="canManageImages ? obsoleteImages : undefined"
         :images="client.images"
       />
     </template>
@@ -55,7 +55,10 @@ const authStore = useAuthStore();
 const clientStore = useClientStore();
 
 const canViewNote = authStore.isCdr() || authStore.isAdmin();
+
+const canUploadImages = authStore.isCommercial() || authStore.isAdmin();
 const canManageImages = authStore.isSafilo() || authStore.isAdmin();
+const canViewImages = canUploadImages || canManageImages;
 
 const toast = useToast();
 
