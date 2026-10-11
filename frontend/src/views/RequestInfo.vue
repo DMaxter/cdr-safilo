@@ -55,9 +55,20 @@ function refreshRequest() {
   requestStore.getAllRequests(true);
 }
 
+function notFound(detail: string) {
+  toast.add({
+    severity: "warn",
+    summary: TITLE,
+    detail,
+    life: 10000,
+  });
+
+  router.replace({ name: "search" });
+}
+
 onMounted(async () => {
   if (id.value === null) {
-    loading.value = false;
+    notFound("Pedido inválido");
     return;
   }
 
@@ -76,6 +87,13 @@ onMounted(async () => {
       life: 10000,
     });
     console.error(response);
+    loading.value = false;
+    return;
+  }
+
+  if (!request_.value) {
+    notFound(`Pedido ${id.value} não encontrado`);
+    return;
   }
 
   loading.value = false;
