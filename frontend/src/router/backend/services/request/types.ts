@@ -7,6 +7,7 @@ import { Finishing } from "@router/backend/services/finishing/types";
 export class Request {
   id: number = 0;
   user: string | null = null;
+  userEmail: string | null = null;
   client: Client | null = null;
   created: Date | null = null;
   lastUpdate: Date | null = null;
@@ -23,6 +24,7 @@ export class Request {
     if (obj) {
       this.id = obj.id;
       this.user = obj.user;
+      this.userEmail = obj.userEmail ?? null;
       this.client = obj.client ? new Client(obj.client) : null;
       this.created = obj.created ? new Date(obj.created) : null;
       this.lastUpdate = obj.lastUpdate ? new Date(obj.lastUpdate) : null;

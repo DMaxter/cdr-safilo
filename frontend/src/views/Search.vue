@@ -103,7 +103,7 @@
           <span>{{ data.materialNames.join(", ") }}</span>
         </template>
       </P-Column>
-      <P-Column class="w-[10rem]" field="user" header="Comercial" sortable filter>
+      <P-Column class="w-[10rem]" field="userEmail" header="Comercial" sortable filter>
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
             v-model="filterModel.value"
@@ -113,6 +113,9 @@
             placeholder="Comercial"
             @change="filterCallback()"
           />
+        </template>
+        <template #body="{ data }">
+          <span>{{ data.user }}</span>
         </template>
       </P-Column>
       <P-Column class="w-[15rem]" field="created" header="Data de Criação" sortable filter>
@@ -150,6 +153,11 @@
       </P-Column>
     </P-DataTable>
     <RequestSummary v-model="summary" :request="selectedRequest" @opened="onWaybillOpened" />
+    <template #actions>
+      <P-Button v-if="isCommercial" @click="toggleOwnRequests">
+        {{ ownRequestsOnly ? "Ver todos os pedidos" : "Ver só os meus pedidos" }}
+      </P-Button>
+    </template>
   </Container>
 </template>
 
@@ -161,6 +169,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 
 import { statusItems } from "@/maps";
+import { useAuthStore } from "@stores/auth";
 import { useRequestStore } from "@stores/requests";
 import { useRequestAccess } from "@/composables/useRequestAccess";
 import { Client } from "@router/backend/services/client/types";
@@ -179,6 +188,10 @@ const toast = useToast();
 const requestStore = useRequestStore();
 const { canCancel, canEdit } = useRequestAccess();
 
+const authStore = useAuthStore();
+const isCommercial = authStore.isCommercial();
+const ownCommercial = authStore.logged?.email ?? "";
+
 const route = useRoute();
 const router = useRouter();
 
@@ -187,7 +200,11 @@ const TITLE = "Cancelamento de Pedido";
 // Filter options are derived straight from the loaded requests (like ClientList's
 // banner options), so they are never empty when returning to this screen.
 const commercialsFilterOptions = computed(() =>
-  Array.from(new Set(requestStore.requests.map((r) => r.user!))),
+  Array.from(
+    new Set(
+      requestStore.requests.map((r) => r.userEmail).filter((email): email is string => !!email),
+    ),
+  ),
 );
 const clients = computed(() => {
   const uniqueClients = new Map<number | string, Client>();
@@ -230,7 +247,7 @@ const filters = ref<Record<string, { value: unknown; matchMode: string }>>({
   id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   status: { value: null, matchMode: FilterMatchMode.IN },
   "client.id": { value: null, matchMode: FilterMatchMode.IN },
-  user: { value: null, matchMode: FilterMatchMode.IN },
+  userEmail: { value: null, matchMode: FilterMatchMode.IN },
   created: { value: null, matchMode: "between" },
   "brand.name": { value: null, matchMode: FilterMatchMode.IN },
   materialNames: { value: null, matchMode: "materialIn" },
@@ -251,7 +268,7 @@ if (route.query.client) {
   filters.value["client.id"].value = ([route.query.client].flat() as string[]).map(Number);
 }
 if (route.query.commercial) {
-  filters.value.user.value = [route.query.commercial].flat() as string[];
+  filters.value.userEmail.value = [route.query.commercial].flat() as string[];
 }
 if (route.query.creationDate) {
   const dates = ([route.query.creationDate].flat() as string[]).map((d) => new Date(d));
@@ -272,6 +289,22 @@ async function refreshRequests() {
   if (!response.success) {
     console.error("Failed to retrieve requests:", response.content);
   }
+}
+
+// Commercials may see every request, but can scope the table to their own history.
+const ownRequestsOnly = computed(() => {
+  const value = filters.value.userEmail.value;
+  return (
+    ownCommercial !== "" && Array.isArray(value) && value.length === 1 && value[0] === ownCommercial
+  );
+});
+
+function toggleOwnRequests() {
+  if (ownCommercial === "") {
+    return;
+  }
+
+  filters.value.userEmail.value = ownRequestsOnly.value ? null : [ownCommercial];
 }
 
 function showSummary(item: Request) {
@@ -333,7 +366,7 @@ const URL_KEYS: Record<string, string> = {
   id: "id",
   status: "status",
   "client.id": "client",
-  user: "commercial",
+  userEmail: "commercial",
   created: "creationDate",
   "brand.name": "brand",
   materialNames: "material",
