@@ -55,6 +55,10 @@ export async function cancelRequest(id: number): Promise<AxiosResponse<null | Er
   return await http.put(`/request/cancel/${id}`);
 }
 
+export async function toProduction(id: number): Promise<AxiosResponse<null | Error>> {
+  return await http.put(`/request/production/${id}`);
+}
+
 export async function editRequest(
   id: number,
   request: Request,
