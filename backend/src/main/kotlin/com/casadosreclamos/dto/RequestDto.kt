@@ -9,6 +9,7 @@ import java.util.*
 data class RequestDto(
     var id: Long?,
     var user: String?,
+    var userEmail: String?,
     var client: ClientDto?,
     var created: Date?,
     var lastUpdate: Date?,
@@ -24,6 +25,7 @@ data class RequestDto(
     constructor(request: Request) : this(
         request.id,
         request.requester.name,
+        request.requester.email,
         ClientDto(request.client),
         request.created,
         request.lastUpdate,
