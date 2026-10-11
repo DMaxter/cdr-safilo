@@ -151,7 +151,7 @@ async function deletePrice() {
 }
 
 function openPriceManagement(price: Price, mode: ManageMode) {
-  selectedPrice.value = price;
+  selectedPrice.value = new Price(price);
   manageMode.value = mode;
 }
 
