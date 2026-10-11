@@ -4,7 +4,7 @@
       <Circle :size="100">
         <Icon icon="account_circle" :size="80" />
       </Circle>
-      {{ authStore.logged!!.name }}
+      {{ authStore.logged?.name }}
     </div>
     <div class="my-[30px] flex justify-around">
       <div class="flex justify-start items-center">
@@ -21,8 +21,8 @@
           <template v-if="hasPlafond">
             <PlafondDetail
               v-model="plafondDetail"
-              :user="authStore.logged!!.email"
-              :credits="authStore.logged!!.credits"
+              :user="authStore.logged?.email"
+              :credits="authStore.logged?.credits"
             />
             <Circle class="cursor-pointer" :size="30" @click="showPlafondDetail()">
               <Icon icon="help_outline" :size="20" />
@@ -37,7 +37,7 @@
         <div class="ml-[10px]">
           Email
           <div class="field">
-            {{ authStore.logged!!.email }}
+            {{ authStore.logged?.email }}
           </div>
         </div>
       </div>
@@ -60,16 +60,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useAuthStore } from "@stores/auth";
 
 const authStore = useAuthStore();
 
-const credits = authStore
-  .logged!.credits!.map((element) => element.amount)
-  .reduce((sum, e) => sum + e, 0)
-  .toFixed(2);
+const credits = computed(() =>
+  (authStore.logged?.credits ?? [])
+    .map((element) => element.amount)
+    .reduce((sum, e) => sum + e, 0)
+    .toFixed(2),
+);
 
 const hasPlafond: boolean = authStore.isCommercial() || authStore.isAdmin();
 const plafondDetail = ref(false);
