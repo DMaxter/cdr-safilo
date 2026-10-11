@@ -13,10 +13,6 @@ class ClientRepository : PanacheRepository<Client> {
         return find("name = :name", Parameters.with("name", name).map()).firstResult()
     }
 
-    fun streamByBanner(banner: String): Multi<Client> {
-        return stream("banner.name = :banner", Parameters.with("banner", banner).map())
-    }
-
     override fun findById(id: Long?): Uni<Client> {
         return find(
             "SELECT DISTINCT c FROM Client c LEFT JOIN FETCH c.images WHERE c.id = :id",

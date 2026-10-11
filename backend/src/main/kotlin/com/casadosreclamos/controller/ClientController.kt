@@ -3,7 +3,6 @@ package com.casadosreclamos.controller
 import com.casadosreclamos.dto.ClientDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.CDR_ROLE
-import com.casadosreclamos.model.COMMERCIAL_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.ClientService
 import io.quarkus.security.Authenticated
@@ -165,25 +164,6 @@ class ClientController {
             logger.info("Temporary file with clients deleted successfully")
 
             Response.ok().build()
-        }
-    }
-
-    @GET
-    @Path("/banner/{banner}")
-    @Operation(summary = "Obtain clients of a banner")
-    @RolesAllowed(COMMERCIAL_ROLE, MANAGER_ROLE, ADMIN_ROLE)
-    @APIResponses(
-            APIResponse(responseCode = "200", description = "Successful operation"),
-            APIResponse(responseCode = "401", description = "User is not logged in"),
-            APIResponse(responseCode = "403", description = "Insufficient privileges")
-    )
-    fun getBannerClients(@PathParam("banner") banner: String): Multi<ClientDto> {
-        return identity.deferredIdentity.onItem().transformToMulti { id ->
-            logger.info("User ${id.principal.name} is getting clients of banner $banner")
-
-            return@transformToMulti clientService.getByBanner(banner).onItem().transform {
-                ClientDto(it)
-            }
         }
     }
 }
