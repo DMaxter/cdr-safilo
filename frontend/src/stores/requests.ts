@@ -148,6 +148,33 @@ export const useRequestStore = defineStore("requestStore", () => {
     }
   }
 
+  async function toProduction(id: number): Promise<APIResponse<string | null>> {
+    try {
+      const { status, data } = await API.requests.toProduction(id);
+
+      if (status === 200) {
+        _update(id, { status: Status.InProduction });
+        return {
+          success: true,
+          content: null,
+        };
+      } else {
+        return {
+          success: false,
+          content: getErrorMessage(data),
+          status: status,
+        };
+      }
+    } catch (error) {
+      const _error = error as AxiosError<Error>;
+      return {
+        success: false,
+        status: _error.response?.status,
+        content: getErrorMessage(_error.response?.data),
+      };
+    }
+  }
+
   async function checkPrice(request: Request): Promise<APIResponse<number | string>> {
     try {
       const { status, data } = await API.requests.checkPrice(request);
@@ -222,6 +249,7 @@ export const useRequestStore = defineStore("requestStore", () => {
     addRequest,
     editRequest,
     cancelRequest,
+    toProduction,
     checkPrice,
     exportRequests,
   };

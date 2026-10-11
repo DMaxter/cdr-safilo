@@ -37,5 +37,10 @@ export function useRequestAccess() {
     return (authStore.isCdr() || authStore.isAdmin()) && request.status !== Status.Cancelled;
   }
 
-  return { canCancel, canEdit, canSeeWaybill };
+  /** CDR/ADMIN may advance a still-ordered request to production, once it has been printed. */
+  function canSendToProduction(request: Request): boolean {
+    return (authStore.isCdr() || authStore.isAdmin()) && request.status === Status.Ordered;
+  }
+
+  return { canCancel, canEdit, canSeeWaybill, canSendToProduction };
 }

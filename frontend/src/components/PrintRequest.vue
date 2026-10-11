@@ -96,11 +96,16 @@ const props = defineProps<{
   request: Request;
 }>();
 
+const emit = defineEmits<{
+  (e: "printed"): void;
+}>();
+
 const printable = useTemplateRef<HTMLElement>("printable");
 
 const { handlePrint } = useVueToPrint({
   content: printable as ShallowRef<HTMLElement>,
   documentTitle: `Pedido_Safilo_${props.request.id}`,
+  onAfterPrint: () => emit("printed"),
 });
 
 defineExpose({ handlePrint });

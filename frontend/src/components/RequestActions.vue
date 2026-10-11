@@ -24,7 +24,7 @@
 
     <slot name="extra" />
 
-    <PrintRequest ref="printer" class="only-print" :request="props.request" />
+    <PrintRequest ref="printer" class="only-print" :request="props.request" @printed="onPrinted" />
     <Waybill v-model="waybill" :request="props.request" @opened="emit('refresh')" />
   </div>
 </template>
@@ -41,6 +41,7 @@ import { useRequestAccess } from "@/composables/useRequestAccess";
 import { useRequestStore } from "@stores/requests";
 
 const TITLE = "Cancelamento de Pedido";
+const PRODUCTION_TITLE = "Produção de Pedido";
 
 const props = defineProps<{
   request: Request;
@@ -57,7 +58,7 @@ const toast = useToast();
 const router = useRouter();
 
 const requestStore = useRequestStore();
-const { canCancel, canEdit, canSeeWaybill } = useRequestAccess();
+const { canCancel, canEdit, canSeeWaybill, canSendToProduction } = useRequestAccess();
 
 const printer = useTemplateRef<typeof PrintRequestComponent>("printer");
 const waybill = ref(false);
@@ -107,6 +108,50 @@ async function cancelRequest() {
       detail: "Ocorreu um erro ao cancelar o pedido",
       life: 10000,
     });
+    console.error(response);
+  }
+}
+
+function onPrinted() {
+  if (!canSendToProduction(props.request)) {
+    return;
+  }
+
+  confirm.require({
+    message: `O pedido ${props.request.id} foi impresso? Se sim, será marcado como "Em Produção".`,
+    header: "Confirmar impressão do pedido",
+    rejectProps: {
+      label: "Não",
+      severity: "secondary",
+      outline: true,
+    },
+    acceptProps: {
+      label: "Sim, marcar em produção",
+    },
+    accept: sendToProduction,
+  });
+}
+
+async function sendToProduction() {
+  const response = await requestStore.toProduction(props.request.id);
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: PRODUCTION_TITLE,
+      detail: "Pedido em produção",
+      life: 10000,
+    });
+
+    emit("refresh");
+  } else {
+    toast.add({
+      severity: "error",
+      summary: PRODUCTION_TITLE,
+      detail: "Ocorreu um erro ao marcar o pedido em produção",
+      life: 10000,
+    });
+
     console.error(response);
   }
 }
