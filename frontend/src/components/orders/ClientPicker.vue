@@ -96,7 +96,7 @@ const filters = ref({
 });
 
 onMounted(async () => {
-  if (clientStore.clients.length > 0) {
+  if (clientStore.loaded) {
     return;
   }
 
