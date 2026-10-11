@@ -16,7 +16,7 @@ export async function changePassword(
   old: string,
   password: string,
 ): Promise<AxiosResponse<undefined | Error>> {
-  return await http.put(`/user/password/${encodeURI(old)}/${encodeURI(password)}`);
+  return await http.put("/user/password", { old, new: password });
 }
 
 export async function changePlafond(

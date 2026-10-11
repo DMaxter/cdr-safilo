@@ -2,6 +2,7 @@ package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.AuthDto
 import com.casadosreclamos.dto.RegisterDto
+import com.casadosreclamos.dto.ResetPasswordDto
 import com.casadosreclamos.dto.UserDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
@@ -92,15 +93,18 @@ class AuthController {
 
     @POST
     @PermitAll
-    @Path("/forgot/{username}/{password}/{token}")
+    @Path("/forgot/{username}/{token}")
     @Operation(summary = "Change user password")
-    @APIResponses(APIResponse(responseCode = "200", description = "Password was successfully changed"))
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Password was successfully changed"),
+        APIResponse(responseCode = "400", description = "Invalid token or password")
+    )
     fun changePassword(
-        @PathParam("username") user: String, @PathParam("password") password: String, @PathParam("token") token: String
+        @PathParam("username") user: String, @PathParam("token") token: String, credentials: ResetPasswordDto
     ): Uni<Response> {
         logger.info("Changing password for user \"$user\"@${context.request().remoteAddress()} through recovery token")
 
-        return authService.changePassword(user, password, token)
+        return authService.changePassword(user, credentials.password.orEmpty(), token)
     }
 
     @GET
