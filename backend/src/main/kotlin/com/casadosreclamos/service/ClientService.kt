@@ -35,10 +35,6 @@ class ClientService {
         return clientRepository.findById(id)
     }
 
-    fun getByBanner(banner: String): Multi<Client> {
-        return clientRepository.streamByBanner(banner)
-    }
-
     @Throws(
             InvalidIdException::class,
             InvalidBannerException::class,
