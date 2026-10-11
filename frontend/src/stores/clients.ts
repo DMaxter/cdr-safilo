@@ -10,9 +10,23 @@ import { Image } from "@router/backend/services/image/types";
 
 export const useClientStore = defineStore("clientStore", () => {
   const clients = ref<Client[]>([]);
+  const loaded = ref(false);
 
   function init(data: Client[]) {
     clients.value = data;
+    loaded.value = true;
+  }
+
+  function _upsert(client: Client): Client {
+    const index = clients.value.findIndex((c) => c.id === client.id);
+
+    if (index === -1) {
+      clients.value.push(client);
+      return clients.value[clients.value.length - 1];
+    }
+
+    clients.value[index] = client;
+    return clients.value[index];
   }
 
   function add(client: Client) {
@@ -182,35 +196,50 @@ export const useClientStore = defineStore("clientStore", () => {
   }
 
   async function getClient(id: number): Promise<APIResponse<Client | string | null>> {
-    let index = clients.value.findIndex((c) => c.id === id);
+    const cached = clients.value.find((c) => c.id === id);
 
-    if (index === -1) {
-      const response = await getClients();
-
-      if (!response.success) {
-        return response;
-      }
-
-      index = clients.value.findIndex((c) => c.id === id);
-      if (index === -1) {
-        console.error(`Client ${id} not in store`);
-        return {
-          success: false,
-          status: 404,
-          content: `Cliente ${id} não existe`,
-        };
-      } else {
-        return {
-          success: true,
-          content: clients.value[index],
-        };
-      }
-    } else {
+    if (cached) {
       return {
         success: true,
-        content: clients.value[index],
+        content: cached,
       };
     }
+
+    try {
+      const { status, data } = await API.clients.getClient(id);
+
+      if (status === 200 && data) {
+        return {
+          success: true,
+          content: _upsert(data as Client),
+        };
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    const response = await getClients();
+
+    if (!response.success) {
+      return response;
+    }
+
+    const client = clients.value.find((c) => c.id === id);
+
+    if (!client) {
+      console.error(`Client ${id} not in store`);
+
+      return {
+        success: false,
+        status: 404,
+        content: `Cliente ${id} não existe`,
+      };
+    }
+
+    return {
+      success: true,
+      content: client,
+    };
   }
 
   async function uploadImages(
@@ -331,6 +360,7 @@ export const useClientStore = defineStore("clientStore", () => {
 
   return {
     clients,
+    loaded,
     addClient,
     editClient,
     editNote,
