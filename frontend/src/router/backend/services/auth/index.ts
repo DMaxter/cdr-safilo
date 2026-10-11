@@ -26,9 +26,9 @@ export async function changePassword(
   password: string,
   token: string,
 ): Promise<AxiosResponse<undefined | Error>> {
-  return await http.post(
-    `/auth/forgot/${encodeURI(username)}/${encodeURI(password)}/${encodeURI(token)}`,
-  );
+  return await http.post(`/auth/forgot/${encodeURI(username)}/${encodeURI(token)}`, {
+    password,
+  });
 }
 
 export async function isLogged(): Promise<AxiosResponse<boolean | Error>> {

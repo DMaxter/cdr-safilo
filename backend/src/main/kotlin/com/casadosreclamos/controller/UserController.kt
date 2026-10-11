@@ -1,6 +1,7 @@
 package com.casadosreclamos.controller
 
 import com.casadosreclamos.dto.UserDto
+import com.casadosreclamos.dto.UserPasswordDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.MANAGER_ROLE
 import com.casadosreclamos.service.UserService
@@ -67,18 +68,23 @@ class UserController {
     }
 
     @PUT
-    @Path("/password/{old}/{new}")
+    @Path("/password")
     @Authenticated
     @Operation(summary = "Change user password")
     @APIResponses(
         APIResponse(responseCode = "200", description = "Password updated"),
+        APIResponse(responseCode = "400", description = "Invalid credentials"),
         APIResponse(responseCode = "401", description = "No user session exists")
     )
-    fun changePassword(@PathParam("old") old: String, @PathParam("new") new: String): Uni<Response> {
+    fun changePassword(credentials: UserPasswordDto): Uni<Response> {
         return identity.deferredIdentity.onItem().transformToUni { id ->
             logger.info("User ${id.principal.name} is changing their password")
 
-            userService.changePassword(id.principal.name, old, new)
+            userService.changePassword(
+                id.principal.name,
+                credentials.old.orEmpty(),
+                credentials.new.orEmpty()
+            )
         }
     }
 
