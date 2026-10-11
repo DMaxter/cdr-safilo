@@ -21,7 +21,7 @@
       </template>
     </ItemGroup>
     <template #footer>
-      <P-Button text @click="add">Adicionar</P-Button>
+      <P-Button v-if="props.uploadAction || props.addAction" text @click="add">Adicionar</P-Button>
       <P-Button v-if="props.deleteAction" :disabled="!isSelected" text @click="del"
         >Apagar</P-Button
       >
