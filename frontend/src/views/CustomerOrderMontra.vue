@@ -4,7 +4,7 @@
     <v-container fill-height>
       <v-row justify="center" align="center">
         <v-col cols="auto">
-          <v-card elevation="12" tile color="#FAFAFA" :height="$vuetify.breakpoint.height > 670
+          <v-card elevation="12" tile color="#FAFAFA" :height="tallScreen
             ? '650px'
             : '500px'" width="800" style="border-radius: 15px; background-color: #E0E0E0">
             <v-row no-gutters justify="start" class="pt-2 pl-2">
@@ -315,7 +315,7 @@
             flat
             tile
             outlined
-            :width="$vuetify.breakpoint.height > 670
+            :width="tallScreen
                 ? '500px'
                 : '650px'"
             style="background-color: rgba(235,235,238, 0.3);"
@@ -333,16 +333,16 @@
             justify="center"
           >
         <v-card
-        :height="$vuetify.breakpoint.height > 670
+        :height="tallScreen
                 ? '350px'
                 : '200px'"
-          :width="$vuetify.breakpoint.height > 670
+          :width="tallScreen
                 ? '500px'
                 : '650px'"
           outlined
           style="background-color: rgba(235,235,238, 0.4);"
         >
-        <template v-if="$vuetify.breakpoint.height > 670">
+        <template v-if="tallScreen">
           <v-row justify="center" align="center" class="d-flex flex-column mt-4">
             <v-col cols="auto" class="pa-0 pb-3">
               <h2> Face {{faces[n-1]}} </h2>
@@ -628,6 +628,10 @@ export default {
 
   data: () => ({
     store,
+    // Captured once on mount: on iPad, opening the on-screen keyboard shrinks the
+    // viewport, and reacting to that resize destroyed the focused input (making the
+    // keyboard close and the screen appear to reload).
+    tallScreen: window.innerHeight > 670,
     myImage2: require('@/assets/logologo1.png'),
     faces: ["A", "B", "C", "D", "E"],
     myImage: require('@/assets/default-placeholder.png'),

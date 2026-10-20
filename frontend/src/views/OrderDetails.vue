@@ -4,7 +4,7 @@
     <v-container fill-height>
       <v-row justify="center" align="center" class="d-print-none">
         <v-col cols="auto">
-          <v-card elevation="12" :height="$vuetify.breakpoint.height > 620
+          <v-card elevation="12" :height="tallScreen
             ? '600px'
             : '480px'" width="800" tile style="background-color: #E0E0E0">
             <v-row no-gutters justify="start" class="pt-2 pl-2">
@@ -157,7 +157,7 @@
               </template>
             </v-row>
 
-            <v-row justify="center" align="center" class="fill-height d-flex flex-column" :style="$vuetify.breakpoint.height > 620
+            <v-row justify="center" align="center" class="fill-height d-flex flex-column" :style="tallScreen
               ? 'height: 480px'
               : 'height: 350px'">
               <v-dialog max-width="800" v-model="this.cancelShow" id="cancelStatus">
@@ -201,12 +201,12 @@
                   </u></span>
                 <span v-else> {{ store.pedidoAtual.codClient }} </span>
               </h3>
-              <v-card elevation="12" color="#FAFAFA" :height="$vuetify.breakpoint.height > 620
+              <v-card elevation="12" color="#FAFAFA" :height="tallScreen
                 ? '450px'
-                : '320px'" :width="$vuetify.breakpoint.height > 620
+                : '320px'" :width="tallScreen
                   ? '400px'
                   : '600px'" tile>
-                <template v-if="$vuetify.breakpoint.height > 620">
+                <template v-if="tallScreen">
 
                   <v-row justify="space-between" align="start" class="d-flex flex-column fill-height mt-0">
                     <v-col cols="auto" class="ml-4"> Data: {{ store.pedidoAtual.data }}</v-col>
@@ -285,7 +285,7 @@
                 </template>
               </v-card>
             </v-row>
-            <v-row no-gutters align="end" justify="space-between" class="d-flex mt-4" :style="$vuetify.breakpoint.height > 620
+            <v-row no-gutters align="end" justify="space-between" class="d-flex mt-4" :style="tallScreen
               ? 'height: 28px'
               : 'height: 38px'">
               <v-col cols="auto" class="pl-4">
@@ -1043,6 +1043,10 @@ export default {
 
   data() {
     return {
+      // Captured once on mount: on iPad, opening the on-screen keyboard shrinks the
+      // viewport, and reacting to that resize destroyed the focused input (making the
+      // keyboard close and the screen appear to reload).
+      tallScreen: window.innerHeight > 620,
       errorMsg: "",
       phoneNumber: null,
       address: null,
