@@ -152,7 +152,7 @@
         </template>
       </P-Column>
     </P-DataTable>
-    <RequestSummary v-model="summary" :request="selectedRequest" @opened="onWaybillOpened" />
+    <RequestSummary v-model="summary" :request="selectedRequest" @changed="onWaybillChanged" />
     <template #actions>
       <P-Button v-if="isCommercial" @click="toggleOwnRequests">
         {{ ownRequestsOnly ? "Ver todos os pedidos" : "Ver só os meus pedidos" }}
@@ -316,8 +316,8 @@ function openDetails(item: Request) {
   router.push({ name: "request", params: { id: item.id } });
 }
 
-async function onWaybillOpened() {
-  // Waybill/cancel actions change the request server-side, so force a re-sync.
+async function onWaybillChanged() {
+  // Waybill create/cancel actions change the request server-side, so force a re-sync.
   await requestStore.getAllRequests(true);
 }
 

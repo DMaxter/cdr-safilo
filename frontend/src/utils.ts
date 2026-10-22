@@ -38,6 +38,21 @@ export function getStatusIcon(value: Status) {
   }
 }
 
+export function downloadBlob(blob: Blob, filename: string) {
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+
+  // The anchor must be attached for some browsers to start the download.
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  window.URL.revokeObjectURL(url);
+}
+
 export function getStatusClass(value: Status): string {
   if (value === Status.Cancelled) {
     return "status-cancelled";
