@@ -26,14 +26,14 @@ const routes = [
   {
     path: "/order",
     name: "order",
-    meta: { title: "Encomendar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+    meta: { title: "Encomendar | " + BASE_TITLE, requiresAuth: true },
     component: () => import("@views/OrderWizard.vue"),
   },
   {
     path: "/redefine-password",
     name: "redefine-password",
     meta: {
-      title: "Redefinir Palavra-passe | " + import.meta.env.VUE_APP_NAME,
+      title: "Redefinir Palavra-passe | " + BASE_TITLE,
       requiresAuth: false,
     },
     component: () => import("@views/RedefinePassword.vue"),
@@ -42,7 +42,7 @@ const routes = [
     path: "/request/:id",
     name: "request",
     meta: {
-      title: "Detalhe do Pedido | " + import.meta.env.VUE_APP_NAME,
+      title: "Detalhe do Pedido | " + BASE_TITLE,
       requiresAuth: true,
     },
     component: () => import("@views/RequestInfo.vue"),
@@ -50,20 +50,20 @@ const routes = [
   {
     path: "/search",
     name: "search",
-    meta: { title: "Pesquisa | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+    meta: { title: "Pesquisa | " + BASE_TITLE, requiresAuth: true },
     component: () => import("@views/Search.vue"),
   },
   {
     path: "/clients",
     name: "clients",
-    meta: { title: "Clientes | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+    meta: { title: "Clientes | " + BASE_TITLE, requiresAuth: true },
     component: () => import("@views/ClientList.vue"),
   },
   {
     path: "/client",
     name: "client",
     meta: {
-      title: "Informação de Cliente | " + import.meta.env.VUE_APP_NAME,
+      title: "Informação de Cliente | " + BASE_TITLE,
       requiresAuth: true,
     },
     component: () => import("@views/ClientInfo.vue"),
@@ -71,7 +71,7 @@ const routes = [
   {
     path: "/configure",
     name: "configure",
-    meta: { title: "Configurar | " + import.meta.env.VUE_APP_NAME, requiresAuth: true },
+    meta: { title: "Configurar | " + BASE_TITLE, requiresAuth: true },
     component: () => import("@views/Configure.vue"),
   },
 ];
