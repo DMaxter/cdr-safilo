@@ -116,7 +116,7 @@
                 text
                 severity="secondary"
                 size="small"
-                @click="wizard.setBrand(null as any)"
+                @click="wizard.setBrand(null)"
                 ><template #icon><Icon icon="edit" /></template
               ></P-Button>
             </div>
@@ -232,7 +232,7 @@
                     }}
                     cm | Acabamentos:
                     {{
-                      wizard.slots[slotConfig.key]?.finishings.map((f: any) => f.name).join(", ") ||
+                      wizard.slots[slotConfig.key]?.finishings.map((f) => f.name).join(", ") ||
                       "Nenhum"
                     }}
                   </div>
