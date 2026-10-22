@@ -109,7 +109,7 @@ async function login() {
     toast.add({
       severity: "error",
       summary: "Erro de autenticação",
-      detail: "O nome de utilizador ou a palavra-passe estão incorretos",
+      detail: (response.content as string) || "O nome de utilizador ou a palavra-passe estão incorretos",
       life: 10000,
     });
     console.error(response);
