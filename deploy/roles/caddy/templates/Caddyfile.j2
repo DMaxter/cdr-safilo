@@ -12,8 +12,8 @@
   }
 
   handle {
-    file_server {
-      root /var/www/safilo
-    }
+    root * /var/www/safilo
+    try_files {path} /index.html
+    file_server
   }
 }
