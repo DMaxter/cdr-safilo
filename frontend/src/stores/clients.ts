@@ -5,7 +5,7 @@ import { ref } from "vue";
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
 import { getErrorMessage } from "@router/backend/errors";
-import { Client } from "@router/backend/services/client/types";
+import { Client, toClientUpdatePayload } from "@router/backend/services/client/types";
 import { Image } from "@router/backend/services/image/types";
 
 export const useClientStore = defineStore("clientStore", () => {
@@ -86,10 +86,10 @@ export const useClientStore = defineStore("clientStore", () => {
 
   async function editClient(client: Client): Promise<APIResponse<string | null>> {
     try {
-      const { status, data } = await API.clients.editClient(client);
+      const { status, data } = await API.clients.editClient(toClientUpdatePayload(client));
 
       if (status === 200) {
-        edit(client);
+        edit(data && typeof data === "object" ? (data as Client) : client);
 
         return {
           success: true,
@@ -195,14 +195,19 @@ export const useClientStore = defineStore("clientStore", () => {
     }
   }
 
-  async function getClient(id: number): Promise<APIResponse<Client | string | null>> {
-    const cached = clients.value.find((c) => c.id === id);
+  async function getClient(
+    id: number,
+    force = false,
+  ): Promise<APIResponse<Client | string | null>> {
+    if (!force) {
+      const cached = clients.value.find((c) => c.id === id);
 
-    if (cached) {
-      return {
-        success: true,
-        content: cached,
-      };
+      if (cached) {
+        return {
+          success: true,
+          content: cached,
+        };
+      }
     }
 
     try {

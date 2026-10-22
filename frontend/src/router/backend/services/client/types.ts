@@ -31,3 +31,22 @@ export class Client {
     }
   }
 }
+
+export type ClientUpdatePayload = Pick<
+  Client,
+  "id" | "name" | "fiscalNumber" | "email" | "phone" | "address" | "postalCode" | "city" | "country"
+>;
+
+export function toClientUpdatePayload(client: Client): ClientUpdatePayload {
+  return {
+    id: client.id,
+    name: client.name,
+    fiscalNumber: client.fiscalNumber,
+    email: client.email,
+    phone: client.phone,
+    address: client.address,
+    postalCode: client.postalCode,
+    city: client.city,
+    country: client.country,
+  };
+}
