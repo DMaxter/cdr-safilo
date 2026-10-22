@@ -2,7 +2,7 @@ import type { AxiosResponse } from "axios";
 
 import { http } from "@router/backend/api";
 import type { Error } from "@router/backend/types";
-import { Client } from "@router/backend/services/client/types";
+import { Client, type ClientUpdatePayload } from "@router/backend/services/client/types";
 
 export async function getClients(): Promise<AxiosResponse<Client[] | Error>> {
   return await http.get("/client");
@@ -16,7 +16,9 @@ export async function createClient(client: Client): Promise<AxiosResponse<Client
   return await http.post("/client", client);
 }
 
-export async function editClient(client: Client): Promise<AxiosResponse<null | Error>> {
+export async function editClient(
+  client: ClientUpdatePayload,
+): Promise<AxiosResponse<Client | Error>> {
   return await http.put("/client", client);
 }
 

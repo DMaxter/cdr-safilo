@@ -168,6 +168,12 @@ async function obsoleteImages(images: Image[]) {
     }
   }
 
+  // Obsolete is applied server-side; re-read so the page never shows a stale cache.
+  const refreshed = await clientStore.getClient(client.value.id as number, true);
+  if (refreshed.success) {
+    client.value = refreshed.content as Client;
+  }
+
   if (errors.length === 0) {
     toast.add({
       severity: "success",
