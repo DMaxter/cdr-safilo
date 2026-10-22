@@ -19,7 +19,17 @@ export function useRequestAccess() {
       return false;
     }
 
-    return canManipulate || (authStore.isCommercial() && request.user === authStore.logged?.name);
+    if (canManipulate) return true;
+    if (authStore.isCommercial()) {
+      const loggedEmail = authStore.logged?.email;
+      if (loggedEmail && request.userEmail && loggedEmail === request.userEmail) {
+        return true;
+      }
+      if (request.user === authStore.logged?.name) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Whether the current user may cancel this request (same backend rule as edit). */
