@@ -287,6 +287,12 @@ async function refreshRequests() {
   // Skips the backend call when the store already holds the requests.
   const response = await requestStore.getAllRequests();
   if (!response.success) {
+    toast.add({
+      severity: "error",
+      summary: "Pedidos",
+      detail: (response.content as string) || "Não foi possível carregar os pedidos",
+      life: 10000,
+    });
     console.error("Failed to retrieve requests:", response.content);
   }
 }
