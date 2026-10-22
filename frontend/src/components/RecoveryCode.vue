@@ -44,7 +44,7 @@ async function recover() {
       detail: "Ocorreu um erro ao pedir para alterar a palavra-passe",
       life: 10000,
     });
-    console.log(response);
+    console.error(response);
   }
 }
 

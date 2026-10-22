@@ -36,11 +36,7 @@ export interface SlotConfig {
 }
 
 export type RequestTypeName =
-  | "OneFace"
-  | "TwoFaces"
-  | "SimpleShowcase"
-  | "LeftShowcase"
-  | "RightShowcase";
+  "OneFace" | "TwoFaces" | "SimpleShowcase" | "LeftShowcase" | "RightShowcase";
 
 export const ORDER_TYPE_CONFIG: Record<RequestTypeName, SlotConfig[]> = {
   OneFace: [{ key: "cover", label: "Frente" }],
@@ -299,7 +295,7 @@ export const useOrderWizardStore = defineStore("orderWizard", () => {
     initSlots();
   }
 
-  function setBrand(b: Brand) {
+  function setBrand(b: Brand | null) {
     brand.value = b;
   }
 

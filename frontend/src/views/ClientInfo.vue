@@ -112,7 +112,7 @@ async function addImages(files: File[]) {
       life: 10000,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     toast.add({
       severity: "error",
       summary: IMAGE_TITLE,
