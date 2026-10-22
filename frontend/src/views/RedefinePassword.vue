@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-around items-center h-full">
     <img :src="CDRLogo" class="object-contain m-w-[350px]" />
-    <P-Card class="max-w-[500px] w-1/2 max-h-[300px]">
+    <P-Card v-if="isValid" class="max-w-[500px] w-1/2 max-h-[300px]">
       <template #title>Redefinir Palavra Passe</template>
       <template #content>
         <P-Form class="flex flex-col" @submit="changePassword">
@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 
@@ -87,27 +87,40 @@ const errors = computed(() => ({
   ]),
 }));
 
-if (!route.query.email) {
-  toast.add({
-    severity: "error",
-    summary: TITLE,
-    detail: "Email não definido",
-    life: 10000,
-  });
-  router.push({ name: "login" });
-}
+const isValid = ref(false);
 
-if (!route.query.token) {
-  toast.add({
-    severity: "error",
-    summary: TITLE,
-    detail: "Token não definido",
-    life: 10000,
-  });
-  router.push({ name: "login" });
-}
+onMounted(() => {
+  if (!route.query.email) {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Email não definido",
+      life: 10000,
+    });
+    router.push({ name: "login" });
+    return;
+  }
+
+  if (!route.query.token) {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Token não definido",
+      life: 10000,
+    });
+    router.push({ name: "login" });
+    return;
+  }
+
+  isValid.value = true;
+});
 
 async function changePassword() {
+  if (!isValid.value) {
+    router.push({ name: "login" });
+    return;
+  }
+
   if (!passwordsMatch.value) {
     toast.add({
       severity: "warn",
