@@ -182,32 +182,42 @@ class ClientService {
             throw InvalidCountryException()
         }
 
-        return Panache.withTransaction {
-            clientRepository
-                    .findById(clientDto.id)
-                    .onItem()
-                    .transform { client ->
-                        if (client == null) {
-                            logger.error("Client with ID ${clientDto.id} is not registered")
+        val bannerUni =
+                if (clientDto.banner == null || clientDto.banner!!.isEmpty()) {
+                    Uni.createFrom().nullItem()
+                } else {
+                    createBannerIfNotExists(clientDto.banner!!)
+                }
 
-                            throw InvalidIdException("cliente")
+        return bannerUni.onItem().transformToUni { banner ->
+            Panache.withTransaction {
+                clientRepository
+                        .findById(clientDto.id)
+                        .onItem()
+                        .transform { client ->
+                            if (client == null) {
+                                logger.error("Client with ID ${clientDto.id} is not registered")
+
+                                throw InvalidIdException("cliente")
+                            }
+
+                            client.email = clientDto.email!!
+                            client.name = clientDto.name!!
+                            client.fiscalNumber = clientDto.fiscalNumber!!
+                            client.phone = clientDto.phone!!
+                            client.address = clientDto.address!!
+                            client.postalCode = clientDto.postalCode!!
+                            client.city = clientDto.city!!
+                            client.country = clientDto.country!!
+                            client.banner = banner
+
+                            client
                         }
-
-                        client.email = clientDto.email!!
-                        client.name = clientDto.name!!
-                        client.fiscalNumber = clientDto.fiscalNumber!!
-                        client.phone = clientDto.phone!!
-                        client.address = clientDto.address!!
-                        client.postalCode = clientDto.postalCode!!
-                        client.city = clientDto.city!!
-                        client.country = clientDto.country!!
-
-                        client
-                    }
-                    .onItem()
-                    .invoke { _ -> logger.info("Client updated successfully") }
-                    .onFailure()
-                    .invoke { e -> logger.error("Couldn't update client: $e") }
+                        .onItem()
+                        .invoke { _ -> logger.info("Client updated successfully") }
+                        .onFailure()
+                        .invoke { e -> logger.error("Couldn't update client: $e") }
+            }
         }
     }
 

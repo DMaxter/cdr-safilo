@@ -34,7 +34,7 @@ export class Client {
 
 export type ClientUpdatePayload = Pick<
   Client,
-  "id" | "name" | "fiscalNumber" | "email" | "phone" | "address" | "postalCode" | "city" | "country"
+  "id" | "name" | "fiscalNumber" | "email" | "phone" | "address" | "postalCode" | "city" | "country" | "banner"
 >;
 
 export function toClientUpdatePayload(client: Client): ClientUpdatePayload {
@@ -48,5 +48,6 @@ export function toClientUpdatePayload(client: Client): ClientUpdatePayload {
     postalCode: client.postalCode,
     city: client.city,
     country: client.country,
+    banner: client.banner || "",
   };
 }
