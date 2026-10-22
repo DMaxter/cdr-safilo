@@ -85,8 +85,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VUE_APP_ROOT_API: https://${{ vars.HOST }}:8889
-      VUE_APP_NAME: Casa dos Reclamos
+      VITE_BACKEND_URL: https://${{ vars.HOST }}:8889
 
     steps:
       - name: "Notify Discord - Start Frontend Build "
