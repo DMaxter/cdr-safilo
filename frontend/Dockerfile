@@ -1,9 +1,9 @@
 #Build Stage
-FROM node:18-alpine AS build-stage
+FROM node:22-alpine AS build-stage
 WORKDIR /app
-RUN npm install -g pnpm
-COPY package*.json ./
-RUN pnpm install
+RUN npm install -g pnpm@12.15.0
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
 
