@@ -327,6 +327,7 @@ import { computed, ref, watch } from "vue";
 import { API } from "@router/backend";
 import type { Request } from "@router/backend/services/request/types";
 import { required, validateField } from "@/rules";
+import { downloadBlob } from "@/utils";
 import {
   Waybill,
   Contact,
@@ -348,7 +349,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "opened"): void;
+  (e: "changed"): void;
 }>();
 
 const enabled = defineModel<boolean>();
@@ -536,7 +537,7 @@ async function cancelWaybill() {
         life: 5000,
       });
       close();
-      emit("opened");
+      emit("changed");
     } else {
       toast.add({
         severity: "error",
@@ -594,13 +595,7 @@ async function createWaybill() {
     const { status, data } = await API.waybill.openWaybill(props.request.id, buildPayload());
 
     if (status === 200 || status === 201) {
-      const blob = data as Blob;
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `waybill_${props.request.id}.pdf`;
-      link.click();
-      window.URL.revokeObjectURL(url);
+      downloadBlob(data as Blob, `waybill_${props.request.id}.pdf`);
 
       toast.add({
         severity: "success",
@@ -609,7 +604,7 @@ async function createWaybill() {
         life: 5000,
       });
       close();
-      emit("opened");
+      emit("changed");
     } else {
       toast.add({
         severity: "error",
@@ -648,13 +643,7 @@ async function showDownload() {
     );
 
     if (status === 200) {
-      const blob = data as Blob;
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `waybill_${props.request.id}.pdf`;
-      link.click();
-      window.URL.revokeObjectURL(url);
+      downloadBlob(data as Blob, `waybill_${props.request.id}.pdf`);
 
       toast.add({
         severity: "success",

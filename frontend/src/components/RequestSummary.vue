@@ -9,7 +9,7 @@
     </div>
 
     <template #footer>
-      <RequestActions :request="props.request" @back="close" @refresh="emit('opened')">
+      <RequestActions :request="props.request" @back="close" @refresh="emit('changed')">
         <template #extra>
           <P-Button label="Ver pedido" @click="openDetails()" />
         </template>
@@ -30,7 +30,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "opened"): void;
+  (e: "changed"): void;
 }>();
 
 const enabled = defineModel<boolean>();

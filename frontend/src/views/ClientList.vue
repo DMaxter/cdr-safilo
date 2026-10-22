@@ -116,7 +116,7 @@ import { Client } from "@router/backend/services/client/types";
 import { useAuthStore } from "@stores/auth";
 import { useClientStore } from "@stores/clients";
 import { useRequestStore } from "@stores/requests";
-import { ManageMode } from "@/utils";
+import { ManageMode, downloadBlob } from "@/utils";
 
 FilterService.register("bannerIn", (value: string | null | undefined, filter: string[] | null) => {
   if (!filter || filter.length === 0) return true;
@@ -187,12 +187,7 @@ async function downloadRequests() {
   exporting.value = false;
 
   if (response.success) {
-    const url = window.URL.createObjectURL(response.content as Blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "pedidos.csv";
-    link.click();
-    window.URL.revokeObjectURL(url);
+    downloadBlob(response.content as Blob, "pedidos.csv");
 
     toast.add({
       severity: "success",
