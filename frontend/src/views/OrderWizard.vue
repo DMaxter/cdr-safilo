@@ -458,7 +458,7 @@ onMounted(async () => {
 });
 
 async function loadForEdit(id: number) {
-  await requestStore.getAllRequests();
+  await requestStore.getAllRequests(true);
   const existing = requestStore.requests.find((r) => r.id === id);
   if (!existing) {
     toast.add({
@@ -467,6 +467,7 @@ async function loadForEdit(id: number) {
       detail: "Pedido não encontrado",
       life: 10000,
     });
+    router.push({ name: "search" });
     return;
   }
 
@@ -477,6 +478,7 @@ async function loadForEdit(id: number) {
       detail: "Não tem permissão para editar este pedido",
       life: 10000,
     });
+    router.push({ name: "search" });
     return;
   }
 
