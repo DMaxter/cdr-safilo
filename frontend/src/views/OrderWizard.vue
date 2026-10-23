@@ -366,6 +366,15 @@ function onSuccessContinue() {
   router.push({ name: wizard.isEditing ? "search" : "profile" });
 }
 
+// Clear slots when client changes
+watch(selectedClient, (client, prevClient) => {
+  if (client && prevClient && client.id !== prevClient.id) {
+    wizard.resetSlots();
+    slotStep.value = 1;
+    estimatedPrice.value = null;
+  }
+});
+
 const TYPE_ICONS: Record<RequestTypeName, string> = {
   OneFace: "crop_portrait",
   TwoFaces: "filter_2",
@@ -488,12 +497,22 @@ async function loadForEdit(id: number) {
 }
 
 function selectType(t: RequestTypeName) {
+  if (wizard.type && wizard.type !== t) {
+    if (confirm("Ao alterar o tipo de pedido, os dados dos blocos já preenchidos podem ser perdidos. Deseja continuar?")) {
+      wizard.setType(t);
+      slotStep.value = 1;
+      return;
+    }
+    return;
+  }
   wizard.setType(t);
   slotStep.value = 1;
 }
 
 function onBrandSelect(b: Brand) {
   wizard.setBrand(b);
+  wizard.resetSlots();
+  slotStep.value = 1;
 }
 
 function goToStep(target: number) {

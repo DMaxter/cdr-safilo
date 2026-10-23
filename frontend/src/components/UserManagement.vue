@@ -144,17 +144,35 @@ async function addComercial() {
   }
 
   try {
-    const { status } = await API.auth.register({
+    const { status, data } = await API.auth.register({
       email: comercialEmail.value.trim(),
       name: comercialName.value.trim(),
       password: password1.value,
     } as Register);
     if (status === 200) {
+      toast.add({
+        severity: "success",
+        summary: TITLE,
+        detail: "Comercial registado com sucesso",
+        life: 10000,
+      });
       added.value = true;
     } else {
+      toast.add({
+        severity: "error",
+        summary: TITLE,
+        detail: typeof data === "string" ? data : "Ocorreu um erro ao registar o comercial",
+        life: 10000,
+      });
       failed.value = true;
     }
-  } catch {
+  } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: TITLE,
+      detail: "Ocorreu um erro ao registar o comercial",
+      life: 10000,
+    });
     failed.value = true;
   }
 }

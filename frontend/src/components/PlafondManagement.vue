@@ -114,10 +114,28 @@ onMounted(async () => {
 });
 
 function increasePlafond() {
+  if (!changeAmount.value || changeAmount.value <= 0) {
+    toast.add({
+      severity: "warn",
+      summary: TITLE.value,
+      detail: "Introduza um valor positivo",
+      life: 5000,
+    });
+    return;
+  }
   draftAmount.value += changeAmount.value;
 }
 
 function decreasePlafond() {
+  if (!changeAmount.value || changeAmount.value <= 0) {
+    toast.add({
+      severity: "warn",
+      summary: TITLE.value,
+      detail: "Introduza um valor positivo",
+      life: 5000,
+    });
+    return;
+  }
   draftAmount.value -= changeAmount.value;
   if (draftAmount.value < 0) {
     draftAmount.value = 0;
@@ -130,6 +148,15 @@ async function action() {
       severity: "error",
       summary: TITLE.value,
       detail: "Selecione uma marca",
+      life: 5000,
+    });
+    return;
+  }
+  if (draftAmount.value < 0) {
+    toast.add({
+      severity: "warn",
+      summary: TITLE.value,
+      detail: "O plafond não pode ser negativo",
       life: 5000,
     });
     return;

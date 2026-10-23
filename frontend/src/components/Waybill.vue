@@ -322,7 +322,7 @@
 <script lang="ts" setup>
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import { API } from "@router/backend";
 import type { Request } from "@router/backend/services/request/types";
@@ -364,12 +364,35 @@ const openWaybill = computed(() => props.request.trackingCode === null);
 // FIXME: Get countries from Backend - to be implemented
 const countries = ["PT", "ES"];
 const services = ref<Service[]>([]);
-const [labels, packages] = await Promise.all([getLabels(), getPackages()]);
+const labels = ref<any[]>([]);
+const packages = ref<any[]>([]);
+let packagesLoaded = false;
+
+async function loadPackagesAndLabels() {
+  if (packagesLoaded) return;
+  try {
+    const [labelsResp, packagesResp] = await Promise.all([getLabels(), getPackages()]);
+    if (Array.isArray(labelsResp)) {
+      labels.value = (labelsResp as any[]).filter((label) => label.active !== false);
+    }
+    if (Array.isArray(packagesResp)) {
+      packages.value = (packagesResp as any[]).filter((pkg) => pkg.active !== false);
+    }
+    packagesLoaded = true;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+onMounted(() => {
+  loadPackagesAndLabels();
+});
 
 watch(
   () => enabled.value,
   async (newVal) => {
     if (newVal) {
+      loadPackagesAndLabels();
       prefillDestination();
       if (props.request.id !== 0) {
         await loadServices();
@@ -595,7 +618,7 @@ async function createWaybill() {
     const { status, data } = await API.waybill.openWaybill(props.request.id, buildPayload());
 
     if (status === 200 || status === 201) {
-      downloadBlob(data as Blob, `waybill_${props.request.id}.pdf`);
+      downloadBlob(data as Blob, `carta_porte_${props.request.id}.pdf`);
 
       toast.add({
         severity: "success",
@@ -608,7 +631,7 @@ async function createWaybill() {
     } else {
       toast.add({
         severity: "error",
-        summary: SERVICES_TITLE,
+        summary: WAYBILL_TITLE,
         detail: "Ocorreu um erro ao abrir a carta de porte",
         life: 10000,
       });
@@ -616,7 +639,7 @@ async function createWaybill() {
   } catch (error) {
     toast.add({
       severity: "error",
-      summary: SERVICES_TITLE,
+      summary: WAYBILL_TITLE,
       detail: "Ocorreu um erro ao abrir a carta de porte",
       life: 10000,
     });
@@ -643,7 +666,7 @@ async function showDownload() {
     );
 
     if (status === 200) {
-      downloadBlob(data as Blob, `waybill_${props.request.id}.pdf`);
+      downloadBlob(data as Blob, `carta_porte_${props.request.id}_${selectedDownloadFormat.value}.pdf`);
 
       toast.add({
         severity: "success",
