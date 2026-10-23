@@ -299,6 +299,12 @@ export const useOrderWizardStore = defineStore("orderWizard", () => {
     brand.value = b;
   }
 
+  function resetSlots() {
+    for (const key of Object.keys(slots.value)) {
+      slots.value[key] = createEmptyDraftSlot();
+    }
+  }
+
   function setSlotMaterial(key: string, material: Material | null) {
     const slot = slots.value[key];
     if (!slot) return;
@@ -344,5 +350,6 @@ export const useOrderWizardStore = defineStore("orderWizard", () => {
     setType,
     setBrand,
     setSlotMaterial,
+    resetSlots,
   };
 });

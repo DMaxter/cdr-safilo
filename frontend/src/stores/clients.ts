@@ -295,11 +295,10 @@ export const useClientStore = defineStore("clientStore", () => {
       const { status, data } = await API.images.deleteClientImages(imageIds);
 
       if (status === 200) {
-        clients.value.forEach((client) => {
-          if (client.id === clientId) {
-            client.images = client.images.filter((image) => !imageIds.includes(image.id));
-          }
-        });
+        const client = clients.value.find((c) => c.id === clientId);
+        if (client) {
+          client.images = (client.images || []).filter((image) => !imageIds.includes(image.id));
+        }
 
         return {
           success: true,
