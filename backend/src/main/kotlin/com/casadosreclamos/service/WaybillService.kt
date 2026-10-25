@@ -37,6 +37,8 @@ private const val CDR_PHONE = "+351 252 871 364"
 
 private const val LAST_WAYBILL_FILE = "/safilo/last_waybill"
 
+val WAYBILL_COUNTRIES = listOf("PT", "ES")
+
 @ApplicationScoped
 class WaybillService {
     @Inject lateinit var logger: Logger

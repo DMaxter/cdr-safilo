@@ -246,7 +246,7 @@
                     id="country"
                     v-model="waybill.destination.address.country"
                     fluid
-                    :options="countries"
+                    :options="countryOptions"
                   />
                   <label for="country">País</label>
                 </P-FloatLabel>
@@ -333,6 +333,7 @@ import {
   Contact,
   Address,
   Service,
+  PackageType,
   type LabelFormat,
 } from "@router/backend/services/waybill/types";
 
@@ -361,22 +362,38 @@ const selectedDownloadFormat = ref<LabelFormat | null>(null);
 
 const openWaybill = computed(() => props.request.trackingCode === null);
 
-// FIXME: Get countries from Backend - to be implemented
-const countries = ["PT", "ES"];
+const countries = ref<string[]>([]);
+
+const countryOptions = computed<string[]>(() => {
+  const current = waybill.value.destination.address.country;
+
+  if (current && !countries.value.includes(current)) {
+    return [...countries.value, current];
+  }
+
+  return countries.value;
+});
 const services = ref<Service[]>([]);
-const labels = ref<any[]>([]);
-const packages = ref<any[]>([]);
+const labels = ref<LabelFormat[]>([]);
+const packages = ref<PackageType[]>([]);
 let packagesLoaded = false;
 
 async function loadPackagesAndLabels() {
   if (packagesLoaded) return;
   try {
-    const [labelsResp, packagesResp] = await Promise.all([getLabels(), getPackages()]);
+    const [labelsResp, packagesResp, countriesResp] = await Promise.all([
+      getLabels(),
+      getPackages(),
+      API.waybill.getCountries(),
+    ]);
     if (Array.isArray(labelsResp)) {
-      labels.value = (labelsResp as any[]).filter((label) => label.active !== false);
+      labels.value = labelsResp;
     }
     if (Array.isArray(packagesResp)) {
-      packages.value = (packagesResp as any[]).filter((pkg) => pkg.active !== false);
+      packages.value = packagesResp;
+    }
+    if (countriesResp.status === 200 && Array.isArray(countriesResp.data)) {
+      countries.value = countriesResp.data;
     }
     packagesLoaded = true;
   } catch (error) {
@@ -666,7 +683,10 @@ async function showDownload() {
     );
 
     if (status === 200) {
-      downloadBlob(data as Blob, `carta_porte_${props.request.id}_${selectedDownloadFormat.value}.pdf`);
+      downloadBlob(
+        data as Blob,
+        `carta_porte_${props.request.id}_${selectedDownloadFormat.value}.pdf`,
+      );
 
       toast.add({
         severity: "success",
