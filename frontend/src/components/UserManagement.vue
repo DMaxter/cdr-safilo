@@ -1,8 +1,6 @@
 <template>
   <P-Dialog v-model:visible="dialog1" modal header="Registar Comercial" class="w-[500px]">
-    <div v-if="added">Comercial registado com sucesso!</div>
-    <div v-if="failed">Ocorreu um erro a registar o comercial</div>
-    <div v-if="!added && !failed" class="flex flex-col items-center space-y-4">
+    <div class="flex flex-col items-center space-y-4">
       <div class="w-4/5">
         <P-InputText
           v-model="comercialEmail"
@@ -80,7 +78,7 @@
     </div>
     <template #footer>
       <P-Button label="Voltar" text @click="close()" />
-      <P-Button v-if="!added && !failed" label="Adicionar" text @click="addComercial()" />
+      <P-Button label="Adicionar" text @click="addComercial()" />
     </template>
   </P-Dialog>
 </template>
@@ -89,8 +87,8 @@
 import { useToast } from "primevue/usetoast";
 import { computed, ref } from "vue";
 
-import { API } from "@router/backend";
 import { Register } from "@router/backend/services/auth/types";
+import { useUserStore } from "@stores/users";
 import { required, validateField } from "@/rules";
 
 const TITLE = "Registo de Comercial";
@@ -101,9 +99,8 @@ const comercialEmail = ref("");
 const comercialName = ref("");
 const password1 = ref("");
 const password2 = ref("");
-const added = ref(false);
-const failed = ref(false);
 
+const userStore = useUserStore();
 const toast = useToast();
 
 const touched = ref<Record<string, boolean>>({});
@@ -143,37 +140,27 @@ async function addComercial() {
     return;
   }
 
-  try {
-    const { status, data } = await API.auth.register({
-      email: comercialEmail.value.trim(),
-      name: comercialName.value.trim(),
-      password: password1.value,
-    } as Register);
-    if (status === 200) {
-      toast.add({
-        severity: "success",
-        summary: TITLE,
-        detail: "Comercial registado com sucesso",
-        life: 10000,
-      });
-      added.value = true;
-    } else {
-      toast.add({
-        severity: "error",
-        summary: TITLE,
-        detail: typeof data === "string" ? data : "Ocorreu um erro ao registar o comercial",
-        life: 10000,
-      });
-      failed.value = true;
-    }
-  } catch (error) {
+  const response = await userStore.register({
+    email: comercialEmail.value.trim(),
+    name: comercialName.value.trim(),
+    password: password1.value,
+  } as Register);
+
+  if (response.success) {
+    toast.add({
+      severity: "success",
+      summary: TITLE,
+      detail: "Comercial registado com sucesso",
+      life: 10000,
+    });
+    close();
+  } else {
     toast.add({
       severity: "error",
       summary: TITLE,
-      detail: "Ocorreu um erro ao registar o comercial",
+      detail: response.content || "Ocorreu um erro ao registar o comercial",
       life: 10000,
     });
-    failed.value = true;
   }
 }
 
@@ -187,8 +174,6 @@ function reset() {
 
 function close() {
   dialog1.value = false;
-  added.value = false;
-  failed.value = false;
   reset();
 }
 </script>

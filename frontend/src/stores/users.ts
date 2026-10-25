@@ -5,6 +5,7 @@ import { ref } from "vue";
 import { API } from "@router/backend";
 import type { Error, APIResponse } from "@router/backend/types";
 import { getErrorMessage } from "@router/backend/errors";
+import type { Register } from "@router/backend/services/auth/types";
 import { User } from "@router/backend/services/user/types";
 
 export const useUserStore = defineStore("userStore", () => {
@@ -21,6 +22,33 @@ export const useUserStore = defineStore("userStore", () => {
       if (status === 200) {
         init(data as User[]);
 
+        return {
+          success: true,
+          content: null,
+        };
+      } else {
+        return {
+          success: false,
+          content: getErrorMessage(data),
+          status: status,
+        };
+      }
+    } catch (error) {
+      const _error = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        status: _error.response?.status,
+        content: getErrorMessage(_error.response?.data),
+      };
+    }
+  }
+
+  async function register(request: Register): Promise<APIResponse<string | null>> {
+    try {
+      const { status, data } = await API.auth.register(request);
+
+      if (status === 200) {
         return {
           success: true,
           content: null,
@@ -82,6 +110,7 @@ export const useUserStore = defineStore("userStore", () => {
   return {
     users,
     getUsers,
+    register,
     changePlafond,
   };
 });
