@@ -53,7 +53,13 @@
           <P-InputNumber v-model="draft.height" :min="0" fluid :invalid="draft.height <= 0" />
           <label>Altura (cm)</label>
         </P-FloatLabel>
-        <P-Message v-if="draft.height <= 0" severity="error" size="small" variant="simple" class="mt-1">
+        <P-Message
+          v-if="draft.height <= 0"
+          severity="error"
+          size="small"
+          variant="simple"
+          class="mt-1"
+        >
           Altura deve ser superior a 0
         </P-Message>
       </div>
@@ -63,7 +69,13 @@
           <P-InputNumber v-model="draft.width" :min="0" fluid :invalid="draft.width <= 0" />
           <label>Largura (cm)</label>
         </P-FloatLabel>
-        <P-Message v-if="draft.width <= 0" severity="error" size="small" variant="simple" class="mt-1">
+        <P-Message
+          v-if="draft.width <= 0"
+          severity="error"
+          size="small"
+          variant="simple"
+          class="mt-1"
+        >
           Largura deve ser superior a 0
         </P-Message>
       </div>
