@@ -10,6 +10,8 @@ import { pt } from "primelocale/js/pt.js";
 
 import App from "@/App.vue";
 import router from "@router";
+import { onUnauthorized } from "@router/backend/api";
+import { useAuthStore } from "@stores/auth";
 
 const app = createApp(App);
 
@@ -47,6 +49,16 @@ app.use(PrimeVue, {
 
 app.use(router);
 app.directive("tooltip", Tooltip);
+
+onUnauthorized(() => {
+  const authStore = useAuthStore();
+
+  authStore.invalidateSession();
+
+  if (router.currentRoute.value.meta.requiresAuth) {
+    router.push({ name: "login" });
+  }
+});
 
 // PrimeVue Components
 import Accordion from "primevue/accordion";

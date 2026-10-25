@@ -17,3 +17,22 @@ export const http = axios.create({
 
 http.defaults.headers.post["Content-Type"] = "application/json";
 http.defaults.withCredentials = true; // Send cookies
+
+type UnauthorizedHandler = () => void;
+
+let unauthorizedHandler: UnauthorizedHandler | null = null;
+
+export function onUnauthorized(handler: UnauthorizedHandler) {
+  unauthorizedHandler = handler;
+}
+
+http.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401) {
+      unauthorizedHandler?.();
+    }
+
+    return Promise.reject(error);
+  },
+);

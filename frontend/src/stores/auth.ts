@@ -11,6 +11,8 @@ import { getRole, Role, User } from "@router/backend/services/user/types";
 export const useAuthStore = defineStore("authStore", () => {
   const logged = ref<User | null>(null);
 
+  const sessionChecked = ref(false);
+
   function hasRole(role: string): boolean {
     if (logged.value) {
       return logged.value!.roles.includes(getRole(role) as Role);
@@ -19,20 +21,36 @@ export const useAuthStore = defineStore("authStore", () => {
     }
   }
 
-  async function isLoggedIn(): Promise<boolean> {
+  async function isLoggedIn(force = false): Promise<boolean> {
+    if (!force && sessionChecked.value) {
+      return logged.value !== null;
+    }
+
     try {
       const { status, data } = await API.users.getUserInfo();
 
-      if (status === 200) {
-        logged.value = data as unknown as User;
+      logged.value = status === 200 ? (data as unknown as User) : null;
+      sessionChecked.value = true;
 
-        return true;
+      return logged.value !== null;
+    } catch (error) {
+      const _error = error as AxiosError<Error>;
+      const status = _error.response?.status;
+
+      if (status === 401 || status === 403) {
+        logged.value = null;
+        sessionChecked.value = true;
+
+        return false;
       }
 
-      return false;
-    } catch {
-      return false;
+      return logged.value !== null;
     }
+  }
+
+  function invalidateSession() {
+    logged.value = null;
+    sessionChecked.value = true;
   }
 
   function isSafilo(): boolean {
@@ -56,7 +74,7 @@ export const useAuthStore = defineStore("authStore", () => {
       const { status, data } = await API.auth.login(request);
 
       if (status === 200) {
-        await isLoggedIn();
+        await isLoggedIn(true);
 
         return {
           success: true,
@@ -86,6 +104,7 @@ export const useAuthStore = defineStore("authStore", () => {
 
       if (status === 200) {
         logged.value = null;
+        sessionChecked.value = true;
 
         return {
           success: true,
@@ -203,6 +222,7 @@ export const useAuthStore = defineStore("authStore", () => {
     login,
     logout,
     isLoggedIn,
+    invalidateSession,
     isAdmin,
     isCdr,
     isCommercial,
