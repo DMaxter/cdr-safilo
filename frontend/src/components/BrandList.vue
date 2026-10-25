@@ -88,7 +88,6 @@ onMounted(async () => {
   await refresh();
 });
 
-// TODO: Support multiple images
 async function addImage(link: string) {
   try {
     let final_link;

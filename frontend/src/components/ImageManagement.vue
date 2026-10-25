@@ -41,8 +41,8 @@
     <P-Dialog v-model:visible="adding" modal class="w-[500px]">
       <template #header>Adicionar Imagem</template>
       <P-FloatLabel class="field" variant="on">
-        <P-InputText id="link" ref="link" v-model="imageLink" fluid />
-        <label for="link">Link</label>
+        <P-Textarea id="link" ref="link" v-model="imageLink" rows="4" fluid />
+        <label for="link">Links (um por linha)</label>
       </P-FloatLabel>
       <template #footer>
         <P-Button @click="handleAdd">Adicionar</P-Button>
@@ -109,7 +109,14 @@ async function obsolete() {
 
 async function handleAdd() {
   if (props.addAction) {
-    await props.addAction(imageLink.value);
+    const links = imageLink.value
+      .split("\n")
+      .map((link) => link.trim())
+      .filter((link) => link !== "");
+
+    for (const link of links) {
+      await props.addAction(link);
+    }
   }
   imageLink.value = "";
 }
