@@ -311,6 +311,7 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
+import { useConfirm } from "primevue/useconfirm";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -332,6 +333,7 @@ import type { Brand } from "@router/backend/services/brand/types";
 import { requestTypes } from "@/maps";
 
 const toast = useToast();
+const confirm = useConfirm();
 const router = useRouter();
 const route = useRoute();
 
@@ -357,6 +359,8 @@ const successDialog = ref(false);
 const estimatedPrice = ref<number | null>(null);
 const slotStep = ref(1);
 
+const lastClientId = ref<number | null>(null);
+
 const successButtonLabel = computed(() =>
   wizard.isEditing ? "Voltar à pesquisa" : "Ir para o perfil",
 );
@@ -366,14 +370,11 @@ function onSuccessContinue() {
   router.push({ name: wizard.isEditing ? "search" : "profile" });
 }
 
-// Clear slots when client changes
-watch(selectedClient, (client, prevClient) => {
-  if (client && prevClient && client.id !== prevClient.id) {
-    wizard.resetSlots();
-    slotStep.value = 1;
-    estimatedPrice.value = null;
-  }
-});
+function discardSlots() {
+  wizard.resetSlots();
+  slotStep.value = 1;
+  estimatedPrice.value = null;
+}
 
 const TYPE_ICONS: Record<RequestTypeName, string> = {
   OneFace: "crop_portrait",
@@ -444,10 +445,19 @@ const allSlotsValid = computed(() => {
 });
 
 watch(selectedClient, (client) => {
-  if (client) {
-    wizard.setClient(client);
-  } else {
+  if (!client) {
     wizard.clearClient();
+    return;
+  }
+
+  const clientId = client.id as number;
+  const isSwitch = lastClientId.value !== null && lastClientId.value !== clientId;
+
+  lastClientId.value = clientId;
+  wizard.setClient(client);
+
+  if (isSwitch) {
+    discardSlots();
   }
 });
 
@@ -493,26 +503,40 @@ async function loadForEdit(id: number) {
 
   wizard.initFromRequest(existing);
   slotStep.value = 1;
+  lastClientId.value = existing.client?.id as number;
   selectedClient.value = existing.client;
 }
 
 function selectType(t: RequestTypeName) {
-  if (wizard.type && wizard.type !== t) {
-    if (confirm("Ao alterar o tipo de pedido, os dados dos blocos já preenchidos podem ser perdidos. Deseja continuar?")) {
-      wizard.setType(t);
-      slotStep.value = 1;
-      return;
-    }
+  if (!wizard.type || wizard.type === t) {
+    wizard.setType(t);
+    slotStep.value = 1;
     return;
   }
-  wizard.setType(t);
-  slotStep.value = 1;
+
+  confirm.require({
+    message:
+      "Ao alterar o tipo de pedido, os dados já preenchidos nos blocos podem ser perdidos. Deseja continuar?",
+    header: "Alterar tipo de pedido",
+    rejectProps: {
+      label: "Cancelar",
+      severity: "secondary",
+      outline: true,
+    },
+    acceptProps: {
+      label: "Continuar",
+      severity: "danger",
+    },
+    accept: () => {
+      wizard.setType(t);
+      slotStep.value = 1;
+    },
+  });
 }
 
 function onBrandSelect(b: Brand) {
   wizard.setBrand(b);
-  wizard.resetSlots();
-  slotStep.value = 1;
+  discardSlots();
 }
 
 function goToStep(target: number) {
@@ -522,6 +546,19 @@ function goToStep(target: number) {
     estimatePrice();
   }
 }
+
+let estimateTimeout: ReturnType<typeof setTimeout> | undefined;
+
+watch(
+  () => [wizard.slots, wizard.amount, wizard.application, wizard.brand],
+  () => {
+    if (wizard.step !== 3) return;
+
+    clearTimeout(estimateTimeout);
+    estimateTimeout = setTimeout(estimatePrice, 400);
+  },
+  { deep: true },
+);
 
 async function estimatePrice() {
   estimatedPrice.value = null;
