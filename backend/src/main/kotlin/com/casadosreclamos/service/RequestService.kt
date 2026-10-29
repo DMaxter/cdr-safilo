@@ -527,9 +527,8 @@ class RequestService {
 
                             request = req
 
-                            // Prevent other commercials from cancelling arbitrary requests
+                            // Only admins, managers and the owning commercial may cancel a request
                             if (roles.contains(Role.ADMIN) ||
-                                            roles.contains(Role.CDR) ||
                                             roles.contains(Role.MANAGER) ||
                                             (roles.contains(Role.COMMERCIAL) &&
                                                     request.requester.email == email)
@@ -537,7 +536,7 @@ class RequestService {
                                 request.status = RequestStatus.CANCELLED
                                 request.lastUpdate = Date()
                             } else {
-                                logger.error("Commercial doesn't have permission to delete request")
+                                logger.error("User doesn't have permission to cancel request")
 
                                 throw OperationNotPerformedException()
                             }

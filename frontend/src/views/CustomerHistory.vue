@@ -199,7 +199,7 @@
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="getRequest(item)" class="mr-1">mdi-plus</v-icon>
             <v-icon @click="getRequestNewTab(item)" class="ml-1">mdi-open-in-new</v-icon>
-            <v-icon @click="dialog = true; reqtocan = item" class="ml-1">mdi-close</v-icon>
+            <v-icon v-if="canCancel" @click="dialog = true; reqtocan = item" class="ml-1">mdi-close</v-icon>
             <v-icon @click="editRequest(item)" class="ml-1">mdi-pen</v-icon>
           </template>
     </v-data-table>
@@ -283,6 +283,7 @@ data () {
         store,
         dialog: false,
         reqtocan: null,
+        profile: null,
         added: false,
         failed: false,
         myImage: require('@/assets/logologo1.png'),
@@ -467,6 +468,7 @@ data () {
             link: require('@/assets/E.png'),
           },
         ]
+      this.profile = await Backend.getProfile()
       this.requests = await Backend.getRequests()
       this.allBrands = await Backend.getBrands()
       this.allBrands.forEach(element => {
@@ -482,6 +484,10 @@ data () {
       console.log(this.requests)
     },
     computed: {
+      canCancel() {
+        const roles = (this.profile && this.profile.roles) || []
+        return roles.includes('ADMIN') || roles.includes('MANAGER') || roles.includes('COMMERCIAL')
+      },
       headers() {
         return [
           {

@@ -298,7 +298,7 @@
                 <v-btn class="mr-2 d-flex flex-column customGradient" small tile dark @click="print()">
                   <v-icon>mdi-printer</v-icon>
                 </v-btn>
-                <v-btn aria-label="Cancelar" class="mr-2 d-flex, flex-column customGradient" small tile dark
+                <v-btn v-if="canCancel" aria-label="Cancelar" class="mr-2 d-flex, flex-column customGradient" small tile dark
                   @click="cancel">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                     fill="#e8eaed">
@@ -1103,6 +1103,12 @@ export default {
         "DONE",
         "CANCELLED"
       ]
+    }
+  },
+  computed: {
+    canCancel() {
+      const roles = (this.profile && this.profile.roles) || []
+      return roles.includes('ADMIN') || roles.includes('MANAGER') || roles.includes('COMMERCIAL')
     }
   },
   async created() {
