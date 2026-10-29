@@ -47,7 +47,7 @@
             {{ errors.repeat }}
           </P-Message>
 
-          <P-Button :disabled="!passwordsMatch" fluid class="mt-[30px] mb-[10px]" type="submit">
+          <P-Button :disabled="!passwordsMatch || !password" fluid class="mt-[30px] mb-[10px]" type="submit">
             Confirmar
           </P-Button>
         </P-Form>
@@ -77,7 +77,9 @@ const repeatPassword = ref("");
 
 const touched = reactive({ password: false, repeat: false });
 
-const passwordsMatch = computed(() => password.value === repeatPassword.value);
+const passwordsMatch = computed(
+  () => password.value !== "" && repeatPassword.value !== "" && password.value === repeatPassword.value,
+);
 
 const errors = computed(() => ({
   password: validateField(password.value, [required]),

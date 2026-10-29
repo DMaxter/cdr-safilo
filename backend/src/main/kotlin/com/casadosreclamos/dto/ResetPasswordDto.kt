@@ -1,3 +1,16 @@
 package com.casadosreclamos.dto
 
-data class ResetPasswordDto(var password: String?)
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+
+class ResetPasswordDto {
+    @JsonProperty("password")
+    var password: String? = null
+
+    constructor()
+
+    @JsonCreator
+    constructor(@JsonProperty("password") password: String?) {
+        this.password = password
+    }
+}
