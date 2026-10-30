@@ -1,5 +1,5 @@
 <template>
-  <P-Dialog v-model:visible="enabled" modal class="max-w-95/100">
+  <P-Dialog v-model:visible="enabled" modal class="max-w-95/100" @hide="reset">
     <template #header>Alterar Palavra-passe</template>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
@@ -7,18 +7,31 @@
         v-model="currentPassword"
         fluid
         type="password"
-        :invalid="!!errors.current"
+        :invalid="touched.current && !!errors.current"
+        @blur="touched.current = true"
       />
       <label for="current">Palavra-passe atual</label>
     </P-FloatLabel>
-    <P-Message v-if="errors.current" severity="error" size="small" variant="simple">
+    <P-Message
+      v-if="touched.current && errors.current"
+      severity="error"
+      size="small"
+      variant="simple"
+    >
       {{ errors.current }}
     </P-Message>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="new" v-model="newPassword" fluid type="password" :invalid="!!errors.new" />
+      <P-InputText
+        id="new"
+        v-model="newPassword"
+        fluid
+        type="password"
+        :invalid="touched.new && !!errors.new"
+        @blur="touched.new = true"
+      />
       <label for="new">Nova palavra-passe</label>
     </P-FloatLabel>
-    <P-Message v-if="errors.new" severity="error" size="small" variant="simple">
+    <P-Message v-if="touched.new && errors.new" severity="error" size="small" variant="simple">
       {{ errors.new }}
     </P-Message>
     <P-FloatLabel class="field" variant="on">
@@ -27,11 +40,17 @@
         v-model="repeatNewPassword"
         fluid
         type="password"
-        :invalid="!!errors.repeat"
+        :invalid="touched.repeat && !!errors.repeat"
+        @blur="touched.repeat = true"
       />
       <label for="repeat">Repetir nova palavra-passe</label>
     </P-FloatLabel>
-    <P-Message v-if="errors.repeat" severity="error" size="small" variant="simple">
+    <P-Message
+      v-if="touched.repeat && errors.repeat"
+      severity="error"
+      size="small"
+      variant="simple"
+    >
       {{ errors.repeat }}
     </P-Message>
     <template #footer>
@@ -65,6 +84,8 @@ const currentPassword = ref("");
 const newPassword = ref("");
 const repeatNewPassword = ref("");
 
+const touched = ref({ current: false, new: false, repeat: false });
+
 const currentRules = [required];
 
 const newPasswordRules = [
@@ -87,6 +108,10 @@ const errors = computed(() => ({
 const canChangePassword = computed(() => Object.values(errors.value).every((e) => e === null));
 
 async function changePassword() {
+  touched.value.current = true;
+  touched.value.new = true;
+  touched.value.repeat = true;
+
   if (!canChangePassword.value) {
     toast.add({
       severity: "warn",
@@ -119,10 +144,17 @@ async function changePassword() {
   }
 }
 
-function close() {
+function reset() {
   currentPassword.value = "";
   newPassword.value = "";
   repeatNewPassword.value = "";
+  touched.value.current = false;
+  touched.value.new = false;
+  touched.value.repeat = false;
+}
+
+function close() {
+  reset();
   enabled.value = false;
 }
 </script>
