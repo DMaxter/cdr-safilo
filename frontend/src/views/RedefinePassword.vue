@@ -47,8 +47,17 @@
             {{ errors.repeat }}
           </P-Message>
 
-          <P-Button :disabled="!passwordsMatch || !password" fluid class="mt-[30px] mb-[10px]" type="submit">
+          <P-Button
+            :disabled="!passwordsMatch || !password"
+            fluid
+            class="mt-[30px] mb-[10px]"
+            type="submit"
+          >
             Confirmar
+          </P-Button>
+
+          <P-Button type="button" text fluid @click="router.push({ name: 'login' })">
+            Voltar atrás
           </P-Button>
         </P-Form>
       </template>
@@ -78,7 +87,8 @@ const repeatPassword = ref("");
 const touched = reactive({ password: false, repeat: false });
 
 const passwordsMatch = computed(
-  () => password.value !== "" && repeatPassword.value !== "" && password.value === repeatPassword.value,
+  () =>
+    password.value !== "" && repeatPassword.value !== "" && password.value === repeatPassword.value,
 );
 
 const errors = computed(() => ({
