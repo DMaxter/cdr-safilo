@@ -12,6 +12,7 @@
         :value="clientStore.clients"
         :rows="10"
         :rows-per-page-options="[5, 10, 20, 50, 100]"
+        table-style="table-layout: fixed; width: 100%"
       >
         <template #empty>Não existem clientes registados</template>
         <template #header>
@@ -25,20 +26,22 @@
           </div>
         </template>
 
-        <P-Column sortable field="id" header="Código">
+        <P-Column class="w-[7rem]" sortable field="id" header="Código">
           <template #filter="{ filterModel, filterCallback }">
             <P-InputText
               v-model="filterModel.value"
+              fluid
               placeholder="Código"
               @input="filterCallback()"
             />
           </template>
         </P-Column>
-        <P-Column sortable field="banner" header="Banner">
+        <P-Column class="w-[12rem]" sortable field="banner" header="Banner">
           <template #filter="{ filterModel, filterCallback }">
             <P-MultiSelect
               v-model="filterModel.value"
               filter
+              fluid
               :options="banners"
               option-label="label"
               option-value="value"
@@ -46,22 +49,37 @@
               @change="filterCallback()"
             />
           </template>
+          <template #body="{ data }">
+            <span class="break-words">{{ data.banner }}</span>
+          </template>
         </P-Column>
         <P-Column sortable field="name" header="Nome">
           <template #filter="{ filterModel, filterCallback }">
-            <P-InputText v-model="filterModel.value" placeholder="Nome" @input="filterCallback()" />
+            <P-InputText
+              v-model="filterModel.value"
+              fluid
+              placeholder="Nome"
+              @input="filterCallback()"
+            />
+          </template>
+          <template #body="{ data }">
+            <span class="break-words">{{ data.name }}</span>
           </template>
         </P-Column>
-        <P-Column sortable field="city" header="Cidade">
+        <P-Column class="w-[10rem]" sortable field="city" header="Cidade">
           <template #filter="{ filterModel, filterCallback }">
             <P-InputText
               v-model="filterModel.value"
+              fluid
               placeholder="Cidade"
               @input="filterCallback()"
             />
           </template>
+          <template #body="{ data }">
+            <span class="break-words">{{ data.city }}</span>
+          </template>
         </P-Column>
-        <P-Column>
+        <P-Column class="w-[8rem]">
           <template #body="{ data }">
             <Icon v-tooltip="'Ver cliente'" icon="visibility" @click="openClientInfo(data)" />
             <Icon
