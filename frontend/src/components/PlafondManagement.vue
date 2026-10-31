@@ -1,6 +1,7 @@
 <template>
-  <P-Dialog v-model:visible="enabled" modal header="Plafonds" class="w-[95vw] max-w-[500px]">
+  <P-Dialog v-model:visible="enabled" modal header="Plafonds" class="w-[95vw] max-w-[560px]">
     <template #header>{{ editing ? "Editar Plafond" : "Adicionar Plafond" }}</template>
+    <div class="mb-1 text-xs font-semibold text-gray-500 uppercase tracking-wide">Marca</div>
     <P-FloatLabel class="field" variant="on">
       <P-Select
         id="brand"
@@ -24,27 +25,31 @@
       {{ brandError }}
     </P-Message>
 
+    <div class="mb-1 mt-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Plafond atual</div>
     <P-FloatLabel class="field" variant="on">
       <P-InputNumber id="amount" v-model="draftAmount" fluid :min="0" :max-fraction-digits="2" />
-      <label for="amount">Plafond</label>
+      <label for="amount">Valor</label>
     </P-FloatLabel>
 
-    <div class="field flex items-center gap-2">
+    <div class="mb-1 mt-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Ajuste</div>
+    <div class="field flex flex-col gap-2">
       <P-FloatLabel variant="on">
         <P-InputNumber
           id="change"
           v-model="changeAmount"
           fluid
-          :min="0"
           :max="10000"
+          :min="-10000"
           :step="100"
           show-buttons
-          class="w-28"
         />
         <label for="change">Alteração</label>
       </P-FloatLabel>
-      <P-Button fluid label="Aumentar" @click="increasePlafond" />
-      <P-Button fluid label="Diminuir" @click="decreasePlafond" />
+      <div class="flex items-center gap-2 text-sm text-gray-600">
+        <span>Novo plafond estimado:</span>
+        <strong>{{ (draftAmount + changeAmount).toFixed(2) }}</strong>
+      </div>
+
     </div>
 
     <template #footer>
@@ -137,35 +142,6 @@ onMounted(async () => {
   await loadBrandsIfNeeded();
 });
 
-function increasePlafond() {
-  if (!changeAmount.value || changeAmount.value <= 0) {
-    toast.add({
-      severity: "warn",
-      summary: TITLE.value,
-      detail: "Introduza um valor positivo",
-      life: 5000,
-    });
-    return;
-  }
-  draftAmount.value += changeAmount.value;
-}
-
-function decreasePlafond() {
-  if (!changeAmount.value || changeAmount.value <= 0) {
-    toast.add({
-      severity: "warn",
-      summary: TITLE.value,
-      detail: "Introduza um valor positivo",
-      life: 5000,
-    });
-    return;
-  }
-  draftAmount.value -= changeAmount.value;
-  if (draftAmount.value < 0) {
-    draftAmount.value = 0;
-  }
-}
-
 async function action() {
   touched.value = true;
 
@@ -180,7 +156,8 @@ async function action() {
     });
     return;
   }
-  if (draftAmount.value < 0) {
+  const finalAmount = draftAmount.value + (changeAmount.value || 0);
+  if (finalAmount < 0) {
     toast.add({
       severity: "warn",
       summary: TITLE.value,
@@ -190,7 +167,7 @@ async function action() {
     return;
   }
 
-  const response = await userStore.changePlafond(props.user, brandId, draftAmount.value);
+  const response = await userStore.changePlafond(props.user, brandId, finalAmount);
 
   if (response.success) {
     toast.add({
