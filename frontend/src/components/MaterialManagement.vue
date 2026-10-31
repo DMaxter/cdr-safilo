@@ -142,11 +142,12 @@ async function createMaterial() {
       detail: "Material adicionado com sucesso",
       life: 10000,
     });
+    close();
   } else {
     toast.add({
       severity: "error",
       summary: TITLE.value,
-      detail: "Ocorreu um erro a adicionar o material",
+      detail: (response.content as string) || "Ocorreu um erro a adicionar o material",
       life: 10000,
     });
     console.error(response);
@@ -163,11 +164,12 @@ async function updateMaterial() {
       detail: "Material editado com sucesso",
       life: 10000,
     });
+    close();
   } else {
     toast.add({
       severity: "error",
       summary: TITLE.value,
-      detail: "Ocorreu um erro a editar o material",
+      detail: (response.content as string) || "Ocorreu um erro a editar o material",
       life: 10000,
     });
     console.error(response);

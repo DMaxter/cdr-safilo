@@ -47,6 +47,7 @@ async function edit() {
       detail: "Nota editada com sucesso",
       life: 10000,
     });
+    close();
   } else {
     toast.add({
       severity: "error",

@@ -204,7 +204,8 @@ async function action() {
     toast.add({
       severity: "error",
       summary: TITLE.value,
-      detail: `Ocorreu um erro a ${editing.value ? "editar" : "adicionar"} o plafond`,
+      detail:
+        response.content || `Ocorreu um erro a ${editing.value ? "editar" : "adicionar"} o plafond`,
       life: 10000,
     });
   }

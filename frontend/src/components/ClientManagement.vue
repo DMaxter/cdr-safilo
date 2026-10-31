@@ -2,9 +2,27 @@
   <P-Dialog v-model:visible="enabled" modal class="max-w-95/100 w-[400px]">
     <template #header>{{ editing ? "Editar Cliente" : "Adicionar Cliente" }}</template>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="id" v-model="draft.id" :disabled="editing" fluid />
+      <P-InputText
+        id="id"
+        v-model="draft.id"
+        required
+        inputmode="numeric"
+        :disabled="editing"
+        fluid
+        :invalid="touched.id && !!errors.id"
+        @blur="touch('id')"
+      />
       <label for="id">Código do cliente</label>
     </P-FloatLabel>
+    <P-Message
+      v-if="touched.id && errors.id"
+      class="mt-2"
+      severity="error"
+      size="small"
+      variant="simple"
+    >
+      {{ errors.id }}
+    </P-Message>
     <P-FloatLabel class="field" variant="on">
       <P-InputText
         id="name"
@@ -257,7 +275,16 @@ watch(
 
 const emailRules = [required, (value: string) => /\S+@\S+\.\S+/.test(value) || "Email inválido"];
 
+// The backend uses the code as the numeric client ID, so it must be a positive integer.
+const clientCodeRules = [
+  required,
+  (value: number | string) =>
+    (/^\d+$/.test(String(value ?? "").trim()) && Number(value) > 0) ||
+    "O código tem de ser um número inteiro positivo",
+];
+
 const errors = computed(() => ({
+  id: editing.value ? null : validateField(draft.value.id, clientCodeRules),
   name: validateField(draft.value.name.trim(), [required]),
   email: validateField(draft.value.email.trim(), emailRules),
   fiscalNumber: validateField(draft.value.fiscalNumber.trim(), [required]),
@@ -300,7 +327,11 @@ async function action() {
 }
 
 async function createClient() {
-  const response = await clientStore.addClient(draft.value);
+  // The code is typed as text, but the API expects a numeric ID.
+  const payload = new Client(draft.value);
+  payload.id = Number(payload.id);
+
+  const response = await clientStore.addClient(payload);
 
   if (response.success) {
     toast.add({
@@ -309,11 +340,12 @@ async function createClient() {
       detail: "Cliente adicionado com sucesso",
       life: 10000,
     });
+    close();
   } else {
     toast.add({
       severity: "error",
       summary: TITLE.value,
-      detail: "Ocorreu um erro a adicionar o cliente",
+      detail: response.content || "Ocorreu um erro a adicionar o cliente",
       life: 10000,
     });
     console.error(response);
@@ -330,11 +362,12 @@ async function updateClient() {
       detail: "Cliente editado com sucesso",
       life: 10000,
     });
+    close();
   } else {
     toast.add({
       severity: "error",
       summary: TITLE.value,
-      detail: "Ocorreu um erro a editar o cliente",
+      detail: response.content || "Ocorreu um erro a editar o cliente",
       life: 10000,
     });
     console.error(response);

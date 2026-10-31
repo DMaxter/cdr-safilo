@@ -107,11 +107,12 @@ async function createBrand() {
       detail: "Marca adicionada com sucesso",
       life: 10000,
     });
+    close();
   } else {
     toast.add({
       severity: "error",
       summary: TITLE.value,
-      detail: "Ocorreu um erro a adicionar a marca",
+      detail: (response.content as string) || "Ocorreu um erro a adicionar a marca",
       life: 10000,
     });
     console.error(response);
@@ -128,11 +129,12 @@ async function updateBrand() {
       detail: "Marca editada com sucesso",
       life: 10000,
     });
+    close();
   } else {
     toast.add({
       severity: "error",
       summary: TITLE.value,
-      detail: "Ocorreu um erro a editar a marca",
+      detail: (response.content as string) || "Ocorreu um erro a editar a marca",
       life: 10000,
     });
     console.error(response);
