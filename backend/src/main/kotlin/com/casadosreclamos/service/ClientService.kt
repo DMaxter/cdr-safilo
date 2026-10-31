@@ -8,6 +8,8 @@ import com.casadosreclamos.repo.BannerRepository
 import com.casadosreclamos.repo.ClientRepository
 import com.casadosreclamos.utils.EMAIL_REGEX
 import com.casadosreclamos.utils.PHONE_REGEX
+import com.casadosreclamos.utils.isSupportedCountry
+import com.casadosreclamos.utils.normalizeCountry
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
@@ -89,8 +91,8 @@ class ClientService {
             logger.error("Client city is null or empty")
 
             throw InvalidCityException()
-        } else if (clientDto.country == null || clientDto.country!!.isEmpty()) {
-            logger.error("Client country is null or empty")
+        } else if (!isSupportedCountry(clientDto.country)) {
+            logger.error("Client country is null, empty or unsupported: ${clientDto.country}")
 
             throw InvalidCountryException()
         }
@@ -103,7 +105,7 @@ class ClientService {
         client.address = clientDto.address!!
         client.postalCode = clientDto.postalCode!!
         client.city = clientDto.city!!
-        client.country = clientDto.country!!
+        client.country = normalizeCountry(clientDto.country)!!
         client.images = mutableSetOf()
 
         val bannerUni =
@@ -176,8 +178,8 @@ class ClientService {
             logger.error("Client city is null or empty")
 
             throw InvalidCityException()
-        } else if (clientDto.country == null || clientDto.country!!.isEmpty()) {
-            logger.error("Client country is null or empty")
+        } else if (!isSupportedCountry(clientDto.country)) {
+            logger.error("Client country is null, empty or unsupported: ${clientDto.country}")
 
             throw InvalidCountryException()
         }
@@ -208,7 +210,7 @@ class ClientService {
                             client.address = clientDto.address!!
                             client.postalCode = clientDto.postalCode!!
                             client.city = clientDto.city!!
-                            client.country = clientDto.country!!
+                            client.country = normalizeCountry(clientDto.country)!!
                             client.banner = banner
 
                             client
@@ -270,14 +272,7 @@ class ClientService {
                         val address = record[2]
                         val postalCode = record[3]
                         val city = record[9]
-                        val country =
-                                if (record[8] == "PORTUGAL") {
-                                    "PT"
-                                } else if (record[8] == "ESPANHA") {
-                                    "ES"
-                                } else {
-                                    record[8]
-                                }
+                        val country = normalizeCountry(record[8]) ?: record[8]
 
                         val clientDto =
                                 ClientDto(

@@ -17,10 +17,6 @@ export async function getLabelFormats(): Promise<AxiosResponse<LabelFormat[] | E
   return await http.get("/waybill/formats");
 }
 
-export async function getCountries(): Promise<AxiosResponse<string[] | Error>> {
-  return await http.get("/waybill/countries");
-}
-
 export async function openWaybill(
   requestId: number,
   waybill: Waybill,

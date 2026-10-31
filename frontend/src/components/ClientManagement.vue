@@ -150,11 +150,14 @@
       {{ errors.city }}
     </P-Message>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText
+      <P-Select
         id="country"
         v-model="draft.country"
-        required
         fluid
+        :options="countryStore.countries"
+        option-label="name"
+        option-value="code"
+        :loading="!countryStore.loaded"
         :invalid="touched.country && !!errors.country"
         @blur="touch('country')"
       />
@@ -182,6 +185,7 @@ import { computed, ref, watch } from "vue";
 
 import { Client } from "@router/backend/services/client/types";
 import { useClientStore } from "@stores/clients";
+import { useCountryStore } from "@stores/countries";
 import { required, validateField } from "@/rules";
 import { ManageMode } from "@/utils";
 
@@ -206,7 +210,39 @@ watch(
 );
 
 const clientStore = useClientStore();
+const countryStore = useCountryStore();
 const toast = useToast();
+
+// Countries are only needed once the dialog opens; the store caches them.
+watch(
+  enabled,
+  async (open) => {
+    if (!open) {
+      return;
+    }
+
+    await countryStore.getCountries();
+
+    if (!countryStore.loaded) {
+      toast.add({
+        severity: "error",
+        summary: TITLE.value,
+        detail: "Não foi possível obter a lista de países",
+        life: 10000,
+      });
+    }
+
+    // A client stored with an unsupported country must pick a valid one.
+    if (
+      countryStore.loaded &&
+      draft.value.country &&
+      !countryStore.countries.some((country) => country.code === draft.value.country)
+    ) {
+      draft.value.country = "";
+    }
+  },
+  { immediate: true },
+);
 
 const touched = ref<Record<string, boolean>>({});
 

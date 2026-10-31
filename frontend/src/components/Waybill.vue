@@ -247,6 +247,8 @@
                     v-model="waybill.destination.address.country"
                     fluid
                     :options="countryOptions"
+                    option-label="name"
+                    option-value="code"
                   />
                   <label for="country">País</label>
                 </P-FloatLabel>
@@ -325,9 +327,11 @@ import { useToast } from "primevue/usetoast";
 import { computed, onMounted, ref, watch } from "vue";
 
 import { API } from "@router/backend";
+import { Country } from "@router/backend/services/country/types";
 import type { Request } from "@router/backend/services/request/types";
 import { required, validateField } from "@/rules";
 import { downloadBlob } from "@/utils";
+import { useCountryStore } from "@stores/countries";
 import {
   Waybill,
   Contact,
@@ -362,16 +366,16 @@ const selectedDownloadFormat = ref<LabelFormat | null>(null);
 
 const openWaybill = computed(() => props.request.trackingCode === null);
 
-const countries = ref<string[]>([]);
+const countryStore = useCountryStore();
 
-const countryOptions = computed<string[]>(() => {
+const countryOptions = computed<Country[]>(() => {
   const current = waybill.value.destination.address.country;
 
-  if (current && !countries.value.includes(current)) {
-    return [...countries.value, current];
+  if (current && !countryStore.countries.some((country) => country.code === current)) {
+    return [...countryStore.countries, new Country({ code: current, name: current })];
   }
 
-  return countries.value;
+  return countryStore.countries;
 });
 const services = ref<Service[]>([]);
 const labels = ref<LabelFormat[]>([]);
@@ -381,19 +385,16 @@ let packagesLoaded = false;
 async function loadPackagesAndLabels() {
   if (packagesLoaded) return;
   try {
-    const [labelsResp, packagesResp, countriesResp] = await Promise.all([
+    const [labelsResp, packagesResp] = await Promise.all([
       getLabels(),
       getPackages(),
-      API.waybill.getCountries(),
+      countryStore.getCountries(),
     ]);
     if (Array.isArray(labelsResp)) {
       labels.value = labelsResp;
     }
     if (Array.isArray(packagesResp)) {
       packages.value = packagesResp;
-    }
-    if (countriesResp.status === 200 && Array.isArray(countriesResp.data)) {
-      countries.value = countriesResp.data;
     }
     packagesLoaded = true;
   } catch (error) {

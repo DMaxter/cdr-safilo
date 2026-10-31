@@ -6,7 +6,6 @@ import com.casadosreclamos.dto.fema.Service
 import com.casadosreclamos.dto.fema.WaybillDto
 import com.casadosreclamos.model.ADMIN_ROLE
 import com.casadosreclamos.model.CDR_ROLE
-import com.casadosreclamos.service.WAYBILL_COUNTRIES
 import com.casadosreclamos.service.WaybillService
 import io.quarkus.security.identity.CurrentIdentityAssociation
 import io.smallrye.mutiny.Uni
@@ -68,18 +67,6 @@ class WaybillController {
     )
     fun getLabelFormats(): Uni<List<LabelFormat>> {
         return waybillService.getLabelFormats()
-    }
-
-    @GET
-    @Path("/countries")
-    @Operation(summary = "Obtain supported destination countries")
-    @APIResponses(
-        APIResponse(responseCode = "200", description = "Successful operation"),
-        APIResponse(responseCode = "401", description = "User is not logged in"),
-        APIResponse(responseCode = "403", description = "Insufficient privileges")
-    )
-    fun getCountries(): List<String> {
-        return WAYBILL_COUNTRIES
     }
 
     @POST

@@ -9,7 +9,7 @@
       <p><b>Código Postal: </b>{{ client.postalCode }}</p>
       <p><b>Morada: </b>{{ client.address }}</p>
       <p><b>Cidade: </b>{{ client.city }}</p>
-      <p><b>País: </b>{{ client.country }}</p>
+      <p><b>País: </b>{{ countryLabel }}</p>
       <h3 class="font-bold text-xl">Contacto</h3>
       <p><b>Email: </b>{{ client.email }}</p>
       <p><b>Número de telefone: </b>{{ client.phone }}</p>
@@ -35,13 +35,14 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { Client } from "@router/backend/services/client/types";
 import type { Image } from "@router/backend/services/image/types";
 import { useAuthStore } from "@stores/auth";
 import { useClientStore } from "@stores/clients";
+import { useCountryStore } from "@stores/countries";
 
 const TITLE = "Informação de Cliente";
 const IMAGE_TITLE = "Alteração de Imagens de Cliente";
@@ -53,6 +54,7 @@ const router = useRouter();
 
 const authStore = useAuthStore();
 const clientStore = useClientStore();
+const countryStore = useCountryStore();
 
 const canViewNote = authStore.isCdr() || authStore.isAdmin();
 
@@ -63,6 +65,7 @@ const canViewImages = canUploadImages || canManageImages;
 const toast = useToast();
 
 const client = ref<Client>(new Client());
+const countryLabel = computed(() => countryStore.label(client.value.country));
 
 if (route.query.id) {
   try {
@@ -75,6 +78,7 @@ if (route.query.id) {
     const response = await clientStore.getClient(id);
     if (response.success) {
       client.value = response.content as Client;
+      await countryStore.getCountries();
     } else {
       toast.add({
         severity: "error",
