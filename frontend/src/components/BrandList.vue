@@ -1,5 +1,5 @@
 <template>
-  <P-Dialog v-model:visible="enabled" modal class="w-[800px]">
+  <P-Dialog v-model:visible="enabled" modal class="w-[95vw] max-w-[800px]">
     <template #header>Marcas</template>
     <div class="h-85/100">
       <P-DataTable
@@ -13,6 +13,7 @@
         :value="brandStore.brands"
         :rows="10"
         :rows-per-page-options="[5, 10, 20, 50, 100]"
+        table-style="min-width: 26rem"
       >
         <template #empty>Não existem marcas registadas</template>
 

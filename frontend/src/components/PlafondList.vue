@@ -1,5 +1,5 @@
 <template>
-  <P-Dialog v-model:visible="enabled" modal class="w-[800px] h-[75vh]">
+  <P-Dialog v-model:visible="enabled" modal class="w-[95vw] max-w-[800px] h-[75vh]">
     <template #header>Plafonds</template>
     <P-DataTable
       v-model:filters="filters"
@@ -12,7 +12,7 @@
       :value="rows"
       :rows="10"
       :rows-per-page-options="[5, 10, 20, 50, 100]"
-      table-style="table-layout: fixed; width: 100%"
+      table-style="table-layout: fixed; width: 100%; min-width: 32rem"
     >
       <template #empty>Não existem plafonds</template>
 

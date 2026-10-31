@@ -5,11 +5,13 @@
       <P-DataTable
         v-model:filters="filters"
         paginator
+        scrollable
         removable-sort
         filter-display="row"
         :value="finishingGroupStore.finishingGroups"
         :rows="10"
         :rows-per-page-options="[5, 10, 20, 50, 100]"
+        table-style="min-width: 34rem"
       >
         <template #empty>Não existem grupos de acabamentos registados</template>
 

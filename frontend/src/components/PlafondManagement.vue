@@ -1,5 +1,5 @@
 <template>
-  <P-Dialog v-model:visible="enabled" modal header="Plafonds" class="w-[500px]">
+  <P-Dialog v-model:visible="enabled" modal header="Plafonds" class="w-[95vw] max-w-[500px]">
     <template #header>{{ editing ? "Editar Plafond" : "Adicionar Plafond" }}</template>
     <P-FloatLabel class="field" variant="on">
       <P-Select

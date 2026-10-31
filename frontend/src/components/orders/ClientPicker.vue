@@ -13,7 +13,7 @@
     removable-sort
     sort-field="name"
     :sort-order="1"
-    table-style="table-layout: fixed; width: 100%"
+    table-style="table-layout: fixed; width: 100%; min-width: 24rem"
     class="client-picker-table"
     @row-click="onRowClick"
   >

@@ -13,7 +13,7 @@
       :value="requestStore.requests"
       :rows="25"
       :rows-per-page-options="[10, 25, 50, 100]"
-      table-style="table-layout: fixed; width: 100%"
+      table-style="table-layout: fixed; width: 100%; min-width: 92rem"
       responsive-layout="scroll"
     >
       <template #empty>Não existem pedidos registados</template>

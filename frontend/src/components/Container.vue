@@ -6,7 +6,7 @@
         <slot />
       </template>
       <template v-if="slots.actions" #footer>
-        <div class="flex justify-around">
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:justify-around">
           <slot name="actions" />
         </div>
       </template>

@@ -12,7 +12,7 @@
         :value="clientStore.clients"
         :rows="10"
         :rows-per-page-options="[5, 10, 20, 50, 100]"
-        table-style="table-layout: fixed; width: 100%"
+        table-style="table-layout: fixed; width: 100%; min-width: 44rem"
       >
         <template #empty>Não existem clientes registados</template>
         <template #header>

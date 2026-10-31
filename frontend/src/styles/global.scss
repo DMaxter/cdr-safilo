@@ -26,6 +26,11 @@
   margin-top: 10px;
 }
 
+// Let dialog footers wrap instead of squeezing/overflowing on narrow screens.
+.p-dialog-footer {
+  flex-wrap: wrap;
+}
+
 // For printing
 @media print {
   html,

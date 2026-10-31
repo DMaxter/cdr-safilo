@@ -5,11 +5,13 @@
       <P-DataTable
         v-model:filters="filters"
         paginator
+        scrollable
         removable-sort
         filter-display="row"
         :value="finishingStore.finishings"
         :rows="10"
         :rows-per-page-options="[5, 10, 20, 50, 100]"
+        table-style="min-width: 30rem"
       >
         <template #empty>Não existem acabamentos registados</template>
 

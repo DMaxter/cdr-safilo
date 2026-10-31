@@ -1,5 +1,5 @@
 <template>
-  <P-Dialog v-model:visible="enabled" modal class="w-[700px]">
+  <P-Dialog v-model:visible="enabled" modal class="w-[95vw] max-w-[700px]">
     <template #header>Imagens</template>
     <ItemGroup v-model="selected" :multiple="props.multiple" :options="props.images">
       <template #empty>Não existem imagens associadas</template>
@@ -38,7 +38,7 @@
       :multiple="true"
       :uploader="handleUpload"
     />
-    <P-Dialog v-model:visible="adding" modal class="w-[500px]">
+    <P-Dialog v-model:visible="adding" modal class="w-[95vw] max-w-[500px]">
       <template #header>Adicionar Imagem</template>
       <P-FloatLabel class="field" variant="on">
         <P-Textarea id="link" ref="link" v-model="imageLink" rows="4" fluid />
