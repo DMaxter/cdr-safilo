@@ -298,7 +298,7 @@
     </div>
     <template #footer>
       <P-Button class="p-button-secondary mr-2" label="Voltar" @click="close()" />
-      <P-Button v-if="openWaybill" label="Abrir" @click="createWaybill()"
+      <P-Button v-if="openWaybill" label="Abrir" :disabled="!isValid" @click="createWaybill()"
         ><template #icon><Icon icon="file_open" /></template
       ></P-Button>
       <P-Button
