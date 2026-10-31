@@ -1,7 +1,7 @@
 <template>
   <P-Menubar :model="items">
     <template #item="{ item, props }">
-      <Router-Link v-slot="{ href, navigate }" :to="item.route" custom>
+      <Router-Link v-slot="{ href, navigate }" :to="{ name: item.route }" custom>
         <a
           v-if="item.display !== undefined ? item.display! : true"
           :href="href"
