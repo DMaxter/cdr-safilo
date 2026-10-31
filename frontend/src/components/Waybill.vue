@@ -324,7 +324,7 @@
 <script lang="ts" setup>
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { API } from "@router/backend";
 import { Country } from "@router/backend/services/country/types";
@@ -405,22 +405,23 @@ async function loadPackagesAndLabels() {
 // Validation state, cleared every time the dialog (re)opens.
 const touched = ref<Record<string, boolean>>({});
 
-onMounted(() => {
-  loadPackagesAndLabels();
-});
-
 watch(
   () => enabled.value,
   async (newVal) => {
-    if (newVal) {
-      touched.value = {};
-      loadPackagesAndLabels();
-      prefillDestination();
-      if (props.request.id !== 0) {
-        await loadServices();
-      } else {
-        services.value = [];
-      }
+    if (!newVal) {
+      return;
+    }
+
+    // Catalogs are loaded lazily: the dialog only exists for CDR/ADMIN and the
+    // endpoints must not be hit while it is closed.
+    touched.value = {};
+    loadPackagesAndLabels();
+    prefillDestination();
+
+    if (openWaybill.value && props.request.id !== 0) {
+      await loadServices();
+    } else {
+      services.value = [];
     }
   },
   { immediate: true },

@@ -52,7 +52,11 @@
     <div class="border rounded p-3">
       <label>Cliente:</label>
       <div class="font-bold">
-        <router-link :to="{ name: 'client', query: { id: request.client?.id } }">
+        <router-link
+          :to="{ name: 'client', query: { id: request.client?.id } }"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {{ request.client?.name ?? "Desconhecido" }}<Icon icon="open_in_new" />
         </router-link>
       </div>

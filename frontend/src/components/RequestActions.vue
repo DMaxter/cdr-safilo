@@ -25,7 +25,12 @@
     <slot name="extra" />
 
     <PrintRequest ref="printer" class="only-print" :request="props.request" @printed="onPrinted" />
-    <Waybill v-model="waybill" :request="props.request" @changed="emit('refresh')" />
+    <Waybill
+      v-if="canSeeWaybill(props.request)"
+      v-model="waybill"
+      :request="props.request"
+      @changed="emit('refresh')"
+    />
   </div>
 </template>
 

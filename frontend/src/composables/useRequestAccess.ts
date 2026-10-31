@@ -13,33 +13,35 @@ export function useRequestAccess() {
 
   const canManipulate = authStore.isSafilo() || authStore.isCdr() || authStore.isAdmin();
 
-  /** CDR/ADMIN/MANAGER, or the commercial who created the request, while it is still ordered. */
-  function canManage(request: Request): boolean {
+  /** The commercial who created the request, matched by email (preferred) or display name. */
+  function isOwnedByCommercial(request: Request): boolean {
+    if (!authStore.isCommercial()) {
+      return false;
+    }
+
+    const loggedEmail = authStore.logged?.email;
+    if (loggedEmail && request.userEmail && loggedEmail === request.userEmail) {
+      return true;
+    }
+
+    const loggedName = authStore.logged?.name;
+    return !!loggedName && request.user === loggedName;
+  }
+
+  function canEdit(request: Request): boolean {
     if (request.status !== Status.Ordered) {
       return false;
     }
 
-    if (canManipulate) return true;
-    if (authStore.isCommercial()) {
-      const loggedEmail = authStore.logged?.email;
-      if (loggedEmail && request.userEmail && loggedEmail === request.userEmail) {
-        return true;
-      }
-      if (request.user === authStore.logged?.name) {
-        return true;
-      }
-    }
-    return false;
+    return canManipulate || isOwnedByCommercial(request);
   }
 
-  /** Whether the current user may cancel this request (same backend rule as edit). */
   function canCancel(request: Request): boolean {
-    return canManage(request);
-  }
+    if (request.status !== Status.Ordered) {
+      return false;
+    }
 
-  /** Whether the current user may edit this request. PUT /request/{id} enforces the same rule server-side. */
-  function canEdit(request: Request): boolean {
-    return canManage(request);
+    return authStore.isSafilo() || authStore.isAdmin() || isOwnedByCommercial(request);
   }
 
   /** The waybill code/button is only shown to CDR/ADMIN and never for cancelled requests. */
