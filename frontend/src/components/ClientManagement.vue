@@ -190,7 +190,14 @@ import { required, validateField } from "@/rules";
 import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
-const enabled = computed(() => mode.value !== ManageMode.None);
+const enabled = computed({
+  get: () => mode.value !== ManageMode.None,
+  set: (value) => {
+    if (!value) {
+      close();
+    }
+  },
+});
 const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
@@ -199,12 +206,16 @@ const props = defineProps<{
 
 const TITLE = computed(() => (editing.value ? "Edição de cliente" : "Criação de cliente"));
 
+// Validation state, cleared every time the dialog (re)opens.
+const touched = ref<Record<string, boolean>>({});
+
 // Work on a copy so edits don't leak into the store until save.
 const draft = ref<Client>(new Client());
 watch(
   () => [props.client, mode.value] as const,
   () => {
     draft.value = new Client(props.client);
+    touched.value = {};
   },
   { immediate: true },
 );
@@ -243,8 +254,6 @@ watch(
   },
   { immediate: true },
 );
-
-const touched = ref<Record<string, boolean>>({});
 
 const emailRules = [required, (value: string) => /\S+@\S+\.\S+/.test(value) || "Email inválido"];
 
@@ -333,6 +342,7 @@ async function updateClient() {
 }
 
 function close() {
+  touched.value = {};
   mode.value = ManageMode.None;
 }
 </script>

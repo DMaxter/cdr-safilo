@@ -42,7 +42,14 @@ import { required, validateField } from "@/rules";
 import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
-const enabled = computed(() => mode.value !== ManageMode.None);
+const enabled = computed({
+  get: () => mode.value !== ManageMode.None,
+  set: (value) => {
+    if (!value) {
+      close();
+    }
+  },
+});
 const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
@@ -51,12 +58,16 @@ const props = defineProps<{
 
 const TITLE = computed(() => (editing.value ? "Edição de marca" : "Criação de marca"));
 
+// Validation state, cleared every time the dialog (re)opens.
+const touched = ref(false);
+
 // Work on a copy so edits don't leak into the store until save.
 const draft = ref<Brand>(new Brand());
 watch(
   () => [props.brand, mode.value] as const,
   () => {
     draft.value = new Brand(props.brand);
+    touched.value = false;
   },
   { immediate: true },
 );
@@ -64,7 +75,6 @@ watch(
 const brandStore = useBrandStore();
 const toast = useToast();
 
-const touched = ref(false);
 const nameError = computed(() => validateField(draft.value.name.trim(), [required]));
 
 async function action() {
@@ -130,6 +140,7 @@ async function updateBrand() {
 }
 
 function close() {
+  touched.value = false;
   mode.value = ManageMode.None;
 }
 </script>

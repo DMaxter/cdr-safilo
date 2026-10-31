@@ -70,7 +70,14 @@ import { required, validateField } from "@/rules";
 import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
-const enabled = computed(() => mode.value !== ManageMode.None);
+const enabled = computed({
+  get: () => mode.value !== ManageMode.None,
+  set: (value) => {
+    if (!value) {
+      close();
+    }
+  },
+});
 const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
@@ -79,12 +86,16 @@ const props = defineProps<{
 
 const TITLE = computed(() => (editing.value ? "Edição de material" : "Criação de material"));
 
+// Validation state, cleared every time the dialog (re)opens.
+const touched = ref(false);
+
 // Work on a copy so edits don't leak into the store until save.
 const draft = ref<Material>(new Material());
 watch(
   () => [props.material, mode.value] as const,
   () => {
     draft.value = new Material(props.material);
+    touched.value = false;
   },
   { immediate: true },
 );
@@ -94,7 +105,6 @@ const finishingStore = useFinishingStore();
 const finishingGroupStore = useFinishingGroupStore();
 const toast = useToast();
 
-const touched = ref(false);
 const nameError = computed(() => validateField(draft.value.name.trim(), [required]));
 
 onMounted(async () => {
@@ -165,6 +175,7 @@ async function updateMaterial() {
 }
 
 function close() {
+  touched.value = false;
   mode.value = ManageMode.None;
 }
 </script>

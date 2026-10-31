@@ -1,5 +1,11 @@
 <template>
-  <P-Dialog v-model:visible="dialog1" modal header="Registar Comercial" class="w-[500px]">
+  <P-Dialog
+    v-model:visible="dialog1"
+    modal
+    header="Registar Comercial"
+    class="w-[500px]"
+    @hide="reset"
+  >
     <div class="flex flex-col items-center space-y-4">
       <div class="w-4/5">
         <P-InputText
@@ -174,6 +180,5 @@ function reset() {
 
 function close() {
   dialog1.value = false;
-  reset();
 }
 </script>

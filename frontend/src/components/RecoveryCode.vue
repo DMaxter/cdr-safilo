@@ -1,5 +1,5 @@
 <template>
-  <P-Dialog v-model:visible="enabled" modal class="w-3/10">
+  <P-Dialog v-model:visible="enabled" modal class="w-3/10" @hide="close">
     <template #header>Recuperar palavra-passe</template>
     <P-FloatLabel variant="on" class="mt-[10px]">
       <P-InputText
@@ -86,5 +86,7 @@ async function recover() {
 
 function close() {
   enabled.value = false;
+  email.value = "";
+  touched.value = false;
 }
 </script>

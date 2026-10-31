@@ -2,13 +2,29 @@
   <P-Dialog v-model:visible="enabled" modal>
     <template #header>{{ editing ? "Editar Acabamento" : "Adicionar Acabamento" }}</template>
     <P-FloatLabel v-if="editing" class="field" variant="on">
-      <P-InputText id="id" v-model="props.finishing.id" fluid disabled />
+      <P-InputText id="id" v-model="draft.id" fluid disabled />
       <label for="id">ID</label>
     </P-FloatLabel>
     <P-FloatLabel class="field" variant="on">
-      <P-InputText id="name" v-model="props.finishing.name" required fluid />
+      <P-InputText
+        id="name"
+        v-model="draft.name"
+        required
+        fluid
+        :invalid="touched.name && !!errors.name"
+        @blur="touch('name')"
+      />
       <label for="name">Nome</label>
     </P-FloatLabel>
+    <P-Message
+      v-if="touched.name && errors.name"
+      class="mt-2"
+      severity="error"
+      size="small"
+      variant="simple"
+    >
+      {{ errors.name }}
+    </P-Message>
     <template v-if="!editing">
       <P-FloatLabel class="field" variant="on">
         <P-InputNumber
@@ -21,9 +37,20 @@
           locale="pt-PT"
           :min-fraction-digits="2"
           :max-fraction-digits="2"
+          :invalid="touched.cost && !!errors.cost"
+          @blur="touch('cost')"
         />
         <label for="cost">Custo</label>
       </P-FloatLabel>
+      <P-Message
+        v-if="touched.cost && errors.cost"
+        class="mt-2"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
+        {{ errors.cost }}
+      </P-Message>
       <P-FloatLabel class="field" variant="on">
         <P-MultiSelect
           id="materials"
@@ -34,12 +61,23 @@
           option-label="name"
           display="chip"
           placeholder="Materiais"
+          :invalid="touched.materials && !!errors.materials"
+          @blur="touch('materials')"
         />
         <label for="materials">Materiais do acabamento</label>
       </P-FloatLabel>
+      <P-Message
+        v-if="touched.materials && errors.materials"
+        class="mt-2"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
+        {{ errors.materials }}
+      </P-Message>
     </template>
     <div v-if="editing" class="field flex items-center gap-2">
-      <P-ToggleSwitch id="obsolete" v-model="props.finishing.obsolete" />
+      <P-ToggleSwitch id="obsolete" v-model="draft.obsolete" />
       <label for="obsolete">Obsoleto</label>
     </div>
     <template #footer>
@@ -51,16 +89,24 @@
 
 <script lang="ts" setup>
 import { useToast } from "primevue/usetoast";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import { Finishing, NewFinishing } from "@router/backend/services/finishing/types";
+import type { Material } from "@router/backend/services/material/types";
 import { useFinishingStore } from "@stores/finishings";
 import { useMaterialStore } from "@stores/materials";
 import { required, validateField } from "@/rules";
 import { ManageMode } from "@/utils";
 
 const mode = defineModel<ManageMode>();
-const enabled = computed(() => mode.value !== ManageMode.None);
+const enabled = computed({
+  get: () => mode.value !== ManageMode.None,
+  set: (value) => {
+    if (!value) {
+      close();
+    }
+  },
+});
 const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
@@ -73,7 +119,37 @@ const finishingStore = useFinishingStore();
 const materialStore = useMaterialStore();
 const toast = useToast();
 
-const draft = ref<NewFinishing>(new NewFinishing());
+type FinishingDraft = {
+  id: number;
+  name: string;
+  obsolete: boolean;
+  cost: number | null;
+  materials: Material[];
+};
+
+function newDraft(finishing?: Finishing): FinishingDraft {
+  return {
+    id: finishing?.id ?? 0,
+    name: finishing?.name ?? "",
+    obsolete: finishing?.obsolete ?? false,
+    cost: 0,
+    materials: [],
+  };
+}
+
+// Validation state, cleared every time the dialog (re)opens.
+const touched = ref<Record<string, boolean>>({});
+
+// Work on a copy so edits don't leak into the store until save.
+const draft = ref<FinishingDraft>(newDraft());
+watch(
+  () => [props.finishing, mode.value] as const,
+  () => {
+    draft.value = newDraft(props.finishing);
+    touched.value = {};
+  },
+  { immediate: true },
+);
 
 const availableMaterials = computed(() => materialStore.materials.filter((m) => !m.obsolete));
 
@@ -82,34 +158,38 @@ const nonNegative = (value: number | null) =>
     ? "Campo obrigatório"
     : value >= 0 || "O custo não pode ser negativo";
 
-const atLeastOne = (value: NewFinishing["materials"]) =>
-  value.length > 0 || "Selecione pelo menos um material";
+const atLeastOne = (value: Material[]) => value.length > 0 || "Selecione pelo menos um material";
 
-const errors = computed(() => {
-  const fields = [validateField(props.finishing.name.trim(), [required])];
+const errors = computed<Record<string, string | null>>(() => ({
+  name: validateField(draft.value.name.trim(), [required]),
+  cost: editing.value ? null : validateField(draft.value.cost, [nonNegative]),
+  materials: editing.value ? null : validateField(draft.value.materials, [atLeastOne]),
+}));
 
-  if (!editing.value) {
-    fields.push(
-      validateField(draft.value.cost, [nonNegative]),
-      validateField(draft.value.materials, [atLeastOne]),
-    );
-  }
+const errorList = computed(() =>
+  Object.values(errors.value).filter((error): error is string => error !== null),
+);
 
-  return fields.filter((e) => e !== null);
-});
-
-const isValid = computed(() => errors.value.length === 0);
+const isValid = computed(() => errorList.value.length === 0);
 
 onMounted(async () => {
   await materialStore.getMaterials();
 });
 
+function touch(field: string) {
+  touched.value[field] = true;
+}
+
 async function action() {
+  for (const field of Object.keys(errors.value)) {
+    touched.value[field] = true;
+  }
+
   if (!isValid.value) {
     toast.add({
       severity: "warn",
       summary: TITLE.value,
-      detail: errors.value.join(" "),
+      detail: errorList.value[0],
       life: 10000,
     });
     return;
@@ -124,8 +204,8 @@ async function action() {
 
 async function createFinishing() {
   const newFinishing = new NewFinishing({
-    name: props.finishing.name,
-    cost: draft.value.cost,
+    name: draft.value.name,
+    cost: draft.value.cost ?? 0,
     materials: draft.value.materials,
   });
 
@@ -151,7 +231,13 @@ async function createFinishing() {
 }
 
 async function updateFinishing() {
-  const response = await finishingStore.editFinishing(props.finishing);
+  const finishing = new Finishing({
+    id: draft.value.id,
+    name: draft.value.name,
+    obsolete: draft.value.obsolete,
+  });
+
+  const response = await finishingStore.editFinishing(finishing);
 
   if (response.success) {
     toast.add({
@@ -173,6 +259,7 @@ async function updateFinishing() {
 }
 
 function close() {
+  touched.value = {};
   mode.value = ManageMode.None;
 }
 </script>

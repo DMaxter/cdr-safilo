@@ -402,6 +402,9 @@ async function loadPackagesAndLabels() {
   }
 }
 
+// Validation state, cleared every time the dialog (re)opens.
+const touched = ref<Record<string, boolean>>({});
+
 onMounted(() => {
   loadPackagesAndLabels();
 });
@@ -410,6 +413,7 @@ watch(
   () => enabled.value,
   async (newVal) => {
     if (newVal) {
+      touched.value = {};
       loadPackagesAndLabels();
       prefillDestination();
       if (props.request.id !== 0) {
@@ -440,8 +444,6 @@ function prefillDestination() {
     }),
   });
 }
-
-const touched = ref<Record<string, boolean>>({});
 
 function touch(field: string) {
   touched.value[field] = true;
@@ -717,6 +719,7 @@ async function showDownload() {
 }
 
 function close() {
+  touched.value = {};
   enabled.value = false;
   selectedDownloadFormat.value = null;
 }

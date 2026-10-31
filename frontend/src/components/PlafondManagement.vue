@@ -9,9 +9,20 @@
         :options="brandStore.brands"
         option-label="name"
         option-value="id"
+        :invalid="touched && !!brandError"
+        @blur="touched = true"
       />
       <label for="brand">Marca</label>
     </P-FloatLabel>
+    <P-Message
+      v-if="touched && brandError"
+      class="mt-2"
+      severity="error"
+      size="small"
+      variant="simple"
+    >
+      {{ brandError }}
+    </P-Message>
 
     <P-FloatLabel class="field" variant="on">
       <P-InputNumber id="amount" v-model="draftAmount" fluid :min="0" :max-fraction-digits="2" />
@@ -54,7 +65,14 @@ import { ManageMode } from "@/utils";
 import { Plafond } from "@/router/backend/services/user/types";
 
 const mode = defineModel<ManageMode>();
-const enabled = computed(() => mode.value !== ManageMode.None);
+const enabled = computed({
+  get: () => mode.value !== ManageMode.None,
+  set: (value) => {
+    if (!value) {
+      close();
+    }
+  },
+});
 const editing = computed(() => enabled.value && mode.value === ManageMode.Edit);
 
 const props = defineProps<{
@@ -70,6 +88,10 @@ const TITLE = computed(() => (editing.value ? "Edição de plafond" : "Criação
 
 const changeAmount = ref(0);
 const selectedBrandId = ref<number | null>(null);
+
+// Validation state, cleared every time the dialog (re)opens.
+const touched = ref(false);
+const brandError = computed(() => (selectedBrandId.value === null ? "Selecione uma marca" : null));
 
 // Work on a copy so edits don't leak into the store until save.
 const draftAmount = ref(0);
@@ -87,6 +109,8 @@ watch(
       await loadBrandsIfNeeded();
     }
 
+    touched.value = false;
+    changeAmount.value = 0;
     draftAmount.value = props.plafond.amount;
 
     if (editing.value && props.plafond.brand) {
@@ -143,11 +167,15 @@ function decreasePlafond() {
 }
 
 async function action() {
-  if (selectedBrandId.value === null) {
+  touched.value = true;
+
+  const brandId = selectedBrandId.value;
+
+  if (brandId === null) {
     toast.add({
-      severity: "error",
+      severity: "warn",
       summary: TITLE.value,
-      detail: "Selecione uma marca",
+      detail: brandError.value,
       life: 5000,
     });
     return;
@@ -162,11 +190,7 @@ async function action() {
     return;
   }
 
-  const response = await userStore.changePlafond(
-    props.user,
-    selectedBrandId.value,
-    draftAmount.value,
-  );
+  const response = await userStore.changePlafond(props.user, brandId, draftAmount.value);
 
   if (response.success) {
     toast.add({
@@ -187,6 +211,7 @@ async function action() {
 }
 
 function close() {
+  touched.value = false;
   mode.value = ManageMode.None;
 }
 </script>
