@@ -106,7 +106,7 @@
           />
         </template>
         <template #body="{ data }">
-          <span>{{ (data.materialNames || data.getMaterials?.() || []).join(", ") }}</span>
+          <span>{{ materialNamesOf(data).join(", ") }}</span>
         </template>
       </P-Column>
       <P-Column class="w-[10rem]" field="userEmail" header="Comercial" sortable filter>
@@ -197,6 +197,14 @@ function filterByMaterials(value: unknown, filter: unknown): boolean {
   return filterValues.some((name) => materials.includes(name as string));
 }
 
+function materialNamesOf(request: Partial<Request>): string[] {
+  if (Array.isArray(request.materialNames)) {
+    return request.materialNames;
+  }
+
+  return typeof request.getMaterials === "function" ? request.getMaterials() : [];
+}
+
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -238,7 +246,7 @@ const brands = computed(() =>
 const materials = computed(() => {
   const names = new Set<string>();
   requestStore.requests.forEach((r) => {
-    r.getMaterials().forEach((m) => {
+    materialNamesOf(r).forEach((m) => {
       if (m) names.add(m);
     });
   });

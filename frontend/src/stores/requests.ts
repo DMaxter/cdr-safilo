@@ -19,7 +19,7 @@ export const useRequestStore = defineStore("requestStore", () => {
   }
 
   function add(request: Request) {
-    requests.value.push(request);
+    requests.value.push(request instanceof Request ? request : new Request(request));
   }
 
   function _update(id: number, request: Partial<Request>) {
@@ -71,7 +71,7 @@ export const useRequestStore = defineStore("requestStore", () => {
       const { status, data } = await API.requests.addRequest(request);
 
       if (status === 200) {
-        const newRequest = data as Request;
+        const newRequest = new Request(data as Request);
         add(newRequest);
         return {
           success: true,
