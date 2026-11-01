@@ -88,7 +88,13 @@
           <span>{{ data.brand?.name }}</span>
         </template>
       </P-Column>
-      <P-Column class="w-[12rem]" field="materialNames" header="Material" filter>
+      <P-Column
+        class="w-[12rem]"
+        header="Material"
+        filter
+        :filter-function="filterByMaterials"
+        filter-field="materialNames"
+      >
         <template #filter="{ filterModel, filterCallback }">
           <P-MultiSelect
             v-model="filterModel.value"
@@ -100,7 +106,7 @@
           />
         </template>
         <template #body="{ data }">
-          <span>{{ data.materialNames.join(", ") }}</span>
+          <span>{{ (data.materialNames || data.getMaterials?.() || []).join(", ") }}</span>
         </template>
       </P-Column>
       <P-Column class="w-[10rem]" field="userEmail" header="Comercial" sortable filter>
@@ -177,10 +183,19 @@ import { Request, Status } from "@router/backend/services/request/types";
 import { getStatusIcon, getStatusClass } from "@/utils";
 
 // Custom match mode: a request matches when any of its slot materials is selected.
-FilterService.register("materialIn", (value: string[] | undefined, filter: string[] | null) => {
-  if (!filter || filter.length === 0) return true;
-  return filter.some((name) => value?.includes(name));
+FilterService.register("materialIn", (value: unknown, filter: unknown) => {
+  if (!filter || (Array.isArray(filter) && filter.length === 0)) return true;
+  const materials = Array.isArray(value) ? value : [];
+  const filterValues = Array.isArray(filter) ? filter : [filter];
+  return filterValues.some((name) => materials.includes(name as string));
 });
+
+function filterByMaterials(value: unknown, filter: unknown): boolean {
+  if (!filter || (Array.isArray(filter) && filter.length === 0)) return true;
+  const materials = Array.isArray(value) ? value : [];
+  const filterValues = Array.isArray(filter) ? filter : [filter];
+  return filterValues.some((name) => materials.includes(name as string));
+}
 
 const confirm = useConfirm();
 const toast = useToast();
