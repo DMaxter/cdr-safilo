@@ -41,42 +41,63 @@
             :options="materials"
             option-label="name"
             fluid
-            :invalid="!draft.material"
-            @update:model-value="onMaterialSelect"
+            :invalid="touched.material && !!errors.material"
+            @update:model-value="touch('material'); onMaterialSelect($event)"
           />
           <label>Material</label>
         </P-FloatLabel>
-      </div>
-
-      <div>
-        <P-FloatLabel variant="on" class="w-full">
-          <P-InputNumber v-model="draft.height" :min="0" fluid :invalid="draft.height <= 0" />
-          <label>Altura (cm)</label>
-        </P-FloatLabel>
         <P-Message
-          v-if="draft.height <= 0"
+          v-if="touched.material && errors.material"
           severity="error"
           size="small"
           variant="simple"
           class="mt-1"
         >
-          Altura deve ser superior a 0
+          {{ errors.material }}
         </P-Message>
       </div>
 
       <div>
         <P-FloatLabel variant="on" class="w-full">
-          <P-InputNumber v-model="draft.width" :min="0" fluid :invalid="draft.width <= 0" />
-          <label>Largura (cm)</label>
+          <P-InputNumber
+            v-model="draft.height"
+            :min="0"
+            fluid
+            :invalid="touched.height && !!errors.height"
+            @blur="touch('height')"
+          />
+          <label>Altura (cm)</label>
         </P-FloatLabel>
         <P-Message
-          v-if="draft.width <= 0"
+          v-if="touched.height && errors.height"
           severity="error"
           size="small"
           variant="simple"
           class="mt-1"
         >
-          Largura deve ser superior a 0
+          {{ errors.height }}
+        </P-Message>
+      </div>
+
+      <div>
+        <P-FloatLabel variant="on" class="w-full">
+          <P-InputNumber
+            v-model="draft.width"
+            :min="0"
+            fluid
+            :invalid="touched.width && !!errors.width"
+            @blur="touch('width')"
+          />
+          <label>Largura (cm)</label>
+        </P-FloatLabel>
+        <P-Message
+          v-if="touched.width && errors.width"
+          severity="error"
+          size="small"
+          variant="simple"
+          class="mt-1"
+        >
+          {{ errors.width }}
         </P-Message>
       </div>
 
@@ -148,6 +169,19 @@ const groupStore = useFinishingGroupStore();
 const finishingStore = useFinishingStore();
 
 const imagePickerOpen = ref(false);
+
+// Touched state for lazy validation
+type Field = "material" | "height" | "width";
+const touched = ref<Record<Field, boolean>>({ material: false, height: false, width: false });
+function touch(field: Field) {
+  touched.value[field] = true;
+}
+
+const errors = computed<Record<Field, string | null>>(() => ({
+  material: props.draft.material ? null : "Material obrigatório",
+  height: props.draft.height > 0 ? null : "Altura deve ser superior a 0",
+  width: props.draft.width > 0 ? null : "Largura deve ser superior a 0",
+}));
 
 const brandImages = computed(() => {
   if (!props.brand) return [];
