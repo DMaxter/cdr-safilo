@@ -116,7 +116,7 @@
                 text
                 severity="secondary"
                 size="small"
-                @click="wizard.setBrand(null)"
+                @click="onBrandClear"
                 ><template #icon><Icon icon="edit" /></template
               ></P-Button>
             </div>
@@ -359,8 +359,6 @@ const successDialog = ref(false);
 const estimatedPrice = ref<number | null>(null);
 const slotStep = ref(1);
 
-const lastClientId = ref<number | null>(null);
-
 const successButtonLabel = computed(() =>
   wizard.isEditing ? "Voltar à pesquisa" : "Ir para o perfil",
 );
@@ -450,15 +448,8 @@ watch(selectedClient, (client) => {
     return;
   }
 
-  const clientId = client.id as number;
-  const isSwitch = lastClientId.value !== null && lastClientId.value !== clientId;
-
-  lastClientId.value = clientId;
+  // Changing client keeps everything already filled in.
   wizard.setClient(client);
-
-  if (isSwitch) {
-    discardSlots();
-  }
 });
 
 onMounted(async () => {
@@ -503,7 +494,6 @@ async function loadForEdit(id: number) {
 
   wizard.initFromRequest(existing);
   slotStep.value = 1;
-  lastClientId.value = existing.client?.id as number;
   selectedClient.value = existing.client;
 }
 
@@ -516,7 +506,7 @@ function selectType(t: RequestTypeName) {
 
   confirm.require({
     message:
-      "Ao alterar o tipo de pedido, os dados já preenchidos nos blocos podem ser perdidos. Deseja continuar?",
+      "Ao alterar o tipo de pedido, as imagens, materiais, medidas e acabamentos dos blocos serão apagados. Deseja continuar?",
     header: "Alterar tipo de pedido",
     rejectProps: {
       label: "Cancelar",
@@ -528,15 +518,20 @@ function selectType(t: RequestTypeName) {
       severity: "danger",
     },
     accept: () => {
+      discardSlots();
       wizard.setType(t);
-      slotStep.value = 1;
     },
   });
 }
 
 function onBrandSelect(b: Brand) {
   wizard.setBrand(b);
-  discardSlots();
+  wizard.clearSlotImages();
+}
+
+function onBrandClear() {
+  wizard.setBrand(null);
+  wizard.clearSlotImages();
 }
 
 function goToStep(target: number) {

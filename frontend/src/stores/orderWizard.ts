@@ -305,24 +305,21 @@ export const useOrderWizardStore = defineStore("orderWizard", () => {
     }
   }
 
+  function clearSlotImages() {
+    for (const slot of Object.values(slots.value)) {
+      slot.image = null;
+    }
+  }
+
   function setSlotMaterial(key: string, material: Material | null) {
     const slot = slots.value[key];
     if (!slot) return;
 
+    // Finishings depend on the material, so reset them when it changes.
+    const changed = (slot.material?.id ?? null) !== (material?.id ?? null);
     slot.material = material;
 
-    if (!material) {
-      slot.finishings = [];
-      return;
-    }
-
-    const validIds = new Set<number>();
-    for (const group of material.mandatoryFinishings) {
-      for (const f of group.finishings) validIds.add(f.id);
-    }
-    for (const f of material.additionalFinishings) validIds.add(f.id);
-
-    slot.finishings = slot.finishings.filter((f) => validIds.has(f.id));
+    if (changed) slot.finishings = [];
   }
 
   return {
@@ -351,5 +348,6 @@ export const useOrderWizardStore = defineStore("orderWizard", () => {
     setBrand,
     setSlotMaterial,
     resetSlots,
+    clearSlotImages,
   };
 });
