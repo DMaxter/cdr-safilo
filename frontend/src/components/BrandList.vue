@@ -41,8 +41,14 @@
       </P-DataTable>
     </div>
     <template #footer>
-      <P-Button text @click="openBrandManagement(new Brand(), ManageMode.Add)">Adicionar</P-Button>
-      <P-Button text @click="close">Voltar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+        <P-Button
+          label="Adicionar"
+          severity="primary"
+          @click="openBrandManagement(new Brand(), ManageMode.Add)"
+        />
+      </div>
     </template>
   </P-Dialog>
   <BrandManagement v-model="manageMode" :brand="selectedBrand" />

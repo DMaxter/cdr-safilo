@@ -99,16 +99,29 @@
       </P-DataTable>
     </div>
     <template #actions>
-      <P-Button @click="refresh">Atualizar</P-Button>
-      <P-Button v-if="canManage" @click="addClient">Adicionar Cliente</P-Button>
-      <P-Button v-if="canManage" @click="showUpload">Carregar Clientes</P-Button>
-      <P-Button
-        v-if="canManage"
-        :loading="exporting"
-        :disabled="exporting"
-        @click="downloadRequests"
-        >Descarregar pedidos</P-Button
-      >
+      <div class="flex gap-2 flex-wrap">
+        <P-Button label="Atualizar" severity="secondary" @click="refresh" />
+        <P-Button
+          v-if="canManage"
+          label="Adicionar Cliente"
+          severity="primary"
+          @click="addClient"
+        />
+        <P-Button
+          v-if="canManage"
+          label="Carregar Clientes"
+          severity="primary"
+          @click="showUpload"
+        />
+        <P-Button
+          v-if="canManage"
+          label="Descarregar pedidos"
+          severity="primary"
+          :loading="exporting"
+          :disabled="exporting"
+          @click="downloadRequests"
+        />
+      </div>
       <FileUpload
         v-if="canManage"
         v-model="uploading"

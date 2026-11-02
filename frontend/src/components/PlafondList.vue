@@ -34,7 +34,9 @@
       </P-Column>
     </P-DataTable>
     <template #footer>
-      <P-Button label="Voltar" text @click="close" />
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+      </div>
     </template>
   </P-Dialog>
   <PlafondDetail

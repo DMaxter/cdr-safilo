@@ -22,8 +22,10 @@
       {{ emailError }}
     </P-Message>
     <template #footer>
-      <P-Button @click="recover()">Recuperar </P-Button>
-      <P-Button text @click="close()">Voltar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close()" />
+        <P-Button label="Recuperar" severity="primary" @click="recover()" />
+      </div>
     </template>
   </P-Dialog>
 </template>

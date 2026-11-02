@@ -46,10 +46,14 @@
       </P-DataTable>
     </div>
     <template #footer>
-      <P-Button text @click="openFinishingManagement(new Finishing(), ManageMode.Add)"
-        >Adicionar</P-Button
-      >
-      <P-Button text @click="close">Voltar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+        <P-Button
+          label="Adicionar"
+          severity="primary"
+          @click="openFinishingManagement(new Finishing(), ManageMode.Add)"
+        />
+      </div>
     </template>
   </P-Dialog>
   <FinishingManagement v-model="manageMode" :finishing="selectedFinishing" />

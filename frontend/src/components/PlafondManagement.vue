@@ -25,7 +25,9 @@
       {{ brandError }}
     </P-Message>
 
-    <div class="mb-1 mt-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Plafond atual</div>
+    <div class="mb-1 mt-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+      Plafond atual
+    </div>
     <P-FloatLabel class="field" variant="on">
       <P-InputNumber id="amount" v-model="draftAmount" fluid :min="0" :max-fraction-digits="2" />
       <label for="amount">Valor</label>
@@ -49,12 +51,13 @@
         <span>Novo plafond estimado:</span>
         <strong>{{ (draftAmount + changeAmount).toFixed(2) }}</strong>
       </div>
-
     </div>
 
     <template #footer>
-      <P-Button text @click="close">Voltar</P-Button>
-      <P-Button text @click="action">{{ editing ? "Atualizar" : "Adicionar" }}</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+        <P-Button :label="editing ? 'Atualizar' : 'Adicionar'" severity="primary" @click="action" />
+      </div>
     </template>
   </P-Dialog>
 </template>

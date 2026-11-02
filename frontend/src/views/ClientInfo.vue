@@ -17,10 +17,16 @@
       <p v-if="canViewNote && client.note">{{ client.note }}</p>
     </div>
     <template #actions>
-      <P-Button v-if="canViewImages" @click="openImageManagement()">Imagens</P-Button>
-      <P-Button @click="router.push({ name: 'search', query: { client: client.id } })"
-        >Histórico</P-Button
-      >
+      <div class="flex gap-2">
+        <P-Button v-if="canViewImages" severity="primary" @click="openImageManagement()"
+          >Imagens</P-Button
+        >
+        <P-Button
+          severity="primary"
+          @click="router.push({ name: 'search', query: { client: client.id } })"
+          >Histórico</P-Button
+        >
+      </div>
       <ImageManagement
         v-model="managing"
         multiple

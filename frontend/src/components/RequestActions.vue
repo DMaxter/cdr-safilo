@@ -8,7 +8,9 @@
       label="Cancelar"
       severity="danger"
       @click="confirmCancel()"
-    />
+    >
+      <template #icon><Icon icon="cancel" /></template>
+    </P-Button>
     <P-Button label="Voltar" severity="secondary" @click="emit('back')" />
     <P-Button label="Imprimir" severity="info" @click="print()">
       <template #icon><Icon icon="print" /></template>
@@ -16,7 +18,7 @@
     <P-Button
       v-if="canSeeWaybill(props.request)"
       label="Carta de Porte"
-      severity="secondary"
+      severity="primary"
       @click="waybill = true"
     >
       <template #icon><Icon icon="delivery_truck_speed" /></template>

@@ -15,7 +15,9 @@
       A carregar, aguarde...
     </P-Message>
     <template #footer>
-      <P-Button text :disabled="busy" @click="close">Voltar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text :disabled="busy" @click="close" />
+      </div>
     </template>
   </P-Dialog>
 </template>

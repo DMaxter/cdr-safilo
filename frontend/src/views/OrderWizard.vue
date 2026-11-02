@@ -85,12 +85,17 @@
             </button>
           </div>
           <div class="flex justify-end gap-2 mt-4">
-            <P-Button label="Anterior" severity="secondary" @click="selectedClient = null"
-              ><template #icon><Icon icon="arrow_back" /></template
-            ></P-Button>
-            <P-Button label="Próximo" :disabled="!wizard.type" @click="goToStep(2)"
-              ><template #icon><Icon icon="arrow_forward" /></template
-            ></P-Button>
+            <P-Button label="Anterior" severity="secondary" @click="selectedClient = null">
+              <template #icon><Icon icon="arrow_back" /></template>
+            </P-Button>
+            <P-Button
+              label="Próximo"
+              severity="primary"
+              :disabled="!wizard.type"
+              @click="goToStep(2)"
+            >
+              <template #icon><Icon icon="arrow_forward" /></template>
+            </P-Button>
           </div>
         </P-StepPanel>
 
@@ -180,12 +185,17 @@
             </div>
           </div>
           <div class="flex justify-between mt-4">
-            <P-Button label="Anterior" severity="secondary" @click="goToStep(1)"
-              ><template #icon><Icon icon="arrow_back" /></template
-            ></P-Button>
-            <P-Button label="Próximo" :disabled="!allSlotsValid" @click="goToStep(3)"
-              ><template #icon><Icon icon="arrow_forward" /></template
-            ></P-Button>
+            <P-Button label="Anterior" severity="secondary" @click="goToStep(1)">
+              <template #icon><Icon icon="arrow_back" /></template>
+            </P-Button>
+            <P-Button
+              label="Próximo"
+              severity="primary"
+              :disabled="!allSlotsValid"
+              @click="goToStep(3)"
+            >
+              <template #icon><Icon icon="arrow_forward" /></template>
+            </P-Button>
           </div>
         </P-StepPanel>
 
@@ -277,16 +287,18 @@
             </div>
           </div>
           <div class="flex justify-between mt-4">
-            <P-Button label="Anterior" severity="secondary" @click="goToStep(2)"
-              ><template #icon><Icon icon="arrow_back" /></template
-            ></P-Button>
+            <P-Button label="Anterior" severity="secondary" @click="goToStep(2)">
+              <template #icon><Icon icon="arrow_back" /></template>
+            </P-Button>
             <P-Button
               :label="wizard.isEditing ? 'Editar Pedido' : 'Criar Pedido'"
+              severity="primary"
               :loading="wizard.submitting"
               :disabled="wizard.submitting"
               @click="submit"
-              ><template #icon><Icon icon="check" /></template
-            ></P-Button>
+            >
+              <template #icon><Icon icon="check" /></template>
+            </P-Button>
           </div>
         </P-StepPanel>
       </P-StepPanels>

@@ -160,7 +160,7 @@
     </P-DataTable>
     <RequestSummary v-model="summary" :request="selectedRequest" @changed="onWaybillChanged" />
     <template #actions>
-      <P-Button v-if="isCommercial" @click="toggleOwnRequests">
+      <P-Button v-if="isCommercial" severity="secondary" @click="toggleOwnRequests">
         {{ ownRequestsOnly ? "Ver todos os pedidos" : "Ver só os meus pedidos" }}
       </P-Button>
     </template>

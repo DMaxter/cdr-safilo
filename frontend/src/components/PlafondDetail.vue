@@ -12,13 +12,15 @@
       </P-Column>
     </P-DataTable>
     <template #footer>
-      <P-Button
-        v-if="manageSafilo"
-        text
-        @click="openPlafondManagement(new Plafond(), ManageMode.Add)"
-        >Adicionar</P-Button
-      >
-      <P-Button text @click="close()">Fechar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Fechar" severity="secondary" text @click="close()" />
+        <P-Button
+          v-if="manageSafilo"
+          label="Adicionar"
+          severity="primary"
+          @click="openPlafondManagement(new Plafond(), ManageMode.Add)"
+        />
+      </div>
     </template>
   </P-Dialog>
   <PlafondManagement

@@ -13,8 +13,10 @@
       </div>
     </div>
     <template #footer>
-      <P-Button text label="Cancelar" @click="close()" />
-      <P-Button label="Confirmar" :disabled="!selectedId" @click="confirm()" />
+      <div class="flex justify-end gap-2">
+        <P-Button label="Cancelar" severity="secondary" text @click="close()" />
+        <P-Button label="Confirmar" severity="primary" :disabled="!selectedId" @click="confirm()" />
+      </div>
     </template>
   </P-Dialog>
 </template>

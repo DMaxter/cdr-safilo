@@ -66,8 +66,14 @@
       </P-DataTable>
     </div>
     <template #footer>
-      <P-Button text @click="openPriceManagement(new Price(), ManageMode.Add)">Adicionar</P-Button>
-      <P-Button text @click="close">Voltar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+        <P-Button
+          label="Adicionar"
+          severity="primary"
+          @click="openPriceManagement(new Price(), ManageMode.Add)"
+        />
+      </div>
     </template>
   </P-Dialog>
   <PriceManagement v-model="manageMode" :price="selectedPrice" />

@@ -44,10 +44,14 @@
       </P-DataTable>
     </div>
     <template #footer>
-      <P-Button text @click="openFinishingGroupManagement(new FinishingGroup(), ManageMode.Add)"
-        >Adicionar</P-Button
-      >
-      <P-Button text @click="close">Voltar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+        <P-Button
+          label="Adicionar"
+          severity="primary"
+          @click="openFinishingGroupManagement(new FinishingGroup(), ManageMode.Add)"
+        />
+      </div>
     </template>
   </P-Dialog>
   <FinishingGroupManagement v-model="manageMode" :group="selectedGroup" />

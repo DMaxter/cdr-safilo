@@ -49,8 +49,8 @@
           Password
           <div class="field">**********</div>
         </div>
-        <P-Button class="ml-[10px]" @click="showPasswordChange()">
-          Alterar
+        <P-Button class="ml-[10px]" severity="primary" @click="showPasswordChange()">
+          <span>Alterar</span>
           <Icon icon="settings" :size="15" />
         </P-Button>
       </div>

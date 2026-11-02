@@ -50,7 +50,7 @@
           <P-Button text class="self-center mt-1" @click="showRecover()"
             >Esqueci-me da palavra-passe</P-Button
           >
-          <P-Button fluid type="submit">Entrar</P-Button>
+          <P-Button fluid type="submit" severity="primary">Entrar</P-Button>
         </P-Form>
       </template>
     </P-Card>

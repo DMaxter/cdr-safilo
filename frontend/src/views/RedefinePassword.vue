@@ -50,13 +50,20 @@
           <P-Button
             :disabled="!passwordsMatch || !password"
             fluid
+            severity="primary"
             class="mt-[30px] mb-[10px]"
             type="submit"
           >
             Confirmar
           </P-Button>
 
-          <P-Button type="button" text fluid @click="router.push({ name: 'login' })">
+          <P-Button
+            type="button"
+            severity="secondary"
+            text
+            fluid
+            @click="router.push({ name: 'login' })"
+          >
             Voltar atrás
           </P-Button>
         </P-Form>

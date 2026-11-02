@@ -92,8 +92,10 @@
       <label for="finishings">Acabamentos</label>
     </P-FloatLabel>
     <template #footer>
-      <P-Button text @click="close">Voltar</P-Button>
-      <P-Button text @click="action">{{ editing ? "Atualizar" : "Adicionar" }}</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+        <P-Button :label="editing ? 'Atualizar' : 'Adicionar'" severity="primary" @click="action" />
+      </div>
     </template>
   </P-Dialog>
 </template>

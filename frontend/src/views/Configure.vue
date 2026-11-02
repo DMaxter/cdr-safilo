@@ -1,19 +1,31 @@
 <template>
   <Container>
     <div class="grid grid-cols-2 gap-x-10 gap-y-5 mt-[40px]">
-      <P-Button v-if="manageSafilo" class="h-[60px]" @click="openPlafondManagement"
+      <P-Button
+        v-if="manageSafilo"
+        class="h-[60px]"
+        severity="primary"
+        @click="openPlafondManagement"
         >Plafond</P-Button
       >
-      <P-Button v-if="manageSafilo" class="h-[60px]" @click="openBrandList">Marcas</P-Button>
-      <P-Button v-if="manageSafilo" class="h-[60px]" @click="openUserManagement"
+      <P-Button v-if="manageSafilo" class="h-[60px]" severity="primary" @click="openBrandList"
+        >Marcas</P-Button
+      >
+      <P-Button v-if="manageSafilo" class="h-[60px]" severity="primary" @click="openUserManagement"
         >Utilizadores</P-Button
       >
-      <P-Button v-if="manageCdr" class="h-[60px]" @click="openMaterialList">Materiais</P-Button>
-      <P-Button v-if="manageCdr" class="h-[60px]" @click="openFinishingList">Acabamentos</P-Button>
-      <P-Button v-if="manageCdr" class="h-[60px]" @click="openFinishingGroupList"
+      <P-Button v-if="manageCdr" class="h-[60px]" severity="primary" @click="openMaterialList"
+        >Materiais</P-Button
+      >
+      <P-Button v-if="manageCdr" class="h-[60px]" severity="primary" @click="openFinishingList"
+        >Acabamentos</P-Button
+      >
+      <P-Button v-if="manageCdr" class="h-[60px]" severity="primary" @click="openFinishingGroupList"
         >Grupos de acabamentos</P-Button
       >
-      <P-Button v-if="manageCdr" class="h-[60px]" @click="openPriceList">Preços</P-Button>
+      <P-Button v-if="manageCdr" class="h-[60px]" severity="primary" @click="openPriceList"
+        >Preços</P-Button
+      >
     </div>
     <BrandList v-model="brandList" />
     <MaterialList v-model="materialList" />

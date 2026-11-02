@@ -3,8 +3,10 @@
     <template #header>Nota do cliente</template>
     <P-Textarea v-model="draft" auto-resize fluid />
     <template #footer>
-      <P-Button text @click="close()">Voltar</P-Button>
-      <P-Button text @click="edit()">Editar</P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close()" />
+        <P-Button label="Editar" severity="primary" @click="edit()" />
+      </div>
     </template>
   </P-Dialog>
 </template>

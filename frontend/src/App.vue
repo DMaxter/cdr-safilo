@@ -4,7 +4,14 @@
       <RouterView />
     </Suspense>
     <span
-      style="position: absolute; bottom: 20px; right: 20px; z-index: 0; font-size: 12px; color: white"
+      style="
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: 0;
+        font-size: 12px;
+        color: white;
+      "
       >© 2022-2026 Casa dos Reclamos, Todos os direitos reservados.</span
     >
   </div>

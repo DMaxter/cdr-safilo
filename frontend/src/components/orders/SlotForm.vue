@@ -42,7 +42,10 @@
             option-label="name"
             fluid
             :invalid="touched.material && !!errors.material"
-            @update:model-value="touch('material'); onMaterialSelect($event)"
+            @update:model-value="
+              touch('material');
+              onMaterialSelect($event);
+            "
           />
           <label>Material</label>
         </P-FloatLabel>

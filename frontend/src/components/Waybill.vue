@@ -297,26 +297,36 @@
       </div>
     </div>
     <template #footer>
-      <P-Button class="p-button-secondary mr-2" label="Voltar" @click="close()" />
-      <P-Button v-if="openWaybill" label="Abrir" :disabled="!isValid" @click="createWaybill()"
-        ><template #icon><Icon icon="file_open" /></template
-      ></P-Button>
-      <P-Button
-        v-if="!openWaybill"
-        label="Descarregar"
-        :loading="downloading"
-        @click="showDownload()"
-        ><template #icon><Icon icon="download" /></template
-      ></P-Button>
-      <P-Button
-        v-if="!openWaybill"
-        label="Cancelar Carta de Porte"
-        severity="danger"
-        outlined
-        :loading="cancelling"
-        @click="confirmCancel()"
-        ><template #icon><Icon icon="cancel" /></template
-      ></P-Button>
+      <div class="flex justify-end gap-2 flex-wrap">
+        <P-Button label="Voltar" severity="secondary" @click="close()" />
+        <P-Button
+          v-if="openWaybill"
+          label="Abrir"
+          severity="primary"
+          :disabled="!isValid"
+          @click="createWaybill()"
+        >
+          <template #icon><Icon icon="file_open" /></template>
+        </P-Button>
+        <P-Button
+          v-if="!openWaybill"
+          label="Descarregar"
+          severity="primary"
+          :loading="downloading"
+          @click="showDownload()"
+        >
+          <template #icon><Icon icon="download" /></template>
+        </P-Button>
+        <P-Button
+          v-if="!openWaybill"
+          label="Cancelar Carta de Porte"
+          severity="danger"
+          :loading="cancelling"
+          @click="confirmCancel()"
+        >
+          <template #icon><Icon icon="cancel" /></template>
+        </P-Button>
+      </div>
     </template>
   </P-Dialog>
 </template>

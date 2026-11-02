@@ -83,8 +83,10 @@
       </div>
     </div>
     <template #footer>
-      <P-Button label="Voltar" text @click="close()" />
-      <P-Button label="Adicionar" text @click="addComercial()" />
+      <div class="flex justify-end gap-2">
+        <P-Button label="Voltar" severity="secondary" text @click="close()" />
+        <P-Button label="Adicionar" severity="primary" @click="addComercial()" />
+      </div>
     </template>
   </P-Dialog>
 </template>

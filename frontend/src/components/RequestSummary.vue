@@ -11,7 +11,7 @@
     <template #footer>
       <RequestActions :request="props.request" @back="close" @refresh="emit('changed')">
         <template #extra>
-          <P-Button label="Ver pedido" @click="openDetails()" />
+          <P-Button label="Ver pedido" severity="primary" @click="openDetails()" />
         </template>
       </RequestActions>
     </template>

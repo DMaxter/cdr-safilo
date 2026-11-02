@@ -54,14 +54,16 @@
       {{ errors.repeat }}
     </P-Message>
     <template #footer>
-      <P-Button class="flex flex-row" @click="close">
-        <Icon icon="prev" />
-        Voltar
-      </P-Button>
-      <P-Button class="flex flex-row" @click="changePassword">
-        Confirmar
-        <Icon icon="next" />
-      </P-Button>
+      <div class="flex justify-end gap-2">
+        <P-Button severity="secondary" text class="flex flex-row" @click="close">
+          <Icon icon="prev" />
+          <span>Voltar</span>
+        </P-Button>
+        <P-Button severity="primary" class="flex flex-row" @click="changePassword">
+          <span>Confirmar</span>
+          <Icon icon="next" />
+        </P-Button>
+      </div>
     </template>
   </P-Dialog>
 </template>

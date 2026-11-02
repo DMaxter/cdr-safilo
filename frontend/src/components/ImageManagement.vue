@@ -21,14 +21,29 @@
       </template>
     </ItemGroup>
     <template #footer>
-      <P-Button v-if="props.uploadAction || props.addAction" text @click="add">Adicionar</P-Button>
-      <P-Button v-if="props.deleteAction" :disabled="!isSelected" text @click="del"
-        >Apagar</P-Button
-      >
-      <P-Button v-if="props.obsoleteAction" :disabled="!isSelected" text @click="obsolete"
-        >Marcar obsoleta</P-Button
-      >
-      <P-Button text @click="close">Voltar</P-Button>
+      <div class="flex justify-end gap-2 flex-wrap">
+        <P-Button label="Voltar" severity="secondary" text @click="close" />
+        <P-Button
+          v-if="props.uploadAction || props.addAction"
+          label="Adicionar"
+          severity="primary"
+          @click="add"
+        />
+        <P-Button
+          v-if="props.obsoleteAction"
+          label="Marcar obsoleta"
+          severity="warn"
+          :disabled="!isSelected"
+          @click="obsolete"
+        />
+        <P-Button
+          v-if="props.deleteAction"
+          label="Apagar"
+          severity="danger"
+          :disabled="!isSelected"
+          @click="del"
+        />
+      </div>
     </template>
     <FileUpload
       v-if="props.uploadAction"
@@ -45,8 +60,10 @@
         <label for="link">Links (um por linha)</label>
       </P-FloatLabel>
       <template #footer>
-        <P-Button @click="handleAdd">Adicionar</P-Button>
-        <P-Button @click="closeLinkAdd">Voltar</P-Button>
+        <div class="flex justify-end gap-2">
+          <P-Button label="Voltar" severity="secondary" text @click="closeLinkAdd" />
+          <P-Button label="Adicionar" severity="primary" @click="handleAdd" />
+        </div>
       </template>
     </P-Dialog>
   </P-Dialog>
