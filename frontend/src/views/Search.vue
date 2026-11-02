@@ -1,163 +1,171 @@
 <template>
   <Container>
-    <P-DataTable
-      v-model:filters="filters"
-      paginator
-      scrollable
-      removable-sort
-      class="request-data-table"
-      scroll-height="flex"
-      filter-display="row"
-      sort-field="id"
-      :sort-order="-1"
-      :value="requestStore.requests"
-      :rows="25"
-      :rows-per-page-options="[10, 25, 50, 100]"
-      table-style="table-layout: fixed; width: 100%; min-width: 92rem"
-      responsive-layout="scroll"
-    >
-      <template #empty>Não existem pedidos registados</template>
+    <P-ProgressSpinner v-if="requestLoading" class="mt-8" />
+    <div v-else>
+      <P-DataTable
+        v-model:filters="filters"
+        paginator
+        scrollable
+        removable-sort
+        class="request-data-table"
+        scroll-height="flex"
+        filter-display="row"
+        sort-field="id"
+        :sort-order="-1"
+        :value="requestStore.requests"
+        :rows="25"
+        :rows-per-page-options="[10, 25, 50, 100]"
+        table-style="table-layout: fixed; width: 100%; min-width: 92rem"
+        responsive-layout="scroll"
+      >
+        <template #empty>Não existem pedidos registados</template>
 
-      <P-Column class="w-[10rem]" sortable field="id" header="ID" filter>
-        <template #filter="{ filterModel, filterCallback }">
-          <P-InputText
-            v-model="filterModel.value"
-            fluid
-            type="number"
-            placeholder="ID"
-            @input="filterCallback()"
-          />
-        </template>
-        <template #body="{ data }">
-          <div class="text-right">{{ data.id }}</div>
-        </template>
-      </P-Column>
-      <P-Column class="w-[10rem]" field="status" header="Estado" sortable filter>
-        <template #filter="{ filterModel, filterCallback }">
-          <P-MultiSelect
-            v-model="filterModel.value"
-            filter
-            fluid
-            :options="states"
-            placeholder="Estado"
-            option-label="name"
-            option-value="value"
-            @change="filterCallback()"
-          />
-        </template>
-        <template #body="{ data }">
-          <P-Tag rounded :class="getStatusClass(data.status)">
-            <Icon :icon="getStatusIcon(data.status)" />
-            <span>{{ states.find((s) => s.value === data.status)?.name }}</span>
-          </P-Tag>
-        </template>
-      </P-Column>
-      <P-Column
-        class="w-[15rem]"
-        field="client.name"
-        filter-field="client.id"
-        header="Cliente"
-        sortable
-        filter
-      >
-        <template #filter="{ filterModel, filterCallback }">
-          <P-MultiSelect
-            v-model="filterModel.value"
-            filter
-            fluid
-            :options="clients"
-            option-label="name"
-            option-value="id"
-            placeholder="Cliente"
-            @change="filterCallback()"
-          />
-        </template>
-      </P-Column>
-      <P-Column class="w-[10rem]" field="brand.name" header="Marca" sortable filter>
-        <template #filter="{ filterModel, filterCallback }">
-          <P-MultiSelect
-            v-model="filterModel.value"
-            filter
-            fluid
-            :options="brands"
-            placeholder="Marca"
-            @change="filterCallback()"
-          />
-        </template>
-        <template #body="{ data }">
-          <span>{{ data.brand?.name }}</span>
-        </template>
-      </P-Column>
-      <P-Column
-        class="w-[12rem]"
-        header="Material"
-        filter
-        :filter-function="filterByMaterials"
-        filter-field="materialNames"
-      >
-        <template #filter="{ filterModel, filterCallback }">
-          <P-MultiSelect
-            v-model="filterModel.value"
-            filter
-            fluid
-            :options="materials"
-            placeholder="Material"
-            @change="filterCallback()"
-          />
-        </template>
-        <template #body="{ data }">
-          <span>{{ materialNamesOf(data).join(", ") }}</span>
-        </template>
-      </P-Column>
-      <P-Column class="w-[10rem]" field="userEmail" header="Comercial" sortable filter>
-        <template #filter="{ filterModel, filterCallback }">
-          <P-MultiSelect
-            v-model="filterModel.value"
-            filter
-            fluid
-            :options="commercialsFilterOptions"
-            placeholder="Comercial"
-            @change="filterCallback()"
-          />
-        </template>
-        <template #body="{ data }">
-          <span>{{ data.user }}</span>
-        </template>
-      </P-Column>
-      <P-Column class="w-[15rem]" field="created" header="Data de Criação" sortable filter>
-        <template #filter="{ filterModel, filterCallback }">
-          <P-DatePicker
-            v-model="filterModel.value"
-            fluid
-            selection-mode="range"
-            :manual-input="false"
-            date-format="dd/mm/yy"
-            placeholder="Data de Criação"
-            :show-button-bar="true"
-            @date-select="filterCallback()"
-            @hide="filterCallback()"
-          />
-        </template>
-        <template #body="{ data }">
-          <span>
-            {{ new Date(data.created).toLocaleString("pt-PT") }}
-          </span>
-        </template>
-      </P-Column>
-      <P-Column class="w-[10rem]">
-        <template #body="{ data }">
-          <Icon v-tooltip="'Ver resumo'" icon="visibility" @click="showSummary(data)" />
-          <Icon v-tooltip="'Ver detalhes'" icon="open_in_new" @click="openDetails(data)" />
-          <Icon v-if="canEdit(data)" v-tooltip="'Editar'" icon="edit" @click="editRequest(data)" />
-          <Icon
-            v-if="canCancel(data)"
-            v-tooltip="'Cancelar'"
-            icon="cancel"
-            @click="confirmCancel(data)"
-          />
-        </template>
-      </P-Column>
-    </P-DataTable>
+        <P-Column class="w-[10rem]" sortable field="id" header="ID" filter>
+          <template #filter="{ filterModel, filterCallback }">
+            <P-InputText
+              v-model="filterModel.value"
+              fluid
+              type="number"
+              placeholder="ID"
+              @input="filterCallback()"
+            />
+          </template>
+          <template #body="{ data }">
+            <div class="text-right">{{ data.id }}</div>
+          </template>
+        </P-Column>
+        <P-Column class="w-[10rem]" field="status" header="Estado" sortable filter>
+          <template #filter="{ filterModel, filterCallback }">
+            <P-MultiSelect
+              v-model="filterModel.value"
+              filter
+              fluid
+              :options="states"
+              placeholder="Estado"
+              option-label="name"
+              option-value="value"
+              @change="filterCallback()"
+            />
+          </template>
+          <template #body="{ data }">
+            <P-Tag rounded :class="getStatusClass(data.status)">
+              <Icon :icon="getStatusIcon(data.status)" />
+              <span>{{ states.find((s) => s.value === data.status)?.name }}</span>
+            </P-Tag>
+          </template>
+        </P-Column>
+        <P-Column
+          class="w-[15rem]"
+          field="client.name"
+          filter-field="client.id"
+          header="Cliente"
+          sortable
+          filter
+        >
+          <template #filter="{ filterModel, filterCallback }">
+            <P-MultiSelect
+              v-model="filterModel.value"
+              filter
+              fluid
+              :options="clients"
+              option-label="name"
+              option-value="id"
+              placeholder="Cliente"
+              @change="filterCallback()"
+            />
+          </template>
+        </P-Column>
+        <P-Column class="w-[10rem]" field="brand.name" header="Marca" sortable filter>
+          <template #filter="{ filterModel, filterCallback }">
+            <P-MultiSelect
+              v-model="filterModel.value"
+              filter
+              fluid
+              :options="brands"
+              placeholder="Marca"
+              @change="filterCallback()"
+            />
+          </template>
+          <template #body="{ data }">
+            <span>{{ data.brand?.name }}</span>
+          </template>
+        </P-Column>
+        <P-Column
+          class="w-[12rem]"
+          header="Material"
+          filter
+          :filter-function="filterByMaterials"
+          filter-field="materialNames"
+        >
+          <template #filter="{ filterModel, filterCallback }">
+            <P-MultiSelect
+              v-model="filterModel.value"
+              filter
+              fluid
+              :options="materials"
+              placeholder="Material"
+              @change="filterCallback()"
+            />
+          </template>
+          <template #body="{ data }">
+            <span>{{ materialNamesOf(data).join(", ") }}</span>
+          </template>
+        </P-Column>
+        <P-Column class="w-[10rem]" field="userEmail" header="Comercial" sortable filter>
+          <template #filter="{ filterModel, filterCallback }">
+            <P-MultiSelect
+              v-model="filterModel.value"
+              filter
+              fluid
+              :options="commercialsFilterOptions"
+              placeholder="Comercial"
+              @change="filterCallback()"
+            />
+          </template>
+          <template #body="{ data }">
+            <span>{{ data.user }}</span>
+          </template>
+        </P-Column>
+        <P-Column class="w-[15rem]" field="created" header="Data de Criação" sortable filter>
+          <template #filter="{ filterModel, filterCallback }">
+            <P-DatePicker
+              v-model="filterModel.value"
+              fluid
+              selection-mode="range"
+              :manual-input="false"
+              date-format="dd/mm/yy"
+              placeholder="Data de Criação"
+              :show-button-bar="true"
+              @date-select="filterCallback()"
+              @hide="filterCallback()"
+            />
+          </template>
+          <template #body="{ data }">
+            <span>
+              {{ new Date(data.created).toLocaleString("pt-PT") }}
+            </span>
+          </template>
+        </P-Column>
+        <P-Column class="w-[10rem]">
+          <template #body="{ data }">
+            <Icon v-tooltip="'Ver resumo'" icon="visibility" @click="showSummary(data)" />
+            <Icon v-tooltip="'Ver detalhes'" icon="open_in_new" @click="openDetails(data)" />
+            <Icon
+              v-if="canEdit(data)"
+              v-tooltip="'Editar'"
+              icon="edit"
+              @click="editRequest(data)"
+            />
+            <Icon
+              v-if="canCancel(data)"
+              v-tooltip="'Cancelar'"
+              icon="cancel"
+              @click="confirmCancel(data)"
+            />
+          </template>
+        </P-Column>
+      </P-DataTable>
+    </div>
     <RequestSummary v-model="summary" :request="selectedRequest" @changed="onWaybillChanged" />
     <template #actions>
       <P-Button v-if="isCommercial" severity="secondary" @click="toggleOwnRequests">
@@ -214,6 +222,8 @@ const { canCancel, canEdit } = useRequestAccess();
 const authStore = useAuthStore();
 const isCommercial = authStore.isCommercial();
 const ownCommercial = authStore.logged?.email ?? "";
+
+const requestLoading = ref(false);
 
 const route = useRoute();
 const router = useRouter();
@@ -307,16 +317,21 @@ if (route.query.material) {
 }
 
 async function refreshRequests() {
-  // Skips the backend call when the store already holds the requests.
-  const response = await requestStore.getAllRequests();
-  if (!response.success) {
-    toast.add({
-      severity: "error",
-      summary: "Pedidos",
-      detail: (response.content as string) || "Não foi possível carregar os pedidos",
-      life: 10000,
-    });
-    console.error("Failed to retrieve requests:", response.content);
+  requestLoading.value = true;
+  try {
+    // Skips the backend call when the store already holds the requests.
+    const response = await requestStore.getAllRequests();
+    if (!response.success) {
+      toast.add({
+        severity: "error",
+        summary: "Pedidos",
+        detail: (response.content as string) || "Não foi possível carregar os pedidos",
+        life: 10000,
+      });
+      console.error("Failed to retrieve requests:", response.content);
+    }
+  } finally {
+    requestLoading.value = false;
   }
 }
 

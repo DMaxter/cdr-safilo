@@ -9,9 +9,11 @@ import { Finishing, NewFinishing } from "@router/backend/services/finishing/type
 
 export const useFinishingStore = defineStore("finishingStore", () => {
   const finishings = ref<Finishing[]>([]);
+  const loaded = ref(false);
 
   function init(data: Finishing[]) {
     finishings.value = data;
+    loaded.value = true;
   }
 
   async function getFinishings(): Promise<APIResponse<string | null>> {
@@ -162,6 +164,7 @@ export const useFinishingStore = defineStore("finishingStore", () => {
 
   return {
     finishings,
+    loaded,
     getFinishings,
     addFinishing,
     editFinishing,

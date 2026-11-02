@@ -9,9 +9,11 @@ import { Material } from "@router/backend/services/material/types";
 
 export const useMaterialStore = defineStore("materialStore", () => {
   const materials = ref<Material[]>([]);
+  const loaded = ref(false);
 
   function init(data: Material[]) {
     materials.value = data;
+    loaded.value = true;
   }
 
   function add(material: Material) {
@@ -178,6 +180,7 @@ export const useMaterialStore = defineStore("materialStore", () => {
 
   return {
     materials,
+    loaded,
     getMaterials,
     addMaterial,
     editMaterial,

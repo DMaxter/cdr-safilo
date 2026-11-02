@@ -2,7 +2,9 @@
   <Container>
     <h2 class="font-extrabold text-3xl mb-4">Pedido {{ id ?? "" }}</h2>
 
-    <div v-if="loading" class="py-10 text-center text-gray-500">A carregar pedido...</div>
+    <div v-if="loading" class="py-10 text-center">
+      <P-ProgressSpinner class="mt-8" />
+    </div>
 
     <P-Message v-else-if="!request" severity="warn" :closable="false">
       Não foi possível encontrar o pedido {{ id }}.

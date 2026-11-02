@@ -10,9 +10,11 @@ import { Image } from "@router/backend/services/image/types";
 
 export const useBrandStore = defineStore("brandStore", () => {
   const brands = ref<Brand[]>([]);
+  const loaded = ref(false);
 
   function init(data: Brand[]) {
     brands.value = data;
+    loaded.value = true;
   }
 
   function add(brand: Brand) {
@@ -262,6 +264,7 @@ export const useBrandStore = defineStore("brandStore", () => {
 
   return {
     brands,
+    loaded,
     getBrands,
     addBrand,
     editBrand,

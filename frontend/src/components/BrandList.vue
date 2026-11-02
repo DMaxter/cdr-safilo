@@ -1,7 +1,8 @@
 <template>
   <P-Dialog v-model:visible="enabled" modal class="w-[95vw] max-w-[800px]">
     <template #header>Marcas</template>
-    <div class="h-85/100">
+    <P-ProgressSpinner v-if="loading" class="mt-8" />
+    <div v-else class="h-85/100">
       <P-DataTable
         v-model:filters="filters"
         paginator
@@ -85,6 +86,7 @@ const selectedBrand = ref<Brand>(new Brand());
 
 const manageMode = ref<ManageMode>(ManageMode.None);
 const manageImages = ref(false);
+const loading = ref(false);
 
 const filters = ref({
   id: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -217,15 +219,20 @@ async function deleteBrand() {
 }
 
 async function refresh() {
-  const response = await brandStore.getBrands();
+  loading.value = true;
+  try {
+    const response = await brandStore.getBrands();
 
-  if (!response.success) {
-    toast.add({
-      severity: "error",
-      summary: TITLE,
-      detail: "Não foi possível obter a lista de marcas",
-      life: 10000,
-    });
+    if (!response.success) {
+      toast.add({
+        severity: "error",
+        summary: TITLE,
+        detail: "Não foi possível obter a lista de marcas",
+        life: 10000,
+      });
+    }
+  } finally {
+    loading.value = false;
   }
 }
 

@@ -1,7 +1,8 @@
 <template>
   <P-Dialog v-model:visible="enabled" modal class="w-8/10 max-w-[1000px]" fluid>
     <template #header>Materiais</template>
-    <div class="h-85/100">
+    <P-ProgressSpinner v-if="loading" class="mt-8" />
+    <div v-else class="h-85/100">
       <P-DataTable
         v-model:filters="filters"
         paginator
@@ -79,6 +80,7 @@ const toast = useToast();
 const selectedMaterial = ref<Material>(new Material());
 
 const manageMode = ref<ManageMode>(ManageMode.None);
+const loading = ref(false);
 
 const filters = ref({
   id: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -90,15 +92,20 @@ onMounted(async () => {
 });
 
 async function refresh() {
-  const response = await materialStore.getMaterials();
+  loading.value = true;
+  try {
+    const response = await materialStore.getMaterials();
 
-  if (!response.success) {
-    toast.add({
-      severity: "error",
-      summary: TITLE,
-      detail: "Não foi possível obter a lista de materiais",
-      life: 10000,
-    });
+    if (!response.success) {
+      toast.add({
+        severity: "error",
+        summary: TITLE,
+        detail: "Não foi possível obter a lista de materiais",
+        life: 10000,
+      });
+    }
+  } finally {
+    loading.value = false;
   }
 }
 

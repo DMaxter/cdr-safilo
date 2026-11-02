@@ -9,9 +9,11 @@ import { Price } from "@router/backend/services/price/types";
 
 export const usePriceStore = defineStore("priceStore", () => {
   const prices = ref<Price[]>([]);
+  const loaded = ref(false);
 
   function init(data: Price[]) {
     prices.value = data;
+    loaded.value = true;
   }
 
   function _update(price: Price) {
@@ -141,6 +143,7 @@ export const usePriceStore = defineStore("priceStore", () => {
 
   return {
     prices,
+    loaded,
     getPrices,
     addPrice,
     editPrice,

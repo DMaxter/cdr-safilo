@@ -1,6 +1,7 @@
 <template>
   <Container>
-    <div class="h-85/100">
+    <P-ProgressSpinner v-if="clientLoading" class="mt-8" />
+    <div v-else class="h-85/100">
       <P-DataTable
         v-model:filters="filters"
         paginator
@@ -163,6 +164,7 @@ const EXPORT_TITLE = "Exportação de Pedidos";
 
 const authStore = useAuthStore();
 const clientStore = useClientStore();
+const clientLoading = ref(false);
 const requestStore = useRequestStore();
 const toast = useToast();
 
@@ -200,15 +202,20 @@ onMounted(async () => {
 });
 
 async function refresh() {
-  const response = await clientStore.getClients();
+  clientLoading.value = true;
+  try {
+    const response = await clientStore.getClients();
 
-  if (!response.success) {
-    toast.add({
-      severity: "error",
-      summary: TITLE,
-      detail: "Não foi possível obter a lista de clientes",
-      life: 10000,
-    });
+    if (!response.success) {
+      toast.add({
+        severity: "error",
+        summary: TITLE,
+        detail: "Não foi possível obter a lista de clientes",
+        life: 10000,
+      });
+    }
+  } finally {
+    clientLoading.value = false;
   }
 }
 
