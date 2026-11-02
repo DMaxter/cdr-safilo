@@ -84,7 +84,7 @@
         >
           <Icon icon="image" class="text-3xl" />
         </div>
-        <div class="min-w-0">
+        <div class="min-w-0 flex-1 text-left">
           <div class="font-bold">{{ entry.label }}</div>
           <div class="text-sm">
             Material: {{ entry.slot?.material?.name ?? "—" }} | Medidas:

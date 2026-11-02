@@ -43,6 +43,7 @@ import { useRouter } from "vue-router";
 import PrintRequestComponent from "@components/PrintRequest.vue";
 import type { Request } from "@router/backend/services/request/types";
 import { useRequestAccess } from "@/composables/useRequestAccess";
+import { useAuthStore } from "@stores/auth";
 import { useRequestStore } from "@stores/requests";
 
 const TITLE = "Cancelamento de Pedido";
@@ -63,6 +64,7 @@ const toast = useToast();
 const router = useRouter();
 
 const requestStore = useRequestStore();
+const authStore = useAuthStore();
 const { canCancel, canEdit, canSeeWaybill, canSendToProduction } = useRequestAccess();
 
 const printer = useTemplateRef<typeof PrintRequestComponent>("printer");
@@ -105,6 +107,8 @@ async function cancelRequest() {
     });
 
     // The parent re-syncs the store so every view (dialog, page, list) sees the new status.
+    // Refresh the cached plafond since cancelling refunds credits.
+    await authStore.isLoggedIn(true);
     emit("refresh");
   } else {
     toast.add({

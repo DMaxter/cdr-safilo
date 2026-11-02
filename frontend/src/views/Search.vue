@@ -360,6 +360,9 @@ async function cancelRequest() {
       detail: "Pedido cancelado com sucesso",
       life: 10000,
     });
+
+    // Refresh the cached plafond since cancelling refunds credits.
+    await authStore.isLoggedIn(true);
   } else {
     toast.add({
       severity: "error",

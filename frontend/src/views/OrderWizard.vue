@@ -222,7 +222,7 @@
                 >
                   <Icon icon="image" class="text-3xl" />
                 </div>
-                <div>
+                <div class="flex-1 min-w-0 text-left">
                   <div class="font-bold">{{ slotConfig.label }}</div>
                   <div class="text-sm">
                     Material: {{ wizard.slots[slotConfig.key]?.material?.name ?? "—" }}
@@ -291,21 +291,6 @@
         </P-StepPanel>
       </P-StepPanels>
     </P-Stepper>
-
-    <P-Dialog
-      v-model:visible="successDialog"
-      modal
-      header="Pedido Submetido"
-      :style="{ width: '400px' }"
-    >
-      <div class="text-center">
-        <Icon icon="check_circle" class="text-6xl text-green-500 mb-4" />
-        <p>O pedido foi submetido com sucesso.</p>
-      </div>
-      <template #footer>
-        <P-Button :label="successButtonLabel" @click="onSuccessContinue" />
-      </template>
-    </P-Dialog>
   </Container>
 </template>
 
@@ -355,18 +340,8 @@ const submitTitle = computed(() => (wizard.isEditing ? "Editar Pedido" : TITLE))
 const canEstimatePrice = computed(() => authStore.isCommercial() || authStore.isAdmin());
 
 const selectedClient = ref<Client | null>(null);
-const successDialog = ref(false);
 const estimatedPrice = ref<number | null>(null);
 const slotStep = ref(1);
-
-const successButtonLabel = computed(() =>
-  wizard.isEditing ? "Voltar à pesquisa" : "Ir para o perfil",
-);
-
-function onSuccessContinue() {
-  successDialog.value = false;
-  router.push({ name: wizard.isEditing ? "search" : "profile" });
-}
 
 function discardSlots() {
   wizard.resetSlots();
@@ -596,7 +571,13 @@ async function submit() {
       detail: wizard.isEditing ? "Pedido editado com sucesso" : "Pedido criado com sucesso",
       life: 10000,
     });
-    successDialog.value = true;
+
+    // Navigate immediately; refresh caches in the background.
+    router.push({ name: "search" });
+
+    Promise.all([authStore.isLoggedIn(true), requestStore.getAllRequests(true)]).catch((error) =>
+      console.error("Failed to refresh data after submitting request:", error),
+    );
   } else {
     toast.add({
       severity: "error",
